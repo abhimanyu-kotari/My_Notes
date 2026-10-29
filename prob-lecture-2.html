@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Joint, Marginal, Conditional Probability & Bayes' Theorem | Probability for ML Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Probability 02 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#prob2-intro" class="sidebar-link">1. Roadmap &amp; The Architecture of Multi-Variable Probability</a></li>
+        <li><a href="#venn-diagrams" class="sidebar-link">2. Visual Foundation 1: Venn Diagrams &amp; Set Operations</a></li>
+        <li><a href="#contingency-tables" class="sidebar-link">3. Visual Foundation 2: Contingency Tables (Cross-Tabs)</a></li>
+        <li><a href="#joint-probability" class="sidebar-link">4. Joint Probability: Simultaneous Multi-Variable Events</a></li>
+        <li><a href="#marginal-probability" class="sidebar-link">5. Marginal Probability: Summing Across Margins</a></li>
+        <li><a href="#conditional-probability" class="sidebar-link">6. Conditional Probability: The Philosophy of Reduced Sample Spaces</a></li>
+        <li><a href="#conditional-walkthroughs" class="sidebar-link">7. 3 Step-by-Step Solved Problems (Coins, Dice &amp; Titanic)</a></li>
+        <li><a href="#conditional-formula" class="sidebar-link">8. The Formal Conditional Formula &amp; Pandas Code</a></li>
+        <li><a href="#event-relationships" class="sidebar-link">9. Independent vs. Dependent vs. Mutually Exclusive Events</a></li>
+        <li><a href="#bayes-theorem" class="sidebar-link">10. Bayes' Theorem: Mathematical Proof &amp; Terminology</a></li>
+        <li><a href="#bayes-ml-classifier" class="sidebar-link">11. Machine Learning Case Study: Building a Bayes Classifier</a></li>
+        <li><a href="#interactive-bayes-sim" class="sidebar-link">12. Interactive Contingency Table &amp; Bayes' Theorem Simulator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 02 Notes</span>
+          <span class="tag">Probability</span>
+          <span class="tag">Joint Probability</span>
+          <span class="tag">Marginal Probability</span>
+          <span class="tag">Conditional Probability</span>
+          <span class="tag">Bayes' Theorem</span>
+          <span class="tag">Naive Bayes ML</span>
+        </div>
+        <h1 class="lecture-main-title">Joint, Marginal, Conditional Probability &amp; Bayes' Theorem</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This lecture covers multi-variable probability theory: how two or more random variables interact simultaneously. We explore the two primary visual tools for multi-event analysis (Venn diagrams and Contingency Tables), define the three foundational types of probability (Joint $P(X \cap Y)$, Marginal $P(X)$, and Conditional $P(A \mid B)$), unpack the concept of sample space reduction, clarify the vital differences between Independent, Dependent, and Mutually Exclusive events, derive the algebraic proof of Bayes' Theorem, and implement a complete Naive Bayes classification decision rule from scratch on tabular data.<br>
+          <strong>Why do we use it?</strong> Real-world machine learning models never look at a single feature in isolation; they analyze hundreds of features simultaneously. When an ML model predicts medical diagnoses, filters spam, or computes fraud risk, it relies on Bayes' Theorem to rationally update prior probabilities using incoming evidence. Without understanding joint, marginal, and conditional probabilities, you cannot comprehend classification algorithms, loss functions, or Bayesian machine learning.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: ROADMAP & MULTI-VARIABLE PROBABILITY -->
+      <!-- ============================================================ -->
+      <section id="prob2-intro" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Roadmap &amp; The Architecture of Multi-Variable Probability</h2>
+
+        <p>
+          In <strong>Lecture 1</strong>, we mastered the core foundations: single random experiments, sample spaces $S$, random variables as functions $X: S \to \mathbb{R}$, probability distribution tables (PMFs), expected value ($\mathbb{E}[X]$), and variance ($\text{Var}(X)$).
+        </p>
+
+        <p>
+          However, real data science problems rarely involve a single random variable. In datasets like <strong>Titanic</strong>, you have passenger class (`Pclass`), passenger sex (`Sex`), ticket fare (`Fare`), and survival status (`Survived`). To model how features relate to targets, we need the mathematics of <strong>multi-variable probability</strong>.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">The Pedagogical Architecture of This Module</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+            
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #58a6ff; border-radius: 6px;">
+              <strong style="color: #58a6ff;">Step 1: Visual Tools</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Mastering <strong>Venn Diagrams</strong> and <strong>Contingency Tables</strong> (cross-tabulations) to organize multi-variable event intersections losslessly.
+              </p>
+            </div>
+
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #7ee787; border-radius: 6px;">
+              <strong style="color: #7ee787;">Step 2: The Three Probability Types</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                • <strong>Joint:</strong> $P(A \cap B)$ (Both happening together)<br>
+                • <strong>Marginal:</strong> $P(A)$ (One event ignoring the other)<br>
+                • <strong>Conditional:</strong> $P(A \mid B)$ (Event $A$ in reduced universe $B$)
+              </p>
+            </div>
+
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #ffa657; border-radius: 6px;">
+              <strong style="color: #ffa657;">Step 3: Bayes' Theorem &amp; ML</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Deriving Bayes' Rule from first principles and applying it to build a predictive classification system from a raw dataset.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: VENN DIAGRAMS & SET OPERATIONS -->
+      <!-- ============================================================ -->
+      <section id="venn-diagrams" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Visual Foundation 1: Venn Diagrams &amp; Set Operations</h2>
+
+        <p>
+          Before analyzing numbers in tables, probability theory uses <strong>Venn Diagrams</strong> from Set Theory to visualize how events intersect, combine, and partition the sample space.
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #58a6ff; border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.15rem;">Mapping Set Theory to Probability Theory</h3>
+          <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.7;">
+            <li><strong>The Universal Set ($U$):</strong> Represented by the outer rectangular bounding box. In probability, this is the <strong>Sample Space ($S$)</strong> containing all possible outcomes. Its total probability is always $P(U) = P(S) = 1.0$.</li>
+            <li><strong>Subsets / Circles ($A, B$):</strong> Represent individual <strong>Events</strong> consisting of favorable outcomes.</li>
+            <li><strong>Complement ($A'$ or $A^c$):</strong> Everything outside circle $A$ but inside the bounding box: $P(A') = 1 - P(A)$.</li>
+            <li><strong>Intersection ($A \cap B$):</strong> The shared overlapping lens where both events occur simultaneously.</li>
+            <li><strong>Union ($A \cup B$):</strong> The total combined area covered by $A$, $B$, or both.</li>
+          </ul>
+        </div>
+
+        <h3>The Addition Rule for Any Two Events</h3>
+        <p>
+          When you add the area of circle $A$ to the area of circle $B$, the overlapping intersection $A \cap B$ is counted twice! To prevent double-counting, you must subtract the intersection once:
+        </p>
+
+        <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.25rem; text-align: center; margin: 1.25rem 0;">
+          <span style="font-size: 1.35rem; font-weight: 700; color: #79c0ff; font-family: var(--font-mono);">
+            $$P(A \cup B) = P(A) + P(B) - P(A \cap B)$$
+          </span>
+        </div>
+
+        <h3>Concrete Walkthrough: A Single 6-Sided Die Roll</h3>
+        <p>
+          Let the experiment be rolling a fair 6-sided die: $S = \{1, 2, 3, 4, 5, 6\}$ ($n(S) = 6$).
+        </p>
+        <ul style="line-height: 1.8; color: var(--text-secondary);">
+          <li><strong>Event $A$:</strong> Rolling a number greater than or equal to 4 $\implies A = \{4, 5, 6\} \implies P(A) = \frac{3}{6} = 0.50$.</li>
+          <li><strong>Event $B$:</strong> Rolling an even number $\implies B = \{2, 4, 6\} \implies P(B) = \frac{3}{6} = 0.50$.</li>
+          <li><strong>Intersection ($A \cap B$):</strong> Numbers that are BOTH $\ge 4$ AND even $\implies A \cap B = \{4, 6\} \implies P(A \cap B) = \frac{2}{6} = \frac{1}{3}$.</li>
+          <li><strong>Union ($A \cup B$):</strong> Numbers that are either $\ge 4$ OR even $\implies A \cup B = \{2, 4, 5, 6\} \implies n(A \cup B) = 4$.
+            <br>
+            Using formula: $P(A \cup B) = \frac{3}{6} + \frac{3}{6} - \frac{2}{6} = \frac{4}{6} = \mathbf{\frac{2}{3}} \approx 0.667$.
+          </li>
+          <li><strong>Complement of Union ($(A \cup B)'$):</strong> Numbers outside both circles $\implies \{1, 3\} \implies P = 1 - \frac{2}{3} = \mathbf{\frac{1}{3}}$.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: CONTINGENCY TABLES -->
+      <!-- ============================================================ -->
+      <section id="contingency-tables" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Visual Foundation 2: Contingency Tables (Cross-Tabs)</h2>
+
+        <p>
+          While Venn diagrams provide high-level geometric intuition, they become messy when dealing with large numbers, percentages, or multi-class features. In data analysis and machine learning, we use <strong>Contingency Tables</strong> (also known as <strong>Cross-Tabulations</strong> or two-way tables).
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Lossless Equivalence</div>
+            <p>Every piece of information represented in a two-circle Venn diagram can be transferred into a $2 \times 2$ Contingency Table with zero loss of information, and vice-versa!</p>
+          </div>
+        </div>
+
+        <h3>Walkthrough: The 100-Student Electives Class</h3>
+        <p>
+          Consider a university cohort of $100$ students choosing between two elective subjects: <strong>Mathematics</strong> and <strong>Biology</strong>.
+        </p>
+        <ul style="line-height: 1.8; color: var(--text-secondary);">
+          <li>$10$ students enrolled in <strong>both</strong> Math and Biology.</li>
+          <li>$30$ students enrolled in <strong>only Math</strong> (not Biology).</li>
+          <li>$40$ students enrolled in <strong>only Biology</strong> (not Math).</li>
+          <li>Remaining students took neither subject: $100 - (10 + 30 + 40) = \mathbf{20}$ students.</li>
+        </ul>
+
+        <p>
+          Here is how this exact problem maps into a clean Contingency Table:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Elective Choice</th>
+                <th>Biology ($\text{Bio}$)</th>
+                <th>Not Biology ($\text{Bio}'$)</th>
+                <th style="background: rgba(88,166,255,0.15); color: #58a6ff;">Total (Math Margins)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Mathematics ($\text{Math}$)</strong></td>
+                <td><strong>10</strong> (Both)</td>
+                <td><strong>30</strong> (Math only)</td>
+                <td style="font-weight: 700; color: #79c0ff;">40</td>
+              </tr>
+              <tr>
+                <td><strong>Not Mathematics ($\text{Math}'$)</strong></td>
+                <td><strong>40</strong> (Bio only)</td>
+                <td><strong>20</strong> (Neither)</td>
+                <td style="font-weight: 700; color: #79c0ff;">60</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="font-weight: 700; border-top: 2px solid var(--border-color); background: rgba(126,231,135,0.15);">
+                <td style="color: #7ee787;">Total (Bio Margins)</td>
+                <td style="color: #7ee787;">50</td>
+                <td style="color: #7ee787;">50</td>
+                <td style="color: #ffffff; background: #238636;">100 (Grand Total)</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p>
+          Notice the mathematical elegance:
+          $$\text{Math Margin: } 40 + 60 = 100 \qquad \text{Bio Margin: } 50 + 50 = 100$$
+          Contingency tables provide the exact substrate needed to calculate <strong>Joint, Marginal, and Conditional probabilities</strong> in seconds.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: JOINT PROBABILITY -->
+      <!-- ============================================================ -->
+      <section id="joint-probability" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Joint Probability: Simultaneous Multi-Variable Events</h2>
+
+        <div style="background: var(--bg-card); border: 2px solid #58a6ff; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.25rem;">Definition of Joint Probability</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            <strong>Joint Probability</strong> is the probability of <strong>two or more events occurring simultaneously (at the exact same time)</strong> in a single random trial. For two random variables $X$ and $Y$:
+          </p>
+          <div style="text-align: center; margin: 1rem 0; font-size: 1.35rem; color: #79c0ff; font-family: var(--font-mono);">
+            $$P(X = x, Y = y) = P(X = x \text{ and } Y = y) = P(X \cap Y)$$
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            In machine learning, this answers queries like: <em>"What is the probability that a customer belongs to Age Group 20-30 AND clicked on the banner ad?"</em>
+          </p>
+        </div>
+
+        <h3>Titanic Dataset Walkthrough ($N = 891$)</h3>
+        <p>
+          Let $X$ be passenger class (`Pclass` $\in \{1, 2, 3\}$) and $Y$ be survival status (`Survived` $\in \{0 = \text{Died}, 1 = \text{Survived}\}$).
+        </p>
+        <p>
+          The raw observed passenger counts in the dataset form our contingency table:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Passenger Class ($X$)</th>
+                <th>Died ($Y = 0$)</th>
+                <th>Survived ($Y = 1$)</th>
+                <th>Total Passengers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1st Class ($X = 1$)</td>
+                <td>80</td>
+                <td>136</td>
+                <td>216</td>
+              </tr>
+              <tr>
+                <td>2nd Class ($X = 2$)</td>
+                <td>97</td>
+                <td>87</td>
+                <td>184</td>
+              </tr>
+              <tr>
+                <td>3rd Class ($X = 3$)</td>
+                <td>372</td>
+                <td>119</td>
+                <td>491</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="font-weight: 700;">
+                <td>Total</td>
+                <td>549</td>
+                <td>342</td>
+                <td>891</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p>
+          To convert these raw counts into <strong>Joint Probabilities</strong>, we divide each individual cell by the grand total $N = 891$:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Passenger Class ($X$)</th>
+                <th>$P(X = x, Y = 0)$ [Died]</th>
+                <th>$P(X = x, Y = 1)$ [Survived]</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1st Class ($X = 1$)</td>
+                <td>$\frac{80}{891} = \mathbf{0.0898}$</td>
+                <td>$\frac{136}{891} = \mathbf{0.1526}$</td>
+              </tr>
+              <tr>
+                <td>2nd Class ($X = 2$)</td>
+                <td>$\frac{97}{891} = \mathbf{0.1089}$</td>
+                <td>$\frac{87}{891} = \mathbf{0.0976}$</td>
+              </tr>
+              <tr>
+                <td>3rd Class ($X = 3$)</td>
+                <td>$\frac{372}{891} = \mathbf{0.4175}$</td>
+                <td>$\frac{119}{891} = \mathbf{0.1336}$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-content">
+            <div class="callout-title">The Joint Distribution Axiom</div>
+            <p>
+              The entire table above represents the <strong>Joint Probability Distribution</strong>. Summing all 6 joint cells equals exactly 1.0:
+            </p>
+            <div style="text-align: center; margin: 0.5rem 0;">
+              $$0.0898 + 0.1526 + 0.1089 + 0.0976 + 0.4175 + 0.1336 = \mathbf{1.0000}$$
+            </div>
+          </div>
+        </div>
+
+        <p>In Python (Pandas), you generate this table in a single line:</p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> <span class="var">pandas</span> <span class="kw">as</span> <span class="var">pd</span>
+
+<span class="com"># Joint Probability Distribution across all cells</span>
+<span class="var">joint_dist</span> <span class="op">=</span> <span class="var">pd</span>.<span class="func">crosstab</span>(<span class="var">df</span>[<span class="str">'Pclass'</span>], <span class="var">df</span>[<span class="str">'Survived'</span>], <span class="var">normalize</span><span class="op">=</span><span class="str">'all'</span>)
+<span class="func">print</span>(<span class="var">joint_dist</span>)</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: MARGINAL PROBABILITY -->
+      <!-- ============================================================ -->
+      <section id="marginal-probability" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Marginal Probability: Summing Across Margins</h2>
+
+        <p>
+          Also referred to in literature as <strong>Simple Probability</strong> or <strong>Unconditional Probability</strong>.
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #7ee787; font-size: 1.15rem;">Definition of Marginal Probability</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            <strong>Marginal Probability</strong> refers to the probability of an event occurring <strong>completely irrespective / regardless</strong> of the outcome of any other variable. It ignores all other conditions.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.95rem;">
+            <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 4px; text-align: center;">
+              $$P(X = x) = \sum_{y} P(X = x, Y = y)$$
+            </div>
+            <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 4px; text-align: center;">
+              $$P(Y = y) = \sum_{x} P(X = x, Y = y)$$
+            </div>
+          </div>
+        </div>
+
+        <h3>Why Is It Named "Marginal"?</h3>
+        <p>
+          The name comes from the physical layout of cross-tabulation tables! When you sum the joint probabilities across a row or down a column, the total is written in the <strong>margins (borders)</strong> of the table:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Pclass ($X$)</th>
+                <th>Died ($Y = 0$)</th>
+                <th>Survived ($Y = 1$)</th>
+                <th style="background: rgba(88,166,255,0.2); color: #58a6ff;">Marginal $P(X)$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1st Class ($X=1$)</td>
+                <td>0.0898</td>
+                <td>0.1526</td>
+                <td style="font-weight: 700; color: #58a6ff;">0.2424 (24.2%)</td>
+              </tr>
+              <tr>
+                <td>2nd Class ($X=2$)</td>
+                <td>0.1089</td>
+                <td>0.0976</td>
+                <td style="font-weight: 700; color: #58a6ff;">0.2065 (20.7%)</td>
+              </tr>
+              <tr>
+                <td>3rd Class ($X=3$)</td>
+                <td>0.4175</td>
+                <td>0.1336</td>
+                <td style="font-weight: 700; color: #58a6ff;">0.5511 (55.1%)</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background: rgba(126,231,135,0.2); font-weight: 700;">
+                <td style="color: #7ee787;">Marginal $P(Y)$</td>
+                <td style="color: #7ee787;">0.6162 (61.6% Died)</td>
+                <td style="color: #7ee787;">0.3838 (38.4% Survived)</td>
+                <td style="color: #ffffff; background: #238636;">1.0000</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p>
+          In Python Pandas, adding `margins=True` outputs both joint and marginal distributions together:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Combined Joint and Marginal Distributions in Pandas</span>
+<span class="var">prob_matrix</span> <span class="op">=</span> <span class="var">pd</span>.<span class="func">crosstab</span>(<span class="var">df</span>[<span class="str">'Pclass'</span>], <span class="var">df</span>[<span class="str">'Survived'</span>], <span class="var">margins</span><span class="op">=</span><span class="kw">True</span>, <span class="var">normalize</span><span class="op">=</span><span class="str">'all'</span>)
+<span class="func">print</span>(<span class="var">prob_matrix</span>)</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: CONDITIONAL PROBABILITY & REDUCED SPACES -->
+      <!-- ============================================================ -->
+      <section id="conditional-probability" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Conditional Probability: The Philosophy of Reduced Sample Spaces</h2>
+
+        <p>
+          <strong>Conditional Probability</strong> is indisputably the most critical probabilistic concept in machine learning.
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid #ffa657; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #ffa657; font-size: 1.25rem;">What is Conditional Probability?</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            <strong>Conditional Probability</strong> is the measure of the probability of an event $A$ occurring, <strong>given that another event $B$ has already occurred</strong>.
+          </p>
+          <div style="text-align: center; margin: 1rem 0; font-size: 1.4rem; color: #ffa657; font-family: var(--font-mono);">
+            $$P(A \mid B)$$
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0; text-align: center;">
+            Read aloud as: <em>"The probability of A given B"</em> or <em>"The probability of A conditional on B"</em>.
+          </p>
+        </div>
+
+        <h3>The Core Geometric Intuition: The Shrinking Universe</h3>
+        <p>
+          How does conditional probability actually work under the hood? The secret lies in one single concept:
+        </p>
+        <div style="text-align: center; font-size: 1.25rem; font-weight: 800; color: #79c0ff; margin: 1rem 0;">
+          CONDITIONING ON EVENT $B$ SHRINKS THE SAMPLE SPACE DOWN TO $B$!
+        </div>
+
+        <p>
+          Walk through the mental progression:
+        </p>
+        <ol style="line-height: 1.9; color: var(--text-secondary); padding-left: 1.5rem;">
+          <li>Before you are given any information, your universe is the entire sample space $S$. All outcomes are on the table.</li>
+          <li>Suddenly, a reliable witness informs you: <strong>"Event $B$ has definitely occurred!"</strong></li>
+          <li>Instantly, every single outcome in $S$ that lies outside circle $B$ is physically impossible. They are discarded ($P = 0$).</li>
+          <li>Your new universe (new denominator) is now strictly <strong>$B$</strong>.</li>
+          <li>Within this restricted universe $B$, you now look for where event $A$ also occurs. But in $B$, the only place $A$ can occur is the shared lens: <strong>$A \cap B$</strong>!</li>
+          <li>Therefore, the conditional probability is simply the fraction of the new universe occupied by $A$:
+            $$\text{Proportion} = \frac{\text{Shared Region}}{\text{New Universe}} = \frac{P(A \cap B)}{P(B)}$$
+          </li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚡</div>
+          <div class="callout-content">
+            <div class="callout-title">Key Insight</div>
+            <p>There is no complex higher-math derivation required. The formula $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$ emerges directly and logically from the geometry of sample space reduction!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THREE STEP-BY-STEP SOLVED PROBLEMS -->
+      <!-- ============================================================ -->
+      <section id="conditional-walkthroughs" class="note-section content-section">
+        <h2><span class="section-number">07.</span> 3 Step-by-Step Solved Problems (Coins, Dice &amp; Titanic)</h2>
+
+        <p>
+          Let's practice the reduced sample space technique on three classic problems discussed in the lecture:
+        </p>
+
+        <!-- PROBLEM 1 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.15rem;">Problem 1: Three Coins Toss (At Least Two Heads)</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Question:</strong> Three fair coins are tossed. What is the conditional probability that <em>at least 2 coins show Heads</em> ($A$), given that <em>at least 1 coin shows Heads</em> ($B$)?
+          </p>
+          <div style="background: var(--bg-primary); border-left: 3px solid #58a6ff; padding: 1rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.7; color: var(--text-primary);">
+            1. Full Sample Space (|S| = 2&sup3; = 8):<br>
+            &nbsp;&nbsp;&nbsp;S = {HHH, HHT, HTH, THH, HTT, THT, TTH, TTT}<br><br>
+            2. Event B occurred ("At least 1 Head"):<br>
+            &nbsp;&nbsp;&nbsp;TTT is eliminated! Reduced sample space has 7 outcomes:<br>
+            &nbsp;&nbsp;&nbsp;S_reduced = {HHH, HHT, HTH, THH, HTT, THT, TTH} &implies; n(B) = 7<br><br>
+            3. Count favorable outcomes for Event A ("&ge; 2 Heads") inside S_reduced:<br>
+            &nbsp;&nbsp;&nbsp;Favorable = {HHH, HHT, HTH, THH} &implies; n(A &cap; B) = 4<br><br>
+            4. Compute Conditional Probability:<br>
+            &nbsp;&nbsp;&nbsp;P(A | B) = 4 / 7 &approx; <strong style="color: #7ee787;">0.5714 (57.1%)</strong>
+          </div>
+        </div>
+
+        <!-- PROBLEM 2 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #7ee787; font-size: 1.15rem;">Problem 2: Two Dice (Sum is 7 Given First Die is Odd)</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Question:</strong> Two standard dice are rolled ($|S| = 36$). Find the conditional probability that the sum of the numbers is 7 ($A$), given that the first die shows an odd number ($B$).
+          </p>
+          <div style="background: var(--bg-primary); border-left: 3px solid #7ee787; padding: 1rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.7; color: var(--text-primary);">
+            1. Condition B: First die is odd &implies; d1 &in; {1, 3, 5}:<br>
+            &nbsp;&nbsp;&nbsp;Rows 2, 4, and 6 are completely eliminated!<br>
+            &nbsp;&nbsp;&nbsp;Only 3 rows remain (each with 6 pairs) &implies; n(B) = 3 &times; 6 = 18 outcomes.<br><br>
+            2. Identify pairs where sum equals 7 in this reduced set of 18:<br>
+            &nbsp;&nbsp;&nbsp;In row 1 (d1 = 1): (1, 6) &rarr; sum = 7<br>
+            &nbsp;&nbsp;&nbsp;In row 3 (d1 = 3): (3, 4) &rarr; sum = 7<br>
+            &nbsp;&nbsp;&nbsp;In row 5 (d1 = 5): (5, 2) &rarr; sum = 7<br>
+            &nbsp;&nbsp;&nbsp;Total favorable pairs = 3<br><br>
+            3. Compute Conditional Probability:<br>
+            &nbsp;&nbsp;&nbsp;P(A | B) = 3 / 18 = 1 / 6 &approx; <strong style="color: #7ee787;">0.1667 (16.7%)</strong>
+          </div>
+        </div>
+
+        <!-- PROBLEM 3 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: #ffa657; font-size: 1.15rem;">Problem 3: Two Dice (First Die is 2 Given Sum $\le 5$)</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Question:</strong> Find the conditional probability that the first die rolled is 2 ($A$), given that the sum of the two dice is less than or equal to 5 ($B$).
+          </p>
+          <div style="background: var(--bg-primary); border-left: 3px solid #ffa657; padding: 1rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.7; color: var(--text-primary);">
+            1. Find all outcomes in S where sum &le; 5 (Condition B):<br>
+            &nbsp;&nbsp;&nbsp;Sum = 2: (1,1) [1]<br>
+            &nbsp;&nbsp;&nbsp;Sum = 3: (1,2), (2,1) [2]<br>
+            &nbsp;&nbsp;&nbsp;Sum = 4: (1,3), (2,2), (3,1) [3]<br>
+            &nbsp;&nbsp;&nbsp;Sum = 5: (1,4), (2,3), (3,2), (4,1) [4]<br>
+            &nbsp;&nbsp;&nbsp;Reduced universe size n(B) = 1 + 2 + 3 + 4 = 10 outcomes.<br><br>
+            2. In these 10 pairs, count where d1 = 2 (Event A):<br>
+            &nbsp;&nbsp;&nbsp;(2, 1), (2, 2), (2, 3) &implies; Exactly 3 pairs.<br><br>
+            3. Compute Conditional Probability:<br>
+            &nbsp;&nbsp;&nbsp;P(A | B) = 3 / 10 = <strong style="color: #7ee787;">0.3000 (30.0%)</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: FORMULA & TITANIC PANDAS -->
+      <!-- ============================================================ -->
+      <section id="conditional-formula" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The Formal Conditional Formula &amp; Pandas Code</h2>
+
+        <p>
+          When dealing with massive enterprise datasets, manual sample space reduction is impossible. We use the formal algebraic formula:
+        </p>
+
+        <div style="background: var(--bg-primary); border: 2px solid #58a6ff; border-radius: 8px; padding: 1.25rem; text-align: center; margin: 1.25rem 0;">
+          <span style="font-size: 1.4rem; font-weight: 700; color: #79c0ff; font-family: var(--font-mono);">
+            $$P(A \mid B) = \frac{P(A \cap B)}{P(B)} = \frac{\text{Joint Probability of } A \text{ and } B}{\text{Marginal Probability of } B}$$
+          </span>
+        </div>
+
+        <h3>Titanic Real-World Analysis</h3>
+        <p>
+          Let's query the Titanic dataset using this formula:
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <div style="background: var(--bg-card); border-left: 4px solid #f85149; border-radius: 6px; padding: 1.25rem;">
+            <strong style="color: #f85149; font-size: 1.05rem;">Query 1: P(Died | 3rd Class)</strong>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+              "If a passenger held a 3rd class ticket, what was their probability of dying?"
+            </p>
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); background: var(--bg-primary); padding: 0.75rem; border-radius: 4px;">
+              P(Died &cap; Pclass=3) = 372 / 891 = 0.4175<br>
+              P(Pclass=3) = 491 / 891 = 0.5511<br>
+              P(Died | Pclass=3) = 0.4175 / 0.5511 = <strong style="color: #f85149;">75.76%</strong>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.25rem;">
+            <strong style="color: #7ee787; font-size: 1.05rem;">Query 2: P(Died | 1st Class)</strong>
+            <p style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+              "If a passenger held a 1st class ticket, what was their probability of dying?"
+            </p>
+            <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); background: var(--bg-primary); padding: 0.75rem; border-radius: 4px;">
+              P(Died &cap; Pclass=1) = 80 / 891 = 0.0898<br>
+              P(Pclass=1) = 216 / 891 = 0.2424<br>
+              P(Died | Pclass=1) = 0.0898 / 0.2424 = <strong style="color: #7ee787;">37.04%</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <h3>Computing Conditional Probabilities in Pandas: Index vs. Columns Normalization</h3>
+        <p>
+          In Pandas, changing the `normalize` parameter controls the direction of conditioning:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> <span class="var">pandas</span> <span class="kw">as</span> <span class="var">pd</span>
+
+<span class="com"># 1. Condition on Pclass (Rows sum to 1.0): P(Survived | Pclass)</span>
+<span class="var">p_surv_given_class</span> <span class="op">=</span> <span class="var">pd</span>.<span class="func">crosstab</span>(<span class="var">df</span>[<span class="str">'Pclass'</span>], <span class="var">df</span>[<span class="str">'Survived'</span>], <span class="var">normalize</span><span class="op">=</span><span class="str">'index'</span>)
+<span class="func">print</span>(<span class="str">"P(Survived | Pclass):"</span>)
+<span class="func">print</span>(<span class="var">p_surv_given_class</span>)
+
+<span class="com"># 2. Reverse conditioning on Survived (Cols sum to 1.0): P(Pclass | Survived)</span>
+<span class="var">p_class_given_surv</span> <span class="op">=</span> <span class="var">pd</span>.<span class="func">crosstab</span>(<span class="var">df</span>[<span class="str">'Pclass'</span>], <span class="var">df</span>[<span class="str">'Survived'</span>], <span class="var">normalize</span><span class="op">=</span><span class="str">'columns'</span>)
+<span class="func">print</span>(<span class="str">"\nP(Pclass | Survived):"</span>)
+<span class="func">print</span>(<span class="var">p_class_given_surv</span>)</code></pre>
+        </div>
+
+        <p>
+          Notice that $P(\text{Pclass}=3 \mid \text{Died}=0) = \frac{372}{549} \approx \mathbf{67.76\%}$. This tells us that among all the people who died, nearly 68% of them came from 3rd class!
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: INDEPENDENT VS DEPENDENT VS MUTUALLY EXCLUSIVE -->
+      <!-- ============================================================ -->
+      <section id="event-relationships" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Independent vs. Dependent vs. Mutually Exclusive Events</h2>
+
+        <p>
+          One of the most persistent misunderstandings among data scientists is conflating <strong>Independent Events</strong> with <strong>Mutually Exclusive Events</strong>. They are fundamentally different concepts!
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th style="width: 22%;">Dimension</th>
+                <th>Independent Events</th>
+                <th>Dependent Events</th>
+                <th>Mutually Exclusive Events</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Core Definition</strong></td>
+                <td>Occurrence of $A$ has <strong>zero effect</strong> on the probability of $B$.</td>
+                <td>Occurrence of $A$ <strong>changes the probability</strong> of event $B$.</td>
+                <td>Events $A$ and $B$ <strong>cannot happen at the same time</strong> in a single trial.</td>
+              </tr>
+              <tr>
+                <td><strong>Intersection $P(A \cap B)$</strong></td>
+                <td>$P(A \cap B) = P(A) \cdot P(B)$</td>
+                <td>$P(A \cap B) = P(A) \cdot P(B \mid A)$</td>
+                <td><strong>$P(A \cap B) = 0$</strong> ($A \cap B = \emptyset$)</td>
+              </tr>
+              <tr>
+                <td><strong>Conditional $P(A \mid B)$</strong></td>
+                <td><strong>$P(A \mid B) = P(A)$</strong></td>
+                <td>$P(A \mid B) \ne P(A)$</td>
+                <td><strong>$P(A \mid B) = 0$</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Classic Example</strong></td>
+                <td>Tossing a coin (Heads) and rolling a die (6); card draw <em>with replacement</em>.</td>
+                <td>Drawing two Aces from a 52-card deck <em>without replacement</em>.</td>
+                <td>Rolling a die and getting both a 2 and a 5 on the same roll.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title" style="color: #ffa657;">THE CRITICAL PARADOX</div>
+            <p>
+              Can two mutually exclusive events (with non-zero probability) ever be independent?<br>
+              <strong style="font-size: 1.05rem; color: #f85149;">ABSOLUTELY NOT!</strong><br>
+              If $A$ and $B$ are mutually exclusive, knowing that $A$ happened gives you <strong>100% certainty that $B$ did not happen</strong> ($P(B \mid A) = 0$). That is maximum statistical dependence, not independence!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: BAYES' THEOREM PROOF & TERMINOLOGY -->
+      <!-- ============================================================ -->
+      <section id="bayes-theorem" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Bayes' Theorem: Mathematical Proof &amp; Terminology</h2>
+
+        <p>
+          Formulated by English statistician <strong>Reverend Thomas Bayes</strong> in the 1700s, <strong>Bayes' Theorem</strong> is one of the most powerful and celebrated equations in mathematics.
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid #58a6ff; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.25rem;">The Conceptual Essence of Bayes' Theorem</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            Bayes' Theorem describes how to <strong>rationally update our belief in a hypothesis ($A$) when presented with new evidence or observations ($B$)</strong>:
+          </p>
+          <div style="text-align: center; margin: 1rem 0; font-size: 1.45rem; color: #79c0ff; font-family: var(--font-mono);">
+            $$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$$
+          </div>
+        </div>
+
+        <h3>The 4 Formal Statistical Terms</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+          
+          <div style="background: var(--bg-primary); border-top: 3px solid #79c0ff; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #79c0ff;">1. Posterior Probability: $P(A \mid B)$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">
+              The updated probability of hypothesis $A$ <strong>after</strong> seeing the evidence $B$.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-primary); border-top: 3px solid #7ee787; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #7ee787;">2. Likelihood: $P(B \mid A)$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">
+              The probability of observing evidence $B$ <strong>assuming hypothesis $A$ were true</strong>.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-primary); border-top: 3px solid #ffa657; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #ffa657;">3. Prior Probability: $P(A)$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">
+              Our initial, baseline belief in hypothesis $A$ <strong>before</strong> seeing any new evidence.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-primary); border-top: 3px solid #d2a8ff; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #d2a8ff;">4. Evidence (Marginal): $P(B)$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">
+              The total probability of observing evidence $B$ across all possible hypotheses.
+            </p>
+          </div>
+
+        </div>
+
+        <h3>The Complete Algebraic Derivation</h3>
+        <p>
+          Despite its profound status in artificial intelligence, the mathematical derivation of Bayes' Theorem takes only three elementary lines of algebra:
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="font-size: 0.95rem; line-height: 2; color: var(--text-primary);">
+            <p><strong>Step 1:</strong> Write the definition of conditional probability for $P(A \mid B)$:</p>
+            $$P(A \mid B) = \frac{P(A \cap B)}{P(B)} \implies P(A \cap B) = P(A \mid B) \cdot P(B) \quad \text{--- (Equation 1)}$$
+
+            <p><strong>Step 2:</strong> Write the definition of conditional probability for $P(B \mid A)$:</p>
+            $$P(B \mid A) = \frac{P(A \cap B)}{P(A)} \implies P(A \cap B) = P(B \mid A) \cdot P(A) \quad \text{--- (Equation 2)}$$
+
+            <p><strong>Step 3:</strong> Since the left-hand sides of Equation 1 and Equation 2 both equal $P(A \cap B)$, equate their right-hand sides:</p>
+            $$P(A \mid B) \cdot P(B) = P(B \mid A) \cdot P(A)$$
+
+            <p><strong>Step 4:</strong> Divide both sides by $P(B)$:</p>
+            <div style="background: var(--bg-primary); padding: 1rem; border-radius: 6px; border: 1px solid #7ee787; text-align: center; margin-top: 0.75rem;">
+              <span style="font-size: 1.35rem; font-weight: 700; color: #7ee787;">
+                $$\mathbf{P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}} \quad \blacksquare$$
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: MACHINE LEARNING BAYES CLASSIFIER -->
+      <!-- ============================================================ -->
+      <section id="bayes-ml-classifier" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Machine Learning Case Study: Building a Bayes Classifier</h2>
+
+        <p>
+          How is Bayes' Theorem directly executed by classification algorithms like <strong>Naive Bayes</strong>? Let's walk through the end-to-end classification problem from Nitish's lecture.
+        </p>
+
+        <h3>The Training Dataset (5 Historical Passenger Records)</h3>
+        <div class="table-wrapper">
+          <table class="comparison-table" style="max-width: 480px;">
+            <thead>
+              <tr>
+                <th>Passenger ID</th>
+                <th>Gender (`Sex`)</th>
+                <th>Survival (`Survived`)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Male</td>
+                <td><strong>0 (Died)</strong></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Male</td>
+                <td><strong>0 (Died)</strong></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Female</td>
+                <td><strong>1 (Survived)</strong></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Female</td>
+                <td><strong>0 (Died)</strong></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Male</td>
+                <td><strong>1 (Survived)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>The Query: Predict Output for a New Passenger</h3>
+        <p>
+          A new passenger boards the ship with feature: $\mathbf{X} = \text{Male}$.<br>
+          <strong>Will this passenger survive ($Y = 1$) or die ($Y = 0$)?</strong>
+        </p>
+
+        <p>
+          We use Bayes' Theorem to compute the posterior probabilities for both candidate classes:
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <!-- CLASS 0: DIED -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin: 0 0 0.5rem; color: #f85149; font-size: 1.1rem;">Evaluate Hypothesis 1: Died ($Y = 0$)</h4>
+            <div style="font-size: 0.9rem; line-height: 1.8; color: var(--text-secondary);">
+              • Prior $P(Y = 0)$: 3 out of 5 passengers died $\implies \mathbf{3/5} = 0.60$<br>
+              • Likelihood $P(\text{Male} \mid Y = 0)$: Out of the 3 dead passengers, 2 were Male $\implies \mathbf{2/3} \approx 0.667$<br>
+              • Evidence $P(\text{Male})$: 3 out of 5 total passengers are Male $\implies \mathbf{3/5} = 0.60$<br>
+              <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.95rem; color: #f85149;">
+                P(0 | Male) = [(2/3) &times; (3/5)] / (3/5)<br>
+                P(0 | Male) = 2/3 &approx; <strong style="font-size: 1.1rem;">0.6667 (66.7%)</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLASS 1: SURVIVED -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin: 0 0 0.5rem; color: #7ee787; font-size: 1.1rem;">Evaluate Hypothesis 2: Survived ($Y = 1$)</h4>
+            <div style="font-size: 0.9rem; line-height: 1.8; color: var(--text-secondary);">
+              • Prior $P(Y = 1)$: 2 out of 5 passengers survived $\implies \mathbf{2/5} = 0.40$<br>
+              • Likelihood $P(\text{Male} \mid Y = 1)$: Out of the 2 survivors, 1 was Male $\implies \mathbf{1/2} = 0.50$<br>
+              • Evidence $P(\text{Male})$: 3 out of 5 total passengers are Male $\implies \mathbf{3/5} = 0.60$<br>
+              <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.95rem; color: #7ee787;">
+                P(1 | Male) = [(1/2) &times; (2/5)] / (3/5)<br>
+                P(1 | Male) = (1/5) / (3/5) = 1/3 &approx; <strong style="font-size: 1.1rem;">0.3333 (33.3%)</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="background: var(--bg-primary); border: 2px solid #238636; border-radius: 8px; padding: 1.25rem; text-align: center;">
+          <h4 style="margin: 0 0 0.5rem; color: #7ee787; font-size: 1.15rem;">Final Machine Learning Decision</h4>
+          <p style="margin: 0; font-size: 1rem; color: var(--text-primary);">
+            Since $P(\text{Died} \mid \text{Male}) = 66.7\% > P(\text{Survived} \mid \text{Male}) = 33.3\%$, the Bayes classifier predicts:
+          </p>
+          <div style="font-size: 1.4rem; font-weight: 800; color: #f85149; margin-top: 0.5rem; font-family: var(--font-mono);">
+            PREDICTION: DIED (0)
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: 1.5rem;">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">How Naive Bayes Scales</div>
+            <p>
+              In real datasets with multiple feature columns ($x_1 = \text{Pclass}, x_2 = \text{Sex}, x_3 = \text{Age}$), calculating the joint likelihood $P(x_1, x_2, x_3 \mid y)$ directly from data is impossible due to the curse of dimensionality. The "Naive" assumption assumes features are <em>conditionally independent given the class</em>:
+            </p>
+            <div style="text-align: center; margin: 0.75rem 0;">
+              $$P(x_1, x_2, x_3 \mid y) \approx P(x_1 \mid y) \cdot P(x_2 \mid y) \cdot P(x_3 \mid y)$$
+            </div>
+            <p style="margin-bottom: 0;">
+              This turns an intractable joint probability into simple products of individual 1D feature likelihoods!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE SIMULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-bayes-sim" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive Contingency Table &amp; Bayes' Theorem Simulator</h2>
+
+        <p>
+          Experiment directly with contingency tables and Bayes' Rule. Change the patient population parameters below for a <strong>Medical Diagnostic Screening Test</strong> (Prevalence, Sensitivity, and False Positive Rate) to observe how Bayes' Theorem updates posterior diagnostic certainty!
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;">
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            
+            <div>
+              <label for="sim-prevalence" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
+                Disease Prevalence $P(\text{Disease})$:
+              </label>
+              <select id="sim-prevalence" onchange="updateBayesSim()" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem;">
+                <option value="0.01" selected>1% (Rare Disease)</option>
+                <option value="0.05">5%</option>
+                <option value="0.10">10%</option>
+                <option value="0.25">25% (Common Condition)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="sim-sensitivity" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
+                Test Sensitivity $P(\text{Pos} \mid \text{Disease})$:
+              </label>
+              <select id="sim-sensitivity" onchange="updateBayesSim()" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem;">
+                <option value="0.99" selected>99% (Highly Accurate Test)</option>
+                <option value="0.95">95%</option>
+                <option value="0.90">90%</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="sim-fpr" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
+                False Positive Rate $P(\text{Pos} \mid \text{Healthy})$:
+              </label>
+              <select id="sim-fpr" onchange="updateBayesSim()" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem;">
+                <option value="0.05" selected>5% False Alarm Rate</option>
+                <option value="0.02">2%</option>
+                <option value="0.01">1% Low False Alarm</option>
+                <option value="0.10">10%</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Contingency Table Based on 10,000 Patient Cohort -->
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">
+              Live Contingency Table (Simulated 10,000 Patient Cohort):
+            </div>
+            <div class="table-wrapper">
+              <table class="comparison-table" style="margin: 0;">
+                <thead>
+                  <tr>
+                    <th>Medical Status</th>
+                    <th>Tested Positive ($\text{Pos}$)</th>
+                    <th>Tested Negative ($\text{Neg}$)</th>
+                    <th style="background: rgba(88,166,255,0.15); color: #58a6ff;">Marginal Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Has Disease</strong></td>
+                    <td id="tbl-tp" style="font-weight: 700; color: #7ee787;">--</td>
+                    <td id="tbl-fn" style="color: #f85149;">--</td>
+                    <td id="tbl-marg-dis" style="font-weight: 700; color: #58a6ff;">--</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Healthy (No Disease)</strong></td>
+                    <td id="tbl-fp" style="color: #ffa657;">--</td>
+                    <td id="tbl-tn" style="color: #7ee787;">--</td>
+                    <td id="tbl-marg-hlt" style="font-weight: 700; color: #58a6ff;">--</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr style="font-weight: 700; background: rgba(126,231,135,0.1);">
+                    <td>Total Tested</td>
+                    <td id="tbl-marg-pos" style="color: #ffa657;">--</td>
+                    <td id="tbl-marg-neg">--</td>
+                    <td style="color: #ffffff; background: #238636;">10,000</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- Metrics Row -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Prior $P(\text{Disease})$</div>
+              <div id="sim-prior-disp" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">--</div>
+            </div>
+
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Marginal $P(\text{Positive})$</div>
+              <div id="sim-evidence-disp" style="font-size: 1.25rem; font-weight: 700; color: #d2a8ff; font-family: var(--font-mono);">--</div>
+            </div>
+
+            <div style="background: var(--bg-primary); border: 2px solid #7ee787; border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: #7ee787; text-transform: uppercase; font-weight: 700;">Posterior $P(\text{Disease} \mid \text{Pos})$</div>
+              <div id="sim-posterior-disp" style="font-size: 1.35rem; font-weight: 800; color: #7ee787; font-family: var(--font-mono);">--</div>
+            </div>
+
+          </div>
+
+          <!-- Interactive Canvas: Sample Space Reduction -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">
+              Visualizing Sample Space Reduction: Total Positives Universe vs. True Sick Patients
+            </div>
+            <canvas id="sim-bayes-canvas" width="680" height="200" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Probability for Machine Learning</strong> &mdash; Lecture 2 Reference
+      </div>
+      <div>
+        <a href="probability.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Probability Portal</a>
+        <a href="prob-lecture-1.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Previous: Lecture 1 (Foundations &amp; RVs)</a>
+        <a href="#prob2-intro" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function updateBayesSim() {
+      const prev = parseFloat(document.getElementById('sim-prevalence').value);
+      const sens = parseFloat(document.getElementById('sim-sensitivity').value);
+      const fpr = parseFloat(document.getElementById('sim-fpr').value);
+
+      const totalPop = 10000;
+      const numDisease = Math.round(totalPop * prev);
+      const numHealthy = totalPop - numDisease;
+
+      const tp = Math.round(numDisease * sens);
+      const fn = numDisease - tp;
+
+      const fp = Math.round(numHealthy * fpr);
+      const tn = numHealthy - fp;
+
+      const totalPos = tp + fp;
+      const totalNeg = fn + tn;
+
+      // Table counts
+      document.getElementById('tbl-tp').textContent = tp.toLocaleString();
+      document.getElementById('tbl-fn').textContent = fn.toLocaleString();
+      document.getElementById('tbl-marg-dis').textContent = numDisease.toLocaleString();
+
+      document.getElementById('tbl-fp').textContent = fp.toLocaleString();
+      document.getElementById('tbl-tn').textContent = tn.toLocaleString();
+      document.getElementById('tbl-marg-hlt').textContent = numHealthy.toLocaleString();
+
+      document.getElementById('tbl-marg-pos').textContent = totalPos.toLocaleString();
+      document.getElementById('tbl-marg-neg').textContent = totalNeg.toLocaleString();
+
+      // Metrics
+      const pEvidence = totalPos / totalPop;
+      const posterior = totalPos > 0 ? (tp / totalPos) : 0;
+
+      document.getElementById('sim-prior-disp').textContent = (prev * 100).toFixed(1) + '%';
+      document.getElementById('sim-evidence-disp').textContent = (pEvidence * 100).toFixed(2) + '%';
+      document.getElementById('sim-posterior-disp').textContent = (posterior * 100).toFixed(1) + '%';
+
+      drawBayesCanvas(tp, fp, totalPos);
+    }
+
+    function drawBayesCanvas(tp, fp, totalPos) {
+      const canvas = document.getElementById('sim-bayes-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (totalPos === 0) return;
+
+      const tpRatio = tp / totalPos;
+      const fpRatio = fp / totalPos;
+
+      const barX = 50;
+      const barY = 50;
+      const barW = canvas.width - 100;
+      const barH = 50;
+
+      const tpWidth = barW * tpRatio;
+      const fpWidth = barW * fpRatio;
+
+      // Draw TP segment (True Sick)
+      ctx.fillStyle = '#238636';
+      ctx.fillRect(barX, barY, tpWidth, barH);
+      ctx.strokeStyle = '#2ea043';
+      ctx.strokeRect(barX, barY, tpWidth, barH);
+
+      // Draw FP segment (False Alarms)
+      ctx.fillStyle = '#d29922';
+      ctx.fillRect(barX + tpWidth, barY, fpWidth, barH);
+      ctx.strokeStyle = '#e3b341';
+      ctx.strokeRect(barX + tpWidth, barY, fpWidth, barH);
+
+      // Labels inside/above bar
+      ctx.font = '13px Inter, sans-serif';
+      ctx.textAlign = 'center';
+
+      // Title
+      ctx.fillStyle = '#c9d1d9';
+      ctx.fillText(`Reduced Sample Space: All Positive Test Results (Total: ${totalPos})`, canvas.width / 2, 30);
+
+      // TP Label
+      if (tpWidth > 60) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px Inter, sans-serif';
+        ctx.fillText(`Truly Sick: ${tp}`, barX + tpWidth / 2, barY + 30);
+      }
+
+      // FP Label
+      if (fpWidth > 60) {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px Inter, sans-serif';
+        ctx.fillText(`False Alarms: ${fp}`, barX + tpWidth + fpWidth / 2, barY + 30);
+      }
+
+      // Legend / Conclusion below bar
+      ctx.font = '13px Inter, sans-serif';
+      ctx.fillStyle = '#7ee787';
+      ctx.fillText(`P(Disease | Positive) = Truly Sick / Total Positive = ${tp} / ${totalPos} = ${(tpRatio * 100).toFixed(1)}%`, canvas.width / 2, barY + barH + 40);
+
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.fillText('Notice how false alarms can outnumber true sick cases when disease prevalence is low!', canvas.width / 2, barY + barH + 60);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateBayesSim();
+    });
+  </script>
+</body>
+</html>

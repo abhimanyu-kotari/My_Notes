@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 7: File I/O (Input &amp; Output) | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 7 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-file-io" class="sidebar-link">1. Why Do We Need Files? (RAM vs. Storage)</a></li>
+        <li><a href="#file-types" class="sidebar-link">2. Types of Files: Text vs. Binary</a></li>
+        <li><a href="#open-close" class="sidebar-link">3. 3 Simple Steps: open(), Read/Write, close()</a></li>
+        <li><a href="#file-modes" class="sidebar-link">4. File Modes Made Simple ('r', 'w', 'a', 'x')</a></li>
+        <li><a href="#reading-files" class="sidebar-link">5. Reading Files &amp; The Bookmark Analogy</a></li>
+        <li><a href="#writing-appending" class="sidebar-link">6. Writing vs. Appending Data</a></li>
+        <li><a href="#plus-modes-deep-dive" class="sidebar-link">7. The '+' Modes Explained ('r+', 'w+', 'a+')</a></li>
+        <li><a href="#with-syntax" class="sidebar-link">8. The 'with' Syntax: The Automatic Closer</a></li>
+        <li><a href="#file-deletion" class="sidebar-link">9. Deleting Files &amp; The os Module</a></li>
+        <li><a href="#practice-tasks" class="sidebar-link">10. Step-by-Step Solved Practice Tasks</a></li>
+        <li><a href="#comparison-matrix" class="sidebar-link">11. Quick Reference &amp; Summary Matrix</a></li>
+        <li><a href="#interactive-simulator" class="sidebar-link">12. Interactive Cursor &amp; Parser Sandboxes</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 07 Notes</span>
+          <span class="tag">File I/O</span>
+          <span class="tag">open()</span>
+          <span class="tag">read() &amp; readline()</span>
+          <span class="tag">write() &amp; append</span>
+          <span class="tag">with Syntax</span>
+          <span class="tag">os.remove()</span>
+          <span class="tag">5 Solved Tasks</span>
+        </div>
+        <h1 class="lecture-main-title">File Input &amp; Output (I/O) in Python</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> File I/O (Input/Output) is how Python reads information from and writes information into files (like <code>.txt</code> or <code>.csv</code>) saved on your computer's hard drive or SSD.<br>
+          <strong>Why do we use it?</strong> Regular Python variables disappear the moment your program closes because they only live in temporary memory (RAM). We use File I/O whenever data must be saved permanently—like saving a player's high score, keeping user accounts, writing daily activity logs, or reading records from a document.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHY DO WE NEED FILES? -->
+      <!-- ============================================================ -->
+      <section id="intro-file-io" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Why Do We Need Files? (RAM vs. Permanent Storage)</h2>
+
+        <h3>1. The Problem with Normal Variables</h3>
+        <p>
+          So far in our Python journey, whenever we created a variable like <code>name = "Alice"</code> or <code>score = 100</code>, where was that data stored?
+        </p>
+        <p>
+          It was stored in your computer's <strong>RAM (Random Access Memory)</strong>. RAM is lightning-fast, but it has one big catch: <strong>it is temporary (volatile)</strong>.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Real-Life Analogy: The Classroom Blackboard vs. A Notebook</div>
+          <p>
+            Think of <strong>RAM</strong> like a teacher's <strong>blackboard</strong>. During a lecture, the teacher writes notes, calculations, and formulas on the board. Everything is quick and accessible. But as soon as class ends, the board is wiped clean! When your Python program finishes running or you turn off your computer, <strong>everything in RAM disappears</strong>.
+          </p>
+          <p>
+            If you want notes to stay with you tomorrow, next week, or next year, you write them in your <strong>notebook</strong>. In computer terms, that notebook is a <strong>File</strong> saved on your hard drive or SSD (secondary storage)!
+          </p>
+        </div>
+
+        <h3>2. What is a File?</h3>
+        <p>
+          A <strong>File</strong> is simply a named collection of data stored permanently on your disk (SSD or HDD).
+        </p>
+        <ul>
+          <li><strong>Without files:</strong> If you build a game, the player's high score is lost the second they close the game window.</li>
+          <li><strong>With files:</strong> Your game writes <code>high_score = 950</code> into a file named <code>saved_game.txt</code>. When the player opens the game next week, the program reads the file and restores their score!</li>
+        </ul>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;">
+          <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-around; flex-wrap: wrap; text-align: center;">
+            <div style="flex: 1; min-width: 200px; padding: 1rem; background: rgba(248, 81, 73, 0.1); border: 1px solid #f85149; border-radius: 6px;">
+              <strong style="color: #ff7b72; font-size: 1.1rem;">RAM (Memory)</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">Super fast &bull; Temporary &bull; Data is lost when program stops</p>
+            </div>
+            <div style="font-size: 1.5rem; color: var(--text-muted);">&rarr; Save to &rarr;</div>
+            <div style="flex: 1; min-width: 200px; padding: 1rem; background: rgba(63, 185, 80, 0.1); border: 1px solid #2ea043; border-radius: 6px;">
+              <strong style="color: #7ee787; font-size: 1.1rem;">Files (Disk / SSD)</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">Permanent storage &bull; Safe &bull; Data stays even when PC shuts down</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          The operations we perform on files—reading data from them (Input) and writing data into them (Output)—are called <strong>File I/O (Input / Output)</strong>.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: TYPES OF FILES -->
+      <!-- ============================================================ -->
+      <section id="file-types" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Types of Files: Text Files vs. Binary Files</h2>
+
+        <p>
+          In everyday programming, files broadly fall into two friendly categories:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>What is inside?</th>
+                <th>Common Examples</th>
+                <th>Can you open it in Notepad?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Text Files</strong></td>
+                <td>Plain human-readable characters, words, sentences, and numbers.</td>
+                <td><code>.txt</code>, <code>.py</code>, <code>.csv</code>, <code>.json</code>, <code>.log</code></td>
+                <td><strong>Yes!</strong> Looks like normal text.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Binary Files</strong></td>
+                <td>Special computer-encoded raw data (media, images, audio, compiled code).</td>
+                <td><code>.png</code>, <code>.jpg</code>, <code>.mp4</code>, <code>.pdf</code>, <code>.exe</code></td>
+                <td><strong>No.</strong> Opens as strange unreadable symbols and gibberish.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Quick Fun Fact: All Files are 0s and 1s!</div>
+          <p>
+            Behind the scenes, your computer stores both text files and binary files as combinations of <strong>0s and 1s</strong> (bits). The only difference is that for a text file, your computer translates those 0s and 1s into letters (like 'A', 'B', 'C') using character sets like UTF-8 or ASCII!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: 3 SIMPLE STEPS -->
+      <!-- ============================================================ -->
+      <section id="open-close" class="note-section content-section">
+        <h2><span class="section-number">03.</span> 3 Simple Steps: open(), Read/Write, close()</h2>
+
+        <p>
+          Working with files in Python is as easy as 1-2-3:
+        </p>
+        <ol>
+          <li><strong>Open the file:</strong> Tell Python which file you want to work with and what you want to do (read or write).</li>
+          <li><strong>Perform your action:</strong> Read data out of it, or write new data into it.</li>
+          <li><strong>Close the file:</strong> Pack up and close the file so your computer saves the changes and frees up memory.</li>
+        </ol>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Step 1: Open the file in read mode ("r")</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>)
+
+<span class="com"># Step 2: Read the contents into a variable</span>
+<span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()
+<span class="func">print</span>(<span class="var">data</span>)
+
+<span class="com"># Step 3: Always close the file when finished!</span>
+<span class="var">f</span>.<span class="func">close</span>()</code></pre>
+        </div>
+
+        <h3>How the open() Function Works</h3>
+        <p>
+          The <code>open()</code> function takes two arguments:
+        </p>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem 1.25rem; font-family: var(--font-mono); font-size: 0.95rem; margin-bottom: 1rem;">
+          <code><span class="var">f</span> = <span class="func">open</span>(<span class="str">"file_name"</span>, <span class="str">"mode"</span>)</code>
+        </div>
+        <ul>
+          <li><strong><code>file_name</code>:</strong> The name (or path) of the file you want to open (e.g. <code>"demo.txt"</code>).</li>
+          <li><strong><code>mode</code>:</strong> What you plan to do. For example, <code>"r"</code> for reading or <code>"w"</code> for writing.</li>
+          <li><strong>Default Mode:</strong> If you don't write the second argument, Python defaults to <code>"r"</code> (read mode)!
+            <br>
+            So <code>open("demo.txt")</code> is exactly the same as <code>open("demo.txt", "r")</code>.
+          </li>
+        </ul>
+
+        <h3>Why Must We Call f.close()?</h3>
+        <p>
+          Imagine taking a book from a library shelf. While you have it on your desk, nobody else can check it out. If you walk away without putting it back, it stays locked up!
+        </p>
+        <ul>
+          <li>Closing a file tells the computer: <em>"I am done with this file. Please save all changes to disk and let other programs use it."</em></li>
+          <li>If you forget to close files in big programs, your computer can run out of file handles or lose unsaved changes!</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: FILE MODES MADE SIMPLE -->
+      <!-- ============================================================ -->
+      <section id="file-modes" class="note-section content-section">
+        <h2><span class="section-number">04.</span> File Modes Made Simple ('r', 'w', 'a', 'x')</h2>
+
+        <p>
+          When opening a file, the <strong>mode</strong> tells Python your intention. Here are the 4 main modes every beginner should know:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Meaning</th>
+                <th>What if the file exists?</th>
+                <th>What if the file is MISSING?</th>
+                <th>Simple Analogy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>'r'</code></td>
+                <td><strong>Read</strong> (Default)</td>
+                <td>Opens it for reading. Does not touch or change existing content.</td>
+                <td><strong>Gives an Error!</strong> (<code>FileNotFoundError</code>)</td>
+                <td>Opening a textbook to read. If you don't own the book, you can't read it!</td>
+              </tr>
+              <tr>
+                <td><code>'w'</code></td>
+                <td><strong>Write</strong> (Overwrite)</td>
+                <td><strong>Erases everything!</strong> Wipes the file completely clean to start fresh.</td>
+                <td><strong>Creates a new file</strong> automatically.</td>
+                <td>Erasing a whiteboard completely before writing new notes.</td>
+              </tr>
+              <tr>
+                <td><code>'a'</code></td>
+                <td><strong>Append</strong> (Add to end)</td>
+                <td><strong>Keeps all existing text!</strong> Moves your cursor to the very bottom so new lines are added at the end.</td>
+                <td><strong>Creates a new file</strong> automatically.</td>
+                <td>Adding a new diary entry at the end of your diary without tearing out old pages.</td>
+              </tr>
+              <tr>
+                <td><code>'x'</code></td>
+                <td><strong>Create</strong> (Exclusive)</td>
+                <td><strong>Gives an Error!</strong> (<code>FileExistsError</code>)</td>
+                <td>Creates a brand new file for writing.</td>
+                <td>Creating a new username. Fails if the name is already taken!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Example 1: Trying to read a file that doesn't exist</span>
+<span class="kw">try</span>:
+    <span class="var">f</span> = <span class="func">open</span>(<span class="str">"missing_notes.txt"</span>, <span class="str">"r"</span>)
+<span class="kw">except</span> <span class="cls">FileNotFoundError</span>:
+    <span class="func">print</span>(<span class="str">"Oops! File does not exist, so 'r' mode raises an error!"</span>)
+
+<span class="com"># Example 2: In 'w' mode, Python automatically creates the file for you!</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"new_file.txt"</span>, <span class="str">"w"</span>)
+<span class="var">f</span>.<span class="func">write</span>(<span class="str">"Hello, World!\n"</span>)
+<span class="var">f</span>.<span class="func">close</span>()
+<span class="func">print</span>(<span class="str">"new_file.txt was created and written successfully!"</span>)</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: READING FILES & THE BOOKMARK ANALOGY -->
+      <!-- ============================================================ -->
+      <section id="reading-files" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Reading Files &amp; The Bookmark Analogy</h2>
+
+        <h3>1. The File Cursor (Your Reading Finger)</h3>
+        <p>
+          Whenever Python opens a file, it keeps track of a <strong>cursor</strong> (or pointer).
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Finger / Bookmark Analogy</div>
+          <p>
+            Imagine reading a physical book with your index finger pointing to each word as you read:
+          </p>
+          <ul>
+            <li>When you open the book, your finger is at <strong>letter 0 (the start)</strong>.</li>
+            <li>If you read 5 letters, your finger moves forward by 5 letters.</li>
+            <li>If you read the whole book from start to finish, your finger reaches the <strong>very last page (EOF &mdash; End of File)</strong>.</li>
+          </ul>
+        </div>
+
+        <h3>2. The 3 Ways to Read Data</h3>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Suppose demo.txt contains:</span>
+<span class="com"># Line 1: Python is easy.</span>
+<span class="com"># Line 2: We love coding.</span>
+
+<span class="com"># --- METHOD 1: f.read() reads the ENTIRE file at once ---</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>)
+<span class="var">all_text</span> = <span class="var">f</span>.<span class="func">read</span>()
+<span class="func">print</span>(<span class="var">all_text</span>)
+<span class="var">f</span>.<span class="func">close</span>()
+
+<span class="com"># --- METHOD 2: f.read(n) reads only 'n' characters ---</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>)
+<span class="var">first_six</span> = <span class="var">f</span>.<span class="func">read</span>(<span class="num">6</span>)   <span class="com"># Reads first 6 characters -&gt; "Python"</span>
+<span class="func">print</span>(<span class="str">"First 6 chars:"</span>, <span class="var">first_six</span>)
+<span class="var">f</span>.<span class="func">close</span>()
+
+<span class="com"># --- METHOD 3: f.readline() reads ONE line at a time ---</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>)
+<span class="var">line_one</span> = <span class="var">f</span>.<span class="func">readline</span>()  <span class="com"># Reads up to the first newline '\n'</span>
+<span class="var">line_two</span> = <span class="var">f</span>.<span class="func">readline</span>()  <span class="com"># Reads the next line</span>
+<span class="func">print</span>(<span class="str">"1st line:"</span>, <span class="var">line_one</span>, <span class="var">end</span>=<span class="str">""</span>)
+<span class="func">print</span>(<span class="str">"2nd line:"</span>, <span class="var">line_two</span>, <span class="var">end</span>=<span class="str">""</span>)
+<span class="var">f</span>.<span class="func">close</span>()</code></pre>
+        </div>
+
+        <h3>3. Why Does readline() Return Nothing After read()?</h3>
+        <p>
+          This is the <strong>#1 most common mistake</strong> beginners make:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>)
+
+<span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()       <span class="com"># Reads the WHOLE file. Cursor is now at the END!</span>
+<span class="func">print</span>(<span class="var">data</span>)
+
+<span class="var">line</span> = <span class="var">f</span>.<span class="func">readline</span>()   <span class="com"># Output is EMPTY: "" ! Why?</span>
+<span class="func">print</span>(<span class="str">"Line is:"</span>, <span class="func">repr</span>(<span class="var">line</span>))  <span class="com"># Prints: ''</span>
+<span class="var">f</span>.<span class="func">close</span>()</code></pre>
+        </div>
+
+        <p>
+          <strong>Why did that happen?</strong>
+          <br>
+          Because <code>f.read()</code> already moved your reading finger all the way to the very end of the file! There is nothing left after the end of the file.
+        </p>
+        <p>
+          <strong>How to fix it:</strong>
+          <br>
+          If you want to read again from the top, you can either close and reopen the file, or use <code>f.seek(0)</code> to move your finger back to the start!
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: WRITING VS APPENDING -->
+      <!-- ============================================================ -->
+      <section id="writing-appending" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Writing vs. Appending Data</h2>
+
+        <h3>1. The Overwrite Danger of 'w'</h3>
+        <p>
+          Whenever you open an existing file in <code>"w"</code> mode, <strong>Python immediately deletes all previous content</strong> in that file. It clears the slate so you can write from scratch.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Suppose demo.txt had 100 lines of old notes.</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"w"</span>)
+
+<span class="com"># The 100 old lines are now completely wiped clean!</span>
+<span class="var">f</span>.<span class="func">write</span>(<span class="str">"This is my brand new line.\n"</span>)
+<span class="var">f</span>.<span class="func">close</span>()
+<span class="com"># demo.txt now contains ONLY this one new line.</span></code></pre>
+        </div>
+
+        <h3>2. Keeping Old Data Safe with 'a' (Append)</h3>
+        <p>
+          If you want to <strong>add new lines without erasing old lines</strong>, use <code>"a"</code> (append mode):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># 'a' mode leaves old text untouched and adds new text at the end!</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"a"</span>)
+<span class="var">f</span>.<span class="func">write</span>(<span class="str">"Here is an extra line at the bottom.\n"</span>)
+<span class="var">f</span>.<span class="func">close</span>()</code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Important Tip: write() Does NOT Add Newlines Automatically</div>
+          <p>
+            When you use <code>print("hello")</code>, Python automatically jumps to the next line.
+          </p>
+          <p>
+            But <code>f.write("hello")</code> does <strong>NOT</strong> add a new line! If you write:
+            <br>
+            <code>f.write("Hello")</code>
+            <br>
+            <code>f.write("World")</code>
+            <br>
+            Your file will look like <code>HelloWorld</code> stuck together! If you want separate lines, always add <code>\n</code>:
+            <br>
+            <code>f.write("Hello\n")</code>
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THE '+' MODES EXPLAINED -->
+      <!-- ============================================================ -->
+      <section id="plus-modes-deep-dive" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The '+' Modes Explained ('r+', 'w+', 'a+')</h2>
+
+        <p>
+          Sometimes you want to both read AND write to a file at the same time. In Python, adding a <code>+</code> gives you both abilities!
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Can Read?</th>
+                <th>Can Write?</th>
+                <th>Does it erase existing content?</th>
+                <th>How it works in plain English</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>'r+'</code></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td><strong>No</strong> (Safe!)</td>
+                <td>Starts at the beginning. If you write, it overwrites letter-by-letter from the start without deleting the rest.</td>
+              </tr>
+              <tr>
+                <td><code>'w+'</code></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td><strong>Yes</strong> (Wipes clean!)</td>
+                <td>Empties the whole file first! Then lets you write, and you can also read what you wrote.</td>
+              </tr>
+              <tr>
+                <td><code>'a+'</code></td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td><strong>No</strong> (Safe!)</td>
+                <td>Lets you read, and any writes are automatically pasted at the very end of the file.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>How 'r+' Overwrites (Letter-by-Letter)</h3>
+        <p>
+          Suppose your file contains the word <code>"abcdef"</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Initial file content: "abcdef"</span>
+<span class="var">f</span> = <span class="func">open</span>(<span class="str">"sample.txt"</span>, <span class="str">"r+"</span>)
+
+<span class="com"># We write 3 characters "123" at position 0</span>
+<span class="var">f</span>.<span class="func">write</span>(<span class="str">"123"</span>)
+<span class="var">f</span>.<span class="func">close</span>()
+
+<span class="com"># Final file content: "123def"</span>
+<span class="com"># Notice: Only the first 3 letters ('a','b','c') were replaced with '1','2','3'.</span>
+<span class="com"># The remaining 'def' was untouched!</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: THE WITH SYNTAX -->
+      <!-- ============================================================ -->
+      <section id="with-syntax" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The 'with' Syntax: The Automatic Closer</h2>
+
+        <h3>1. The Smart Way to Handle Files</h3>
+        <p>
+          What happens if your program crashes or encounters an error before reaching <code>f.close()</code>? The file remains open and locked in memory!
+        </p>
+        <p>
+          To make life easy, Python provides the <code>with</code> statement. Think of it like an <strong>automatic door closer</strong>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># The Pythonic Way: Using 'with'</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"demo.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()
+    <span class="func">print</span>(<span class="var">data</span>)
+    <span class="com"># We do NOT need to write f.close()!</span>
+
+<span class="com"># As soon as we leave the indented block, Python closes the file automatically!</span>
+<span class="func">print</span>(<span class="str">"Is file closed?"</span>, <span class="var">f</span>.<span class="var">closed</span>)  <span class="com"># True!</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Why 'with' is Loved by All Python Developers</div>
+          <ul>
+            <li><strong>Zero Stress:</strong> You never have to worry about forgetting <code>f.close()</code>.</li>
+            <li><strong>Error Proof:</strong> Even if your code throws an error inside the block, Python guarantees the file is safely closed.</li>
+            <li><strong>Cleaner Code:</strong> Shorter, simpler, and matches industry best practices.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: DELETING FILES & THE OS MODULE -->
+      <!-- ============================================================ -->
+      <section id="file-deletion" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Deleting Files &amp; The os Module</h2>
+
+        <h3>1. How to Delete a File in Python</h3>
+        <p>
+          You might wonder: <em>Does Python have a <code>f.delete()</code> function?</em>
+          <br>
+          <strong>No!</strong> Deleting a file is an Operating System action (like right-clicking a file and choosing "Delete").
+        </p>
+        <p>
+          So to delete a file, we use Python's built-in <strong><code>os</code></strong> (Operating System) module:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> <span class="var">os</span>
+
+<span class="com"># Deletes the file permanently from your disk</span>
+<span class="var">os</span>.<span class="func">remove</span>(<span class="str">"sample.txt"</span>)
+<span class="func">print</span>(<span class="str">"sample.txt has been deleted!"</span>)</code></pre>
+        </div>
+
+        <h3>2. Built-in Modules vs. External Packages (pip)</h3>
+        <p>
+          This is an important distinction you will hear in interviews:
+        </p>
+        <ul>
+          <li><strong>Built-in Modules (e.g. <code>os</code>, <code>math</code>, <code>random</code>):</strong>
+            <br>
+            These are like <strong>pre-installed apps</strong> on a brand-new smartphone (like the Calculator or Clock). They come packaged with Python. You don't need the internet or any installation commands—just write <code>import os</code>!
+          </li>
+          <li><strong>External Modules (e.g. <code>tensorflow</code>, <code>numpy</code>, <code>pandas</code>):</strong>
+            <br>
+            These are like <strong>apps from the App Store / Play Store</strong>. They are written by other developers. You must download and install them using the terminal command:
+            <br>
+            <code style="background: var(--bg-card); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.4rem;">pip install tensorflow</code>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: SOLVED PRACTICE TASKS -->
+      <!-- ============================================================ -->
+      <section id="practice-tasks" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Step-by-Step Solved Practice Tasks</h2>
+
+        <p>
+          Here are the 5 practical problems solved step-by-step with complete code, explanations, and outputs.
+        </p>
+
+        <!-- PRACTICE 1 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; color: #58a6ff;">Practice Problem 1: Create a Practice File</h3>
+            <span class="tag">Basic Writing</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            <strong>Task:</strong> Create a new file named <code>practice.txt</code> using Python. Add the following lines to it:
+            <br>
+            <code style="display: block; margin-top: 0.5rem; background: var(--bg-primary); padding: 0.75rem; border-radius: 4px;">
+              Hi everyone<br>
+              we are learning File I/O<br>
+              using Java.<br>
+              I like programming in Java.
+            </code>
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="com"># Solution to Problem 1</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"practice.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="func">write</span>(<span class="str">"Hi everyone\n"</span>)
+    <span class="var">f</span>.<span class="func">write</span>(<span class="str">"we are learning File I/O\n"</span>)
+    <span class="var">f</span>.<span class="func">write</span>(<span class="str">"using Java.\n"</span>)
+    <span class="var">f</span>.<span class="func">write</span>(<span class="str">"I like programming in Java.\n"</span>)
+
+<span class="func">print</span>(<span class="str">"practice.txt created successfully!"</span>)</code></pre>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <strong>Key point:</strong> We used <code>"w"</code> mode so Python creates the file, and added <code>\n</code> at the end of every line to make sure each sentence sits on its own line!
+          </p>
+        </div>
+
+        <!-- PRACTICE 2 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; color: #58a6ff;">Practice Problem 2: Replace "Java" with "Python"</h3>
+            <span class="tag">Read &amp; Replace</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            <strong>Task:</strong> In <code>practice.txt</code>, replace every occurrence of the word <code>"Java"</code> with the word <code>"Python"</code>.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="com"># Solution to Problem 2: The 2-Step Approach</span>
+
+<span class="com"># Step 1: Read the file content into a string</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"practice.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()
+
+<span class="com"># Step 2: Replace the words in memory using Python's .replace()</span>
+<span class="var">new_data</span> = <span class="var">data</span>.<span class="func">replace</span>(<span class="str">"Java"</span>, <span class="str">"Python"</span>)
+
+<span class="com"># Step 3: Write the updated text back into the file</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"practice.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="func">write</span>(<span class="var">new_data</span>)
+
+<span class="func">print</span>(<span class="str">"Replacement done! New contents:"</span>)
+<span class="func">print</span>(<span class="var">new_data</span>)</code></pre>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <strong>Output:</strong><br>
+            <code>Hi everyone<br>we are learning File I/O<br>using Python.<br>I like programming in Python.</code>
+          </p>
+        </div>
+
+        <!-- PRACTICE 3 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; color: #58a6ff;">Practice Problem 3: Search for a Word in the File</h3>
+            <span class="tag">Word Search</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            <strong>Task:</strong> Check whether the word <code>"learning"</code> exists in <code>practice.txt</code>.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="com"># Solution to Problem 3</span>
+<span class="kw">def</span> <span class="func">check_for_word</span>(<span class="var">word</span>):
+    <span class="kw">with</span> <span class="func">open</span>(<span class="str">"practice.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+        <span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()
+        
+    <span class="kw">if</span> <span class="var">word</span> <span class="kw">in</span> <span class="var">data</span>:
+        <span class="func">print</span>(<span class="str">f"Yes! '{word}' was found in the file."</span>)
+    <span class="kw">else</span>:
+        <span class="func">print</span>(<span class="str">f"No, '{word}' is not in the file."</span>)
+
+<span class="func">check_for_word</span>(<span class="str">"learning"</span>)  <span class="com"># Output: Yes! 'learning' was found in the file.</span></code></pre>
+          </div>
+        </div>
+
+        <!-- PRACTICE 4 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; color: #58a6ff;">Practice Problem 4: Find Which Line Contains the Word</h3>
+            <span class="tag">Line Finder</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            <strong>Task:</strong> Write a function <code>check_for_line(word)</code> that finds which line number the word first appears on (1, 2, 3...). If it is not found, return <code>-1</code>.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="com"># Solution to Problem 4: Read line-by-line using a while loop</span>
+<span class="kw">def</span> <span class="func">check_for_line</span>(<span class="var">word</span>):
+    <span class="var">line_number</span> = <span class="num">1</span>
+    <span class="kw">with</span> <span class="func">open</span>(<span class="str">"practice.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+        <span class="kw">while</span> <span class="kw">True</span>:
+            <span class="var">line</span> = <span class="var">f</span>.<span class="func">readline</span>()
+            
+            <span class="com"># If line is empty string "", we reached the end of the file!</span>
+            <span class="kw">if</span> <span class="kw">not</span> <span class="var">line</span>:
+                <span class="kw">break</span>
+            
+            <span class="kw">if</span> <span class="var">word</span> <span class="kw">in</span> <span class="var">line</span>:
+                <span class="func">print</span>(<span class="str">f"Found '{word}' on Line {line_number}!"</span>)
+                <span class="kw">return</span> <span class="var">line_number</span>
+            
+            <span class="var">line_number</span> += <span class="num">1</span>
+
+    <span class="func">print</span>(<span class="str">f"'{word}' was not found in any line."</span>)
+    <span class="kw">return</span> -<span class="num">1</span>
+
+<span class="func">check_for_line</span>(<span class="str">"learning"</span>)  <span class="com"># Found 'learning' on Line 2!</span>
+<span class="func">check_for_line</span>(<span class="str">"Python"</span>)    <span class="com"># Found 'Python' on Line 3!</span>
+<span class="func">check_for_line</span>(<span class="str">"Banana"</span>)    <span class="com"># 'Banana' was not found in any line. Returns -1.</span></code></pre>
+          </div>
+        </div>
+
+        <!-- PRACTICE 5 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h3 style="margin: 0; font-size: 1.25rem; color: #58a6ff;">Practice Problem 5: Count Even Numbers in a Comma-Separated File</h3>
+            <span class="tag">Numbers Parsing</span>
+          </div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            <strong>Task:</strong> From a file named <code>numbers.txt</code> containing comma-separated numbers (like <code>1, 2, 45, 55, 86, 76</code>), parse all numbers and count how many of them are <strong>even</strong> numbers.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="com"># Step 1: Create the numbers.txt file</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"numbers.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="func">write</span>(<span class="str">"1, 2, 45, 55, 86, 76"</span>)
+
+<span class="com"># Step 2: Read and count even numbers</span>
+<span class="kw">with</span> <span class="func">open</span>(<span class="str">"numbers.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">data</span> = <span class="var">f</span>.<span class="func">read</span>()
+
+<span class="com"># split(",") separates the string wherever a comma appears</span>
+<span class="com"># Result: ['1', ' 2', ' 45', ' 55', ' 86', ' 76']</span>
+<span class="var">numbers_list</span> = <span class="var">data</span>.<span class="func">split</span>(<span class="str">","</span>)
+<span class="var">even_count</span> = <span class="num">0</span>
+
+<span class="kw">for</span> <span class="var">val</span> <span class="kw">in</span> <span class="var">numbers_list</span>:
+    <span class="var">num</span> = <span class="func">int</span>(<span class="var">val</span>.<span class="func">strip</span>())  <span class="com"># strip() removes extra spaces, int() converts to number</span>
+    <span class="kw">if</span> <span class="var">num</span> % <span class="num">2</span> == <span class="num">0</span>:
+        <span class="var">even_count</span> += <span class="num">1</span>
+        <span class="func">print</span>(<span class="str">f"Even number found: {num}"</span>)
+
+<span class="func">print</span>(<span class="str">f"Total even numbers count: {even_count}"</span>)  <span class="com"># Output: 3 (2, 86, 76)</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SUMMARY MATRIX -->
+      <!-- ============================================================ -->
+      <section id="comparison-matrix" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Quick Reference &amp; Summary Matrix</h2>
+
+        <p>
+          Keep this summary handy whenever you are writing file handling code:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Action</th>
+                <th>If file exists</th>
+                <th>If file is missing</th>
+                <th>Where does writing start?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>'r'</code></td>
+                <td>Read only</td>
+                <td>Safe (reads content)</td>
+                <td>Error (<code>FileNotFoundError</code>)</td>
+                <td>Cannot write</td>
+              </tr>
+              <tr>
+                <td><code>'w'</code></td>
+                <td>Write only</td>
+                <td><strong>Wipes it clean to 0</strong></td>
+                <td>Creates new file</td>
+                <td>At the very start (0)</td>
+              </tr>
+              <tr>
+                <td><code>'a'</code></td>
+                <td>Append only</td>
+                <td>Safe (keeps old data)</td>
+                <td>Creates new file</td>
+                <td>At the end (EOF)</td>
+              </tr>
+              <tr>
+                <td><code>'r+'</code></td>
+                <td>Read &amp; Write</td>
+                <td>Safe (keeps old data)</td>
+                <td>Error</td>
+                <td>Overwrites from cursor forward</td>
+              </tr>
+              <tr>
+                <td><code>'w+'</code></td>
+                <td>Read &amp; Write</td>
+                <td><strong>Wipes it clean to 0</strong></td>
+                <td>Creates new file</td>
+                <td>At the very start (0)</td>
+              </tr>
+              <tr>
+                <td><code>'a+'</code></td>
+                <td>Read &amp; Write</td>
+                <td>Safe (keeps old data)</td>
+                <td>Creates new file</td>
+                <td>Always at the end (EOF)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE SIMULATORS -->
+      <!-- ============================================================ -->
+      <section id="interactive-simulator" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive Cursor &amp; Parser Sandboxes</h2>
+
+        <p>
+          Try out the interactive widgets below to visualize the file cursor moving like a bookmark, and to test your own comma-separated number inputs!
+        </p>
+
+        <!-- SIMULATOR 1: FILE CURSOR VISUALIZER -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <h3 style="margin: 0; font-size: 1.3rem;">Interactive 1: Watch the File Cursor Move!</h3>
+            <span class="tag">Live Visualizer</span>
+          </div>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Click the buttons below to see how your reading cursor (the yellow marker) moves through the file characters:
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button class="btn-primary" onclick="simRead(5)" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">f.read(5) &rarr; Read 5 Chars</button>
+            <button class="btn-primary" onclick="simRead(10)" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">f.read(10) &rarr; Read 10 Chars</button>
+            <button class="btn-primary" onclick="simReadLine()" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">f.readline() &rarr; Read One Line</button>
+            <button class="btn-primary" onclick="simReadAll()" style="padding: 0.45rem 0.9rem; font-size: 0.85rem;">f.read() &rarr; Read Entire File</button>
+            <button class="btn-primary" onclick="simSeek(0)" style="padding: 0.45rem 0.9rem; font-size: 0.85rem; background:#388bfd;">f.seek(0) &rarr; Reset to Start</button>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600;">FILE CHARACTERS (Yellow = Current Cursor Position, Blue = Already Read):</div>
+            <div id="sim-buffer-display" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 0.75rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; min-height: 50px;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Cursor Position:</div>
+              <div id="sim-cursor-pos" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">0 / 48</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Returned String:</div>
+              <div id="sim-return-val" style="font-size: 0.95rem; font-family: var(--font-mono); color: #7ee787; word-break: break-all;">[File freshly opened at start]</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMULATOR 2: COMMA PARSER SANDBOX -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <h3 style="margin: 0; font-size: 1.3rem;">Interactive 2: Comma-Separated Number &amp; Even Counter Sandbox</h3>
+            <span class="tag">Problem 5 Tester</span>
+          </div>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Type any comma-separated numbers below to see how Python splits them, converts them to integers, and finds the even ones:
+          </p>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" id="sandbox-csv-input" value="1, 2, 45, 55, 86, 76, 102, 117" style="flex: 1; min-width: 250px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.6rem 0.9rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.9rem;">
+            <button class="btn-primary" onclick="parseCsvSandbox()">Parse &amp; Count Evens</button>
+          </div>
+
+          <div id="sandbox-results" style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; font-family: var(--font-mono); font-size: 0.88rem;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 7 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-file-io" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Simulator 1: Live Stream Cursor State Machine
+    const simFileContent = "Hi everyone\nwe are learning File I/O\nusing Python.";
+    let simPointer = 0;
+
+    function renderSimBuffer(lastReadSlice = "") {
+      const container = document.getElementById('sim-buffer-display');
+      container.innerHTML = "";
+      
+      for (let i = 0; i < simFileContent.length; i++) {
+        const charBox = document.createElement('span');
+        const ch = simFileContent[i];
+        charBox.textContent = ch === '\n' ? '↵' : (ch === ' ' ? '·' : ch);
+        charBox.style.display = 'inline-block';
+        charBox.style.padding = '2px 5px';
+        charBox.style.borderRadius = '3px';
+        charBox.style.border = '1px solid transparent';
+
+        if (i < simPointer) {
+          // Already read characters
+          charBox.style.background = 'rgba(56, 139, 253, 0.2)';
+          charBox.style.color = '#79c0ff';
+        } else if (i === simPointer) {
+          // Exact cursor location
+          charBox.style.background = '#d29922';
+          charBox.style.color = '#000';
+          charBox.style.fontWeight = 'bold';
+          charBox.style.border = '1px solid #f2cc60';
+        } else {
+          // Unread characters ahead
+          charBox.style.background = 'rgba(255, 255, 255, 0.05)';
+          charBox.style.color = 'var(--text-muted)';
+        }
+        container.appendChild(charBox);
+      }
+
+      document.getElementById('sim-cursor-pos').textContent = `${simPointer} / ${simFileContent.length}${simPointer >= simFileContent.length ? ' (EOF - End of File)' : ''}`;
+    }
+
+    function simRead(n) {
+      if (simPointer >= simFileContent.length) {
+        document.getElementById('sim-return-val').innerHTML = '<span style="color:#f85149;">"" (Empty string &mdash; Cursor already at the end of the file!)</span>';
+        return;
+      }
+      const prev = simPointer;
+      simPointer = Math.min(simPointer + n, simFileContent.length);
+      const chunk = simFileContent.slice(prev, simPointer);
+      document.getElementById('sim-return-val').innerHTML = `Read: <span style="color:#7ee787;">${JSON.stringify(chunk)}</span> (${chunk.length} characters)`;
+      renderSimBuffer(chunk);
+    }
+
+    function simReadLine() {
+      if (simPointer >= simFileContent.length) {
+        document.getElementById('sim-return-val').innerHTML = '<span style="color:#f85149;">"" (Empty string &mdash; Cursor already at the end of the file!)</span>';
+        return;
+      }
+      const prev = simPointer;
+      const nextNl = simFileContent.indexOf('\n', simPointer);
+      if (nextNl === -1) {
+        simPointer = simFileContent.length;
+      } else {
+        simPointer = nextNl + 1;
+      }
+      const line = simFileContent.slice(prev, simPointer);
+      document.getElementById('sim-return-val').innerHTML = `Read Line: <span style="color:#7ee787;">${JSON.stringify(line)}</span>`;
+      renderSimBuffer(line);
+    }
+
+    function simReadAll() {
+      if (simPointer >= simFileContent.length) {
+        document.getElementById('sim-return-val').innerHTML = '<span style="color:#f85149;">"" (Empty string &mdash; Cursor already at the end of the file!)</span>';
+        return;
+      }
+      const prev = simPointer;
+      simPointer = simFileContent.length;
+      const text = simFileContent.slice(prev);
+      document.getElementById('sim-return-val').innerHTML = `Read to End: <span style="color:#7ee787;">${JSON.stringify(text)}</span>`;
+      renderSimBuffer(text);
+    }
+
+    function simSeek(pos) {
+      simPointer = Math.max(0, Math.min(pos, simFileContent.length));
+      document.getElementById('sim-return-val').innerHTML = `<span style="color:#58a6ff;">Bookmark reset to character ${simPointer} via seek(${pos})</span>`;
+      renderSimBuffer();
+    }
+
+    // Simulator 2: Comma Parser Sandbox
+    function parseCsvSandbox() {
+      const raw = document.getElementById('sandbox-csv-input').value;
+      const tokens = raw.split(',');
+      const resContainer = document.getElementById('sandbox-results');
+      
+      let html = '<div style="margin-bottom:0.75rem; color:var(--text-muted);">Step-by-Step Numbers Check:</div>';
+      let evenCount = 0;
+      let totalParsed = 0;
+
+      html += '<div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:1rem;">';
+      tokens.forEach((tok) => {
+        const trimmed = tok.trim();
+        if (trimmed !== "") {
+          const num = parseInt(trimmed, 10);
+          if (!isNaN(num)) {
+            totalParsed++;
+            const isEven = (num % 2 === 0);
+            if (isEven) evenCount++;
+            html += `<div style="background:${isEven ? 'rgba(63, 185, 80, 0.15)' : 'rgba(248, 81, 73, 0.15)'}; border:1px solid ${isEven ? '#2ea043' : '#f85149'}; padding:4px 8px; border-radius:4px;">
+              <strong>${num}</strong> &rarr; <span style="color:${isEven ? '#7ee787' : '#ff7b72'}; font-size:0.78rem;">${isEven ? 'EVEN (divisible by 2)' : 'ODD'}</span>
+            </div>`;
+          }
+        }
+      });
+      html += '</div>';
+
+      html += `<div style="padding-top:0.75rem; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <span>Total Numbers Parsed: <strong>${totalParsed}</strong></span>
+        <span style="color:#7ee787; font-weight:700;">Even Count: ${evenCount}</span>
+        <span style="color:#ff7b72; font-weight:700;">Odd Count: ${totalParsed - evenCount}</span>
+      </div>`;
+
+      resContainer.innerHTML = html;
+    }
+
+    // Initialize simulators on DOM load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSimBuffer();
+      parseCsvSandbox();
+    });
+  </script>
+</body>
+</html>

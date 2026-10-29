@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Descriptive Statistics, Data Types & Sampling | Statistics Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 1 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#stats-intro" class="sidebar-link">1. Descriptive vs. Inferential Statistics</a></li>
+        <li><a href="#data-variables" class="sidebar-link">2. What is Data? Quantitative vs. Qualitative</a></li>
+        <li><a href="#discrete-continuous" class="sidebar-link">3. Discrete vs. Continuous Variables</a></li>
+        <li><a href="#measurement-scales" class="sidebar-link">4. 4 Measurement Scales (NOIR Framework)</a></li>
+        <li><a href="#population-sample" class="sidebar-link">5. Population (N) vs. Sample (n)</a></li>
+        <li><a href="#sampling-techniques" class="sidebar-link">6. 4 Core Sampling Techniques</a></li>
+        <li><a href="#frequency-distributions" class="sidebar-link">7. Frequency Distributions &amp; Cumulative Frequency</a></li>
+        <li><a href="#visualizations-bar-hist" class="sidebar-link">8. Visualizing Data: Bar Charts vs. Histograms</a></li>
+        <li><a href="#kde-pdf-intro" class="sidebar-link">9. Probability Density Functions &amp; KDE</a></li>
+        <li><a href="#summary-cheatsheet" class="sidebar-link">10. Quick Reference &amp; Summary Matrix</a></li>
+        <li><a href="#interactive-sampling-sim" class="sidebar-link">11. Interactive Sampling &amp; Histogram Simulator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 01 Notes</span>
+          <span class="tag">Statistics</span>
+          <span class="tag">Descriptive Stats</span>
+          <span class="tag">Population &amp; Sample</span>
+          <span class="tag">4 Sampling Methods</span>
+          <span class="tag">NOIR Scales</span>
+          <span class="tag">Bar Charts &amp; Histograms</span>
+          <span class="tag">PDF &amp; KDE</span>
+        </div>
+        <h1 class="lecture-main-title">Descriptive Statistics, Data Types &amp; Sampling Techniques</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This module introduces the foundations of statistics for data science: understanding the difference between Descriptive and Inferential statistics, classifying data into Quantitative vs. Qualitative and Discrete vs. Continuous, measuring variables across 4 fundamental scales (Nominal, Ordinal, Interval, Ratio), selecting representative samples from populations using 4 proven techniques, and visualizing data distributions with frequency tables, bar charts, histograms, and smooth Probability Density Functions (PDF).<br>
+          <strong>Why do we use it?</strong> In data science and machine learning, you cannot train reliable models or extract valid business insights from raw data without first organizing, cleaning, and summarizing it. Proper sampling prevents election-poll and medical trial bias, correct measurement scales ensure you don't perform invalid math on categories, and histograms reveal the underlying distribution shape of your features.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: DESCRIPTIVE VS INFERENTIAL -->
+      <!-- ============================================================ -->
+      <section id="stats-intro" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Descriptive vs. Inferential Statistics (The Data Science Divide)</h2>
+
+        <h3>1. What is Statistics?</h3>
+        <p>
+          At its core, <strong>Statistics</strong> is the science of <em>collecting, organizing, analyzing, and interpreting data</em>. With the explosive volume of data generated by modern software, databases, and sensors, statistics provides the mathematical toolkit needed to make <strong>better, evidence-backed business decisions</strong>.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">The Two Pillars of Statistics in Data Science</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+            
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #58a6ff; border-radius: 6px;">
+              <strong style="color: #58a6ff; font-size: 1.1rem;">1. Descriptive Statistics</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+                Techniques used to <strong>organize, summarize, and describe</strong> the characteristics of a specific dataset that has already been observed or measured.
+              </p>
+              <ul style="margin: 0.75rem 0 0; padding-left: 1.25rem; font-size: 0.88rem; color: var(--text-muted);">
+                <li>Measures of Central Tendency (Mean, Median, Mode)</li>
+                <li>Measures of Dispersion (Variance, Standard Deviation, Range)</li>
+                <li>Visualizations (Histograms, Box Plots, Bar Charts, KDE)</li>
+                <li><em>Example Question:</em> "What was the average math exam score of the 20 students in Class A?"</li>
+              </ul>
+            </div>
+
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #7ee787; border-radius: 6px;">
+              <strong style="color: #7ee787; font-size: 1.1rem;">2. Inferential Statistics</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+                Techniques that use <strong>sample data</strong> to make predictions, test hypotheses, and draw formal <strong>conclusions about an entire population</strong>.
+              </p>
+              <ul style="margin: 0.75rem 0 0; padding-left: 1.25rem; font-size: 0.88rem; color: var(--text-muted);">
+                <li>Hypothesis Testing ($Z$-test, $t$-test, ANOVA, $\chi^2$-test)</li>
+                <li>Confidence Intervals &amp; Margin of Error</li>
+                <li>P-values, Significance Levels ($lpha$), and Decision Rules</li>
+                <li><em>Example Question:</em> "Are the exam scores of Class A representative of all 1,000 math students across the entire university?"</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Comparison Dimension</th>
+                <th>Descriptive Statistics</th>
+                <th>Inferential Statistics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Primary Objective</strong></td>
+                <td>Describe and summarize the known dataset.</td>
+                <td>Infer properties and test claims about an unmeasured population.</td>
+              </tr>
+              <tr>
+                <td><strong>Scope of Data</strong></td>
+                <td>Applies strictly to the observed dataset in hand.</td>
+                <td>Generalizes beyond the sample to a larger population.</td>
+              </tr>
+              <tr>
+                <td><strong>Core Tools</strong></td>
+                <td>Mean, Median, Mode, Variance, IQR, Plots.</td>
+                <td>$Z$-test, Student's $t$-test, ANOVA, Chi-Square, Confidence Intervals.</td>
+              </tr>
+              <tr>
+                <td><strong>Certainty</strong></td>
+                <td>Exact calculations with 100% certainty for that data.</td>
+                <td>Probabilistic conclusions involving confidence levels (e.g. 95% CI).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: WHAT IS DATA? QUANTITATIVE VS QUALITATIVE -->
+      <!-- ============================================================ -->
+      <section id="data-variables" class="note-section content-section">
+        <h2><span class="section-number">02.</span> What is Data? Quantitative vs. Qualitative Variables</h2>
+
+        <h3>1. Defining Data and Variables</h3>
+        <p>
+          <strong>Data</strong> consists of raw facts, figures, or pieces of information that can be recorded and measured. A <strong>Variable</strong> is any characteristic, number, or quantity that can be measured or counted and can take on different values across individuals or entities.
+        </p>
+
+        <h3>2. The Two Primary Classes of Variables</h3>
+        <p>
+          Variables are divided into two fundamental branches:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #ffa657; border-radius: 6px;">
+              <strong style="color: #ffa657; font-size: 1.05rem;">Quantitative (Numerical) Variables</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Variables measured numerically. You can perform standard mathematical operations on them (addition, subtraction, multiplication, averages).
+              </p>
+              <div style="margin-top: 0.75rem; font-size: 0.88rem; color: #a5d6ff;">
+                <strong>Examples:</strong> Age (25, 30), Weight (72 kg), Height (178 cm), Bank Balance ($5,000), Exam Marks (85%).
+              </div>
+            </div>
+
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #d2a8ff; border-radius: 6px;">
+              <strong style="color: #d2a8ff; font-size: 1.05rem;">Qualitative (Categorical) Variables</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Variables based on descriptive characteristics, attributes, or labels. They represent groups or classes; arithmetic operations do not apply.
+              </p>
+              <div style="margin-top: 0.75rem; font-size: 0.88rem; color: #7ee787;">
+                <strong>Examples:</strong> Gender (Male/Female), Blood Group (A+, O-), T-Shirt Size (S, M, L, XL), Flower Species (Rose, Lily).
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Data Science Interview Trap: Numeric Representation of Categorical Data</div>
+          <p>
+            Just because a feature contains numbers does <strong>not</strong> automatically make it quantitative! For example:
+          </p>
+          <ul>
+            <li><strong>PIN Code / Zip Code:</strong> <code>560001</code> vs <code>110001</code>. You cannot add two pin codes together or calculate the "average pin code" of a state. It is a <em>categorical label</em> encoded as digits.</li>
+            <li><strong>Phone Numbers &amp; Employee IDs:</strong> Numeric symbols acting as identifiers, not countable quantities.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: DISCRETE VS CONTINUOUS -->
+      <!-- ============================================================ -->
+      <section id="discrete-continuous" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Discrete vs. Continuous Variables</h2>
+
+        <p>
+          Quantitative variables are further split into two distinct subclasses:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Discrete Variables</th>
+                <th>Continuous Variables</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Definition</strong></td>
+                <td>Variables that take on distinct, separate, countable values (usually whole integers).</td>
+                <td>Variables that take on any real value within a continuous range (including decimals and fractions).</td>
+              </tr>
+              <tr>
+                <td><strong>Counting / Measuring</strong></td>
+                <td>Counted (1, 2, 3...). There are no intermediate values.</td>
+                <td>Measured using an instrument (ruler, scale, stopwatch, thermometer).</td>
+              </tr>
+              <tr>
+                <td><strong>Gaps Between Values</strong></td>
+                <td>Yes. You cannot have 2.5 bank accounts.</td>
+                <td>No. Between 170 cm and 171 cm lie infinitely many values (170.25, 170.258...).</td>
+              </tr>
+              <tr>
+                <td><strong>Real-World Examples</strong></td>
+                <td>
+                  &bull; Number of children in a family (0, 1, 2, 3)<br>
+                  &bull; Number of bank accounts owned<br>
+                  &bull; Population count of a city<br>
+                  &bull; Number of heads when tossing 10 coins
+                </td>
+                <td>
+                  &bull; Height (172.5 cm)<br>
+                  &bull; Weight (68.4 kg)<br>
+                  &bull; Rainfall in inches (1.35 in)<br>
+                  &bull; Blood pressure (120.4 mmHg)<br>
+                  &bull; River length &amp; Song duration
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: 4 MEASUREMENT SCALES (NOIR) -->
+      <!-- ============================================================ -->
+      <section id="measurement-scales" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The 4 Variable Measurement Scales (NOIR Framework)</h2>
+
+        <p>
+          In 1946, psychologist S. S. Stevens introduced the <strong>NOIR</strong> hierarchy of measurement levels. In data analysis, knowing the scale determines which statistical operations, tests, and ML encodings are legally valid.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <!-- Nominal -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 800; font-size: 1.15rem; color: #ff7b72;">1. Nominal</span>
+              <span class="tag">Qualitative</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              Data categorized by labels or names. <strong>Order does not matter</strong>, and no mathematical calculations can be performed.
+            </p>
+            <div style="font-size: 0.84rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.6rem; border-radius: 4px;">
+              <strong>Examples:</strong> Gender, Eye Color, Marital Status, Flower Type.<br>
+              <strong>Allowed Math:</strong> Mode, Frequency counts, Equality ($=$ or $
+eq$).
+            </div>
+          </div>
+
+          <!-- Ordinal -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 800; font-size: 1.15rem; color: #ffa657;">2. Ordinal</span>
+              <span class="tag">Qualitative</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              Data where <strong>order or rank matters</strong>, but the mathematical difference between consecutive ranks is unknown or unequal.
+            </p>
+            <div style="font-size: 0.84rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.6rem; border-radius: 4px;">
+              <strong>Examples:</strong> Exam Ranks (1st, 2nd, 3rd), Customer Feedback (Good, Fair, Poor), T-Shirt Sizes (S, M, L).<br>
+              <strong>Allowed Math:</strong> Median, Percentiles, Comparisons ($&gt;, &lt;$).
+            </div>
+          </div>
+
+          <!-- Interval -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 800; font-size: 1.15rem; color: #79c0ff;">3. Interval</span>
+              <span class="tag">Quantitative</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              Numeric data where order and exact differences matter, but there is <strong>NO True / Natural Zero</strong> (zero does not mean absence).
+            </p>
+            <div style="font-size: 0.84rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.6rem; border-radius: 4px;">
+              <strong>Examples:</strong> Temperature in &deg;F or &deg;C (0&deg;F does not mean "no temperature"), IQ scores, Calendar years.<br>
+              <strong>Allowed Math:</strong> Addition, Subtraction, Mean, Std Dev. (No ratios!).
+            </div>
+          </div>
+
+          <!-- Ratio -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="font-weight: 800; font-size: 1.15rem; color: #7ee787;">4. Ratio</span>
+              <span class="tag">Quantitative</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              Numeric data with order, exact differences, and a <strong>True Natural Zero</strong> point (zero means total absence of the property).
+            </p>
+            <div style="font-size: 0.84rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.6rem; border-radius: 4px;">
+              <strong>Examples:</strong> Weight (0 kg = no weight), Height, Salary, Distance, Cab fares.<br>
+              <strong>Allowed Math:</strong> All arithmetic (+, -, *, /), Ratios ("100 kg is 2x 50 kg").
+            </div>
+          </div>
+
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Why the "True Zero" Difference Matters</div>
+          <p>
+            Consider temperature: $80^\circ	ext{F}$ is <strong>not</strong> "twice as hot" as $40^\circ	ext{F}$ because $0^\circ	ext{F}$ is an arbitrary point on a scale, not the complete absence of heat energy. That makes temperature an <strong>Interval scale</strong>.
+          </p>
+          <p style="margin-top: 0.5rem;">
+            Now consider money: An employee earning $\$100,000$ earns <strong>exactly twice as much</strong> as someone earning $\$50,000$, and $\$0$ represents the complete absence of money. That makes salary a <strong>Ratio scale</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: POPULATION VS SAMPLE -->
+      <!-- ============================================================ -->
+      <section id="population-sample" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Population ($N$) vs. Sample ($n$) (Why We Need Samples)</h2>
+
+        <h3>1. Notation and Conceptual Difference</h3>
+        <p>
+          In statistical literature and data science interviews, notation is strictly standardized:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Standard Notation</th>
+                <th>Definition</th>
+                <th>Exit Poll Analogy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Population</strong></td>
+                <td>Capital <strong>$N$</strong></td>
+                <td>The complete collection of all elements, individuals, or items of interest.</td>
+                <td>All 1.5 million registered voters in the state of Goa.</td>
+              </tr>
+              <tr>
+                <td><strong>Sample</strong></td>
+                <td>Small <strong>$n$</strong></td>
+                <td>A subset or slice of observations drawn directly from the population.</td>
+                <td>A group of 2,000 randomly surveyed voters leaving voting booths.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Why Can't We Just Survey the Entire Population?</h3>
+        <ul>
+          <li><strong>Physical Impossibility:</strong> Election reporters cannot interview all 1.5 million people on voting day—voters are traveling, busy, or unreachable.</li>
+          <li><strong>Prohibitive Cost &amp; Time:</strong> A national census takes a full decade and billions of dollars; businesses need answers in days.</li>
+          <li><strong>Destructive Testing:</strong> When testing how much impact a car airbag can take before bursting, you cannot crash 100% of the factory's cars! You must test a small sample $n$.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: 4 CORE SAMPLING TECHNIQUES -->
+      <!-- ============================================================ -->
+      <section id="sampling-techniques" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The 4 Fundamental Sampling Techniques</h2>
+
+        <p>
+          How we extract sample $n$ from population $N$ determines whether our models will be accurate or fatally biased. The 4 major sampling methods are:
+        </p>
+
+        <!-- 4 Sampling Techniques Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <!-- Simple Random -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #58a6ff; font-size: 1.05rem;">1. Simple Random Sampling</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin: 0.5rem 0;">
+              Every single individual in the population has an <strong>equal and independent probability</strong> of being selected.
+            </p>
+            <div style="padding: 0.6rem; background: var(--bg-primary); border-radius: 4px; font-size: 0.84rem; color: var(--text-muted);">
+              <strong>Mechanism:</strong> Lottery draw or random number generator <code>np.random.choice()</code>.<br>
+              <strong>Use Case:</strong> Homogeneous populations, quick exit polling.
+            </div>
+          </div>
+
+          <!-- Stratified -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #7ee787; font-size: 1.05rem;">2. Stratified Sampling</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin: 0.5rem 0;">
+              The population is split into <strong>non-overlapping strata</strong> (subgroups) based on a key feature, and samples are pulled from each stratum.
+            </p>
+            <div style="padding: 0.6rem; background: var(--bg-primary); border-radius: 4px; font-size: 0.84rem; color: var(--text-muted);">
+              <strong>Mechanism:</strong> Divide by age (0-10, 10-20, 20-40, 40+), gender, or profession; sample proportionally.<br>
+              <strong>Use Case:</strong> RBI household income survey; medical clinical trials.
+            </div>
+          </div>
+
+          <!-- Systematic -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #ffa657; font-size: 1.05rem;">3. Systematic Sampling</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin: 0.5rem 0;">
+              From an ordered population, select every <strong>$k$-th individual</strong> (where $k = N / n$).
+            </p>
+            <div style="padding: 0.6rem; background: var(--bg-primary); border-radius: 4px; font-size: 0.84rem; color: var(--text-muted);">
+              <strong>Mechanism:</strong> Standing outside a store and surveying every 8th person who walks out.<br>
+              <strong>Fun Analogy:</strong> The Thanos finger snap selecting every 2nd being!
+            </div>
+          </div>
+
+          <!-- Convenience -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #d2a8ff; font-size: 1.05rem;">4. Convenience / Voluntary Sampling</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin: 0.5rem 0;">
+              Samples chosen based on ease of access or individuals volunteering because of <strong>domain expertise</strong>.
+            </p>
+            <div style="padding: 0.6rem; background: var(--bg-primary); border-radius: 4px; font-size: 0.84rem; color: var(--text-muted);">
+              <strong>Mechanism:</strong> Asking only data science professionals for feedback on Python AI libraries.<br>
+              <strong>Caveat:</strong> Highly vulnerable to voluntary-response and selection bias!
+            </div>
+          </div>
+
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Real-World Case Study: Clinical Drug Trials</div>
+          <p>
+            Suppose a pharmaceutical company develops a new cardiac drug. Can they use <strong>Simple Random Sampling</strong> on the general public?
+          </p>
+          <p style="margin-top: 0.5rem;">
+            <strong>No!</strong> You cannot test a heart medication on healthy 8-year-old children or people without the target condition. Medical researchers use <strong>Stratified Sampling</strong>: segmenting by age group (&gt;18 years, 40-60, 60+), biological sex, and pre-existing medical histories to guarantee safe and statistically valid outcomes.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: FREQUENCY DISTRIBUTIONS -->
+      <!-- ============================================================ -->
+      <section id="frequency-distributions" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Frequency Distributions &amp; Cumulative Frequency</h2>
+
+        <h3>1. The Frequency Distribution Table</h3>
+        <p>
+          A <strong>Frequency Distribution</strong> is a structured table showing the occurrence count of each unique value or category in a dataset. Consider a sample dataset of flowers collected in a botanic survey:
+        </p>
+        <p>
+          <code>[Rose, Lily, Sunflower, Rose, Lily, Lily, Rose, Lily, Sunflower]</code>
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Flower Category</th>
+                <th>Raw Frequency ($f$)</th>
+                <th>Relative Frequency ($f / n$)</th>
+                <th>Cumulative Frequency ($cf$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rose</strong></td>
+                <td>3</td>
+                <td>$3 / 9 pprox 33.3\%$</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><strong>Lily</strong></td>
+                <td>4</td>
+                <td>$4 / 9 pprox 44.4\%$</td>
+                <td>$3 + 4 = \mathbf{7}$</td>
+              </tr>
+              <tr>
+                <td><strong>Sunflower</strong></td>
+                <td>2</td>
+                <td>$2 / 9 pprox 22.2\%$</td>
+                <td>$7 + 2 = \mathbf{9}$ (Total Sample Size $n$)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">What is Cumulative Frequency Used For?</div>
+          <p>
+            <strong>Cumulative Frequency</strong> successively adds running counts down the table. In data analysis, cumulative frequency forms the bedrock for calculating <strong>Percentiles</strong>, <strong>Median</strong>, and cumulative distribution curves (CDF).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: VISUALIZATIONS BAR VS HISTOGRAM -->
+      <!-- ============================================================ -->
+      <section id="visualizations-bar-hist" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Visualizing Data: Bar Charts vs. Histograms</h2>
+
+        <h3>1. The Crucial Distinction</h3>
+        <p>
+          One of the most frequent junior interview mistakes is confusing a <strong>Bar Chart</strong> with a <strong>Histogram</strong>:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Bar Chart</th>
+                <th>Histogram</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Data Type</strong></td>
+                <td><strong>Categorical / Discrete</strong> (e.g. Flower types, Brands, Gender).</td>
+                <td><strong>Continuous / Quantitative</strong> (e.g. Age, Salary, Weight, Temperature).</td>
+              </tr>
+              <tr>
+                <td><strong>Gaps Between Bars</strong></td>
+                <td><strong>Yes</strong>. Gaps emphasize that categories are discrete and separate.</td>
+                <td><strong>No</strong>. Bars touch to reflect a continuous numeric spectrum.</td>
+              </tr>
+              <tr>
+                <td><strong>X-Axis Representation</strong></td>
+                <td>Distinct labels / names.</td>
+                <td>Continuous numerical intervals called <strong>Bins</strong> (e.g. 10-20, 20-30).</td>
+              </tr>
+              <tr>
+                <td><strong>Y-Axis Representation</strong></td>
+                <td>Count, Frequency, or Percentage.</td>
+                <td>Frequency Count or Probability Density.</td>
+              </tr>
+              <tr>
+                <td><strong>Reordering Bars</strong></td>
+                <td>Bars can be rearranged alphabetically or by frequency without breaking meaning.</td>
+                <td>Cannot be rearranged! Order is strictly dictated by numerical magnitude.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Histogram Anatomy: Bins and Bin Width</h3>
+        <p>
+          Given age data: <code>[10, 12, 14, 18, 24, 26, 30, 35, 36, 37, 40, 41, 42, 43, 50, 51]</code>. We partition the range into continuous <strong>Bins</strong> of width 10:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Bin Interval</th>
+                <th>Data Points in Bin</th>
+                <th>Frequency (Bar Height)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>[10, 20)</strong></td>
+                <td>10, 12, 14, 18</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><strong>[20, 30)</strong></td>
+                <td>24, 26</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td><strong>[30, 40)</strong></td>
+                <td>30, 35, 36, 37</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><strong>[40, 50)</strong></td>
+                <td>40, 41, 42, 43</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><strong>[50, 60)</strong></td>
+                <td>50, 51</td>
+                <td>2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PDF AND KDE -->
+      <!-- ============================================================ -->
+      <section id="kde-pdf-intro" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Probability Density Functions (PDF) &amp; KDE</h2>
+
+        <h3>1. What is a Probability Density Function (PDF)?</h3>
+        <p>
+          A blocky histogram shows discrete bin counts. What happens if our sample size $n$ grows to infinity while bin width shrinks to zero? The stair-stepped histogram morphs into a smooth continuous mathematical curve: the <strong>Probability Density Function (PDF)</strong>!
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">What is Kernel Density Estimation (KDE)?</div>
+          <p>
+            <strong>KDE (Kernel Density Estimation)</strong> is a non-parametric technique that places a smooth bell-shaped curve (a Gaussian kernel) over each individual data point and sums them all up to create a smooth, continuous estimate of the underlying PDF.
+          </p>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            In Python's Seaborn library, writing <code>sns.histplot(data, kde=True)</code> automatically overlays this smooth KDE curve over your histogram!
+          </p>
+        </div>
+
+        <h3>2. Fundamental Invariants of a PDF</h3>
+        <ul>
+          <li><strong>Non-negativity:</strong> For all $x$, $f(x) \ge 0$. The curve never drops below the horizontal axis.</li>
+          <li><strong>Total Area Invariant:</strong> The total area under the entire PDF curve from $-\infty$ to $+\infty$ is strictly equal to $1$ ($100\%$ probability):
+            $$\int_{-\infty}^{\infty} f(x)\, dx = 1$$
+          </li>
+          <li><strong>Probability of an Interval:</strong> The probability that variable $X$ falls between values $a$ and $b$ equals the integral (area under curve) from $a$ to $b$:
+            $$P(a \le X \le b) = \int_{a}^{b} f(x)\, dx$$
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: SUMMARY MATRIX -->
+      <!-- ============================================================ -->
+      <section id="summary-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Quick Reference &amp; Summary Matrix</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Core Definition</th>
+                <th>Key Characteristic</th>
+                <th>Standard Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Descriptive Stats</strong></td>
+                <td>Summarizing measured data.</td>
+                <td>No generalization beyond dataset.</td>
+                <td>Mean score of current class.</td>
+              </tr>
+              <tr>
+                <td><strong>Inferential Stats</strong></td>
+                <td>Conclusions about population.</td>
+                <td>Uses sample $n$ to estimate $N$.</td>
+                <td>$Z$-test, Hypothesis testing.</td>
+              </tr>
+              <tr>
+                <td><strong>Discrete Variable</strong></td>
+                <td>Countable separate numbers.</td>
+                <td>Integer steps, no decimals.</td>
+                <td>Number of bank accounts.</td>
+              </tr>
+              <tr>
+                <td><strong>Continuous Variable</strong></td>
+                <td>Measured numeric spectrum.</td>
+                <td>Infinite decimal values.</td>
+                <td>Height, Weight, Blood Pressure.</td>
+              </tr>
+              <tr>
+                <td><strong>Nominal Scale</strong></td>
+                <td>Categorical naming labels.</td>
+                <td>No natural ordering.</td>
+                <td>Colors, Gender, PIN codes.</td>
+              </tr>
+              <tr>
+                <td><strong>Ordinal Scale</strong></td>
+                <td>Ordered categorical ranks.</td>
+                <td>Interval gaps not equal.</td>
+                <td>1st, 2nd, 3rd Exam Ranks.</td>
+              </tr>
+              <tr>
+                <td><strong>Interval Scale</strong></td>
+                <td>Ordered with equal intervals.</td>
+                <td>No natural zero point.</td>
+                <td>Temperature (&deg;F, &deg;C).</td>
+              </tr>
+              <tr>
+                <td><strong>Ratio Scale</strong></td>
+                <td>True zero exists.</td>
+                <td>Ratios ("2x") are valid.</td>
+                <td>Salary, Distance, Weight.</td>
+              </tr>
+              <tr>
+                <td><strong>Stratified Sampling</strong></td>
+                <td>Sampling from strata.</td>
+                <td>Guarantees sub-group balance.</td>
+                <td>Age brackets in clinical trials.</td>
+              </tr>
+              <tr>
+                <td><strong>Histogram</strong></td>
+                <td>Continuous bin visualization.</td>
+                <td>Touching bars, bin frequency.</td>
+                <td>Customer age distributions.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: INTERACTIVE SANDBOX -->
+      <!-- ============================================================ -->
+      <section id="interactive-sampling-sim" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Interactive Sampling &amp; Histogram Simulator</h2>
+
+        <p>
+          Experience how sample size and sampling technique affect your dataset in real time! Generate a synthetic population of customer ages and compare <strong>Simple Random Sampling</strong> vs. <strong>Systematic Sampling</strong>:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">Live Sampling &amp; Frequency Binning Tool</h3>
+          
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Population Size ($N$):</label>
+              <input type="number" id="sim-pop-size" value="500" min="100" max="2000" style="width: 110px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Sample Size ($n$):</label>
+              <input type="number" id="sim-sample-size" value="50" min="10" max="200" style="width: 110px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Sampling Method:</label>
+              <select id="sim-sample-method" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-sans);">
+                <option value="random">Simple Random Sampling</option>
+                <option value="systematic">Systematic Sampling (Every k-th)</option>
+              </select>
+            </div>
+            <div style="align-self: flex-end;">
+              <button class="btn-primary" onclick="runSamplingSim()" style="background: #238636; border-color: #238636; padding: 0.48rem 1rem;">Run Sampling &amp; Plot</button>
+            </div>
+          </div>
+
+          <!-- Output summary -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">True Population Mean ($\mu$):</div>
+              <div id="sim-pop-mean" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Sample Mean ($ar{x}$):</div>
+              <div id="sim-sample-mean" style="font-size: 1.25rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Sampling Error ($|ar{x} - \mu|$):</div>
+              <div id="sim-sample-err" style="font-size: 1.25rem; font-weight: 700; color: #ffa657; font-family: var(--font-mono);">--</div>
+            </div>
+          </div>
+
+          <!-- Canvas for Histogram -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">Live Sample Histogram (Age Bins of Width 10):</div>
+            <canvas id="sim-hist-canvas" width="600" height="220" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Lecture 1 Reference
+      </div>
+      <div>
+        <a href="statistics.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Statistics Portal</a>
+        <a href="stats-lecture-2.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Next: Lecture 2 (Central Tendency &amp; Dispersion) →</a>
+        <a href="#stats-intro" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    let population = [];
+
+    function generatePopulation(N) {
+      population = [];
+      for (let i = 0; i < N; i++) {
+        // Generate bimodal age distribution (students 18-25 & professionals 35-55)
+        const isStudent = Math.random() < 0.5;
+        let age;
+        if (isStudent) {
+          age = Math.floor(18 + Math.random() * 12); // 18-30
+        } else {
+          age = Math.floor(30 + Math.random() * 35); // 30-65
+        }
+        population.push(age);
+      }
+    }
+
+    function runSamplingSim() {
+      const N = parseInt(document.getElementById('sim-pop-size').value, 10) || 500;
+      const n = parseInt(document.getElementById('sim-sample-size').value, 10) || 50;
+      const method = document.getElementById('sim-sample-method').value;
+
+      generatePopulation(N);
+      const popMean = (population.reduce((a, b) => a + b, 0) / N).toFixed(2);
+      document.getElementById('sim-pop-mean').textContent = `${popMean} yrs`;
+
+      let sample = [];
+      if (method === 'random') {
+        const shuffled = [...population].sort(() => 0.5 - Math.random());
+        sample = shuffled.slice(0, n);
+      } else {
+        const k = Math.max(1, Math.floor(N / n));
+        const start = Math.floor(Math.random() * k);
+        for (let i = start; i < N && sample.length < n; i += k) {
+          sample.push(population[i]);
+        }
+      }
+
+      const sampleMean = (sample.reduce((a, b) => a + b, 0) / sample.length).toFixed(2);
+      const err = Math.abs(sampleMean - popMean).toFixed(2);
+
+      document.getElementById('sim-sample-mean').textContent = `${sampleMean} yrs`;
+      document.getElementById('sim-sample-err').textContent = `${err} yrs`;
+
+      drawHistogram(sample);
+    }
+
+    function drawHistogram(sample) {
+      const canvas = document.getElementById('sim-hist-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Bins: 10-20, 20-30, 30-40, 40-50, 50-60, 60-70
+      const bins = [0, 0, 0, 0, 0, 0];
+      const binLabels = ["10-20", "20-30", "30-40", "40-50", "50-60", "60-70"];
+
+      sample.forEach(age => {
+        if (age < 20) bins[0]++;
+        else if (age < 30) bins[1]++;
+        else if (age < 40) bins[2]++;
+        else if (age < 50) bins[3]++;
+        else if (age < 60) bins[4]++;
+        else bins[5]++;
+      });
+
+      const maxCount = Math.max(...bins, 1);
+      const paddingLeft = 40;
+      const paddingBottom = 30;
+      const chartWidth = canvas.width - paddingLeft - 20;
+      const chartHeight = canvas.height - paddingBottom - 20;
+      const barWidth = chartWidth / bins.length;
+
+      // Draw bars
+      bins.forEach((count, i) => {
+        const h = (count / maxCount) * chartHeight;
+        const x = paddingLeft + i * barWidth;
+        const y = canvas.height - paddingBottom - h;
+
+        ctx.fillStyle = '#238636';
+        ctx.fillRect(x + 2, y, barWidth - 4, h);
+
+        ctx.strokeStyle = '#2ea043';
+        ctx.strokeRect(x + 2, y, barWidth - 4, h);
+
+        // Count on top of bar
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        if (count > 0) {
+          ctx.fillText(count, x + barWidth / 2, y - 5);
+        }
+
+        // Bin label below bar
+        ctx.fillStyle = '#8b949e';
+        ctx.fillText(binLabels[i], x + barWidth / 2, canvas.height - 10);
+      });
+
+      // Axis lines
+      ctx.strokeStyle = '#30363d';
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, 10);
+      ctx.lineTo(paddingLeft, canvas.height - paddingBottom);
+      ctx.lineTo(canvas.width - 10, canvas.height - paddingBottom);
+      ctx.stroke();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runSamplingSim();
+    });
+  </script>
+</body>
+</html>

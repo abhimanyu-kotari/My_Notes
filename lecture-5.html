@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 5: Loops in Python | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 5 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-loops" class="sidebar-link">1. Conceptual Foundations of Loops</a></li>
+        <li><a href="#while-loop" class="sidebar-link">2. The while Loop &amp; 3 Invariants</a></li>
+        <li><a href="#infinite-loops" class="sidebar-link">3. Infinite Loop Hazards &amp; Safety</a></li>
+        <li><a href="#while-practice" class="sidebar-link">4. while Loop Practice (Counting &amp; Tables)</a></li>
+        <li><a href="#linear-search-while" class="sidebar-link">5. Linear Search in Sequences</a></li>
+        <li><a href="#loop-controls" class="sidebar-link">6. Loop Controls (break &amp; continue)</a></li>
+        <li><a href="#for-loop" class="sidebar-link">7. The for Loop &amp; Iteration</a></li>
+        <li><a href="#for-else" class="sidebar-link">8. The for...else &amp; while...else Pattern</a></li>
+        <li><a href="#range-function" class="sidebar-link">9. The range() Function in Depth</a></li>
+        <li><a href="#pass-statement" class="sidebar-link">10. The pass Placeholder Statement</a></li>
+        <li><a href="#accumulator-tasks" class="sidebar-link">11. Classical Accumulators: Sum &amp; Factorial</a></li>
+        <li><a href="#comparison-matrix" class="sidebar-link">12. Master Comparison Tables</a></li>
+        <li><a href="#interactive-simulator" class="sidebar-link">13. Interactive Python Loop Simulator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 05 Notes</span>
+          <span class="tag">Loops</span>
+          <span class="tag">while Loop</span>
+          <span class="tag">for Loop</span>
+          <span class="tag">range()</span>
+          <span class="tag">break &amp; continue</span>
+          <span class="tag">Linear Search</span>
+          <span class="tag">Accumulators</span>
+        </div>
+        <h1 class="lecture-main-title">Loops in Python: while, for, range() &amp; Loop Control</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Loops (<code>while</code> and <code>for</code>) are repetition blocks that tell Python to run a section of code over and over again automatically, without you having to write the same line multiple times.<br>
+          <strong>Why do we use it?</strong> We use loops whenever tasks need to be repeated—like sending notification emails to 1,000 users, checking prices across all products in a store, searching through a list of names, or keeping a game running until the player clicks exit.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: CONCEPTUAL FOUNDATIONS OF LOOPS -->
+      <!-- ============================================================ -->
+      <section id="intro-loops" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Conceptual Foundations of Loops &amp; Automation</h2>
+
+        <h3>1. The Architectural Need for Repetition</h3>
+        <p>
+          In computer programming, the primary objective is to delegate repetitive, high-volume tasks to hardware without manual human intervention. Consider real-world software workflows:
+        </p>
+        <ul>
+          <li><strong>Digital Media Streaming:</strong> Repeating a music track or traversing an automated playlist containing thousands of tracks.</li>
+          <li><strong>Enterprise Communications:</strong> Dispatching a personalized transaction notification email to 100,000 active users.</li>
+          <li><strong>Data Processing &amp; Analytics:</strong> Ingesting, parsing, and normalizing millions of data records from a distributed database or CSV dataset.</li>
+        </ul>
+        <p>
+          Without looping constructs, executing a task $N$ times requires copying and pasting the source statement $N$ times. For example, printing a greeting 5 times would require 5 duplicate lines; scaling that to 100,000 occurrences would create an unmaintainable, 100,000-line code file.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Software Engineering Principle: DRY (Don't Repeat Yourself)</div>
+          <p>
+            Copy-pasting statements violates the foundational <strong>DRY principle</strong>. It introduces severe software defects:
+          </p>
+          <ul>
+            <li><strong>Catastrophic File Bloat:</strong> Inflates executable size and degrades lexical parsing speed.</li>
+            <li><strong>Severe Readability Loss:</strong> Masks logical intent under massive redundant syntax boilerplate.</li>
+            <li><strong>High Maintenance Fragility:</strong> Modifying a single string or logic parameter requires altering 100,000 individual locations, virtually guaranteeing bugs.</li>
+          </ul>
+        </div>
+
+        <h3>2. Loop Classification in Python</h3>
+        <p>
+          Python provides two core looping structures, categorized by their governing termination criteria:
+        </p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Loop Construct</th>
+                <th>Classification</th>
+                <th>Termination Mechanism</th>
+                <th>Primary Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>while</code> Loop</strong></td>
+                <td>Condition-Controlled (Indefinite)</td>
+                <td>Terminates when a dynamic Boolean condition evaluates to <code>False</code>.</td>
+                <td>When the exact number of iterations is unknown in advance, or depends on continuous state updates.</td>
+              </tr>
+              <tr>
+                <td><strong><code>for</code> Loop</strong></td>
+                <td>Collection-Controlled (Definite)</td>
+                <td>Terminates when all elements in an iterable sequence (list, tuple, string, range) are exhausted.</td>
+                <td>Sequential traversal through data structures or executing a block a pre-calculated number of times.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THE WHILE LOOP & 3 INVARIANTS -->
+      <!-- ============================================================ -->
+      <section id="while-loop" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The while Loop &amp; The Three Invariants</h2>
+
+        <h3>1. Formal Syntax and Execution Mechanics</h3>
+        <p>
+          The <code>while</code> keyword is a reserved language keyword. In plain English, <code>while</code> translates to <em>"so long as this condition holds true, execute the enclosed block."</em>
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">while</span> condition:
+    <span class="com"># Loop body: statements executed repeatedly while condition == True</span>
+    statement_1
+    statement_2
+    iterator_update</code></pre>
+        </div>
+
+        <h3>2. The Three Invariant Components</h3>
+        <p>
+          Every properly structured <code>while</code> loop depends upon three strictly coordinated structural components. Omitting any one of them inevitably leads to logic failure or process freezing:
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The 3 Structural Pillars of a while Loop</div>
+          <ol style="margin-left: 1.25rem; line-height: 1.8;">
+            <li>
+              <strong>1. Initialization:</strong> The loop control variable (the <em>iterator</em>) is assigned an initial state prior to entering the loop (e.g., <code>count = 1</code> or <code>i = 0</code>).
+            </li>
+            <li>
+              <strong>2. Stopping Condition (Continuation Criterion):</strong> A Boolean expression evaluated prior to every cycle. If <code>True</code>, execution enters the indented body; if <code>False</code>, the loop immediately terminates.
+            </li>
+            <li>
+              <strong>3. State Updation (Step Increment/Decrement):</strong> A statement inside the loop body that modifies the iterator toward the stopping condition (e.g., <code>i += 1</code> or <code>i -= 1</code>).
+            </li>
+          </ol>
+        </div>
+
+        <h3>3. Iterations and Iterators: Step-by-Step State Trace</h3>
+        <p>
+          In computer science terminology:
+        </p>
+        <ul>
+          <li><strong>Iteration:</strong> A single, complete execution cycle through the statements inside the loop body.</li>
+          <li><strong>Iterator / Loop Variable:</strong> The scalar state variable governing the progress of the loop. By convention, short identifier tokens like <code>i</code>, <code>j</code>, <code>k</code>, <code>idx</code>, or descriptive names like <code>count</code> are standard.</li>
+        </ul>
+
+        <p>
+          Let us trace the complete state machine of a 5-step counting loop:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">count</span> = <span class="num">1</span>                    <span class="com"># Step 1: Initialization</span>
+
+<span class="kw">while</span> <span class="var">count</span> &lt;= <span class="num">5</span>:             <span class="com"># Step 2: Stopping Condition</span>
+    <span class="func">print</span>(<span class="str">"Hello, World!"</span>)     <span class="com"># Work inside loop body</span>
+    <span class="var">count</span> += <span class="num">1</span>                <span class="com"># Step 3: Updation (count = count + 1)</span>
+
+<span class="func">print</span>(<span class="str">"Terminated. Final count ="</span>, <span class="var">count</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Hello, World!</div>
+          <div>Hello, World!</div>
+          <div>Hello, World!</div>
+          <div>Hello, World!</div>
+          <div>Hello, World!</div>
+          <div>Terminated. Final count = 6</div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Cycle #</th>
+                <th>Initial <code>count</code></th>
+                <th>Condition Evaluated (<code>count &lt;= 5</code>)</th>
+                <th>Action Taken</th>
+                <th>Post-Updation <code>count</code></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Iteration 1</td>
+                <td><code>1</code></td>
+                <td><code>1 &lt;= 5</code> &rarr; <span style="color: #7ee787; font-weight: 600;">True</span></td>
+                <td>Prints "Hello, World!"</td>
+                <td><code>2</code></td>
+              </tr>
+              <tr>
+                <td>Iteration 2</td>
+                <td><code>2</code></td>
+                <td><code>2 &lt;= 5</code> &rarr; <span style="color: #7ee787; font-weight: 600;">True</span></td>
+                <td>Prints "Hello, World!"</td>
+                <td><code>3</code></td>
+              </tr>
+              <tr>
+                <td>Iteration 3</td>
+                <td><code>3</code></td>
+                <td><code>3 &lt;= 5</code> &rarr; <span style="color: #7ee787; font-weight: 600;">True</span></td>
+                <td>Prints "Hello, World!"</td>
+                <td><code>4</code></td>
+              </tr>
+              <tr>
+                <td>Iteration 4</td>
+                <td><code>4</code></td>
+                <td><code>4 &lt;= 5</code> &rarr; <span style="color: #7ee787; font-weight: 600;">True</span></td>
+                <td>Prints "Hello, World!"</td>
+                <td><code>5</code></td>
+              </tr>
+              <tr>
+                <td>Iteration 5</td>
+                <td><code>5</code></td>
+                <td><code>5 &lt;= 5</code> &rarr; <span style="color: #7ee787; font-weight: 600;">True</span></td>
+                <td>Prints "Hello, World!"</td>
+                <td><code>6</code></td>
+              </tr>
+              <tr>
+                <td>Termination</td>
+                <td><code>6</code></td>
+                <td><code>6 &lt;= 5</code> &rarr; <span style="color: #ff7b72; font-weight: 600;">False</span></td>
+                <td>Loop breaks immediately</td>
+                <td><code>6</code> (Final value preserved)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: INFINITE LOOP HAZARDS & SAFETY -->
+      <!-- ============================================================ -->
+      <section id="infinite-loops" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Infinite Loop Hazards &amp; Process Safety</h2>
+
+        <h3>1. The Mechanics of an Infinite Loop</h3>
+        <p>
+          An <strong>infinite loop</strong> occurs when the loop's continuation condition evaluates to <code>True</code> unconditionally on every iteration, never transitioning to <code>False</code>.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Anti-Pattern 1: Hardcoded True Literal</span>
+<span class="kw">while</span> <span class="bool">True</span>:
+    <span class="func">print</span>(<span class="str">"This loop will never terminate on its own."</span>)
+
+<span class="com"># Anti-Pattern 2: Diverging Update Step (Moving away from boundary)</span>
+<span class="var">i</span> = <span class="num">5</span>
+<span class="kw">while</span> <span class="var">i</span> &lt; <span class="num">6</span>:
+    <span class="func">print</span>(<span class="var">i</span>)
+    <span class="var">i</span> -= <span class="num">1</span>  <span class="com"># i decreases to 4, 3, 2, 1, 0, -1, -2... perpetually &lt; 6!</span>
+
+<span class="com"># Anti-Pattern 3: Missing Update Step</span>
+<span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">5</span>:
+    <span class="func">print</span>(<span class="var">i</span>)
+    <span class="com"># i is never updated; i remains 1 forever!</span></code></pre>
+        </div>
+
+        <h3>2. System Consequences and Recovery</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Impact Dimension</th>
+                <th>System Manifestation</th>
+                <th>Technical Root Cause</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CPU Saturation</strong></td>
+                <td>Single CPU core spikes to 100% utilization.</td>
+                <td>Processor executes the unconditional branch instructions in a tight spinning loop at maximum clock speed.</td>
+              </tr>
+              <tr>
+                <td><strong>Memory / I/O Flood</strong></td>
+                <td>Terminal emulator freezes; RAM fills up if storing output.</td>
+                <td>Standard output stream buffers millions of characters per second, overwhelming the rendering pipeline.</td>
+              </tr>
+              <tr>
+                <td><strong>Process Halting</strong></td>
+                <td>Subsequent code is never executed (starvation).</td>
+                <td>Execution never reaches the statements after the loop.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box" style="border-left: 4px solid #ff7b72;">
+          <div class="concept-title" style="color: #ff7b72;">Emergency Recovery Protocol</div>
+          <p>
+            When an unintended infinite loop executes in a terminal or console:
+          </p>
+          <ul>
+            <li>Press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the active terminal to send an asynchronous <code>KeyboardInterrupt</code> signal (SIGINT).</li>
+            <li>In browser notebooks or IDE terminals, trigger the "Stop Execution" or "Kill Terminal" button immediately.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: WHILE LOOP PRACTICE (COUNTING & TABLES) -->
+      <!-- ============================================================ -->
+      <section id="while-practice" class="note-section content-section">
+        <h2><span class="section-number">04.</span> while Loop Practice: Counting, Tables &amp; Traversal</h2>
+
+        <h3>1. Forward Counting: Printing Numbers from 1 to 100</h3>
+        <p>
+          To print the closed arithmetic sequence $[1, 100]$, initialize the iterator at $1$, maintain the stopping condition $i \le 100$, and apply a unit increment $i \mathrel{+}= 1$:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Practice 1: Print natural numbers from 1 to 100</span>
+<span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">100</span>:
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+    <span class="var">i</span> += <span class="num">1</span>
+<span class="func">print</span>(<span class="str">"\nSequence Complete."</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output (Truncated):</span>
+          <div>1 2 3 4 5 6 7 8 9 10 ... 98 99 100</div>
+          <div>Sequence Complete.</div>
+        </div>
+
+        <h3>2. Reverse Counting: Printing Numbers from 100 Down to 1</h3>
+        <p>
+          Reverse traversal requires inverting both the initialization and the stopping boundary: start at $100$, verify $i \ge 1$, and apply a unit decrement $i \mathrel{-}= 1$:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Practice 2: Print numbers from 100 down to 1</span>
+<span class="var">i</span> = <span class="num">100</span>
+<span class="kw">while</span> <span class="var">i</span> &gt;= <span class="num">1</span>:
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+    <span class="var">i</span> -= <span class="num">1</span>
+<span class="func">print</span>(<span class="str">"\nReverse Sequence Complete."</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output (Truncated):</span>
+          <div>100 99 98 97 96 ... 4 3 2 1</div>
+          <div>Reverse Sequence Complete.</div>
+        </div>
+
+        <h3>3. Mathematical Multiplication Table of Number $n$</h3>
+        <p>
+          The multiplication table for an arbitrary integer $n$ represents the evaluation of the linear function:
+        </p>
+        $$\text{Product}(i) = n \times i \quad \text{for } i \in \{1, 2, 3, \dots, 10\}$$
+        <p>
+          Here, $n$ acts as an invariant multiplier, while $i$ serves as the dynamic loop counter running from $1$ to $10$:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Practice 3: Multiplication Table for dynamic user input n</span>
+<span class="var">n</span> = <span class="builtin">int</span>(<span class="func">input</span>(<span class="str">"Enter an integer: "</span>))
+
+<span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">10</span>:
+    <span class="var">product</span> = <span class="var">n</span> * <span class="var">i</span>
+    <span class="func">print</span>(<span class="str">f"{n} x {i:2d} = {product}"</span>)
+    <span class="var">i</span> += <span class="num">1</span></code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output (Sample for n = 17):</span>
+          <div>17 x  1 = 17</div>
+          <div>17 x  2 = 34</div>
+          <div>17 x  3 = 51</div>
+          <div>17 x  4 = 68</div>
+          <div>17 x  5 = 85</div>
+          <div>17 x  6 = 102</div>
+          <div>17 x  7 = 119</div>
+          <div>17 x  8 = 136</div>
+          <div>17 x  9 = 153</div>
+          <div>17 x 10 = 170</div>
+        </div>
+
+        <h3>4. Sequential List Traversal via 0-Based Indexing</h3>
+        <p>
+          In Python, sequence elements are accessed by 0-based indices $i \in [0, \text{len} - 1]$. To traverse a list using <code>while</code>, initialize the index pointer to $0$ and iterate strictly while $i < \text{len}(\text{collection})$:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Practice 4: Traversing collections via 0-based index pointer</span>
+<span class="var">squares</span> = [<span class="num">1</span>, <span class="num">4</span>, <span class="num">9</span>, <span class="num">16</span>, <span class="num">25</span>, <span class="num">36</span>, <span class="num">49</span>, <span class="num">64</span>, <span class="num">81</span>, <span class="num">100</span>]
+
+<span class="var">idx</span> = <span class="num">0</span>
+<span class="kw">while</span> <span class="var">idx</span> &lt; <span class="func">len</span>(<span class="var">squares</span>):
+    <span class="func">print</span>(<span class="str">f"Index {idx} -&gt; Value: {squares[idx]}"</span>)
+    <span class="var">idx</span> += <span class="num">1</span></code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Index 0 -&gt; Value: 1</div>
+          <div>Index 1 -&gt; Value: 4</div>
+          <div>Index 2 -&gt; Value: 9</div>
+          <div>Index 3 -&gt; Value: 16</div>
+          <div>Index 4 -&gt; Value: 25</div>
+          <div>Index 5 -&gt; Value: 36</div>
+          <div>Index 6 -&gt; Value: 49</div>
+          <div>Index 7 -&gt; Value: 64</div>
+          <div>Index 8 -&gt; Value: 81</div>
+          <div>Index 9 -&gt; Value: 100</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: LINEAR SEARCH IN SEQUENCES -->
+      <!-- ============================================================ -->
+      <section id="linear-search-while" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Linear Search in Sequences</h2>
+
+        <h3>1. Algorithmic Definition of Linear Search</h3>
+        <p>
+          <strong>Linear Search</strong> (or sequential search) is the fundamental search algorithm. Given a collection $S = [s_0, s_1, \dots, s_{N-1}]$ and a query target $x$, the algorithm inspects each element $s_i$ sequentially from index $i = 0$ to $i = N-1$ until either:
+        </p>
+        <ol>
+          <li>A match is encountered: $s_i == x$ (Search Successful).</li>
+          <li>The sequence boundary is reached: $i == N$ without a match (Search Failed).</li>
+        </ol>
+
+        <div class="concept-box">
+          <div class="concept-title">Complexity Analysis: Linear Search</div>
+          <ul>
+            <li><strong>Best-Case Time Complexity:</strong> $O(1)$ &mdash; Target is at the very first element ($s_0 == x$).</li>
+            <li><strong>Worst-Case Time Complexity:</strong> $O(N)$ &mdash; Target is at the final element or absent entirely, requiring all $N$ comparisons.</li>
+            <li><strong>Average-Case Time Complexity:</strong> $O(N)$ &mdash; On average, requires $N/2$ comparisons.</li>
+            <li><strong>Auxiliary Space Complexity:</strong> $O(1)$ &mdash; Requires only a scalar index pointer.</li>
+          </ul>
+        </div>
+
+        <h3>2. Implementation in a Python Tuple</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Tuple containing duplicate occurrences of target 36</span>
+<span class="var">numbers</span> = (<span class="num">1</span>, <span class="num">4</span>, <span class="num">9</span>, <span class="num">16</span>, <span class="num">25</span>, <span class="num">36</span>, <span class="num">49</span>, <span class="num">64</span>, <span class="num">81</span>, <span class="num">100</span>, <span class="num">36</span>)
+<span class="var">target</span> = <span class="num">36</span>
+
+<span class="var">i</span> = <span class="num">0</span>
+<span class="kw">while</span> <span class="var">i</span> &lt; <span class="func">len</span>(<span class="var">numbers</span>):
+    <span class="kw">if</span> <span class="var">numbers</span>[<span class="var">i</span>] == <span class="var">target</span>:
+        <span class="func">print</span>(<span class="str">f"Target {target} located at index {i}"</span>)
+    <span class="kw">else</span>:
+        <span class="func">print</span>(<span class="str">f"Inspecting index {i}: mismatch ({numbers[i]})"</span>)
+    <span class="var">i</span> += <span class="num">1</span></code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Inspecting index 0: mismatch (1)</div>
+          <div>Inspecting index 1: mismatch (4)</div>
+          <div>Inspecting index 2: mismatch (9)</div>
+          <div>Inspecting index 3: mismatch (16)</div>
+          <div>Inspecting index 4: mismatch (25)</div>
+          <div>Target 36 located at index 5</div>
+          <div>Inspecting index 6: mismatch (49)</div>
+          <div>Inspecting index 7: mismatch (64)</div>
+          <div>Inspecting index 8: mismatch (81)</div>
+          <div>Inspecting index 9: mismatch (100)</div>
+          <div>Target 36 located at index 10</div>
+        </div>
+        <p>
+          <em>Observation:</em> Notice that after discovering the target at index 5, the un-optimized loop continued searching redundantly through indices 6 through 10. To optimize linear search for single-instance lookups, we require early termination via <code>break</code>.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: LOOP CONTROLS (BREAK & CONTINUE) -->
+      <!-- ============================================================ -->
+      <section id="loop-controls" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Loop Control Statements: break &amp; continue</h2>
+
+        <h3>1. The <code>break</code> Statement: Immediate Termination</h3>
+        <p>
+          The <code>break</code> statement causes immediate, unconditional termination of the innermost enclosing loop. Control immediately jumps to the first statement situated outside the loop block.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Demonstration of break at i == 3</span>
+<span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">5</span>:
+    <span class="func">print</span>(<span class="str">"Processing item:"</span>, <span class="var">i</span>)
+    <span class="kw">if</span> <span class="var">i</span> == <span class="num">3</span>:
+        <span class="func">print</span>(<span class="str">"Breakpoint triggered! Exiting loop immediately."</span>)
+        <span class="kw">break</span>
+    <span class="var">i</span> += <span class="num">1</span>
+
+<span class="func">print</span>(<span class="str">"Execution resumed outside loop. Final i ="</span>, <span class="var">i</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Processing item: 1</div>
+          <div>Processing item: 2</div>
+          <div>Processing item: 3</div>
+          <div>Breakpoint triggered! Exiting loop immediately.</div>
+          <div>Execution resumed outside loop. Final i = 3</div>
+        </div>
+
+        <h4>Optimizing Linear Search with <code>break</code></h4>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">numbers</span> = (<span class="num">1</span>, <span class="num">4</span>, <span class="num">9</span>, <span class="num">16</span>, <span class="num">25</span>, <span class="num">36</span>, <span class="num">49</span>, <span class="num">64</span>, <span class="num">81</span>, <span class="num">100</span>)
+<span class="var">target</span> = <span class="num">36</span>
+
+<span class="var">i</span> = <span class="num">0</span>
+<span class="kw">while</span> <span class="var">i</span> &lt; <span class="func">len</span>(<span class="var">numbers</span>):
+    <span class="kw">if</span> <span class="var">numbers</span>[<span class="var">i</span>] == <span class="var">target</span>:
+        <span class="func">print</span>(<span class="str">f"Target {target} FOUND at index {i}!"</span>)
+        <span class="kw">break</span>  <span class="com"># Halt search immediately; prevent wasteful checks</span>
+    <span class="var">i</span> += <span class="num">1</span>
+
+<span class="func">print</span>(<span class="str">"Search terminated cleanly."</span>)</code></pre>
+        </div>
+
+        <h3>2. The <code>continue</code> Statement: Cycle Skipping</h3>
+        <p>
+          Unlike <code>break</code>, the <code>continue</code> statement does <strong>not</strong> exit the loop. Instead, it immediately halts the <em>current iteration</em>, discarding any remaining statements below it in the loop body, and immediately passes control back to the top for condition re-evaluation.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Skipping specific item i == 3</span>
+<span class="var">i</span> = <span class="num">0</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">5</span>:
+    <span class="var">i</span> += <span class="num">1</span>
+    <span class="kw">if</span> <span class="var">i</span> == <span class="num">3</span>:
+        <span class="func">print</span>(<span class="str">"[Skipping iteration for i = 3]"</span>)
+        <span class="kw">continue</span>  <span class="com"># Discards print statement below for this cycle</span>
+    <span class="func">print</span>(<span class="str">"Value:"</span>, <span class="var">i</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Value: 1</div>
+          <div>Value: 2</div>
+          <div>[Skipping iteration for i = 3]</div>
+          <div>Value: 4</div>
+          <div>Value: 5</div>
+          <div>Value: 6</div>
+        </div>
+
+        <div class="concept-box" style="border-left: 4px solid #ffa657;">
+          <div class="concept-title" style="color: #ffa657;">Critical Trap: The continue Infinite Loop Pitfall in while Loops</div>
+          <p>
+            In a <code>while</code> loop, if you place the iterator increment statement <code>i += 1</code> <em>after</em> the <code>continue</code> keyword:
+          </p>
+          <pre><code><span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">5</span>:
+    <span class="kw">if</span> <span class="var">i</span> == <span class="num">3</span>:
+        <span class="kw">continue</span>  <span class="com"># FATAL: i is never incremented! i remains 3 forever!</span>
+    <span class="func">print</span>(<span class="var">i</span>)
+    <span class="var">i</span> += <span class="num">1</span></code></pre>
+          <p>
+            When $i = 3$, the loop encounters <code>continue</code>, jumps back to the top without reaching <code>i += 1</code>, re-evaluates $3 \le 5$ as <code>True</code>, encounters <code>continue</code> again, and locks the program in a permanent freeze.
+          </p>
+        </div>
+
+        <h3>3. Parity Filtering with <code>continue</code></h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Filtering: Print ONLY odd numbers between 1 and 10</span>
+<span class="var">i</span> = <span class="num">1</span>
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="num">10</span>:
+    <span class="kw">if</span> <span class="var">i</span> % <span class="num">2</span> == <span class="num">0</span>:
+        <span class="var">i</span> += <span class="num">1</span>
+        <span class="kw">continue</span>  <span class="com"># Discard even numbers</span>
+    <span class="func">print</span>(<span class="str">"Odd number:"</span>, <span class="var">i</span>)
+    <span class="var">i</span> += <span class="num">1</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THE FOR LOOP & ITERATION -->
+      <!-- ============================================================ -->
+      <section id="for-loop" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The for Loop &amp; Sequential Traversal</h2>
+
+        <h3>1. The Paradigm of Collection Traversal</h3>
+        <p>
+          While the <code>while</code> loop is general-purpose, traversing collections using manual index variables (<code>i = 0</code>, <code>arr[i]</code>, <code>i += 1</code>) is verbose and error-prone. Python addresses this with the <strong><code>for</code> loop</strong>, designed for clean, idiomatic <strong>sequential traversal</strong>.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">for</span> item <span class="kw">in</span> iterable_collection:
+    <span class="com"># In each iteration, 'item' automatically receives the next element</span>
+    process(item)</code></pre>
+        </div>
+
+        <h3>2. Traversing Diverse Python Data Types</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># 1. Traversing a List of Strings</span>
+<span class="var">veggies</span> = [<span class="str">"potato"</span>, <span class="str">"brinjal"</span>, <span class="str">"ladyfinger"</span>, <span class="str">"cucumber"</span>]
+<span class="kw">for</span> <span class="var">v</span> <span class="kw">in</span> <span class="var">veggies</span>:
+    <span class="func">print</span>(<span class="str">"Vegetable:"</span>, <span class="var">v</span>)
+
+<span class="com"># 2. Traversing a Tuple of Coordinates</span>
+<span class="var">coords</span> = (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>)
+<span class="kw">for</span> <span class="var">pt</span> <span class="kw">in</span> <span class="var">coords</span>:
+    <span class="func">print</span>(<span class="str">"Point:"</span>, <span class="var">pt</span>)
+
+<span class="com"># 3. Traversing a String Character-by-Character</span>
+<span class="var">title</span> = <span class="str">"Python"</span>
+<span class="kw">for</span> <span class="var">char</span> <span class="kw">in</span> <span class="var">title</span>:
+    <span class="func">print</span>(<span class="str">"Char:"</span>, <span class="var">char</span>, <span class="var">end</span>=<span class="str">" | "</span>)
+<span class="func">print</span>()</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Vegetable: potato</div>
+          <div>Vegetable: brinjal</div>
+          <div>Vegetable: ladyfinger</div>
+          <div>Vegetable: cucumber</div>
+          <div>Point: 10</div>
+          <div>Point: 20</div>
+          <div>Point: 30</div>
+          <div>Point: 40</div>
+          <div>Char: P | Char: y | Char: t | Char: h | Char: o | Char: n | </div>
+        </div>
+
+        <h3>3. Linear Search in a Tuple using a <code>for</code> Loop</h3>
+        <p>
+          When searching directly over elements, we do not need bracket indexing (<code>arr[i]</code>). To track the element's position, we maintain an external index counter:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">numbers</span> = (<span class="num">1</span>, <span class="num">4</span>, <span class="num">9</span>, <span class="num">16</span>, <span class="num">25</span>, <span class="num">36</span>, <span class="num">49</span>, <span class="num">64</span>, <span class="num">81</span>, <span class="num">100</span>, <span class="num">49</span>)
+<span class="var">target</span> = <span class="num">49</span>
+
+<span class="var">idx</span> = <span class="num">0</span>
+<span class="kw">for</span> <span class="var">el</span> <span class="kw">in</span> <span class="var">numbers</span>:
+    <span class="kw">if</span> <span class="var">el</span> == <span class="var">target</span>:
+        <span class="func">print</span>(<span class="str">f"Target {target} located at index {idx}"</span>)
+        <span class="kw">break</span>  <span class="com"># Exit upon first match</span>
+    <span class="var">idx</span> += <span class="num">1</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: THE FOR...ELSE & WHILE...ELSE PATTERN -->
+      <!-- ============================================================ -->
+      <section id="for-else" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The for...else &amp; while...else Pattern</h2>
+
+        <h3>1. Behavioral Semantics of Loop <code>else</code></h3>
+        <p>
+          Python provides a syntax construct rarely found in other languages: an optional <code>else</code> clause attached directly to a <code>for</code> or <code>while</code> loop.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Fundamental Invariant of Loop else</div>
+          <p>
+            The <code>else</code> block attached to a loop executes <strong>if and only if</strong> the loop completes its entire execution sequence naturally (i.e. all items exhausted in a <code>for</code> loop, or condition evaluates to <code>False</code> in a <code>while</code> loop).
+          </p>
+          <p style="font-weight: 700; color: #ff7b72; margin-top: 0.5rem;">
+            If the loop is prematurely terminated via a <code>break</code> statement, the <code>else</code> block is completely skipped.
+          </p>
+        </div>
+
+        <h3>2. Why Not Simply Place Code After the Loop?</h3>
+        <p>
+          A common beginner question is: <em>"Why do we need <code>else:</code> if we can just write statements after the loop block?"</em> The following side-by-side comparison demonstrates the critical behavioral divergence:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Case A: Search with 'else' block (Idiomatic Python)</span>
+<span class="var">word</span> = <span class="str">"apna college"</span>
+<span class="var">search_char</span> = <span class="str">"z"</span>
+
+<span class="kw">for</span> <span class="var">ch</span> <span class="kw">in</span> <span class="var">word</span>:
+    <span class="kw">if</span> <span class="var">ch</span> == <span class="var">search_char</span>:
+        <span class="func">print</span>(<span class="str">"Character found!"</span>)
+        <span class="kw">break</span>
+<span class="kw">else</span>:
+    <span class="com"># Executes ONLY when search_char is NOT present in word!</span>
+    <span class="func">print</span>(<span class="str">f"Search complete: '{search_char}' was not found in string."</span>)</code></pre>
+        </div>
+
+        <p>
+          In contrast, without the <code>else</code> clause, any code placed after the loop runs in <em>both</em> scenarios (whether the item was found or not), requiring messy manual Boolean flag variables like <code>found = False</code>. The loop <code>else</code> eliminates flag boilerplate completely.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: THE RANGE() FUNCTION IN DEPTH -->
+      <!-- ============================================================ -->
+      <section id="range-function" class="note-section content-section">
+        <h2><span class="section-number">09.</span> The range() Function in Depth</h2>
+
+        <h3>1. Definition and Memory Architecture</h3>
+        <p>
+          The built-in <code>range()</code> function returns an immutable sequence of integers. In Python 3, <code>range</code> is not an eager list; it is a memory-efficient sequence type that computes values <em>on demand</em> in $O(1)$ constant memory, regardless of whether it spans 5 or 100,000,000 integers.
+        </p>
+
+        <h3>2. The Three Function Signatures</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Signature</th>
+                <th>Arguments</th>
+                <th>Generated Interval</th>
+                <th>Behavioral Defaults</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>range(stop)</code></td>
+                <td>1 parameter</td>
+                <td>$[0, \text{stop}-1]$</td>
+                <td>Default <code>start = 0</code>, default <code>step = +1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>range(start, stop)</code></td>
+                <td>2 parameters</td>
+                <td>$[\text{start}, \text{stop}-1]$</td>
+                <td>User-defined start and boundary; default <code>step = +1</code>.</td>
+              </tr>
+              <tr>
+                <td><code>range(start, stop, step)</code></td>
+                <td>3 parameters</td>
+                <td>$[\text{start}, \text{stop}-1]$ by $\text{step}$</td>
+                <td>User-defined start, stop, and arbitrary step stride $\pm \Delta$.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># 1. Signature 1: range(stop) -&gt; 0, 1, 2, 3, 4</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">5</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+<span class="func">print</span>()
+
+<span class="com"># 2. Signature 2: range(start, stop) -&gt; 2, 3, 4, 5, 6, 7, 8, 9</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">2</span>, <span class="num">10</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+<span class="func">print</span>()
+
+<span class="com"># 3. Signature 3: range(start, stop, step) with positive step -&gt; 2, 4, 6, 8</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">2</span>, <span class="num">10</span>, <span class="num">2</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+<span class="func">print</span>()
+
+<span class="com"># 4. Signature 3: range(start, stop, step) with negative step (Reverse) -&gt; 5, 4, 3, 2, 1</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">5</span>, <span class="num">0</span>, -<span class="num">1</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+<span class="func">print</span>()</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>0 1 2 3 4 </div>
+          <div>2 3 4 5 6 7 8 9 </div>
+          <div>2 4 6 8 </div>
+          <div>5 4 3 2 1 </div>
+        </div>
+
+        <h3>3. Solved Practice Questions using <code>for</code> and <code>range()</code></h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Problem 1: Print numbers 1 to 100</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="num">101</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+
+<span class="com"># Problem 2: Print numbers 100 down to 1</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">100</span>, <span class="num">0</span>, -<span class="num">1</span>):
+    <span class="func">print</span>(<span class="var">i</span>, <span class="var">end</span>=<span class="str">" "</span>)
+
+<span class="com"># Problem 3: Multiplication table of n using range(1, 11)</span>
+<span class="var">n</span> = <span class="num">12</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    <span class="func">print</span>(<span class="str">f"{n} x {i} = {n * i}"</span>)</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: THE PASS STATEMENT -->
+      <!-- ============================================================ -->
+      <section id="pass-statement" class="note-section content-section">
+        <h2><span class="section-number">10.</span> The pass Placeholder Statement</h2>
+
+        <h3>1. The Syntactic Requirement of pass</h3>
+        <p>
+          In Python, code blocks are delineated by indentation rather than curly brackets <code>{ }</code>. Consequently, an indented block cannot be syntactically empty. If you write an empty loop or conditional branch, the Python compiler raises an <code>IndentationError</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># SYNTAX ERROR: Expecting an indented block</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">5</span>):
+    <span class="com"># Empty body produces IndentationError: expected an indented block</span>
+<span class="func">print</span>(<span class="str">"Work done"</span>)</code></pre>
+        </div>
+
+        <h3>2. Definition and Mechanics</h3>
+        <div class="concept-box">
+          <div class="concept-title">Definition: The pass Statement</div>
+          <p>
+            The <code>pass</code> statement is a <strong>null operation (no-op)</strong>. When executed, absolutely nothing happens. It serves exclusively as a syntactic placeholder in positions where an indented statement is required by Python's grammar.
+          </p>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Correct Syntax with pass</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">5</span>):
+    <span class="kw">pass</span>  <span class="com"># Intentionally empty loop; valid syntax</span>
+
+<span class="func">print</span>(<span class="str">"Execution continues smoothly without syntax errors."</span>)</code></pre>
+        </div>
+
+        <h3>3. Real-World Applications of <code>pass</code></h3>
+        <ul>
+          <li><strong>Stubbing Future Code / API Scaffolding:</strong> Creating function or class stubs while designing software architecture prior to implementation.</li>
+          <li><strong>Exception Handling:</strong> Explicitly ignoring non-critical exceptions in <code>try...except</code> blocks.</li>
+          <li><strong>Abstract Base Classes:</strong> Defining interface method signatures that subclasses must override.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: ACCUMULATOR PATTERNS (SUM & FACTORIAL) -->
+      <!-- ============================================================ -->
+      <section id="accumulator-tasks" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Classical Accumulators: Sum &amp; Factorial</h2>
+
+        <h3>1. The Accumulator Design Pattern</h3>
+        <p>
+          The <strong>accumulator pattern</strong> is a fundamental algorithmic pattern where a variable is initialized to an identity element outside a loop, continuously updated via an aggregation operator ($+$, $\times$) across iterations, and holds the final aggregated result upon loop termination.
+        </p>
+
+        <h3>2. Task 1: Sum of the First $n$ Natural Numbers</h3>
+        <p>
+          Mathematically, the sum of the first $n$ natural numbers is defined as:
+        </p>
+        $$S_n = \sum_{k=1}^n k = 1 + 2 + 3 + \dots + n = \frac{n(n + 1)}{2}$$
+
+        <h4>Implementation A: via <code>while</code> Loop</h4>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">n</span> = <span class="num">7</span>
+<span class="var">total_sum</span> = <span class="num">0</span>    <span class="com"># Additive identity = 0</span>
+<span class="var">i</span> = <span class="num">1</span>
+
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="var">n</span>:
+    <span class="var">total_sum</span> += <span class="var">i</span>
+    <span class="var">i</span> += <span class="num">1</span>
+
+<span class="func">print</span>(<span class="str">f"The iterative sum of first {n} numbers is:"</span>, <span class="var">total_sum</span>)
+<span class="func">print</span>(<span class="str">f"Mathematical verification n*(n+1)//2 ="</span>, <span class="var">n</span> * (<span class="var">n</span> + <span class="num">1</span>) // <span class="num">2</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>The iterative sum of first 7 numbers is: 28</div>
+          <div>Mathematical verification n*(n+1)//2 = 28</div>
+        </div>
+
+        <h4>Implementation B: via <code>for</code> Loop &amp; <code>range()</code></h4>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">n</span> = <span class="num">7</span>
+<span class="var">total_sum</span> = <span class="num">0</span>
+<span class="kw">for</span> <span class="var">k</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="var">n</span> + <span class="num">1</span>):
+    <span class="var">total_sum</span> += <span class="var">k</span>
+
+<span class="func">print</span>(<span class="str">f"Total sum using for-loop:"</span>, <span class="var">total_sum</span>)</code></pre>
+        </div>
+
+        <h3>3. Task 2: Factorial of $n$ ($n!$)</h3>
+        <p>
+          The factorial of a non-negative integer $n$ is defined as the product of all positive integers less than or equal to $n$:
+        </p>
+        $$n! = \prod_{k=1}^n k = 1 \times 2 \times 3 \times \dots \times n \quad (\text{with } 0! = 1)$$
+
+        <div class="concept-box" style="border-left: 4px solid #d2a8ff;">
+          <div class="concept-title" style="color: #d2a8ff;">The Multiplicative Identity Trap</div>
+          <p>
+            Unlike summations where the accumulator is initialized to <code>0</code>, a product accumulator <strong>must be initialized to 1</strong> (the multiplicative identity). Initializing a factorial accumulator to <code>0</code> causes all subsequent multiplications to yield <code>0</code>.
+          </p>
+        </div>
+
+        <h4>Implementation A: via <code>while</code> Loop</h4>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">n</span> = <span class="num">5</span>
+<span class="var">fact</span> = <span class="num">1</span>         <span class="com"># CRITICAL: Multiplicative identity = 1</span>
+<span class="var">i</span> = <span class="num">1</span>
+
+<span class="kw">while</span> <span class="var">i</span> &lt;= <span class="var">n</span>:
+    <span class="var">fact</span> *= <span class="var">i</span>
+    <span class="var">i</span> += <span class="num">1</span>
+
+<span class="func">print</span>(<span class="str">f"{n}! using while loop ="</span>, <span class="var">fact</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>5! using while loop = 120</div>
+        </div>
+
+        <h4>Implementation B: via <code>for</code> Loop &amp; <code>range()</code></h4>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">n</span> = <span class="num">5</span>
+<span class="var">fact</span> = <span class="num">1</span>
+<span class="kw">for</span> <span class="var">k</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="var">n</span> + <span class="num">1</span>):
+    <span class="var">fact</span> *= <span class="var">k</span>
+
+<span class="func">print</span>(<span class="str">f"{n}! using for loop ="</span>, <span class="var">fact</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>5! using for loop = 120</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: MASTER COMPARISON TABLES -->
+      <!-- ============================================================ -->
+      <section id="comparison-matrix" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Master Comparison Tables</h2>
+
+        <h3>1. <code>while</code> Loop vs. <code>for</code> Loop</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature / Dimension</th>
+                <th><code>while</code> Loop</th>
+                <th><code>for</code> Loop</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Primary Mechanism</strong></td>
+                <td>Evaluates a dynamic Boolean condition.</td>
+                <td>Traverses an iterable sequence / generator.</td>
+              </tr>
+              <tr>
+                <td><strong>Iteration Count</strong></td>
+                <td>Indefinite (unknown beforehand, event-driven).</td>
+                <td>Definite (bounded by sequence length / range bounds).</td>
+              </tr>
+              <tr>
+                <td><strong>Iterator Initialization</strong></td>
+                <td>Manual declaration prior to loop (<code>i = 0</code>).</td>
+                <td>Automatic assignment by loop header (<code>for i in ...</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>Iterator Updation</strong></td>
+                <td>Manual increment / decrement inside body (<code>i += 1</code>).</td>
+                <td>Automatic extraction of next element via iterator protocol.</td>
+              </tr>
+              <tr>
+                <td><strong>Infinite Loop Risk</strong></td>
+                <td><strong>High</strong> (if condition never falsifies or update omitted).</td>
+                <td><strong>Extremely Low</strong> (finite collections always terminate).</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Use Cases</strong></td>
+                <td>Event polling, game loops, convergence algorithms, stream processing.</td>
+                <td>Traversing lists, dicts, tuples, files, batch training, fixed iterations.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Loop Control Keywords: <code>break</code> vs. <code>continue</code> vs. <code>pass</code></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Action on Loop Scope</th>
+                <th>Current Iteration</th>
+                <th>Remaining Iterations</th>
+                <th>Typical Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong><code>break</code></strong></td>
+                <td>Exits the loop permanently.</td>
+                <td>Terminated immediately.</td>
+                <td>All discarded.</td>
+                <td>Early exit when search target is located or error occurs.</td>
+              </tr>
+              <tr>
+                <td><strong><code>continue</code></strong></td>
+                <td>Remains in the loop.</td>
+                <td>Terminated immediately.</td>
+                <td>Proceeds to the next iteration.</td>
+                <td>Skipping invalid or unwanted elements during filtering.</td>
+              </tr>
+              <tr>
+                <td><strong><code>pass</code></strong></td>
+                <td>No effect on control flow.</td>
+                <td>Continues uninterrupted.</td>
+                <td>Continues uninterrupted.</td>
+                <td>Syntactic placeholder for empty code blocks or future logic.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: INTERACTIVE PYTHON LOOP SIMULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-simulator" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Interactive Python Loop Simulator</h2>
+
+        <p>
+          Experiment directly with Python looping dynamics. Configure the starting value, stopping boundary, step stride, and optional early termination or skipping criteria to observe real-time state transitions, iteration counts, and accumulator values:
+        </p>
+
+        <!-- Interactive Loop Simulator Widget -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.75rem; margin-top: 1.5rem; box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="margin: 0; color: var(--text-primary); font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>⚡ Live Python Loop Trace Simulator</span>
+            </h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-family: var(--font-mono);">Client-side Invariant Engine</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Loop Type</label>
+              <select id="sim-loop-type" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+                <option value="for">for i in range(start, stop, step)</option>
+                <option value="while">while i &lt; stop (manual step)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Start Value</label>
+              <input type="number" id="sim-start" value="1" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Stop Boundary</label>
+              <input type="number" id="sim-stop" value="10" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Step Size (&Delta;)</label>
+              <input type="number" id="sim-step" value="1" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">break at (Optional)</label>
+              <input type="number" id="sim-break" placeholder="e.g. 7" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">continue at (Optional)</label>
+              <input type="number" id="sim-continue" placeholder="e.g. 4" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <button class="btn-primary" onclick="executeLoopSimulation()" style="cursor: pointer;">
+              <span>Execute Trace Simulation</span>
+            </button>
+            <button class="btn-secondary" onclick="resetLoopSimulation()" style="cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 8px; color: var(--text-primary);">
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Trace Output Box -->
+          <div class="output-box" id="loop-trace-output" style="margin-bottom: 0; min-height: 120px; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.6;">
+            <span class="output-label">Execution Trace:</span>
+            <div style="color: var(--text-muted);">Configure parameters above and click "Execute Trace Simulation" to inspect execution states.</div>
+          </div>
+        </div>
+
+        <!-- Interactive Accumulator Calculator -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.75rem; margin-top: 2rem; box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="margin: 0; color: var(--text-primary); font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🧮 Interactive Accumulator Calculator ($S_n$ and $n!$)</span>
+            </h3>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.9rem;">Target Value $n$:</label>
+            <input type="number" id="calc-n" value="6" min="1" max="20" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); width: 100px;">
+            <button class="btn-primary" onclick="calculateAccumulators()">Compute S_n and n!</button>
+          </div>
+          <div class="output-box" id="calc-output" style="margin-bottom: 0; line-height: 1.7;">
+            <span class="output-label">Computation Results:</span>
+            <div id="calc-results-body">
+              <strong>Sum S_6:</strong> 1 + 2 + 3 + 4 + 5 + 6 = <strong>21</strong> &nbsp;|&nbsp; Formula: 6*(7)/2 = 21<br>
+              <strong>Factorial 6!:</strong> 1 &times; 2 &times; 3 &times; 4 &times; 5 &times; 6 = <strong>720</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 5 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-loops" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function executeLoopSimulation() {
+      const loopType = document.getElementById('sim-loop-type').value;
+      const start = parseInt(document.getElementById('sim-start').value, 10);
+      const stop = parseInt(document.getElementById('sim-stop').value, 10);
+      const step = parseInt(document.getElementById('sim-step').value, 10);
+      const breakValStr = document.getElementById('sim-break').value.trim();
+      const contValStr = document.getElementById('sim-continue').value.trim();
+      
+      const breakVal = breakValStr !== "" ? parseInt(breakValStr, 10) : null;
+      const contVal = contValStr !== "" ? parseInt(contValStr, 10) : null;
+
+      const out = document.getElementById('loop-trace-output');
+      
+      if (isNaN(start) || isNaN(stop) || isNaN(step) || step === 0) {
+        out.innerHTML = '<span style="color:#ff7b72;">Error: Invalid start, stop, or step (step cannot be 0).</span>';
+        return;
+      }
+
+      let logLines = [];
+      logLines.push(`[INIT] loopType=${loopType}, start=${start}, stop=${stop}, step=${step}`);
+      if (breakVal !== null) logLines.push(`[RULE] break triggered when i == ${breakVal}`);
+      if (contVal !== null) logLines.push(`[RULE] continue triggered when i == ${contVal}`);
+      logLines.push('------------------------------------------------------------');
+
+      let current = start;
+      let iterations = 0;
+      let accumulatorSum = 0;
+      let hitBreak = false;
+      const MAX_SAFETY = 200; // Protection against accidental infinite client spin
+
+      while (true) {
+        if (iterations >= MAX_SAFETY) {
+          logLines.push(`<span style="color:#ff7b72;">[WARNING] Max safety limit of ${MAX_SAFETY} steps reached. Terminating simulation.</span>`);
+          break;
+        }
+
+        // Termination check
+        if (step > 0 && current >= stop) break;
+        if (step < 0 && current <= stop) break;
+
+        iterations++;
+        logLines.push(`Iter #${iterations}: i = ${current}`);
+
+        // Check continue condition
+        if (contVal !== null && current === contVal) {
+          logLines.push(`   -> [CONTINUE] i == ${contVal}; discarding remainder of cycle.`);
+          current += step;
+          continue;
+        }
+
+        // Check break condition
+        if (breakVal !== null && current === breakVal) {
+          logLines.push(`   -> [BREAK] i == ${breakVal}; terminating loop immediately!`);
+          hitBreak = true;
+          break;
+        }
+
+        // Normal iteration action
+        accumulatorSum += current;
+        logLines.push(`   -> Processed: value=${current}, running_sum=${accumulatorSum}`);
+
+        current += step;
+      }
+
+      logLines.push('------------------------------------------------------------');
+      if (hitBreak) {
+        logLines.push(`<span style="color:#ffa657;">[TERMINATION] Loop exited via early break. Final i = ${current}.</span>`);
+      } else {
+        logLines.push(`<span style="color:#7ee787;">[TERMINATION] Loop exhausted naturally (else branch would execute). Final i = ${current}.</span>`);
+      }
+      logLines.push(`[SUMMARY] Total iterations: ${iterations}, Final accumulator sum: ${accumulatorSum}`);
+
+      out.innerHTML = '<span class="output-label">Execution Trace:</span>' + logLines.join('<br>');
+    }
+
+    function resetLoopSimulation() {
+      document.getElementById('sim-loop-type').value = 'for';
+      document.getElementById('sim-start').value = '1';
+      document.getElementById('sim-stop').value = '10';
+      document.getElementById('sim-step').value = '1';
+      document.getElementById('sim-break').value = '';
+      document.getElementById('sim-continue').value = '';
+      document.getElementById('loop-trace-output').innerHTML = '<span class="output-label">Execution Trace:</span><div style="color: var(--text-muted);">Configure parameters above and click "Execute Trace Simulation" to inspect execution states.</div>';
+    }
+
+    function calculateAccumulators() {
+      const n = parseInt(document.getElementById('calc-n').value, 10);
+      const res = document.getElementById('calc-results-body');
+      if (isNaN(n) || n < 1) {
+        res.innerHTML = '<span style="color:#ff7b72;">Please enter a positive integer n &ge; 1.</span>';
+        return;
+      }
+      if (n > 25) {
+        res.innerHTML = '<span style="color:#ff7b72;">Please enter n &le; 25 to avoid large integer overflow in demonstration.</span>';
+        return;
+      }
+
+      let sumParts = [];
+      let factParts = [];
+      let totalSum = 0;
+      let totalFact = 1;
+
+      for (let i = 1; i <= n; i++) {
+        sumParts.push(i);
+        factParts.push(i);
+        totalSum += i;
+        totalFact *= i;
+      }
+
+      const sumStr = sumParts.length <= 10 ? sumParts.join(' + ') : `${sumParts.slice(0, 5).join(' + ')} + ... + ${n}`;
+      const factStr = factParts.length <= 10 ? factParts.join(' &times; ') : `${factParts.slice(0, 5).join(' &times; ')} &times; ... &times; ${n}`;
+      const formulaVal = (n * (n + 1)) / 2;
+
+      res.innerHTML = `
+        <strong>Sum S_${n}:</strong> ${sumStr} = <strong>${totalSum}</strong> &nbsp;|&nbsp; Formula Verification: ${n}&times;(${n}+1)/2 = <strong>${formulaVal}</strong><br>
+        <strong>Factorial ${n}!:</strong> ${factStr} = <strong>${totalFact.toLocaleString()}</strong>
+      `;
+    }
+  </script>
+</body>
+</html>

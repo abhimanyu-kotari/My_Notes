@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 3: Probability, Normal Distribution & Z-Scores | Statistics Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 3 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#probability-foundations" class="sidebar-link">1. Probability Foundations</a></li>
+        <li><a href="#addition-rule" class="sidebar-link">2. The Addition Rule</a></li>
+        <li><a href="#multiplication-rule" class="sidebar-link">3. The Multiplication Rule &amp; Bayes</a></li>
+        <li><a href="#permutations-combinations" class="sidebar-link">4. Permutations vs. Combinations</a></li>
+        <li><a href="#normal-distribution" class="sidebar-link">5. Gaussian (Normal) Distribution</a></li>
+        <li><a href="#empirical-rule" class="sidebar-link">6. Empirical Rule (68-95-99.7)</a></li>
+        <li><a href="#z-score-formula" class="sidebar-link">7. The Z-Score Formula</a></li>
+        <li><a href="#standard-normal-dist" class="sidebar-link">8. Standard Normal Distribution</a></li>
+        <li><a href="#z-table-reading" class="sidebar-link">9. Master Guide to Reading Z-Tables</a></li>
+        <li><a href="#standardization-vs-normalization" class="sidebar-link">10. Standardization vs. Normalization</a></li>
+        <li><a href="#python-zscore-outliers" class="sidebar-link">11. Python Outlier Detection (|Z| &gt; 3)</a></li>
+        <li><a href="#interactive-z-calculator" class="sidebar-link">12. Interactive Z-Score &amp; Curve Calculator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 03 Notes</span>
+          <span class="tag">Statistics</span>
+          <span class="tag">Probability Rules</span>
+          <span class="tag">Permutations &amp; Combinations</span>
+          <span class="tag">Gaussian Distribution</span>
+          <span class="tag">68-95-99.7% Rule</span>
+          <span class="tag">Z-Scores</span>
+          <span class="tag">Z-Tables</span>
+          <span class="tag">Feature Scaling</span>
+        </div>
+        <h1 class="lecture-main-title">Probability Foundations, Gaussian Distributions &amp; Z-Scores</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This module bridges probability theory with data modeling: the Addition and Multiplication rules (mutually exclusive vs. non-mutually exclusive, independent vs. dependent, and conditional probability), Permutations ($^n P_r$) vs. Combinations ($^n C_r$), the symmetrical Gaussian (Normal) Distribution bell curve, the Empirical Rule ($68-95-99.7\%$), Z-Scores ($Z = \frac{X - \mu}{\sigma}$), reading Z-Tables to compute tail and body probabilities, and applying Standardization vs. Min-Max Normalization to prepare real-world features for machine learning.<br>
+          <strong>Why do we use it?</strong> Natural measurements—from human heights to financial sensor errors—naturally cluster in symmetrical bell curves. By transforming raw measurements into standardized Z-scores, we can compare metrics measured on completely different scales (like comparing cricket batting averages across different pitch conditions, or combining age in years with salary in dollars without allowing large salary numbers to overpower machine learning algorithms).
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: PROBABILITY FOUNDATIONS -->
+      <!-- ============================================================ -->
+      <section id="probability-foundations" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Probability Foundations: Sample Spaces &amp; Likelihood</h2>
+
+        <h3>1. What is Probability?</h3>
+        <p>
+          <strong>Probability</strong> is the numerical measure of the likelihood that an event will occur. Its value is strictly bounded between $0$ (impossible event) and $1$ (certain event):
+        </p>
+        <p>
+          $$P(\text{Event}) = \frac{\text{Number of Favorable Outcomes}}{\text{Total Number of Possible Outcomes in Sample Space } S}$$
+        </p>
+
+        <h3>2. Basic Experiments &amp; Sample Spaces</h3>
+        <ul>
+          <li><strong>Rolling a Fair 6-Sided Die:</strong> Sample Space $S = \{1, 2, 3, 4, 5, 6\}$. Probability of rolling a $6$:
+            $$P(\text{Rolling a } 6) = \frac{1}{6} \approx 0.1667 \ (16.67\%)$$
+          </li>
+          <li><strong>Flipping an Unbiased Coin:</strong> Sample Space $S = \{\text{Head}, \text{Tail}\}$.
+            $$P(\text{Head}) = \frac{1}{2} = 0.50 \ (50\%)$$
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THE ADDITION RULE -->
+      <!-- ============================================================ -->
+      <section id="addition-rule" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Addition Rule (Mutually Exclusive vs. Non-Mutually Exclusive)</h2>
+
+        <h3>1. Mutually Exclusive Events</h3>
+        <p>
+          Two events are <strong>Mutually Exclusive</strong> (disjoint) if they <em>cannot occur at the same time</em>. (e.g. In a single coin flip, you cannot get both Heads and Tails simultaneously).
+        </p>
+        <p>
+          $$P(A \text{ or } B) = P(A \cup B) = P(A) + P(B)$$
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">example</span>
+          </div>
+          <pre><code>Question: What is the probability of rolling a 1, 3, or 6 on a single die roll?
+P(1 or 3 or 6) = P(1) + P(3) + P(6) = 1/6 + 1/6 + 1/6 = 3/6 = 0.50 (50%)</code></pre>
+        </div>
+
+        <h3>2. Non-Mutually Exclusive Events</h3>
+        <p>
+          Events are <strong>Non-Mutually Exclusive</strong> if both can happen at the same time (there is an intersection or overlap $A \cap B$). If we simply added their probabilities, the overlapping elements would be counted twice!
+        </p>
+        <p>
+          $$P(A \text{ or } B) = P(A) + P(B) - P(A \cap B)$$
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Card Deck Example from Lecture: Queen or Heart</div>
+          <p>
+            In a standard 52-card deck, what is the probability of randomly drawing a card that is either a <strong>Queen</strong> or a <strong>Heart</strong>?
+          </p>
+          <ul>
+            <li>Total cards $n = 52$</li>
+            <li>Number of Queens: $4 \implies P(\text{Queen}) = \frac{4}{52}$</li>
+            <li>Number of Hearts: $13 \implies P(\text{Heart}) = \frac{13}{52}$</li>
+            <li>Number of cards that are BOTH a Queen and a Heart: $1$ (Queen of Hearts) $\implies P(\text{Queen} \cap \text{Heart}) = \frac{1}{52}$</li>
+          </ul>
+          <p style="margin-top: 0.5rem; font-family: var(--font-mono);">
+            $$P(\text{Queen or Heart}) = \frac{4}{52} + \frac{13}{52} - \frac{1}{52} = \frac{16}{52} = \frac{4}{13} \approx \mathbf{30.77\%}$$
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: THE MULTIPLICATION RULE & BAYES -->
+      <!-- ============================================================ -->
+      <section id="multiplication-rule" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Multiplication Rule &amp; Conditional Probability</h2>
+
+        <h3>1. Independent Events</h3>
+        <p>
+          Two events are <strong>Independent</strong> if the occurrence of event $A$ has no influence on the probability of event $B$.
+        </p>
+        <p>
+          $$P(A \text{ and } B) = P(A \cap B) = P(A) \times P(B)$$
+        </p>
+        <p>
+          <em>Example:</em> What is the probability of rolling a $5$ on the first die and a $4$ on the second die?<br>
+          $$P(5 \text{ and } 4) = \frac{1}{6} \times \frac{1}{6} = \frac{1}{36} \approx \mathbf{2.78\%}$$
+        </p>
+
+        <h3>2. Dependent Events &amp; Conditional Probability</h3>
+        <p>
+          Events are <strong>Dependent</strong> when event $A$ directly changes the probability space for event $B$. The probability of $B$ given that $A$ has already occurred is written $P(B \mid A)$:
+        </p>
+        <p>
+          $$P(A \text{ and } B) = P(A) \times P(B \mid A)$$
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Marble Bag Example from Lecture (Without Replacement)</div>
+          <p>
+            A bag contains <strong>3 Red Marbles</strong> and <strong>2 Green Marbles</strong> (Total = 5). What is the probability of drawing a Green marble first, and then a Red marble without putting the first marble back?
+          </p>
+          <ul>
+            <li><strong>First draw:</strong> $P(\text{Green}) = \frac{2}{5}$</li>
+            <li><strong>Second draw:</strong> 4 marbles remain in the bag (3 Red, 1 Green).<br>
+              Conditional probability: $P(\text{Red} \mid \text{Green}) = \frac{3}{4}$</li>
+            <li><strong>Joint Probability:</strong>
+              $$P(\text{Green and Red}) = \frac{2}{5} \times \frac{3}{4} = \frac{6}{20} = \mathbf{0.30 \ (30\%)}$$
+            </li>
+          </ul>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            This concept of updating probabilities based on prior events is the theoretical foundation of <strong>Bayes' Theorem</strong> and the <strong>Naive Bayes Machine Learning Classifier</strong>!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: PERMUTATIONS VS COMBINATIONS -->
+      <!-- ============================================================ -->
+      <section id="permutations-combinations" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Permutations ($^n P_r$) vs. Combinations ($^n C_r$)</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Technique</th>
+                <th>Does Order Matter?</th>
+                <th>Mathematical Formula</th>
+                <th>Real-Life Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Permutation ($^n P_r$)</strong></td>
+                <td><strong>YES</strong> (Order matters). $AB \neq BA$.</td>
+                <td>$$^n P_r = \frac{n!}{(n - r)!}$$</td>
+                <td>Lock passcodes, podium finishes (1st, 2nd, 3rd), diary logging order.</td>
+              </tr>
+              <tr>
+                <td><strong>Combination ($^n C_r$)</strong></td>
+                <td><strong>NO</strong> (Order does NOT matter). $AB = BA$.</td>
+                <td>$$^n C_r = \frac{n!}{r! (n - r)!}$$</td>
+                <td>Selecting team members, choosing 3 books to take on vacation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>The Chocolate Factory Problem from Lecture</h3>
+        <p>
+          A candy factory produces $n = 6$ distinct brands: <code>[Dairy Milk, 5-Star, Milkybar, Eclairs, Gems, Silk]</code>. A student is instructed to record the first $r = 3$ chocolates seen:
+        </p>
+        <ul>
+          <li><strong>If Order Matters (Permutation):</strong>
+            $$^6 P_3 = \frac{6!}{(6 - 3)!} = \frac{6 \times 5 \times 4 \times 3!}{3!} = 6 \times 5 \times 4 = \mathbf{120 \text{ arrangements}}$$
+          </li>
+          <li><strong>If Taking 3 Unique Chocolates Home (Combination):</strong>
+            $$^6 C_3 = \frac{6!}{3! (6 - 3)!} = \frac{6 \times 5 \times 4}{3 \times 2 \times 1} = \mathbf{20 \text{ unique selections}}$$
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: GAUSSIAN NORMAL DISTRIBUTION -->
+      <!-- ============================================================ -->
+      <section id="normal-distribution" class="note-section content-section">
+        <h2><span class="section-number">05.</span> The Gaussian (Normal) Distribution &amp; Bell Curve Anatomy</h2>
+
+        <h3>1. What is the Normal Distribution?</h3>
+        <p>
+          The <strong>Normal Distribution</strong> (or <strong>Gaussian Distribution</strong>) is a continuous probability distribution characterized by a symmetrical, bell-shaped curve. It is described completely by two parameters: its Mean ($\mu$) and Standard Deviation ($\sigma$):
+        </p>
+        <p>
+          $$X \sim \mathcal{N}(\mu, \sigma^2)$$
+        </p>
+
+        <h3>2. Fundamental Properties of the Bell Curve</h3>
+        <ul>
+          <li><strong>Perfect Symmetry:</strong> The curve is completely symmetrical about the center line $\mu$. Exactly $50\%$ of all data points lie to the left of the mean, and $50\%$ lie to the right.</li>
+          <li><strong>Coincidence of Centers:</strong> At the central apex peak, $\text{Mean} = \text{Median} = \text{Mode}$.</li>
+          <li><strong>Asymptotic Tails:</strong> The tails approach the horizontal axis infinitely closely in both directions ($-\infty$ and $+\infty$), but never touch it.</li>
+          <li><strong>Total Area Invariant:</strong> The total area under the curve is strictly equal to $1.0$ ($100\%$).</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: EMPIRICAL RULE (68-95-99.7) -->
+      <!-- ============================================================ -->
+      <section id="empirical-rule" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The Empirical Rule ($68 - 95 - 99.7\%$ Rule)</h2>
+
+        <p>
+          For any dataset that follows a Gaussian normal distribution, the distribution of observations relative to standard deviation follows universal mathematical constants:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+            
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #58a6ff; border-radius: 6px;">
+              <div style="font-size: 1.75rem; font-weight: 800; color: #58a6ff; font-family: var(--font-mono);">68.27%</div>
+              <strong style="color: var(--text-primary); font-size: 0.95rem;">Within 1 Standard Deviation</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-muted);">
+                $$\mu \pm 1\sigma = [\mu - \sigma, \ \mu + \sigma]$$
+                Roughly 68 out of every 100 observations fall within this central zone.
+              </p>
+            </div>
+
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #7ee787; border-radius: 6px;">
+              <div style="font-size: 1.75rem; font-weight: 800; color: #7ee787; font-family: var(--font-mono);">95.45%</div>
+              <strong style="color: var(--text-primary); font-size: 0.95rem;">Within 2 Standard Deviations</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-muted);">
+                $$\mu \pm 2\sigma = [\mu - 2\sigma, \ \mu + 2\sigma]$$
+                Over 95 out of every 100 observations fall within 2 standard deviations.
+              </p>
+            </div>
+
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #ffa657; border-radius: 6px;">
+              <div style="font-size: 1.75rem; font-weight: 800; color: #ffa657; font-family: var(--font-mono);">99.73%</div>
+              <strong style="color: var(--text-primary); font-size: 0.95rem;">Within 3 Standard Deviations</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-muted);">
+                $$\mu \pm 3\sigma = [\mu - 3\sigma, \ \mu + 3\sigma]$$
+                Practically all data (99.73%) falls inside. Anything beyond $|3\sigma|$ is an outlier!
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THE Z-SCORE FORMULA -->
+      <!-- ============================================================ -->
+      <section id="z-score-formula" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The Z-Score: Standardizing Distance from the Mean</h2>
+
+        <h3>1. What is a Z-Score?</h3>
+        <p>
+          A <strong>Z-Score</strong> (or standard score) tells you exactly <em>how many standard deviations an observation $X$ is located above or below the mean</em>:
+        </p>
+        <p>
+          $$Z = \frac{X - \mu}{\sigma}$$
+        </p>
+
+        <h3>2. Interpreting the Sign of a Z-Score</h3>
+        <ul>
+          <li><strong>$Z = 0$:</strong> The point is exactly at the mean ($X = \mu$).</li>
+          <li><strong>$Z &gt; 0$ (Positive):</strong> The point lies to the <strong>right</strong> (above the mean).</li>
+          <li><strong>$Z &lt; 0$ (Negative):</strong> The point lies to the <strong>left</strong> (below the mean).</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Lecture Example: mu = 4, sigma = 1</span>
+<span class="var">mu</span> = <span class="num">4</span>
+<span class="var">sigma</span> = <span class="num">1</span>
+
+<span class="com"># Case 1: X = 4.75</span>
+<span class="var">z1</span> = (<span class="num">4.75</span> - <span class="var">mu</span>) / <span class="var">sigma</span>  <span class="com"># z = +0.75 (0.75 sigma to the right)</span>
+
+<span class="com"># Case 2: X = 3.75</span>
+<span class="var">z2</span> = (<span class="num">3.75</span> - <span class="var">mu</span>) / <span class="var">sigma</span>  <span class="com"># z = -0.25 (0.25 sigma to the left)</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: STANDARD NORMAL DISTRIBUTION -->
+      <!-- ============================================================ -->
+      <section id="standard-normal-dist" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The Standard Normal Distribution ($\mu = 0, \sigma = 1$)</h2>
+
+        <h3>1. The Universal Transformation</h3>
+        <p>
+          Every dataset in the universe has its own raw units and mean: temperatures in Fahrenheit, salaries in rupees, heights in centimeters. When you subtract the mean and divide by standard deviation for every data point, you map that distribution into the <strong>Standard Normal Distribution</strong>:
+        </p>
+        <p>
+          $$Z \sim \mathcal{N}(0, 1) \quad \text{where } \mu_z = 0 \text{ and } \sigma_z = 1$$
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Original Data Point ($X$) with $\mu = 4, \sigma = 1$</th>
+                <th>Standardized Z-Score Calculation</th>
+                <th>Position on Standard Normal Curve</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>$(1 - 4) / 1$</td><td>$-3\sigma$</td></tr>
+              <tr><td>2</td><td>$(2 - 4) / 1$</td><td>$-2\sigma$</td></tr>
+              <tr><td>3</td><td>$(3 - 4) / 1$</td><td>$-1\sigma$</td></tr>
+              <tr><td>4</td><td>$(4 - 4) / 1$</td><td>$\mathbf{0}$ (Center Mean)</td></tr>
+              <tr><td>5</td><td>$(5 - 4) / 1$</td><td>$+1\sigma$</td></tr>
+              <tr><td>6</td><td>$(6 - 4) / 1$</td><td>$+2\sigma$</td></tr>
+              <tr><td>7</td><td>$(7 - 4) / 1$</td><td>$+3\sigma$</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: MASTER GUIDE TO READING Z-TABLES -->
+      <!-- ============================================================ -->
+      <section id="z-table-reading" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Master Guide: How to Read Z-Tables</h2>
+
+        <h3>1. Cumulative Left-Tail vs. Right-Tail Area</h3>
+        <p>
+          Standard statistical Z-tables provide the <strong>cumulative area to the left</strong> of a given $Z$ value ($P(Z \le z)$). Because the total area under the curve is strictly $1.0$:
+        </p>
+        <p>
+          $$\text{Right-Tail Area } P(Z &gt; z) = 1 - P(Z \le z)$$
+        </p>
+
+        <h3>2. Solved Problem 1: Percentage of Scores Above 4.25</h3>
+        <p>
+          Given $\mu = 4, \sigma = 1$. What percentage of scores fall above $4.25$?
+        </p>
+        <ol>
+          <li>Compute Z-score: $Z = \frac{4.25 - 4}{1} = \mathbf{0.25}$.</li>
+          <li>Look up $Z = 0.25$ in standard Z-table:
+            <ul>
+              <li>Row <code>0.2</code>, Column <code>0.05</code> $\implies \text{Left Area} = \mathbf{0.5987}$ ($59.87\%$).</li>
+            </ul>
+          </li>
+          <li>We want the area <strong>above</strong> (right tail):
+            $$\text{Area} = 1 - 0.5987 = \mathbf{0.4013} \approx \mathbf{40.13\%}$$
+          </li>
+        </ol>
+
+        <h3>3. Solved Problem 2: Indian Population IQ Problem</h3>
+        <p>
+          In a population study, average IQ is $\mu = 100$ with $\sigma = 15$. What percentage of people have an IQ <strong>lower than 85</strong>?
+        </p>
+        <ol>
+          <li>Compute Z-score: $Z = \frac{85 - 100}{15} = \frac{-15}{15} = \mathbf{-1.00}$.</li>
+          <li>Look up $Z = -1.00$ in negative Z-table:
+            <ul>
+              <li>Row <code>-1.0</code>, Column <code>0.00</code> $\implies \text{Area} = \mathbf{0.1587}$.</li>
+            </ul>
+          </li>
+          <li>Conclusion: Exactly $\mathbf{15.87\%}$ of the population is expected to have an IQ below 85.</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: STANDARDIZATION VS NORMALIZATION -->
+      <!-- ============================================================ -->
+      <section id="standardization-vs-normalization" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Feature Preprocessing in ML: Standardization vs. Min-Max Normalization</h2>
+
+        <h3>1. Why Feature Scaling is Mandatory in Machine Learning</h3>
+        <p>
+          Consider training a machine learning model on customer records with three features:
+        </p>
+        <ul>
+          <li><strong>Age:</strong> Ranges from 18 to 70 (Scale of tens).</li>
+          <li><strong>Annual Salary:</strong> Ranges from \$30,000 to \$250,000 (Scale of hundreds of thousands).</li>
+          <li><strong>Weight:</strong> Ranges from 50 kg to 100 kg.</li>
+        </ul>
+        <p>
+          Distance-based algorithms (KNN, SVM, K-Means, PCA, and Gradient Descent) calculate Euclidean distances: $d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$. Because salary numbers are thousands of times larger than age numbers, the algorithm will completely ignore age and weight! We must rescale them.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Criteria</th>
+                <th>Standardization (StandardScaler)</th>
+                <th>Normalization (Min-Max Scaler)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Formula</strong></td>
+                <td>$$X_{\text{std}} = \frac{X - \mu}{\sigma}$$</td>
+                <td>$$X_{\text{norm}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}}$$</td>
+              </tr>
+              <tr>
+                <td><strong>Output Range</strong></td>
+                <td>Unbounded (typically $-3$ to $+3$). Centers at $\mu = 0, \sigma = 1$.</td>
+                <td>Strictly bounded between $[0, 1]$ (or $[-1, 1]$).</td>
+              </tr>
+              <tr>
+                <td><strong>Outlier Sensitivity</strong></td>
+                <td><strong>Less sensitive.</strong> Outliers are retained in the outer standard deviations.</td>
+                <td><strong>Highly sensitive!</strong> An extreme outlier will crush all other normal data points into a tiny cluster near 0.</td>
+              </tr>
+              <tr>
+                <td><strong>Primary ML Use Cases</strong></td>
+                <td>Linear Regression, Logistic Regression, SVM, KNN, PCA.</td>
+                <td>Deep Learning Neural Networks (CNNs, image pixels $0-255 \to [0, 1]$).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: PYTHON Z-SCORE OUTLIER DETECTION -->
+      <!-- ============================================================ -->
+      <section id="python-zscore-outliers" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Python Implementation: Detecting Outliers via $|Z| &gt; 3$</h2>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> <span class="cls">numpy</span> <span class="kw">as</span> <span class="var">np</span>
+
+<span class="kw">def</span> <span class="func">detect_outliers_zscore</span>(<span class="var">data</span>, <span class="var">threshold</span>=<span class="num">3</span>):
+    <span class="str">\"\"\"Identify data points falling beyond threshold standard deviations from mean.\"\"\"</span>
+    <span class="var">mean</span> = <span class="var">np</span>.<span class="func">mean</span>(<span class="var">data</span>)
+    <span class="var">std</span> = <span class="var">np</span>.<span class="func">std</span>(<span class="var">data</span>)
+    
+    <span class="var">outliers</span> = []
+    <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">data</span>:
+        <span class="var">z_score</span> = (<span class="var">x</span> - <span class="var">mean</span>) / <span class="var">std</span>
+        <span class="kw">if</span> <span class="var">np</span>.<span class="func">abs</span>(<span class="var">z_score</span>) &gt; <span class="var">threshold</span>:
+            <span class="var">outliers</span>.<span class="func">append</span>(<span class="var">x</span>)
+    <span class="kw">return</span> <span class="var">outliers</span>
+
+<span class="com"># Test dataset from lecture</span>
+<span class="var">dataset</span> = [<span class="num">11</span>, <span class="num">10</span>, <span class="num">12</span>, <span class="num">14</span>, <span class="num">12</span>, <span class="num">15</span>, <span class="num">14</span>, <span class="num">13</span>, <span class="num">15</span>, <span class="num">102</span>, <span class="num">12</span>, <span class="num">14</span>, <span class="num">17</span>, <span class="num">19</span>, <span class="num">107</span>, <span class="num">10</span>, <span class="num">13</span>, <span class="num">12</span>, <span class="num">14</span>, <span class="num">12</span>, <span class="num">108</span>, <span class="num">12</span>, <span class="num">11</span>, <span class="num">14</span>, <span class="num">13</span>, <span class="num">15</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">12</span>, <span class="num">10</span>, <span class="num">14</span>, <span class="num">13</span>, <span class="num">15</span>, <span class="num">10</span>]
+<span class="var">found_outliers</span> = <span class="func">detect_outliers_zscore</span>(<span class="var">dataset</span>, <span class="var">threshold</span>=<span class="num">3</span>)
+<span class="func">print</span>(<span class="str">"Outliers detected by Z-score:"</span>, <span class="var">found_outliers</span>)
+<span class="com"># Output: Outliers detected by Z-score: [102, 107, 108]</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE Z-CALCULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-z-calculator" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive Z-Score &amp; Normal Curve Calculator</h2>
+
+        <p>
+          Input your population mean ($\mu$), standard deviation ($\sigma$), and observed value ($X$) to dynamically compute your Z-score and visualize the exact shaded probability area under the normal curve:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.15rem;">Live Z-Score &amp; Probability Simulator</h3>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Mean (&mu;):</label>
+              <input type="number" id="z-sim-mu" value="100" style="width: 100px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Std Dev (&sigma;):</label>
+              <input type="number" id="z-sim-sigma" value="15" min="0.1" style="width: 100px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Value (X):</label>
+              <input type="number" id="z-sim-x" value="85" style="width: 100px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Area of Interest:</label>
+              <select id="z-sim-type" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-sans);">
+                <option value="left">Left Tail: P(X &le; x)</option>
+                <option value="right">Right Tail: P(X &ge; x)</option>
+              </select>
+            </div>
+            <div style="align-self: flex-end;">
+              <button class="btn-primary" onclick="computeZSim()" style="background: #238636; border-color: #238636; padding: 0.48rem 1rem;">Calculate &amp; Shade</button>
+            </div>
+          </div>
+
+          <!-- Output Metrics -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Calculated Z-Score:</div>
+              <div id="z-res-score" style="font-size: 1.4rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">-1.00</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Probability Area:</div>
+              <div id="z-res-prob" style="font-size: 1.4rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono);">0.1587 (15.87%)</div>
+            </div>
+          </div>
+
+          <!-- Canvas for Normal Curve -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <canvas id="z-curve-canvas" width="600" height="220" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Lecture 3 Reference
+      </div>
+      <div>
+        <a href="stats-lecture-2.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Previous: Lecture 2 (Dispersion &amp; Outliers)</a>
+        <a href="stats-lecture-4.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Next: Lecture 4 (Hypothesis Testing &amp; Inference) →</a>
+        <a href="#probability-foundations" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Approximation of standard normal CDF
+    function normalCdf(z) {
+      let t = 1 / (1 + 0.2316419 * Math.abs(z));
+      let d = 0.3989423 * Math.exp(-z * z / 2);
+      let p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+      return z > 0 ? 1 - p : p;
+    }
+
+    function computeZSim() {
+      const mu = parseFloat(document.getElementById('z-sim-mu').value) || 100;
+      const sigma = parseFloat(document.getElementById('z-sim-sigma').value) || 15;
+      const x = parseFloat(document.getElementById('z-sim-x').value) || 85;
+      const type = document.getElementById('z-sim-type').value;
+
+      const z = (x - mu) / sigma;
+      const leftProb = normalCdf(z);
+      const prob = type === 'left' ? leftProb : (1 - leftProb);
+
+      document.getElementById('z-res-score').textContent = z.toFixed(2);
+      document.getElementById('z-res-prob').textContent = `${prob.toFixed(4)} (${(prob * 100).toFixed(2)}%)`;
+
+      drawNormalCurve(z, type);
+    }
+
+    function drawNormalCurve(zVal, type) {
+      const canvas = document.getElementById('z-curve-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 30;
+      const graphW = width - padding * 2;
+      const graphH = height - padding * 2;
+
+      // Normal PDF: f(z) = (1/sqrt(2pi)) * exp(-z^2 / 2)
+      function pdf(z) {
+        return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z);
+      }
+
+      const zMin = -3.5;
+      const zMax = 3.5;
+      const maxPdf = pdf(0); // ~0.3989
+
+      const toX = (z) => padding + ((z - zMin) / (zMax - zMin)) * graphW;
+      const toY = (p) => height - padding - (p / maxPdf) * graphH;
+
+      // Draw Shaded Region
+      ctx.fillStyle = type === 'left' ? 'rgba(88, 166, 255, 0.35)' : 'rgba(126, 231, 135, 0.35)';
+      ctx.beginPath();
+      
+      const shadeStart = type === 'left' ? zMin : zVal;
+      const shadeEnd = type === 'left' ? zVal : zMax;
+
+      ctx.moveTo(toX(shadeStart), height - padding);
+      for (let z = shadeStart; z <= shadeEnd; z += 0.05) {
+        ctx.lineTo(toX(z), toY(pdf(z)));
+      }
+      ctx.lineTo(toX(shadeEnd), toY(pdf(shadeEnd)));
+      ctx.lineTo(toX(shadeEnd), height - padding);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw Bell Curve Line
+      ctx.strokeStyle = '#58a6ff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let z = zMin; z <= zMax; z += 0.05) {
+        const x = toX(z);
+        const y = toY(pdf(z));
+        if (z === zMin) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Draw Baseline
+      ctx.strokeStyle = '#30363d';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+
+      // Draw Center Mean Line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(toX(0), toY(maxPdf));
+      ctx.lineTo(toX(0), height - padding);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Vertical marker for user's Z
+      const clampedZ = Math.max(zMin, Math.min(zMax, zVal));
+      ctx.strokeStyle = '#ff7b72';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(toX(clampedZ), toY(pdf(clampedZ)));
+      ctx.lineTo(toX(clampedZ), height - padding);
+      ctx.stroke();
+
+      // Axis Labels
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      [-3, -2, -1, 0, 1, 2, 3].forEach(z => {
+        ctx.fillText(z === 0 ? "0 (Mean)" : `${z}σ`, toX(z), height - 12);
+      });
+
+      // Z marker label
+      ctx.fillStyle = '#ff7b72';
+      ctx.font = 'bold 11px JetBrains Mono, monospace';
+      ctx.fillText(`Z = ${zVal.toFixed(2)}`, toX(clampedZ), toY(pdf(clampedZ)) - 8);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      computeZSim();
+    });
+  </script>
+</body>
+</html>

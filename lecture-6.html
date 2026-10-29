@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 6: Functions &amp; Recursion | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 6 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-functions" class="sidebar-link">1. Foundations of Modular Programming</a></li>
+        <li><a href="#function-syntax" class="sidebar-link">2. Anatomy of a Python Function</a></li>
+        <li><a href="#params-vs-args" class="sidebar-link">3. Parameters vs. Arguments &amp; Returns</a></li>
+        <li><a href="#builtin-vs-user" class="sidebar-link">4. Built-in Functions &amp; print(sep, end)</a></li>
+        <li><a href="#default-params" class="sidebar-link">5. Default Parameters &amp; Syntax Rules</a></li>
+        <li><a href="#function-practice" class="sidebar-link">6. Solved Function Practice Tasks</a></li>
+        <li><a href="#intro-recursion" class="sidebar-link">7. Conceptual Foundations of Recursion</a></li>
+        <li><a href="#call-stack" class="sidebar-link">8. Call Stack &amp; Activation Records</a></li>
+        <li><a href="#recursion-depth" class="sidebar-link">9. Base Case &amp; Maximum Recursion Depth</a></li>
+        <li><a href="#recursive-factorial" class="sidebar-link">10. Recurrence Relations &amp; Factorial</a></li>
+        <li><a href="#recursive-practice" class="sidebar-link">11. Solved Recursive Practice Tasks</a></li>
+        <li><a href="#comparison-matrix" class="sidebar-link">12. Master Comparison Matrices</a></li>
+        <li><a href="#interactive-simulator" class="sidebar-link">13. Live Call Stack &amp; Function Visualizer</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 06 Notes</span>
+          <span class="tag">Functions</span>
+          <span class="tag">def Keyword</span>
+          <span class="tag">Parameters &amp; Args</span>
+          <span class="tag">Default Arguments</span>
+          <span class="tag">Recursion</span>
+          <span class="tag">Call Stack</span>
+          <span class="tag">Base Case</span>
+        </div>
+        <h1 class="lecture-main-title">Functions &amp; Recursion in Python</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> A Function is a reusable block of code that performs a specific task whenever you call it, while Recursion is a technique where a function solves a problem by calling a smaller version of itself until it reaches a simple stopping point.<br>
+          <strong>Why do we use it?</strong> Functions save you from repeating the same code across your project—you write the logic once (like <code>calculate_tax()</code> or <code>login_user()</code>) and run it anywhere with a single line. Recursion is used to break down complex tasks, such as navigating nested folders or calculating mathematical formulas.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: FOUNDATIONS OF MODULAR PROGRAMMING -->
+      <!-- ============================================================ -->
+      <section id="intro-functions" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Foundations of Modular Programming &amp; Procedural Abstraction</h2>
+
+        <h3>1. The Architectural Need for Functions</h3>
+        <p>
+          In introductory programming, code is often written as a single monolithic script executing sequentially from top to bottom. However, as software systems scale to enterprise production environments, identical logic sequences must be executed across disparate locations.
+        </p>
+        <p>
+          Consider an arithmetic addition sequence calculating the sum of two variables $a$ and $b$. If this calculation is repeated at lines 10, 45, and 120 with varying inputs, repeating the raw assignment statements creates <strong>code redundancy</strong>.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Anti-Pattern: Redundant code replication without functional abstraction</span>
+<span class="com"># Segment 1</span>
+<span class="var">a</span> = <span class="num">5</span>
+<span class="var">b</span> = <span class="num">10</span>
+<span class="var">total</span> = <span class="var">a</span> + <span class="var">b</span>
+<span class="func">print</span>(<span class="str">"Sum:"</span>, <span class="var">total</span>)
+
+<span class="com"># ... 30 lines of intervening application code ...</span>
+
+<span class="com"># Segment 2: Re-duplicating the exact same computation</span>
+<span class="var">a</span> = <span class="num">2</span>
+<span class="var">b</span> = <span class="num">10</span>
+<span class="var">total</span> = <span class="var">a</span> + <span class="var">b</span>
+<span class="func">print</span>(<span class="str">"Sum:"</span>, <span class="var">total</span>)
+
+<span class="com"># ... 50 lines of intervening code ...</span>
+
+<span class="com"># Segment 3: Yet another copy-pasted block</span>
+<span class="var">a</span> = <span class="num">12</span>
+<span class="var">b</span> = <span class="num">17</span>
+<span class="var">total</span> = <span class="var">a</span> + <span class="var">b</span>
+<span class="func">print</span>(<span class="str">"Sum:"</span>, <span class="var">total</span>)</code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Engineering Metric: Code Redundancy vs. Maintainability</div>
+          <p>
+            Copy-pasting identical logic across multiple locations violates the <strong>Don't Repeat Yourself (DRY)</strong> principle. In software engineering and technical interviews, redundant code is a major code smell:
+          </p>
+          <ul>
+            <li><strong>Maintenance Fragility:</strong> If the addition logic requires rounding, logging, or input validation, the developer must locate and manually modify every replicated block. Missing a single site introduces subtle bugs.</li>
+            <li><strong>Cognitive Overhead:</strong> Readers cannot tell whether minor differences between copy-pasted blocks are intentional or accidental typos.</li>
+            <li><strong>Namespace Pollution:</strong> Re-using generic variable names like <code>a</code>, <code>b</code>, and <code>total</code> across a single global scope increases the risk of unintended variable collisions.</li>
+          </ul>
+        </div>
+
+        <h3>2. What is a Function?</h3>
+        <p>
+          A <strong>function</strong> is an isolated, named, reusable block of statements designed to perform a single cohesive task. In computer science, this is known as <strong>procedural abstraction</strong>: the internal implementation details of an operation are encapsulated behind an explicit interface (parameters and return values), allowing callers to treat the function as a reliable black-box tool.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: ANATOMY OF A PYTHON FUNCTION -->
+      <!-- ============================================================ -->
+      <section id="function-syntax" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Anatomy of a Python Function: Definition to Invocation</h2>
+
+        <h3>1. The Two-Phase Lifecycle of Functions</h3>
+        <p>
+          A function in Python exists in two distinct operational phases:
+        </p>
+        <ol>
+          <li><strong>Definition Phase:</strong> The function's name, parameter signature, and internal algorithm are compiled into a bytecode function object in memory. <em>No execution of the function body occurs during definition.</em></li>
+          <li><strong>Invocation (Call) Phase:</strong> The function is executed by referencing its identifier followed by call parentheses <code>()</code> containing argument values.</li>
+        </ol>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Phase 1: Function Definition</span>
+<span class="kw">def</span> <span class="func">calculate_sum</span>(<span class="var">a</span>, <span class="var">b</span>):
+    <span class="com"># Indented block constitutes the function body</span>
+    <span class="var">result</span> = <span class="var">a</span> + <span class="var">b</span>
+    <span class="kw">return</span> <span class="var">result</span>
+
+<span class="com"># Phase 2: Function Invocation (Call)</span>
+<span class="var">sum1</span> = <span class="func">calculate_sum</span>(<span class="num">5</span>, <span class="num">10</span>)
+<span class="var">sum2</span> = <span class="func">calculate_sum</span>(<span class="num">2</span>, <span class="num">10</span>)
+<span class="var">sum3</span> = <span class="func">calculate_sum</span>(<span class="num">12</span>, <span class="num">17</span>)
+
+<span class="func">print</span>(<span class="str">"Result 1:"</span>, <span class="var">sum1</span>)  <span class="com"># 15</span>
+<span class="func">print</span>(<span class="str">"Result 2:"</span>, <span class="var">sum2</span>)  <span class="com"># 12</span>
+<span class="func">print</span>(<span class="str">"Result 3:"</span>, <span class="var">sum3</span>)  <span class="com"># 29</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Result 1: 15</div>
+          <div>Result 2: 12</div>
+          <div>Result 3: 29</div>
+        </div>
+
+        <h3>2. Syntactic Breakdown of Function Declarations</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Syntax Element</th>
+                <th>Language Role</th>
+                <th>Grammar Rules &amp; Conventions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>def</code></td>
+                <td>Reserved Keyword</td>
+                <td>Signals the beginning of a function header statement to the Python interpreter.</td>
+              </tr>
+              <tr>
+                <td><code>function_name</code></td>
+                <td>Identifier</td>
+                <td>Adheres to standard variable naming rules; PEP 8 dictates <code>snake_case</code> naming.</td>
+              </tr>
+              <tr>
+                <td><code>(param1, param2)</code></td>
+                <td>Parameter List</td>
+                <td>Comma-separated list of formal parameters enclosed in parentheses. Can be empty <code>()</code>.</td>
+              </tr>
+              <tr>
+                <td><code>:</code> (Colon)</td>
+                <td>Block Delimiter</td>
+                <td>Mandatory token concluding the header; indicates an indented block follows.</td>
+              </tr>
+              <tr>
+                <td><code>Indented Body</code></td>
+                <td>Executable Suite</td>
+                <td>Consistent whitespace indentation (4 spaces standard) defining statements belonging to the function scope.</td>
+              </tr>
+              <tr>
+                <td><code>return [expr]</code></td>
+                <td>Termination &amp; Output</td>
+                <td>Optional keyword returning evaluation control and output data to the caller.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: PARAMETERS VS. ARGUMENTS & RETURNS -->
+      <!-- ============================================================ -->
+      <section id="params-vs-args" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Parameters vs. Arguments &amp; The Return Contract</h2>
+
+        <h3>1. Rigorous Terminology: Parameters vs. Arguments</h3>
+        <p>
+          While colloquially used interchangeably, computer science maintains a strict technical boundary between these two concepts:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Parameter (Formal Parameter)</th>
+                <th>Argument (Actual Parameter)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Location</strong></td>
+                <td>Specified in the <strong>function definition header</strong>.</td>
+                <td>Passed in the <strong>function invocation statement</strong>.</td>
+              </tr>
+              <tr>
+                <td><strong>Nature</strong></td>
+                <td>Variable placeholder / symbol in the function's local scope.</td>
+                <td>Concrete value, object reference, or expression result.</td>
+              </tr>
+              <tr>
+                <td><strong>Example</strong></td>
+                <td>In <code>def add(x, y):</code> &rarr; <code>x</code> and <code>y</code> are parameters.</td>
+                <td>In <code>add(10, 20)</code> &rarr; <code>10</code> and <code>20</code> are arguments.</td>
+              </tr>
+              <tr>
+                <td><strong>Binding Mechanism</strong></td>
+                <td>Receives object references via Python's <em>Call-by-Object-Reference</em> model upon invocation.</td>
+                <td>Evaluated by the caller prior to entering the function body.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. The Return Contract &amp; Implicit <code>None</code></h3>
+        <p>
+          A function may or may not return an explicit value to its caller:
+        </p>
+        <ul>
+          <li><strong>Explicit Return:</strong> When a <code>return &lt;expression&gt;</code> is encountered, evaluation terminates immediately, and the evaluated value is handed back to the caller.</li>
+          <li><strong>Void / Implicit Return:</strong> If a function reaches the end of its body without executing a <code>return</code> statement, or executes a bare <code>return</code> with no expression, Python automatically returns the singleton object <code>None</code> (type <code>NoneType</code>).</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Case A: Explicit Return</span>
+<span class="kw">def</span> <span class="func">multiply</span>(<span class="var">x</span>, <span class="var">y</span>):
+    <span class="kw">return</span> <span class="var">x</span> * <span class="var">y</span>
+
+<span class="com"># Case B: Side-Effect Only (No Return Statement)</span>
+<span class="kw">def</span> <span class="func">print_greeting</span>(<span class="var">name</span>):
+    <span class="func">print</span>(<span class="str">f"Welcome to Python, {name}!"</span>)
+    <span class="com"># No return statement</span>
+
+<span class="var">val_a</span> = <span class="func">multiply</span>(<span class="num">4</span>, <span class="num">5</span>)
+<span class="var">val_b</span> = <span class="func">print_greeting</span>(<span class="str">"Developer"</span>)
+
+<span class="func">print</span>(<span class="str">"Returned from multiply:"</span>, <span class="var">val_a</span>, <span class="str">"| Type:"</span>, <span class="func">type</span>(<span class="var">val_a</span>))
+<span class="func">print</span>(<span class="str">"Returned from print_greeting:"</span>, <span class="var">val_b</span>, <span class="str">"| Type:"</span>, <span class="func">type</span>(<span class="var">val_b</span>))</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Welcome to Python, Developer!</div>
+          <div>Returned from multiply: 20 | Type: &lt;class 'int'&gt;</div>
+          <div>Returned from print_greeting: None | Type: &lt;class 'NoneType'&gt;</div>
+        </div>
+
+        <h3>3. Multiple Parameters: Calculating the Arithmetic Mean</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">calculate_average</span>(<span class="var">a</span>, <span class="var">b</span>, <span class="var">c</span>):
+    <span class="var">total</span> = <span class="var">a</span> + <span class="var">b</span> + <span class="var">c</span>
+    <span class="var">avg</span> = <span class="var">total</span> / <span class="num">3</span>
+    <span class="kw">return</span> <span class="var">avg</span>
+
+<span class="var">mean_scores</span> = <span class="func">calculate_average</span>(<span class="num">98</span>, <span class="num">97</span>, <span class="num">95</span>)
+<span class="func">print</span>(<span class="str">"Mean Examination Score:"</span>, <span class="func">round</span>(<span class="var">mean_scores</span>, <span class="num">2</span>))  <span class="com"># 96.67</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: BUILT-IN FUNCTIONS & PRINT(SEP, END) -->
+      <!-- ============================================================ -->
+      <section id="builtin-vs-user" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Built-in Functions &amp; Deep Dive into print(sep, end)</h2>
+
+        <h3>1. Built-in vs. User-Defined Functions</h3>
+        <p>
+          Functions in Python fall into two broad architectural categories:
+        </p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Classification</th>
+                <th>Origin &amp; Author</th>
+                <th>Availability</th>
+                <th>Standard Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Built-in Functions</strong></td>
+                <td>Built into Python's core runtime interpreter written in C (CPython).</td>
+                <td>Globally available in the <code>builtins</code> namespace without requiring import statements.</td>
+                <td><code>print()</code>, <code>len()</code>, <code>type()</code>, <code>range()</code>, <code>input()</code>, <code>int()</code>, <code>max()</code>, <code>min()</code></td>
+              </tr>
+              <tr>
+                <td><strong>User-Defined Functions</strong></td>
+                <td>Authored by the software developer or imported from third-party libraries.</td>
+                <td>Must be defined in source code or explicitly imported via <code>import</code> modules.</td>
+                <td><code>calculate_sum()</code>, <code>usd_to_inr()</code>, custom class methods.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Dissecting the Built-in <code>print()</code> Function</h3>
+        <p>
+          The <code>print()</code> function is the most frequently called function in Python. Its standard library CPython signature reveals key keyword arguments governing string formatting:
+        </p>
+        <code>print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)</code>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword Argument</th>
+                <th>Default Value</th>
+                <th>Architectural Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sep</code></td>
+                <td><code>' '</code> (Single ASCII space)</td>
+                <td>Specifies the delimiter string inserted between multiple consecutive positional arguments.</td>
+              </tr>
+              <tr>
+                <td><code>end</code></td>
+                <td><code>'\n'</code> (Newline character)</td>
+                <td>Specifies the trailing character string appended to the output buffer after all items are emitted.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Default behavior: sep=' ', end='\n'</span>
+<span class="func">print</span>(<span class="str">"Apna"</span>, <span class="str">"College"</span>)
+<span class="func">print</span>(<span class="str">"Shradha"</span>, <span class="str">"Khapra"</span>)
+
+<span class="com"># Customizing separator: sep=' --- '</span>
+<span class="func">print</span>(<span class="str">"Data1"</span>, <span class="str">"Data2"</span>, <span class="str">"Data3"</span>, <span class="var">sep</span>=<span class="str">" --- "</span>)
+
+<span class="com"># Customizing termination: end=' ' (keeping output on the same line)</span>
+<span class="func">print</span>(<span class="str">"Loading"</span>, <span class="var">end</span>=<span class="str">"..."</span>)
+<span class="func">print</span>(<span class="str">"Ready!"</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Apna College</div>
+          <div>Shradha Khapra</div>
+          <div>Data1 --- Data2 --- Data3</div>
+          <div>Loading...Ready!</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: DEFAULT PARAMETERS & SYNTAX RULES -->
+      <!-- ============================================================ -->
+      <section id="default-params" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Default Parameters &amp; The Positional Precedence Rule</h2>
+
+        <h3>1. Motivating Default Arguments</h3>
+        <p>
+          Often, a function performs an operation that uses standard configuration values in 90% of invocations, but occasionally requires customization. Default parameters allow functions to be invoked with fewer arguments by falling back to pre-defined defaults.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Function with default parameters</span>
+<span class="kw">def</span> <span class="func">calculate_product</span>(<span class="var">a</span>, <span class="var">b</span>=<span class="num">1</span>):
+    <span class="kw">return</span> <span class="var">a</span> * <span class="var">b</span>
+
+<span class="com"># Calling with explicit arguments</span>
+<span class="func">print</span>(<span class="func">calculate_product</span>(<span class="num">5</span>, <span class="num">4</span>))  <span class="com"># a=5, b=4 -&gt; 20</span>
+
+<span class="com"># Calling with single argument (b defaults to 1)</span>
+<span class="func">print</span>(<span class="func">calculate_product</span>(<span class="num">7</span>))     <span class="com"># a=7, b=1 -&gt; 7</span></code></pre>
+        </div>
+
+        <h3>2. The Non-Default Argument Precedence Rule</h3>
+        <p>
+          Python's parser enforces a strict syntactic rule regarding the order of parameter types:
+        </p>
+
+        <div class="concept-box" style="border-left: 4px solid #ff7b72;">
+          <div class="concept-title" style="color: #ff7b72;">Syntax Invariant: Positional Precedence Rule</div>
+          <p>
+            <strong>Non-default arguments cannot follow default arguments.</strong> All parameters without default values must precede any parameter with a default value:
+          </p>
+          <pre><code><span class="com"># VALID: Default parameters positioned at the end</span>
+<span class="kw">def</span> <span class="func">correct_signature</span>(<span class="var">a</span>, <span class="var">b</span>=<span class="num">2</span>, <span class="var">c</span>=<span class="num">10</span>): <span class="kw">pass</span>
+
+<span class="com"># SYNTAX ERROR: Default parameter precedes positional parameter</span>
+<span class="kw">def</span> <span class="func">invalid_signature</span>(<span class="var">a</span>=<span class="num">2</span>, <span class="var">b</span>): <span class="kw">pass</span>
+<span class="com"># SyntaxError: non-default argument follows default argument</span></code></pre>
+          <p>
+            <em>Architectural Rationale:</em> If <code>def func(a=2, b):</code> were permitted, calling <code>func(5)</code> would be ambiguous: does <code>5</code> bind to <code>a</code> (overriding its default) leaving <code>b</code> unassigned, or does <code>5</code> bind to <code>b</code>? To avoid positional ambiguity, default parameters must anchor the tail of the parameter list.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: SOLVED FUNCTION PRACTICE TASKS -->
+      <!-- ============================================================ -->
+      <section id="function-practice" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Solved Function Practice Tasks</h2>
+
+        <h3>Task 1: Compute and Print List Length</h3>
+        <p>
+          <em>Objective:</em> Author a function <code>print_length(collection)</code> that accepts an arbitrary iterable and prints its total element count.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">print_length</span>(<span class="var">lst</span>):
+    <span class="var">total_len</span> = <span class="func">len</span>(<span class="var">lst</span>)
+    <span class="func">print</span>(<span class="str">f"Collection contains {total_len} elements."</span>)
+    <span class="kw">return</span> <span class="var">total_len</span>
+
+<span class="var">cities</span> = [<span class="str">"Delhi"</span>, <span class="str">"Gurgaon"</span>, <span class="str">"Noida"</span>, <span class="str">"Pune"</span>, <span class="str">"Mumbai"</span>, <span class="str">"Chennai"</span>]
+<span class="var">heroes</span> = [<span class="str">"Thor"</span>, <span class="str">"Ironman"</span>, <span class="str">"Captain America"</span>, <span class="str">"Shaktiman"</span>]
+
+<span class="func">print_length</span>(<span class="var">cities</span>)
+<span class="func">print_length</span>(<span class="var">heroes</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Collection contains 6 elements.</div>
+          <div>Collection contains 4 elements.</div>
+        </div>
+
+        <h3>Task 2: Print List Elements on a Single Line</h3>
+        <p>
+          <em>Objective:</em> Author a function <code>print_single_line(lst)</code> that prints all elements separated by a space without advancing to a newline until all elements are emitted.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">print_single_line</span>(<span class="var">lst</span>):
+    <span class="kw">for</span> <span class="var">item</span> <span class="kw">in</span> <span class="var">lst</span>:
+        <span class="func">print</span>(<span class="var">item</span>, <span class="var">end</span>=<span class="str">" "</span>)
+    <span class="func">print</span>()  <span class="com"># Trailing newline for clean downstream terminal rendering</span>
+
+<span class="func">print_single_line</span>(<span class="var">heroes</span>)
+<span class="func">print_single_line</span>([<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>])</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Thor Ironman Captain America Shaktiman </div>
+          <div>10 20 30 40 50 </div>
+        </div>
+
+        <h3>Task 3: Iterative Factorial Calculator Function</h3>
+        <p>
+          <em>Objective:</em> Author a function <code>calc_factorial_iter(n)</code> calculating $n! = \prod_{k=1}^n k$ using a loop.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">calc_factorial_iter</span>(<span class="var">n</span>):
+    <span class="kw">if</span> <span class="var">n</span> &lt; <span class="num">0</span>:
+        <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Factorial is undefined for negative integers."</span>)
+    <span class="var">fact</span> = <span class="num">1</span>
+    <span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="var">n</span> + <span class="num">1</span>):
+        <span class="var">fact</span> *= <span class="var">i</span>
+    <span class="kw">return</span> <span class="var">fact</span>
+
+<span class="func">print</span>(<span class="str">"5! ="</span>, <span class="func">calc_factorial_iter</span>(<span class="num">5</span>))   <span class="com"># 120</span>
+<span class="func">print</span>(<span class="str">"6! ="</span>, <span class="func">calc_factorial_iter</span>(<span class="num">6</span>))   <span class="com"># 720</span></code></pre>
+        </div>
+
+        <h3>Task 4: Currency Exchange Converter (USD to INR)</h3>
+        <p>
+          <em>Objective:</em> Author a function <code>usd_to_inr(usd, rate=83.0)</code> converting US Dollars to Indian National Rupees using parameter defaults.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">usd_to_inr</span>(<span class="var">usd_amount</span>, <span class="var">conversion_rate</span>=<span class="num">83.0</span>):
+    <span class="var">inr_value</span> = <span class="var">usd_amount</span> * <span class="var">conversion_rate</span>
+    <span class="func">print</span>(<span class="str">f"${usd_amount:,.2f} USD = {inr_value:,.2f} INR (at {conversion_rate} INR/USD)"</span>)
+    <span class="kw">return</span> <span class="var">inr_value</span>
+
+<span class="func">usd_to_inr</span>(<span class="num">1</span>)
+<span class="func">usd_to_inr</span>(<span class="num">100</span>)
+<span class="func">usd_to_inr</span>(<span class="num">73</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>$1.00 USD = 83.00 INR (at 83.0 INR/USD)</div>
+          <div>$100.00 USD = 8,300.00 INR (at 83.0 INR/USD)</div>
+          <div>$73.00 USD = 6,059.00 INR (at 83.0 INR/USD)</div>
+        </div>
+
+        <h3>Task 5: Parity Classification (Homework Problem)</h3>
+        <p>
+          <em>Objective:</em> Author a function <code>check_parity(num)</code> that returns the exact string <code>"Even"</code> if divisible by 2, or <code>"Odd"</code> otherwise.
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">check_parity</span>(<span class="var">number</span>):
+    <span class="kw">if</span> <span class="var">number</span> % <span class="num">2</span> == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="str">"Even"</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="str">"Odd"</span>
+
+<span class="func">print</span>(<span class="str">"14 is:"</span>, <span class="func">check_parity</span>(<span class="num">14</span>))  <span class="com"># Even</span>
+<span class="func">print</span>(<span class="str">"27 is:"</span>, <span class="func">check_parity</span>(<span class="num">27</span>))  <span class="com"># Odd</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: CONCEPTUAL FOUNDATIONS OF RECURSION -->
+      <!-- ============================================================ -->
+      <section id="intro-recursion" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Conceptual Foundations of Recursion</h2>
+
+        <h3>1. The Recursive Paradigm</h3>
+        <p>
+          <strong>Recursion</strong> is a computational technique wherein a function calls itself directly or indirectly in order to solve a problem. Instead of relying on iterative loop counters, a recursive algorithm decomposes a complex problem into smaller sub-problems of the <em>identical mathematical structure</em> until a trivial boundary condition is reached.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Theoretical Relationship: Recursion vs. Iteration</div>
+          <p>
+            In theoretical computer science (Church-Turing Thesis):
+          </p>
+          <ul>
+            <li><strong>Equivalence:</strong> Every iterative algorithm can be implemented recursively, and every recursive algorithm can be transformed into an iterative algorithm using an explicit stack data structure.</li>
+            <li><strong>Expressive Power:</strong> Recursion produces exceptionally clean, elegant formulations for hierarchical, tree-structured, and combinatorial problems (such as graph traversal, AST parsing, and divide-and-conquer sorting).</li>
+          </ul>
+        </div>
+
+        <h3>2. Introductory Example: Recursive Countdown</h3>
+        <p>
+          Consider printing numbers descending from $n$ to $1$:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">show_countdown</span>(<span class="var">n</span>):
+    <span class="com"># 1. Base Case: Halting Criterion</span>
+    <span class="kw">if</span> <span class="var">n</span> == <span class="num">0</span>:
+        <span class="kw">return</span>  <span class="com"># Return control; unwind stack</span>
+
+    <span class="com"># 2. Local Work</span>
+    <span class="func">print</span>(<span class="var">n</span>, <span class="var">end</span>=<span class="str">" "</span>)
+
+    <span class="com"># 3. Recursive Call: Delegating smaller sub-problem (n - 1)</span>
+    <span class="func">show_countdown</span>(<span class="var">n</span> - <span class="num">1</span>)
+
+<span class="func">show_countdown</span>(<span class="num">5</span>)
+<span class="func">print</span>()</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>5 4 3 2 1 </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: CALL STACK & ACTIVATION RECORDS -->
+      <!-- ============================================================ -->
+      <section id="call-stack" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The Call Stack &amp; Activation Records Lifecycle</h2>
+
+        <h3>1. The Operating System Call Stack</h3>
+        <p>
+          To understand recursion mechanics, one must understand how modern computing hardware coordinates nested function execution. The runtime environment allocates a segment of memory called the <strong>Call Stack</strong>, structured as a Last-In, First-Out (LIFO) stack.
+        </p>
+        <p>
+          Every time a function is invoked, an <strong>Activation Record (Stack Frame)</strong> is allocated and pushed onto the top of the call stack. A stack frame stores:
+        </p>
+        <ul>
+          <li>The values of formal parameters passed into this specific invocation.</li>
+          <li>Local variables scoped to this function instance.</li>
+          <li>The return instruction pointer (the memory address to return to when this frame completes).</li>
+        </ul>
+
+        <h3>2. Full Execution Trace of <code>show_countdown(3)</code></h3>
+        <p>
+          Tracing the lifecycle of the call stack reveals how execution winds down through recursive calls and unwinds during returns:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Call Stack State (Top &rarr; Bottom)</th>
+                <th>Active Frame Action</th>
+                <th>Console Output</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><code>[show(3)]</code></td>
+                <td>Evaluates $n=3 \neq 0$. Prints <code>3</code>. Invokes <code>show(2)</code>.</td>
+                <td><code>3</code></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><code>[show(2), show(3)]</code></td>
+                <td>Pushed. Evaluates $n=2 \neq 0$. Prints <code>2</code>. Invokes <code>show(1)</code>.</td>
+                <td><code>2</code></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><code>[show(1), show(2), show(3)]</code></td>
+                <td>Pushed. Evaluates $n=1 \neq 0$. Prints <code>1</code>. Invokes <code>show(0)</code>.</td>
+                <td><code>1</code></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><code>[show(0), show(1), show(2), show(3)]</code></td>
+                <td>Pushed. Evaluates $n=0 == 0$. <strong>Base case triggered!</strong> Executes <code>return</code>.</td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><code>[show(1), show(2), show(3)]</code></td>
+                <td><code>show(0)</code> popped. Control returns to <code>show(1)</code>. No remaining statements; pops.</td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><code>[show(2), show(3)]</code></td>
+                <td><code>show(1)</code> popped. Control returns to <code>show(2)</code>. No remaining statements; pops.</td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><code>[show(3)]</code></td>
+                <td><code>show(2)</code> popped. Control returns to <code>show(3)</code>. No remaining statements; pops.</td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><code>[]</code> (Empty Stack)</td>
+                <td>Call stack is completely clear. Execution resumes in global scope.</td>
+                <td>&mdash;</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3. Pre-Recursion vs. Post-Recursion Execution (Winding vs. Unwinding)</h3>
+        <p>
+          Statements placed <em>before</em> the recursive call execute on the way <strong>down</strong> the stack (during frame allocation). Statements placed <em>after</em> the recursive call execute on the way <strong>up</strong> the stack (during frame deallocation):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">trace_order</span>(<span class="var">n</span>):
+    <span class="kw">if</span> <span class="var">n</span> == <span class="num">0</span>:
+        <span class="func">print</span>(<span class="str">"[BASE CASE REACHED]"</span>)
+        <span class="kw">return</span>
+
+    <span class="func">print</span>(<span class="str">f"Winding down: n = {n}"</span>)    <span class="com"># Pre-recursive action</span>
+    <span class="func">trace_order</span>(<span class="var">n</span> - <span class="num">1</span>)                 <span class="com"># Recursive invocation</span>
+    <span class="func">print</span>(<span class="str">f"Unwinding up:  n = {n}"</span>)    <span class="com"># Post-recursive action</span>
+
+<span class="func">trace_order</span>(<span class="num">3</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Winding down: n = 3</div>
+          <div>Winding down: n = 2</div>
+          <div>Winding down: n = 1</div>
+          <div>[BASE CASE REACHED]</div>
+          <div>Unwinding up:  n = 1</div>
+          <div>Unwinding up:  n = 2</div>
+          <div>Unwinding up:  n = 3</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: BASE CASE & MAXIMUM RECURSION DEPTH -->
+      <!-- ============================================================ -->
+      <section id="recursion-depth" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Base Case Invariants &amp; The Recursion Depth Hazard</h2>
+
+        <h3>1. The Base Case Invariant</h3>
+        <p>
+          Every valid recursive function must possess at least one <strong>base case</strong>: a conditional branch containing a non-recursive return that handles the minimal input instance without making further recursive calls.
+        </p>
+
+        <h3>2. What Happens Without a Base Case?</h3>
+        <p>
+          If the base case is omitted, or if the recursive update fails to converge toward the base case, the function invokes itself indefinitely. Unlike infinite loops that spin on the CPU without allocating memory, infinite recursion continuously pushes new stack frames onto the call stack.
+        </p>
+
+        <div class="concept-box" style="border-left: 4px solid #ff7b72;">
+          <div class="concept-title" style="color: #ff7b72;">System Safety: RecursionError &amp; Stack Overflow</div>
+          <p>
+            In languages like C or C++, infinite recursion consumes all stack memory until the operating system encounters a fatal <strong>Segmentation Fault (Stack Overflow)</strong>, crashing the host process.
+          </p>
+          <p>
+            Python guards against stack exhaustion by enforcing a strict software ceiling known as the <strong>maximum recursion depth</strong> (typically 1,000 frames by default):
+          </p>
+          <pre><code><span class="com"># Anti-Pattern: Omitting the base case</span>
+<span class="kw">def</span> <span class="func">infinite_recursion</span>(<span class="var">n</span>):
+    <span class="func">print</span>(<span class="var">n</span>)
+    <span class="func">infinite_recursion</span>(<span class="var">n</span> + <span class="num">1</span>)
+
+<span class="com"># Output after ~1,000 recursive frames:</span>
+<span class="com"># RecursionError: maximum recursion depth exceeded while calling a Python object</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: RECURRENCE RELATIONS & FACTORIAL -->
+      <!-- ============================================================ -->
+      <section id="recursive-factorial" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Recurrence Relations &amp; Factorial ($n!$)</h2>
+
+        <h3>1. Mathematical Recurrence Relation</h3>
+        <p>
+          In discrete mathematics, a <strong>recurrence relation</strong> expresses the $n$-th term of a sequence as an equation involving preceding terms.
+        </p>
+        <p>
+          For the factorial function $n! = 1 \times 2 \times \dots \times (n-1) \times n$, notice that the prefix product $1 \times 2 \times \dots \times (n-1)$ is mathematically identical to $(n-1)!$. This yields the classic recurrence relation:
+        </p>
+        $$n! = \begin{cases} 1 & \text{if } n = 0 \text{ or } n = 1 \quad (\text{Base Case}) \\ n \times (n - 1)! & \text{if } n > 1 \quad (\text{Recursive Step}) \end{cases}$$
+
+        <h3>2. Recursive Python Implementation</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">factorial_recursive</span>(<span class="var">n</span>):
+    <span class="com"># Base Case: 0! = 1 and 1! = 1</span>
+    <span class="kw">if</span> <span class="var">n</span> == <span class="num">0</span> <span class="kw">or</span> <span class="var">n</span> == <span class="num">1</span>:
+        <span class="kw">return</span> <span class="num">1</span>
+
+    <span class="com"># Recursive Step: n * (n - 1)!</span>
+    <span class="kw">return</span> <span class="var">n</span> * <span class="func">factorial_recursive</span>(<span class="var">n</span> - <span class="num">1</span>)
+
+<span class="func">print</span>(<span class="str">"Factorial of 4:"</span>, <span class="func">factorial_recursive</span>(<span class="num">4</span>))  <span class="com"># 24</span>
+<span class="func">print</span>(<span class="str">"Factorial of 5:"</span>, <span class="func">factorial_recursive</span>(<span class="num">5</span>))  <span class="com"># 120</span>
+<span class="func">print</span>(<span class="str">"Factorial of 6:"</span>, <span class="func">factorial_recursive</span>(<span class="num">6</span>))  <span class="com"># 720</span></code></pre>
+        </div>
+
+        <h3>3. Return Value Unwinding for <code>factorial_recursive(4)</code></h3>
+        <p>
+          When calculating $4!$, each frame waits on the return value of its child frame before performing multiplication:
+        </p>
+        $$\text{fact}(4) = 4 \times \text{fact}(3)$$
+        $$\text{fact}(3) = 3 \times \text{fact}(2)$$
+        $$\text{fact}(2) = 2 \times \text{fact}(1)$$
+        $$\text{fact}(1) = 1 \quad \text{[Base Case Reached: Returns 1]}$$
+        $$\text{fact}(2) = 2 \times 1 = 2 \quad \text{[Returns 2]}$$
+        $$\text{fact}(3) = 3 \times 2 = 6 \quad \text{[Returns 6]}$$
+        $$\text{fact}(4) = 4 \times 6 = 24 \quad \text{[Final Return: 24]}$$
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SOLVED RECURSIVE PRACTICE TASKS -->
+      <!-- ============================================================ -->
+      <section id="recursive-practice" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Solved Recursive Practice Tasks</h2>
+
+        <h3>Task 1: Recursive Sum of First $n$ Natural Numbers</h3>
+        <p>
+          <em>Objective:</em> Compute the sum $S_n = 1 + 2 + \dots + n$ recursively. The recurrence relation is:
+        </p>
+        $$S(n) = \begin{cases} 0 & \text{if } n = 0 \quad (\text{Base Case}) \\ n + S(n - 1) & \text{if } n \ge 1 \quad (\text{Recursive Step}) \end{cases}$$
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">recursive_sum</span>(<span class="var">n</span>):
+    <span class="kw">if</span> <span class="var">n</span> == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="num">0</span>
+    <span class="kw">return</span> <span class="var">n</span> + <span class="func">recursive_sum</span>(<span class="var">n</span> - <span class="num">1</span>)
+
+<span class="func">print</span>(<span class="str">"Sum of first 5 numbers:"</span>, <span class="func">recursive_sum</span>(<span class="num">5</span>))    <span class="com"># 15</span>
+<span class="func">print</span>(<span class="str">"Sum of first 10 numbers:"</span>, <span class="func">recursive_sum</span>(<span class="num">10</span>))  <span class="com"># 55</span></code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Sum of first 5 numbers: 15</div>
+          <div>Sum of first 10 numbers: 55</div>
+        </div>
+
+        <h3>Task 2: Recursive Sequential List Traversal</h3>
+        <p>
+          <em>Objective:</em> Author a recursive function <code>print_list_recursive(lst, idx=0)</code> that traverses and prints each element of a list using an index pointer.
+        </p>
+        <ul>
+          <li><strong>Base Case:</strong> When <code>idx == len(lst)</code>, all elements have been printed; terminate via <code>return</code>.</li>
+          <li><strong>Work:</strong> Print <code>lst[idx]</code>.</li>
+          <li><strong>Recursive Step:</strong> Invoke <code>print_list_recursive(lst, idx + 1)</code>.</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">print_list_recursive</span>(<span class="var">lst</span>, <span class="var">idx</span>=<span class="num">0</span>):
+    <span class="com"># Base Case: Index pointer reaches sequence boundary</span>
+    <span class="kw">if</span> <span class="var">idx</span> == <span class="func">len</span>(<span class="var">lst</span>):
+        <span class="kw">return</span>
+
+    <span class="com"># Local Task: Print current element</span>
+    <span class="func">print</span>(<span class="str">f"Element [{idx}]:"</span>, <span class="var">lst</span>[<span class="var">idx</span>])
+
+    <span class="com"># Recursive Call: Advance index pointer</span>
+    <span class="func">print_list_recursive</span>(<span class="var">lst</span>, <span class="var">idx</span> + <span class="num">1</span>)
+
+<span class="var">fruits</span> = [<span class="str">"Mango"</span>, <span class="str">"Litchi"</span>, <span class="str">"Apple"</span>, <span class="str">"Banana"</span>]
+<span class="func">print_list_recursive</span>(<span class="var">fruits</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Element [0]: Mango</div>
+          <div>Element [1]: Litchi</div>
+          <div>Element [2]: Apple</div>
+          <div>Element [3]: Banana</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: MASTER COMPARISON MATRICES -->
+      <!-- ============================================================ -->
+      <section id="comparison-matrix" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Master Architectural Comparison Tables</h2>
+
+        <h3>1. Recursion vs. Iteration (Loops)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Engineering Dimension</th>
+                <th>Iteration (Loops)</th>
+                <th>Recursion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Primary Mechanism</strong></td>
+                <td>Repeatedly evaluates block via loop control statement (<code>for</code>/<code>while</code>).</td>
+                <td>Function repeatedly calls itself to instantiate smaller sub-problems.</td>
+              </tr>
+              <tr>
+                <td><strong>Termination Condition</strong></td>
+                <td>Loop continuation condition evaluates to <code>False</code>, or <code>break</code> is triggered.</td>
+                <td>Base case condition is met, returning control without further calls.</td>
+              </tr>
+              <tr>
+                <td><strong>Memory Overhead</strong></td>
+                <td><strong>$O(1)$ Constant Space:</strong> Re-uses the existing stack frame variables.</td>
+                <td><strong>$O(N)$ Linear Stack Space:</strong> Allocates a new activation record for every nested call.</td>
+              </tr>
+              <tr>
+                <td><strong>Execution Speed</strong></td>
+                <td>Faster execution; zero function-call branching overhead.</td>
+                <td>Slightly slower due to stack push/pop overhead and argument passing.</td>
+              </tr>
+              <tr>
+                <td><strong>Failure Mode</strong></td>
+                <td>Infinite Loop (100% CPU spinning; execution does not advance).</td>
+                <td><code>RecursionError</code> (Call stack boundary exceeded).</td>
+              </tr>
+              <tr>
+                <td><strong>Optimal Domains</strong></td>
+                <td>Linear sequence scans, flat array transformations, numerical counters.</td>
+                <td>Tree traversals, graph algorithms (DFS), Divide &amp; Conquer, backtracking.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Print Output vs. Function Return Value</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th><code>print()</code> Output</th>
+                <th><code>return</code> Statement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Destination</strong></td>
+                <td>Emits textual characters to the console display (stdout stream).</td>
+                <td>Passes a memory reference/object back to the calling expression.</td>
+              </tr>
+              <tr>
+                <td><strong>Composability</strong></td>
+                <td><strong>Zero:</strong> Output cannot be reused in downstream calculations.</td>
+                <td><strong>High:</strong> Return values can be stored in variables or passed to other functions.</td>
+              </tr>
+              <tr>
+                <td><strong>Control Flow</strong></td>
+                <td>Does not alter control flow; execution continues to the next statement.</td>
+                <td>Immediately exits the function block.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: INTERACTIVE CALL STACK & FUNCTION VISUALIZER -->
+      <!-- ============================================================ -->
+      <section id="interactive-simulator" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Interactive Call Stack &amp; Function Sandbox</h2>
+
+        <p>
+          Step through recursive activation records interactively. Choose an algorithm below, set the initial parameter $n$, and click <strong>"Step Forward"</strong> to visualize stack frames getting pushed onto the call stack, watching local parameters bind and return values pass down the unwinding chain:
+        </p>
+
+        <!-- Interactive Call Stack Visualizer -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.75rem; margin-top: 1.5rem; box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="margin: 0; color: var(--text-primary); font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🥞 Live Call Stack Step Visualizer</span>
+            </h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-family: var(--font-mono);">LIFO Activation Simulator</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Algorithm</label>
+              <select id="rec-algo" onchange="initRecursionSim()" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+                <option value="factorial">Factorial (n!)</option>
+                <option value="sum">Natural Sum S(n)</option>
+                <option value="countdown">Countdown show(n)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">Input Parameter $n$</label>
+              <input type="number" id="rec-n" value="4" min="1" max="6" onchange="initRecursionSim()" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem;">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+            <button class="btn-primary" onclick="stepRecursionSim()" id="rec-step-btn" style="cursor: pointer;">
+              <span>Step Forward &rarr;</span>
+            </button>
+            <button class="btn-secondary" onclick="autoPlayRecursionSim()" id="rec-play-btn" style="cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 8px; color: var(--text-primary);">
+              <span>Auto Run</span>
+            </button>
+            <button class="btn-secondary" onclick="initRecursionSim()" style="cursor: pointer; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 8px; color: var(--text-primary);">
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Stack Frame Display & State Log Grid -->
+          <div style="display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; margin-top: 1rem;">
+            <!-- Call Stack Graphic Container -->
+            <div style="border: 2px dashed var(--border-color); border-radius: 10px; padding: 1rem; min-height: 240px; display: flex; flex-direction: column-reverse; gap: 0.5rem; background: var(--bg-primary);" id="stack-bucket">
+              <!-- Stack frames dynamically injected here from bottom to top -->
+            </div>
+
+            <!-- Trace Log -->
+            <div class="output-box" id="rec-trace-output" style="margin-bottom: 0; min-height: 240px; font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.6;">
+              <span class="output-label">Execution Trace:</span>
+              <div id="rec-log-content">Click "Step Forward" to begin execution trace.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Function Sandbox (Currency & Average) -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.75rem; margin-top: 2rem; box-shadow: var(--shadow-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <h3 style="margin: 0; color: var(--text-primary); font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>💵 Interactive Currency Converter Sandbox ($1 \text{ USD} = 83 \text{ INR}$)</span>
+            </h3>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+            <label style="font-weight: 600; font-size: 0.9rem;">Amount in USD ($):</label>
+            <input type="number" id="sandbox-usd" value="73" min="1" style="padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-mono); width: 120px;">
+            <button class="btn-primary" onclick="runCurrencySandbox()">Convert to INR</button>
+          </div>
+          <div class="output-box" id="currency-output" style="margin-bottom: 0;">
+            <span class="output-label">Conversion Output:</span>
+            <span id="currency-output-val">$73.00 USD = <strong>6,059.00 INR</strong> (at standard rate 83.0 INR/USD)</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 6 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-functions" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Live Call Stack Simulation State Machine
+    let simSteps = [];
+    let currentStepIdx = 0;
+    let autoInterval = null;
+
+    function buildSimulationSteps() {
+      const algo = document.getElementById('rec-algo').value;
+      const n = Math.min(Math.max(parseInt(document.getElementById('rec-n').value, 10) || 3, 1), 6);
+      simSteps = [];
+
+      if (algo === 'factorial') {
+        // Winding down
+        for (let k = n; k >= 1; k--) {
+          simSteps.push({
+            type: 'push',
+            func: 'factorial',
+            param: k,
+            desc: `Invoked factorial(${k}): evaluating base case (k==1 or k==0)... False. Pushing frame. Calling factorial(${k - 1})`
+          });
+        }
+        // Base case
+        simSteps[simSteps.length - 1].desc = `Invoked factorial(1): Base case reached (k==1). Returning 1!`;
+        simSteps[simSteps.length - 1].isBase = true;
+
+        // Unwinding up
+        let currentProd = 1;
+        for (let k = 2; k <= n; k++) {
+          let prev = currentProd;
+          currentProd *= k;
+          simSteps.push({
+            type: 'pop',
+            func: 'factorial',
+            param: k,
+            retVal: currentProd,
+            desc: `Frame factorial(${k}) receives return value ${prev}. Computes ${k} * ${prev} = ${currentProd}. Popping frame.`
+          });
+        }
+      } else if (algo === 'sum') {
+        for (let k = n; k >= 0; k--) {
+          simSteps.push({
+            type: 'push',
+            func: 'sum',
+            param: k,
+            desc: k === 0 ? `Invoked sum(0): Base case reached (n==0). Returning 0!` : `Invoked sum(${k}): Pushing frame. Calling sum(${k - 1})`
+          });
+        }
+        simSteps[simSteps.length - 1].isBase = true;
+        let runningSum = 0;
+        for (let k = 1; k <= n; k++) {
+          let prev = runningSum;
+          runningSum += k;
+          simSteps.push({
+            type: 'pop',
+            func: 'sum',
+            param: k,
+            retVal: runningSum,
+            desc: `Frame sum(${k}) receives ${prev}. Computes ${k} + ${prev} = ${runningSum}. Popping frame.`
+          });
+        }
+      } else if (algo === 'countdown') {
+        for (let k = n; k >= 0; k--) {
+          simSteps.push({
+            type: 'push',
+            func: 'show',
+            param: k,
+            desc: k === 0 ? `Invoked show(0): Base case reached (n==0). Returning control!` : `Invoked show(${k}): Prints ${k}. Calling show(${k - 1})`
+          });
+        }
+        simSteps[simSteps.length - 1].isBase = true;
+        for (let k = 1; k <= n; k++) {
+          simSteps.push({
+            type: 'pop',
+            func: 'show',
+            param: k,
+            desc: `Frame show(${k}) execution completed. Popping frame off call stack.`
+          });
+        }
+      }
+    }
+
+    function initRecursionSim() {
+      if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+      buildSimulationSteps();
+      currentStepIdx = 0;
+      document.getElementById('stack-bucket').innerHTML = '<div style="color:var(--text-muted); text-align:center; margin:auto; font-size:0.85rem;">[Call Stack Empty]</div>';
+      document.getElementById('rec-log-content').innerHTML = `Initialized trace for <strong>${document.getElementById('rec-algo').value}</strong> with n = ${document.getElementById('rec-n').value}. Click "Step Forward".`;
+      document.getElementById('rec-step-btn').disabled = false;
+    }
+
+    function stepRecursionSim() {
+      if (currentStepIdx >= simSteps.length) {
+        document.getElementById('rec-log-content').innerHTML += '<br><span style="color:#7ee787;">[COMPLETED] Execution finished. Call stack completely unwound.</span>';
+        document.getElementById('rec-step-btn').disabled = true;
+        if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+        return;
+      }
+
+      const step = simSteps[currentStepIdx];
+      const bucket = document.getElementById('stack-bucket');
+      const logContent = document.getElementById('rec-log-content');
+
+      // Clear empty placeholder
+      if (currentStepIdx === 0) bucket.innerHTML = '';
+
+      if (step.type === 'push') {
+        const frameDiv = document.createElement('div');
+        frameDiv.id = `frame-${step.func}-${step.param}`;
+        frameDiv.style.background = step.isBase ? '#15803d' : 'var(--bg-card)';
+        frameDiv.style.border = '1px solid var(--border-color)';
+        frameDiv.style.padding = '0.5rem 0.75rem';
+        frameDiv.style.borderRadius = '6px';
+        frameDiv.style.fontSize = '0.82rem';
+        frameDiv.style.fontFamily = 'var(--font-mono)';
+        frameDiv.style.display = 'flex';
+        frameDiv.style.justifyContent = 'space-between';
+        frameDiv.style.alignItems = 'center';
+        frameDiv.style.boxShadow = 'var(--shadow-sm)';
+        frameDiv.style.animation = 'fadeIn 0.2s ease-in';
+        frameDiv.innerHTML = `<span><strong>${step.func}</strong>(n=${step.param})</span><span style="font-size:0.75rem; color:${step.isBase ? '#fff' : 'var(--text-muted)'};">${step.isBase ? 'BASE CASE' : 'Frame'}</span>`;
+        bucket.appendChild(frameDiv);
+
+        logContent.innerHTML += `<br>&rarr; <span style="color:#79c0ff;">[PUSH]</span> ${step.desc}`;
+      } else if (step.type === 'pop') {
+        const frame = document.getElementById(`frame-${step.func}-${step.param}`);
+        if (frame) {
+          frame.style.opacity = '0.3';
+          frame.style.textDecoration = 'line-through';
+          setTimeout(() => { if (frame.parentNode) frame.remove(); }, 350);
+        }
+        logContent.innerHTML += `<br>&larr; <span style="color:#ff7b72;">[POP]</span> ${step.desc}`;
+      }
+
+      currentStepIdx++;
+      const traceBox = document.getElementById('rec-trace-output');
+      traceBox.scrollTop = traceBox.scrollHeight;
+    }
+
+    function autoPlayRecursionSim() {
+      if (autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+        document.getElementById('rec-play-btn').textContent = 'Auto Run';
+      } else {
+        document.getElementById('rec-play-btn').textContent = 'Pause';
+        autoInterval = setInterval(() => {
+          if (currentStepIdx >= simSteps.length) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+            document.getElementById('rec-play-btn').textContent = 'Auto Run';
+          }
+          stepRecursionSim();
+        }, 750);
+      }
+    }
+
+    function runCurrencySandbox() {
+      const usd = parseFloat(document.getElementById('sandbox-usd').value) || 0;
+      const rate = 83.0;
+      const inr = usd * rate;
+      document.getElementById('currency-output-val').innerHTML = `$${usd.toFixed(2)} USD = <strong>${inr.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} INR</strong> (at standard rate ${rate} INR/USD)`;
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initRecursionSim();
+    });
+  </script>
+</body>
+</html>

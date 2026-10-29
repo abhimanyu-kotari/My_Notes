@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 9: Object-Oriented Programming (Part 2) | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 9 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#del-keyword" class="sidebar-link">1. The del Keyword: Deleting Attributes &amp; Objects</a></li>
+        <li><a href="#private-members" class="sidebar-link">2. Private Attributes &amp; Methods (__)</a></li>
+        <li><a href="#inheritance-core" class="sidebar-link">3. Inheritance: Single, Multi-level &amp; Multiple</a></li>
+        <li><a href="#super-method" class="sidebar-link">4. The super() Method (Parent Class Access)</a></li>
+        <li><a href="#class-methods" class="sidebar-link">5. Class Methods (@classmethod) vs Instance vs Static</a></li>
+        <li><a href="#property-decorator" class="sidebar-link">6. The @property Decorator (Dynamic Attributes)</a></li>
+        <li><a href="#polymorphism-dunder" class="sidebar-link">7. Polymorphism &amp; Operator Overloading (__add__, etc.)</a></li>
+        <li><a href="#practice-circle" class="sidebar-link">8. Practice 1: Circle Class (Area &amp; Perimeter)</a></li>
+        <li><a href="#practice-employee" class="sidebar-link">9. Practice 2: Employee &amp; Engineer Hierarchy</a></li>
+        <li><a href="#practice-order" class="sidebar-link">10. Practice 3: Order Class with __gt__ Overloading</a></li>
+        <li><a href="#summary-matrix" class="sidebar-link">11. Quick Reference &amp; Summary Matrix</a></li>
+        <li><a href="#interactive-sandbox" class="sidebar-link">12. Interactive OOP Sandbox (Complex Numbers &amp; Orders)</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 09 Notes</span>
+          <span class="tag">OOPs Part 2</span>
+          <span class="tag">del Keyword</span>
+          <span class="tag">Private Members</span>
+          <span class="tag">Inheritance</span>
+          <span class="tag">super()</span>
+          <span class="tag">@classmethod</span>
+          <span class="tag">@property</span>
+          <span class="tag">Polymorphism</span>
+          <span class="tag">3 Solved Projects</span>
+        </div>
+        <h1 class="lecture-main-title">Object-Oriented Programming (Part 2): Inheritance &amp; Polymorphism</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Object-Oriented Programming (Part 2) covers advanced OOP tools: deleting data with <code>del</code>, protecting sensitive data with private members (<code>__</code>), reusing and extending code across classes using <strong>Inheritance</strong>, calling parent constructors with <code>super()</code>, managing class-level data with <code>@classmethod</code>, computing live values with <code>@property</code>, and implementing <strong>Polymorphism</strong> via operator overloading (like <code>__add__</code> and <code>__gt__</code>).<br>
+          <strong>Why do we use it?</strong> We use these tools to build secure, scalable, and intuitive software—safeguarding confidential passwords from accidental changes, avoiding duplicate code across related classes, keeping calculated attributes automatically synchronized, and making custom objects interact cleanly using familiar math symbols like <code>+</code> and <code>&gt;</code>.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: THE DEL KEYWORD -->
+      <!-- ============================================================ -->
+      <section id="del-keyword" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The <code>del</code> Keyword: Deleting Attributes &amp; Objects</h2>
+
+        <h3>1. What is the <code>del</code> Keyword?</h3>
+        <p>
+          In Python, the <code>del</code> keyword is used to delete object properties (attributes) or entire objects themselves. When an object is deleted, its name binding is severed from memory. If no other variable points to that object, Python's automatic garbage collector safely frees that memory.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>Python Syntax</th>
+                <th>What Happens Internally?</th>
+                <th>Accessing Afterwards</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Delete Attribute</strong></td>
+                <td><code>del s1.name</code></td>
+                <td>Removes the specific property <code>name</code> from the object's instance dictionary.</td>
+                <td>Raises <code>AttributeError: 'Student' object has no attribute 'name'</code></td>
+              </tr>
+              <tr>
+                <td><strong>Delete Entire Object</strong></td>
+                <td><code>del s1</code></td>
+                <td>Unbinds variable <code>s1</code>. Object memory is marked for garbage collection.</td>
+                <td>Raises <code>NameError: name 's1' is not defined</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Code Example: Deleting Object Properties and Instances</h3>
+        <p>
+          Let's see how <code>del</code> behaves when applied to an attribute versus an entire object:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+
+<span class="com"># Create student object</span>
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>)
+<span class="func">print</span>(<span class="var">s1</span>.<span class="var">name</span>)   <span class="com"># Output: Karan</span>
+
+<span class="com"># Case 1: Delete an object's attribute</span>
+<span class="kw">del</span> <span class="var">s1</span>.<span class="var">name</span>
+<span class="com"># print(s1.name)  # &rarr; AttributeError: 'Student' object has no attribute 'name'</span>
+
+<span class="com"># Case 2: Delete the entire object</span>
+<span class="kw">del</span> <span class="var">s1</span>
+<span class="com"># print(s1)       # &rarr; NameError: name 's1' is not defined</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Important Takeaway: Deletion vs. Reassignment</div>
+          <p>
+            Writing <code>s1.name = None</code> does <strong>not</strong> delete the attribute; the attribute still exists and simply holds <code>None</code>. In contrast, <code>del s1.name</code> completely removes the attribute key from the object, so checking for it will throw an <code>AttributeError</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: PRIVATE ATTRIBUTES AND METHODS -->
+      <!-- ============================================================ -->
+      <section id="private-members" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Private Attributes &amp; Methods (<code>__</code> Double Underscore)</h2>
+
+        <h3>1. Public vs. Private: Conceptual Need for Data Protection</h3>
+        <p>
+          By default in Python, all attributes and methods inside a class are <strong>Public</strong>. This means any code outside the class can read and modify them directly (e.g., <code>acc1.balance = 0</code>).
+        </p>
+        <p>
+          In production software, some sensitive data (like passwords, secret keys, or internal bank balances) must be protected from accidental modification or direct external exposure. Python provides a mechanism to make attributes and methods <strong>Private</strong>.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #2ea043; border-radius: 6px;">
+              <strong style="color: #7ee787; font-size: 1.05rem;">Public Attributes &amp; Methods</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Accessible from <strong>anywhere</strong>: inside the class methods AND outside the class using <code>object.attr</code>.
+              </p>
+              <div style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.85rem; color: #a5d6ff;">
+                self.acc_no = 12345<br>
+                acc.display()
+              </div>
+            </div>
+
+            <div style="padding: 1.25rem; background: var(--bg-primary); border-left: 4px solid #ff7b72; border-radius: 6px;">
+              <strong style="color: #ff7b72; font-size: 1.05rem;">Private Attributes &amp; Methods (__)</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Accessible <strong>only inside the class</strong>. Direct external access throws an <code>AttributeError</code>.
+              </p>
+              <div style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.85rem; color: #ff7b72;">
+                self.__acc_pass = "secret"<br>
+                acc.__reset() # ERROR outside!
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <h3>2. Syntax: Two Leading Underscores (<code>__</code>)</h3>
+        <p>
+          To make any attribute or method private in Python, prefix its name with two underscores (<code>__</code>):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Account</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">acc_no</span>, <span class="var">acc_pass</span>):
+        <span class="var">self</span>.<span class="var">acc_no</span> = <span class="var">acc_no</span>          <span class="com"># Public attribute</span>
+        <span class="var">self</span>.<span class="var">__acc_pass</span> = <span class="var">acc_pass</span>    <span class="com"># Private attribute (prefixed with __)</span>
+
+    <span class="com"># Public method can read private attributes internally</span>
+    <span class="kw">def</span> <span class="func">reset_password</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"Internal Password access:"</span>, <span class="var">self</span>.<span class="var">__acc_pass</span>)
+
+<span class="var">acc1</span> = <span class="cls">Account</span>(<span class="str">"12345"</span>, <span class="str">"abcde"</span>)
+
+<span class="func">print</span>(<span class="var">acc1</span>.<span class="var">acc_no</span>)         <span class="com"># Output: 12345 (Public is accessible)</span>
+<span class="var">acc1</span>.<span class="func">reset_password</span>()      <span class="com"># Output: Internal Password access: abcde</span>
+
+<span class="com"># Attempting direct outside access will crash:</span>
+<span class="com"># print(acc1.__acc_pass)   # &rarr; AttributeError: 'Account' object has no attribute '__acc_pass'</span></code></pre>
+        </div>
+
+        <h3>3. Private Methods in Action</h3>
+        <p>
+          Methods can also be made private using <code>def __method_name(self):</code>. These methods are designed as internal helper routines that other methods inside the class use, but external callers cannot call:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="kw">def</span> <span class="func">__hello</span>(<span class="var">self</span>):                <span class="com"># Private method</span>
+        <span class="func">print</span>(<span class="str">"Hello, internal person!"</span>)
+
+    <span class="kw">def</span> <span class="func">welcome</span>(<span class="var">self</span>):                <span class="com"># Public method</span>
+        <span class="var">self</span>.<span class="func">__hello</span>()                <span class="com"># Calls private helper internally</span>
+
+<span class="var">p1</span> = <span class="cls">Person</span>()
+<span class="var">p1</span>.<span class="func">welcome</span>()                          <span class="com"># Output: Hello, internal person!</span>
+
+<span class="com"># Direct call outside raises AttributeError:</span>
+<span class="com"># p1.__hello()                        # &rarr; AttributeError: 'Person' object has no attribute '__hello'</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Behind the Scenes: Name Mangling</div>
+          <p>
+            Python doesn't have true C++ or Java hardware-level privacy. Instead, it performs <strong>Name Mangling</strong>: an attribute named <code>__acc_pass</code> inside class <code>Account</code> is internally renamed by Python to <code>_Account__acc_pass</code>.
+          </p>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            While you technically <em>could</em> write <code>acc1._Account__acc_pass</code>, this is strongly discouraged. The <code>__</code> prefix serves as an explicit contract to developers: <em>"This is internal private state—do not touch it directly!"</em>
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: INHERITANCE (THE 3RD PILLAR) -->
+      <!-- ============================================================ -->
+      <section id="inheritance-core" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Inheritance: Single, Multi-level &amp; Multiple</h2>
+
+        <h3>1. What is Inheritance? (The 3rd Pillar of OOP)</h3>
+        <p>
+          <strong>Inheritance</strong> is the mechanism where one class (called the <strong>Child</strong> or <strong>Derived</strong> class) acquires all the properties (attributes) and behaviors (methods) of another class (called the <strong>Parent</strong> or <strong>Base</strong> class).
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Terminology</th>
+                <th>Alternative Names</th>
+                <th>Role in Hierarchy</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Base Class</strong></td>
+                <td>Parent Class, Super Class</td>
+                <td>The original class providing common attributes and methods.</td>
+                <td><code>class Car:</code></td>
+              </tr>
+              <tr>
+                <td><strong>Derived Class</strong></td>
+                <td>Child Class, Sub Class</td>
+                <td>The new class that inherits and reuses the parent's logic, adding its own specializations.</td>
+                <td><code>class ToyotaCar(Car):</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Why Use Inheritance? The DRY Principle (Don't Repeat Yourself)</div>
+          <p>
+            Imagine building a software platform for vehicles: <code>ToyotaCar</code>, <code>BMW</code>, <code>Tesla</code>, and <code>Ferrari</code>. All of them have a <code>color</code>, can <code>start()</code>, and can <code>stop()</code>.
+          </p>
+          <p style="margin-top: 0.5rem;">
+            Instead of copying and pasting the same <code>start()</code> and <code>stop()</code> methods across 20 different car classes, we write them once in a general <code>Car</code> parent class. Every specific car model inherits them automatically!
+          </p>
+        </div>
+
+        <h3>2. The Three Types of Inheritance in Python</h3>
+        <p>
+          Python supports three fundamental forms of inheritance:
+        </p>
+
+        <!-- Diagram Cards for 3 Types -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <!-- Single -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #58a6ff; font-size: 1.05rem; margin-bottom: 0.5rem;">1. Single Inheritance</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              A single derived class inherits from a single base class.
+            </p>
+            <div style="text-align: center; padding: 0.75rem; background: var(--bg-primary); border-radius: 6px; font-family: var(--font-mono); font-size: 0.88rem;">
+              <span style="color: #79c0ff;">Base (Car)</span><br>
+              &darr;<br>
+              <span style="color: #7ee787;">Derived (ToyotaCar)</span>
+            </div>
+          </div>
+
+          <!-- Multi-level -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #ffa657; font-size: 1.05rem; margin-bottom: 0.5rem;">2. Multi-Level Inheritance</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              A chain where Class B inherits from Class A, and Class C inherits from Class B.
+            </p>
+            <div style="text-align: center; padding: 0.75rem; background: var(--bg-primary); border-radius: 6px; font-family: var(--font-mono); font-size: 0.88rem;">
+              <span style="color: #79c0ff;">Grandparent (Car)</span><br>
+              &darr;<br>
+              <span style="color: #ffa657;">Parent (ToyotaCar)</span><br>
+              &darr;<br>
+              <span style="color: #7ee787;">Child (Fortuner)</span>
+            </div>
+          </div>
+
+          <!-- Multiple -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #d2a8ff; font-size: 1.05rem; margin-bottom: 0.5rem;">3. Multiple Inheritance</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+              A single derived class inherits from two or more independent base classes simultaneously.
+            </p>
+            <div style="text-align: center; padding: 0.75rem; background: var(--bg-primary); border-radius: 6px; font-family: var(--font-mono); font-size: 0.88rem;">
+              <span style="color: #79c0ff;">Parent A</span> &nbsp;+&nbsp; <span style="color: #79c0ff;">Parent B</span><br>
+              &darr;<br>
+              <span style="color: #d2a8ff;">Child C(A, B)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <h3>3. Type 1: Single Inheritance Implementation</h3>
+        <p>
+          Let's implement single inheritance with <code>Car</code> and <code>ToyotaCar</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Base Class</span>
+<span class="kw">class</span> <span class="cls">Car</span>:
+    <span class="var">color</span> = <span class="str">"black"</span>
+
+    <span class="kw">@</span><span class="func">staticmethod</span>
+    <span class="kw">def</span> <span class="func">start</span>():
+        <span class="func">print</span>(<span class="str">"car started.."</span>)
+
+    <span class="kw">@</span><span class="func">staticmethod</span>
+    <span class="kw">def</span> <span class="func">stop</span>():
+        <span class="func">print</span>(<span class="str">"car stopped."</span>)
+
+<span class="com"># Derived Class inheriting Car</span>
+<span class="kw">class</span> <span class="cls">ToyotaCar</span>(<span class="cls">Car</span>):
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+
+<span class="var">car1</span> = <span class="cls">ToyotaCar</span>(<span class="str">"Fortuner"</span>)
+<span class="var">car2</span> = <span class="cls">ToyotaCar</span>(<span class="str">"Prius"</span>)
+
+<span class="func">print</span>(<span class="var">car1</span>.<span class="var">name</span>)   <span class="com"># Output: Fortuner (from ToyotaCar)</span>
+<span class="func">print</span>(<span class="var">car1</span>.<span class="var">color</span>)  <span class="com"># Output: black (inherited from Car)</span>
+<span class="var">car1</span>.<span class="func">start</span>()       <span class="com"># Output: car started.. (inherited from Car)</span>
+<span class="var">car1</span>.<span class="func">stop</span>()        <span class="com"># Output: car stopped. (inherited from Car)</span></code></pre>
+        </div>
+
+        <h3>4. Type 2: Multi-Level Inheritance Implementation</h3>
+        <p>
+          In multi-level inheritance, properties cascade down an entire family tree:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Car</span>:
+    <span class="kw">@</span><span class="func">staticmethod</span>
+    <span class="kw">def</span> <span class="func">start</span>():
+        <span class="func">print</span>(<span class="str">"car started.."</span>)
+
+    <span class="kw">@</span><span class="func">staticmethod</span>
+    <span class="kw">def</span> <span class="func">stop</span>():
+        <span class="func">print</span>(<span class="str">"car stopped."</span>)
+
+<span class="kw">class</span> <span class="cls">ToyotaCar</span>(<span class="cls">Car</span>):
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">brand</span>):
+        <span class="var">self</span>.<span class="var">brand</span> = <span class="var">brand</span>
+
+<span class="kw">class</span> <span class="cls">Fortuner</span>(<span class="cls">ToyotaCar</span>):
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">type</span>):
+        <span class="var">self</span>.<span class="var">type</span> = <span class="var">type</span>
+
+<span class="var">car1</span> = <span class="cls">Fortuner</span>(<span class="str">"diesel"</span>)
+<span class="func">print</span>(<span class="var">car1</span>.<span class="var">type</span>)   <span class="com"># Output: diesel</span>
+<span class="var">car1</span>.<span class="func">start</span>()       <span class="com"># Output: car started.. (inherited all the way from Car!)</span></code></pre>
+        </div>
+
+        <h3>5. Type 3: Multiple Inheritance Implementation</h3>
+        <p>
+          In multiple inheritance, a child class combines traits from multiple independent parent classes:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">A</span>:
+    <span class="var">varA</span> = <span class="str">"welcome to class A"</span>
+
+<span class="kw">class</span> <span class="cls">B</span>:
+    <span class="var">varB</span> = <span class="str">"welcome to class B"</span>
+
+<span class="com"># Class C inherits from both A and B</span>
+<span class="kw">class</span> <span class="cls">C</span>(<span class="cls">A</span>, <span class="cls">B</span>):
+    <span class="var">varC</span> = <span class="str">"welcome to class C"</span>
+
+<span class="var">c1</span> = <span class="cls">C</span>()
+<span class="func">print</span>(<span class="var">c1</span>.<span class="var">varA</span>)  <span class="com"># Output: welcome to class A (from class A)</span>
+<span class="func">print</span>(<span class="var">c1</span>.<span class="var">varB</span>)  <span class="com"># Output: welcome to class B (from class B)</span>
+<span class="func">print</span>(<span class="var">c1</span>.<span class="var">varC</span>)  <span class="com"># Output: welcome to class C (from class C)</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: THE SUPER() METHOD -->
+      <!-- ============================================================ -->
+      <section id="super-method" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The <code>super()</code> Method (Parent Class Access)</h2>
+
+        <h3>1. Why Do We Need <code>super()</code>?</h3>
+        <p>
+          When a child class defines its own <code>__init__()</code> constructor, it <strong>overrides</strong> the parent class's constructor. This means the parent's initialization code will not run unless we explicitly call it!
+        </p>
+        <p>
+          The <code>super()</code> method is a built-in Python function used to access and call methods of the parent class directly from within the child class.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Car</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">type</span>):
+        <span class="var">self</span>.<span class="var">type</span> = <span class="var">type</span>
+
+    <span class="kw">def</span> <span class="func">start</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"car started.."</span>)
+
+    <span class="kw">def</span> <span class="func">stop</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"car stopped."</span>)
+
+<span class="kw">class</span> <span class="cls">ToyotaCar</span>(<span class="cls">Car</span>):
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">type</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="com"># Call the parent class constructor to set self.type!</span>
+        <span class="func">super</span>().<span class="func">__init__</span>(<span class="var">type</span>)
+        <span class="com"># We can also invoke parent methods using super():</span>
+        <span class="func">super</span>().<span class="func">start</span>()
+
+<span class="com"># Instantiate ToyotaCar</span>
+<span class="var">car1</span> = <span class="cls">ToyotaCar</span>(<span class="str">"Prius"</span>, <span class="str">"electric"</span>)
+<span class="com"># Output during instantiation: car started..</span>
+
+<span class="func">print</span>(<span class="var">car1</span>.<span class="var">name</span>)  <span class="com"># Output: Prius</span>
+<span class="func">print</span>(<span class="var">car1</span>.<span class="var">type</span>)  <span class="com"># Output: electric (successfully initialized via super()!)</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Key Rules for Using <code>super()</code></div>
+          <ul>
+            <li><strong>No need to pass <code>self</code>:</strong> When calling <code>super().__init__(type)</code>, Python automatically handles the <code>self</code> pointer for you.</li>
+            <li><strong>Constructor chaining:</strong> Always call <code>super().__init__()</code> when the child class adds new attributes on top of the parent's base attributes.</li>
+            <li><strong>Method reuse:</strong> You can call any parent method via <code>super().method_name()</code>, which is especially useful if the child method overrides it and wants to extend rather than replace it.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: CLASS METHODS VS INSTANCE VS STATIC -->
+      <!-- ============================================================ -->
+      <section id="class-methods" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Class Methods (<code>@classmethod</code>) vs. Instance vs. Static</h2>
+
+        <h3>1. The 3 Method Types in Python</h3>
+        <p>
+          In Python, methods inside a class can belong to an individual object instance, to the class blueprint itself, or act as an independent utility. Understanding their differences is key to mastering OOP:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Method Type</th>
+                <th>Decorator</th>
+                <th>First Parameter</th>
+                <th>What Does It Access?</th>
+                <th>Typical Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Instance Method</strong></td>
+                <td>None (default)</td>
+                <td><code>self</code></td>
+                <td>Individual object's instance attributes (<code>self.name</code>).</td>
+                <td>Perform actions on specific object state.</td>
+              </tr>
+              <tr>
+                <td><strong>Class Method</strong></td>
+                <td><code>@classmethod</code></td>
+                <td><code>cls</code></td>
+                <td>The class object itself (<code>cls.attribute</code>).</td>
+                <td>Modify class-level attributes, alternative factory constructors.</td>
+              </tr>
+              <tr>
+                <td><strong>Static Method</strong></td>
+                <td><code>@staticmethod</code></td>
+                <td>None (no <code>self</code> or <code>cls</code>)</td>
+                <td>Neither instance nor class state directly.</td>
+                <td>Utility / helper functions logically grouped within the class.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. The Problem: Modifying a Class Attribute from Inside a Method</h3>
+        <p>
+          Suppose we have a class-level attribute <code>name = "anonymous"</code>. If we define a normal method and write <code>self.name = name</code>, Python creates a new <em>instance</em> attribute named <code>name</code> rather than modifying the shared class attribute!
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="var">name</span> = <span class="str">"anonymous"</span>
+
+    <span class="kw">def</span> <span class="func">changeName</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>  <span class="com"># Warning: Creates instance attribute! Class attribute unchanged!</span>
+
+<span class="var">p1</span> = <span class="cls">Person</span>()
+<span class="var">p1</span>.<span class="func">changeName</span>(<span class="str">"Rahul Kumar"</span>)
+<span class="func">print</span>(<span class="var">p1</span>.<span class="var">name</span>)      <span class="com"># Output: Rahul Kumar (instance attribute)</span>
+<span class="func">print</span>(<span class="cls">Person</span>.<span class="var">name</span>)  <span class="com"># Output: anonymous (class attribute stayed the same!)</span></code></pre>
+        </div>
+
+        <h3>3. The Solution: Using <code>@classmethod</code></h3>
+        <p>
+          By decorating the method with <code>@classmethod</code> and using <code>cls</code> as the first parameter, we bind the method directly to the class itself:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="var">name</span> = <span class="str">"anonymous"</span>
+
+    <span class="kw">@</span><span class="func">classmethod</span>
+    <span class="kw">def</span> <span class="func">changeName</span>(<span class="var">cls</span>, <span class="var">name</span>):
+        <span class="var">cls</span>.<span class="var">name</span> = <span class="var">name</span>   <span class="com"># Directly updates the class-level attribute!</span>
+
+<span class="var">p1</span> = <span class="cls">Person</span>()
+<span class="var">p1</span>.<span class="func">changeName</span>(<span class="str">"Rahul Kumar"</span>)
+
+<span class="func">print</span>(<span class="var">p1</span>.<span class="var">name</span>)      <span class="com"># Output: Rahul Kumar</span>
+<span class="func">print</span>(<span class="cls">Person</span>.<span class="var">name</span>)  <span class="com"># Output: Rahul Kumar (successfully updated at class level!)</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">3 Ways to Change Class Attributes (And Why @classmethod is Best)</div>
+          <p>As discussed in the lecture, there are three ways to modify a class attribute:</p>
+          <ol>
+            <li><code>Person.name = name</code> &mdash; Hardcodes the class name. If the class is renamed or subclassed, this breaks.</li>
+            <li><code>self.__class__.name = name</code> &mdash; Works, but looks verbose and obscure.</li>
+            <li><code>@classmethod def changeName(cls, name): cls.name = name</code> &mdash; <strong>The Pythonic Standard!</strong> Clean, elegant, and automatically works with inheritance.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: THE @PROPERTY DECORATOR -->
+      <!-- ============================================================ -->
+      <section id="property-decorator" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The <code>@property</code> Decorator (Dynamic Attributes)</h2>
+
+        <h3>1. The Stale Data Problem</h3>
+        <p>
+          Consider a <code>Student</code> class with marks in Physics, Chemistry, and Mathematics, plus an attribute calculating their percentage:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">phy</span>, <span class="var">chem</span>, <span class="var">math</span>):
+        <span class="var">self</span>.<span class="var">phy</span> = <span class="var">phy</span>
+        <span class="var">self</span>.<span class="var">chem</span> = <span class="var">chem</span>
+        <span class="var">self</span>.<span class="var">math</span> = <span class="var">math</span>
+        <span class="var">self</span>.<span class="var">percentage</span> = <span class="func">str</span>((<span class="var">self</span>.<span class="var">phy</span> + <span class="var">self</span>.<span class="var">chem</span> + <span class="var">self</span>.<span class="var">math</span>) / <span class="num">3</span>) + <span class="str">"%"</span>
+
+<span class="var">stu1</span> = <span class="cls">Student</span>(<span class="num">98</span>, <span class="num">97</span>, <span class="num">99</span>)
+<span class="func">print</span>(<span class="var">stu1</span>.<span class="var">percentage</span>)  <span class="com"># Output: 98.0%</span>
+
+<span class="com"># Teacher accidentally entered wrong physics marks and corrects it:</span>
+<span class="var">stu1</span>.<span class="var">phy</span> = <span class="num">86</span>
+<span class="func">print</span>(<span class="var">stu1</span>.<span class="var">percentage</span>)  <span class="com"># Output STILL 98.0%! (STALE / OUT-OF-DATE DATA!)</span></code></pre>
+        </div>
+
+        <h3>2. The Solution: The <code>@property</code> Decorator</h3>
+        <p>
+          We use the <code>@property</code> decorator on any method in the class to use that method as a <strong>property</strong>. Whenever you access <code>student.percentage</code>, Python automatically calls the method in the background and computes the fresh, live value on the fly without needing parentheses <code>()</code>!
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">phy</span>, <span class="var">chem</span>, <span class="var">math</span>):
+        <span class="var">self</span>.<span class="var">phy</span> = <span class="var">phy</span>
+        <span class="var">self</span>.<span class="var">chem</span> = <span class="var">chem</span>
+        <span class="var">self</span>.<span class="var">math</span> = <span class="var">math</span>
+
+    <span class="kw">@</span><span class="func">property</span>
+    <span class="kw">def</span> <span class="func">percentage</span>(<span class="var">self</span>):
+        <span class="com"># Dynamically calculated every time stu1.percentage is accessed!</span>
+        <span class="kw">return</span> <span class="func">str</span>((<span class="var">self</span>.<span class="var">phy</span> + <span class="var">self</span>.<span class="var">chem</span> + <span class="var">self</span>.<span class="var">math</span>) / <span class="num">3</span>) + <span class="str">"%"</span>
+
+<span class="var">stu1</span> = <span class="cls">Student</span>(<span class="num">98</span>, <span class="num">97</span>, <span class="num">99</span>)
+<span class="func">print</span>(<span class="var">stu1</span>.<span class="var">percentage</span>)  <span class="com"># Output: 98.0%</span>
+
+<span class="var">stu1</span>.<span class="var">phy</span> = <span class="num">86</span>          <span class="com"># Modify physics marks</span>
+<span class="func">print</span>(<span class="var">stu1</span>.<span class="var">percentage</span>)  <span class="com"># Output: 94.0%! (Automatically updated and synced!)</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Getters and Setters</div>
+          <p>
+            In Python, the <code>@property</code> decorator acts as a <strong>Getter</strong>. You can also define a companion <strong>Setter</strong> using <code>@property_name.setter</code> to perform validation or execute actions when someone assigns a value to that property (e.g. <code>stu1.percentage = "95%"</code>).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: POLYMORPHISM & OPERATOR OVERLOADING -->
+      <!-- ============================================================ -->
+      <section id="polymorphism-dunder" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Polymorphism &amp; Operator Overloading (<code>__add__</code>, etc.)</h2>
+
+        <h3>1. What is Polymorphism? (The 4th Pillar of OOP)</h3>
+        <p>
+          The word <strong>Polymorphism</strong> is derived from Greek: <em>Poly</em> (many) + <em>Morph</em> (forms). It means the ability of an operator, function, or method to take on <strong>multiple forms</strong> depending on the context or data types provided.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Everyday Polymorphism: The '+' Operator</div>
+          <p>
+            You have already been using polymorphism in Python from Day 1:
+          </p>
+          <ul>
+            <li><code>1 + 2 = 3</code> &mdash; With integers, <code>+</code> performs <strong>Arithmetic Addition</strong>.</li>
+            <li><code>"apna" + "college" = "apnacollege"</code> &mdash; With strings, <code>+</code> performs <strong>Concatenation</strong>.</li>
+            <li><code>[1, 2] + [3, 4] = [1, 2, 3, 4]</code> &mdash; With lists, <code>+</code> performs <strong>List Merging</strong>.</li>
+          </ul>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            The same operator <code>+</code> exhibits completely different behaviors based on the underlying object type!
+          </p>
+        </div>
+
+        <h3>2. What are Dunder (Magic) Methods?</h3>
+        <p>
+          How does Python know what to do when you write <code>a + b</code>? Behind the scenes, Python translates operators into special methods surrounded by double underscores, commonly called <strong>Dunder Methods</strong> or <strong>Magic Methods</strong>.
+        </p>
+        <p>
+          Writing <code>a + b</code> is syntactic sugar for <code>a.__add__(b)</code>!
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Operation</th>
+                <th>Underlying Dunder Method</th>
+                <th>Expression Translation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>+</code></td>
+                <td>Addition</td>
+                <td><code>__add__(self, other)</code></td>
+                <td><code>a + b &rarr; a.__add__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>-</code></td>
+                <td>Subtraction</td>
+                <td><code>__sub__(self, other)</code></td>
+                <td><code>a - b &rarr; a.__sub__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>Multiplication</td>
+                <td><code>__mul__(self, other)</code></td>
+                <td><code>a * b &rarr; a.__mul__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>/</code></td>
+                <td>Division</td>
+                <td><code>__truediv__(self, other)</code></td>
+                <td><code>a / b &rarr; a.__truediv__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>%</code></td>
+                <td>Modulo (Remainder)</td>
+                <td><code>__mod__(self, other)</code></td>
+                <td><code>a % b &rarr; a.__mod__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>&gt;</code></td>
+                <td>Greater Than</td>
+                <td><code>__gt__(self, other)</code></td>
+                <td><code>a &gt; b &rarr; a.__gt__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>&lt;</code></td>
+                <td>Less Than</td>
+                <td><code>__lt__(self, other)</code></td>
+                <td><code>a &lt; b &rarr; a.__lt__(b)</code></td>
+              </tr>
+              <tr>
+                <td><code>==</code></td>
+                <td>Equality</td>
+                <td><code>__eq__(self, other)</code></td>
+                <td><code>a == b &rarr; a.__eq__(b)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3. Real Implementation: Custom Complex Number Class with <code>__add__</code> &amp; <code>__sub__</code></h3>
+        <p>
+          In mathematics, a complex number has a real part and an imaginary part: $a + bi$. By default, writing <code>num1 + num2</code> on custom objects causes a <code>TypeError: unsupported operand type(s) for +</code>. By overloading <code>__add__</code> and <code>__sub__</code>, we make Python understand custom addition and subtraction!
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Complex</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">real</span>, <span class="var">img</span>):
+        <span class="var">self</span>.<span class="var">real</span> = <span class="var">real</span>
+        <span class="var">self</span>.<span class="var">img</span> = <span class="var">img</span>
+
+    <span class="kw">def</span> <span class="func">showNumber</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="func">str</span>(<span class="var">self</span>.<span class="var">real</span>) + <span class="str">"i + "</span> + <span class="func">str</span>(<span class="var">self</span>.<span class="var">img</span>) + <span class="str">"j"</span>)
+
+    <span class="com"># Overloading the + operator</span>
+    <span class="kw">def</span> <span class="func">__add__</span>(<span class="var">self</span>, <span class="var">num2</span>):
+        <span class="var">newReal</span> = <span class="var">self</span>.<span class="var">real</span> + <span class="var">num2</span>.<span class="var">real</span>
+        <span class="var">newImg</span> = <span class="var">self</span>.<span class="var">img</span> + <span class="var">num2</span>.<span class="var">img</span>
+        <span class="kw">return</span> <span class="cls">Complex</span>(<span class="var">newReal</span>, <span class="var">newImg</span>)
+
+    <span class="com"># Overloading the - operator</span>
+    <span class="kw">def</span> <span class="func">__sub__</span>(<span class="var">self</span>, <span class="var">num2</span>):
+        <span class="var">newReal</span> = <span class="var">self</span>.<span class="var">real</span> - <span class="var">num2</span>.<span class="var">real</span>
+        <span class="var">newImg</span> = <span class="var">self</span>.<span class="var">img</span> - <span class="var">num2</span>.<span class="var">img</span>
+        <span class="kw">return</span> <span class="cls">Complex</span>(<span class="var">newReal</span>, <span class="var">newImg</span>)
+
+<span class="var">num1</span> = <span class="cls">Complex</span>(<span class="num">1</span>, <span class="num">3</span>)    <span class="com"># 1i + 3j</span>
+<span class="var">num1</span>.<span class="func">showNumber</span>()
+
+<span class="var">num2</span> = <span class="cls">Complex</span>(<span class="num">4</span>, <span class="num">6</span>)    <span class="com"># 4i + 6j</span>
+<span class="var">num2</span>.<span class="func">showNumber</span>()
+
+<span class="com"># Adding two complex numbers using + (triggers __add__)</span>
+<span class="var">num3</span> = <span class="var">num1</span> + <span class="var">num2</span>
+<span class="var">num3</span>.<span class="func">showNumber</span>()       <span class="com"># Output: 5i + 9j</span>
+
+<span class="com"># Subtracting two complex numbers using - (triggers __sub__)</span>
+<span class="var">num4</span> = <span class="var">num1</span> - <span class="var">num2</span>
+<span class="var">num4</span>.<span class="func">showNumber</span>()       <span class="com"># Output: -3i + -3j</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: PRACTICE QUESTION 1 (CIRCLE) -->
+      <!-- ============================================================ -->
+      <section id="practice-circle" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Practice 1: Circle Class (Area &amp; Perimeter)</h2>
+
+        <div class="concept-box" style="border-left-color: #58a6ff;">
+          <div class="concept-title" style="color: #58a6ff;">Problem Statement</div>
+          <p>
+            Define a <code>Circle</code> class to create a circle with radius $r$ using the constructor.<br>
+            Define an <code>area()</code> method of the class which calculates the area of the circle ($A = \pi r^2$).<br>
+            Define a <code>perimeter()</code> method of the class which allows you to calculate the perimeter of the circle ($P = 2 \pi r$). Use $\pi = rac{22}{7}$ or $3.14$.
+          </p>
+        </div>
+
+        <h3>Step-by-Step Implementation</h3>
+        <p>
+          We initialize the circle with its radius $r$ in <code>__init__</code>, and compute the geometric values using mathematical formulas:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Circle</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">radius</span>):
+        <span class="var">self</span>.<span class="var">radius</span> = <span class="var">radius</span>
+
+    <span class="kw">def</span> <span class="func">area</span>(<span class="var">self</span>):
+        <span class="com"># Formula: &pi; * r^2</span>
+        <span class="kw">return</span> (<span class="num">22</span> / <span class="num">7</span>) * <span class="var">self</span>.<span class="var">radius</span> ** <span class="num">2</span>
+
+    <span class="kw">def</span> <span class="func">perimeter</span>(<span class="var">self</span>):
+        <span class="com"># Formula: 2 * &pi; * r</span>
+        <span class="kw">return</span> <span class="num">2</span> * (<span class="num">22</span> / <span class="num">7</span>) * <span class="var">self</span>.<span class="var">radius</span>
+
+<span class="com"># Test with radius = 21</span>
+<span class="var">c1</span> = <span class="cls">Circle</span>(<span class="num">21</span>)
+<span class="func">print</span>(<span class="str">"Radius:"</span>, <span class="var">c1</span>.<span class="var">radius</span>)
+<span class="func">print</span>(<span class="str">"Area:"</span>, <span class="var">c1</span>.<span class="func">area</span>())            <span class="com"># Output: 1386.0</span>
+<span class="func">print</span>(<span class="str">"Perimeter:"</span>, <span class="var">c1</span>.<span class="func">perimeter</span>())  <span class="com"># Output: 132.0</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PRACTICE QUESTION 2 (EMPLOYEE & ENGINEER) -->
+      <!-- ============================================================ -->
+      <section id="practice-employee" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Practice 2: Employee &amp; Engineer Hierarchy</h2>
+
+        <div class="concept-box" style="border-left-color: #7ee787;">
+          <div class="concept-title" style="color: #7ee787;">Problem Statement</div>
+          <p>
+            Define an <code>Employee</code> class with attributes <code>role</code>, <code>department</code>, and <code>salary</code>. Create a <code>showDetails()</code> method for it.<br>
+            Now create an <code>Engineer</code> class that inherits properties from <code>Employee</code> and has additional attributes: <code>name</code> and <code>age</code>. Use <code>super()</code> to initialize the parent employee properties.
+          </p>
+        </div>
+
+        <h3>Step-by-Step Implementation</h3>
+        <p>
+          We construct the base <code>Employee</code> class and extend it into the specialized <code>Engineer</code> class, chaining the constructors with <code>super()</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Base Class</span>
+<span class="kw">class</span> <span class="cls">Employee</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">role</span>, <span class="var">dept</span>, <span class="var">salary</span>):
+        <span class="var">self</span>.<span class="var">role</span> = <span class="var">role</span>
+        <span class="var">self</span>.<span class="var">dept</span> = <span class="var">dept</span>
+        <span class="var">self</span>.<span class="var">salary</span> = <span class="var">salary</span>
+
+    <span class="kw">def</span> <span class="func">showDetails</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"Role:"</span>, <span class="var">self</span>.<span class="var">role</span>)
+        <span class="func">print</span>(<span class="str">"Dept:"</span>, <span class="var">self</span>.<span class="var">dept</span>)
+        <span class="func">print</span>(<span class="str">"Salary:"</span>, <span class="var">self</span>.<span class="var">salary</span>)
+
+<span class="com"># Derived Class</span>
+<span class="kw">class</span> <span class="cls">Engineer</span>(<span class="cls">Employee</span>):
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">age</span> = <span class="var">age</span>
+        <span class="com"># Initialize base Employee properties via super()</span>
+        <span class="func">super</span>().<span class="func">__init__</span>(<span class="str">"Engineer"</span>, <span class="str">"IT"</span>, <span class="str">"75,000"</span>)
+
+<span class="var">eng1</span> = <span class="cls">Engineer</span>(<span class="str">"Elon Musk"</span>, <span class="num">40</span>)
+<span class="func">print</span>(<span class="str">"Name:"</span>, <span class="var">eng1</span>.<span class="var">name</span>)
+<span class="func">print</span>(<span class="str">"Age:"</span>, <span class="var">eng1</span>.<span class="var">age</span>)
+<span class="var">eng1</span>.<span class="func">showDetails</span>()</code></pre>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">output</span>
+          </div>
+          <pre><code>Name: Elon Musk
+Age: 40
+Role: Engineer
+Dept: IT
+Salary: 75,000</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: PRACTICE QUESTION 3 (ORDER CLASS) -->
+      <!-- ============================================================ -->
+      <section id="practice-order" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Practice 3: Order Class with <code>__gt__</code> Overloading</h2>
+
+        <div class="concept-box" style="border-left-color: #ffa657;">
+          <div class="concept-title" style="color: #ffa657;">Problem Statement</div>
+          <p>
+            Create an <code>Order</code> class which stores <code>item</code> and its <code>price</code>.<br>
+            Use Dunder method <code>__gt__()</code> to convey that <code>order1 &gt; order2</code> if the price of <code>order1</code> is greater than the price of <code>order2</code>.
+          </p>
+        </div>
+
+        <h3>Step-by-Step Implementation</h3>
+        <p>
+          We implement the <code>Order</code> class and overload the greater-than comparison operator (<code>&gt;</code>) using <code>__gt__(self, other)</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Order</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">item</span>, <span class="var">price</span>):
+        <span class="var">self</span>.<span class="var">item</span> = <span class="var">item</span>
+        <span class="var">self</span>.<span class="var">price</span> = <span class="var">price</span>
+
+    <span class="com"># Overloading the greater-than (>) comparison operator</span>
+    <span class="kw">def</span> <span class="func">__gt__</span>(<span class="var">self</span>, <span class="var">order2</span>):
+        <span class="kw">return</span> <span class="var">self</span>.<span class="var">price</span> > <span class="var">order2</span>.<span class="var">price</span>
+
+<span class="var">order1</span> = <span class="cls">Order</span>(<span class="str">"chips"</span>, <span class="num">20</span>)
+<span class="var">order2</span> = <span class="cls">Order</span>(<span class="str">"tea"</span>, <span class="num">15</span>)
+
+<span class="func">print</span>(<span class="var">order1</span> > <span class="var">order2</span>)  <span class="com"># Output: True (since 20 > 15)</span>
+<span class="func">print</span>(<span class="var">order2</span> > <span class="var">order1</span>)  <span class="com"># Output: False (since 15 is not > 20)</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Why Operator Overloading Creates Clean Code</div>
+          <p>
+            Without operator overloading, developers are forced to write awkward function calls like <code>order1.is_greater_than(order2)</code> or access raw internals everywhere like <code>order1.price &gt; order2.price</code>.
+          </p>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            Overloading <code>__gt__</code> makes your custom domain objects behave as first-class citizens in Python, enabling sorting via <code>sorted([order1, order2])</code> and comparisons using clean, readable mathematical syntax.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SUMMARY MATRIX -->
+      <!-- ============================================================ -->
+      <section id="summary-matrix" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Quick Reference &amp; Summary Matrix</h2>
+
+        <p>
+          Review the core takeaways and syntax contracts from Lecture 9:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Keyword / Syntax</th>
+                <th>Core Mechanism</th>
+                <th>Primary Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Attribute Deletion</strong></td>
+                <td><code>del obj.attr</code></td>
+                <td>Removes key from instance dictionary.</td>
+                <td>Clearing temporary or sensitive attributes.</td>
+              </tr>
+              <tr>
+                <td><strong>Object Deletion</strong></td>
+                <td><code>del obj</code></td>
+                <td>Unbinds reference; eligible for Garbage Collector.</td>
+                <td>Manual memory and resource management.</td>
+              </tr>
+              <tr>
+                <td><strong>Private Members</strong></td>
+                <td><code>__attr</code> or <code>__method()</code></td>
+                <td>Name mangling (<code>_Class__attr</code>).</td>
+                <td>Information hiding, preventing tampering.</td>
+              </tr>
+              <tr>
+                <td><strong>Single Inheritance</strong></td>
+                <td><code>class Child(Parent):</code></td>
+                <td>Child inherits all parent attributes &amp; methods.</td>
+                <td>Code reuse, extending existing classes.</td>
+              </tr>
+              <tr>
+                <td><strong>Multi-Level Inheritance</strong></td>
+                <td><code>A &rarr; B(A) &rarr; C(B)</code></td>
+                <td>Cascading inheritance chain.</td>
+                <td>Deep hierarchical domain modeling.</td>
+              </tr>
+              <tr>
+                <td><strong>Multiple Inheritance</strong></td>
+                <td><code>class C(A, B):</code></td>
+                <td>Child inherits from multiple parents.</td>
+                <td>Combining independent capabilities.</td>
+              </tr>
+              <tr>
+                <td><strong>Parent Calling</strong></td>
+                <td><code>super().__init__(...)</code></td>
+                <td>Invokes parent method without explicit <code>self</code>.</td>
+                <td>Chaining constructors and method extensions.</td>
+              </tr>
+              <tr>
+                <td><strong>Class Method</strong></td>
+                <td><code>@classmethod (cls)</code></td>
+                <td>Binds to class, not individual instance.</td>
+                <td>Modifying class-level attributes, factories.</td>
+              </tr>
+              <tr>
+                <td><strong>Property Decorator</strong></td>
+                <td><code>@property</code></td>
+                <td>Executes method when accessed as attribute.</td>
+                <td>Dynamic computed values, keeping state fresh.</td>
+              </tr>
+              <tr>
+                <td><strong>Operator Overloading</strong></td>
+                <td><code>__add__</code>, <code>__sub__</code>, <code>__gt__</code></td>
+                <td>Translates symbols (<code>+</code>, <code>-</code>, <code>&gt;</code>) to methods.</td>
+                <td>Enabling intuitive math on custom objects.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE OOP SANDBOX -->
+      <!-- ============================================================ -->
+      <section id="interactive-sandbox" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive OOP Sandbox (Complex Numbers &amp; Orders)</h2>
+
+        <p>
+          Test the concepts from Lecture 9 right in your browser! Try our live Complex Number Operator Overloader and the Live Dynamic Student Percentage recalculator:
+        </p>
+
+        <!-- Tool 1: Complex Number Overloader -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">
+            Tool A: Complex Number Overloader (<code>__add__</code> &amp; <code>__sub__</code>)
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Enter coefficients for two complex numbers ($a + bi$ and $c + di$) to see the overloaded <code>+</code> and <code>-</code> dunder operations live:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <!-- Num 1 -->
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+              <strong style="color: #58a6ff; font-size: 0.95rem;">Complex Number 1 (c1)</strong>
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.75rem;">
+                <input type="number" id="c1-real" value="3" style="width: 70px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+                <span>+</span>
+                <input type="number" id="c1-img" value="4" style="width: 70px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+                <span>i</span>
+              </div>
+            </div>
+
+            <!-- Num 2 -->
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+              <strong style="color: #ffa657; font-size: 0.95rem;">Complex Number 2 (c2)</strong>
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.75rem;">
+                <input type="number" id="c2-real" value="1" style="width: 70px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+                <span>+</span>
+                <input type="number" id="c2-img" value="2" style="width: 70px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+                <span>i</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button class="btn-primary" onclick="calcComplexAdd()" style="background: #238636; border-color: #238636;">Calculate (c1 + c2) [__add__]</button>
+            <button class="btn-primary" onclick="calcComplexSub()" style="background: #1f6feb; border-color: #1f6feb;">Calculate (c1 - c2) [__sub__]</button>
+          </div>
+
+          <div id="complex-result-box" style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; font-family: var(--font-mono); font-size: 0.95rem; color: #7ee787;">
+            Result: Click an operation button above!
+          </div>
+        </div>
+
+        <!-- Tool B: Live Dynamic Student Percentage (@property) -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #7ee787; font-size: 1.15rem;">
+            Tool B: Live Dynamic Student Percentage (<code>@property</code> Demo)
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Change subject marks below. Notice how the <code>@property</code> automatically keeps the percentage in sync without needing a manual recalculate method:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Physics Marks:</label>
+              <input type="number" id="prop-phy" value="95" min="0" max="100" oninput="updateStudentProp()" style="width: 100%; margin-top: 0.35rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Chemistry Marks:</label>
+              <input type="number" id="prop-chem" value="90" min="0" max="100" oninput="updateStudentProp()" style="width: 100%; margin-top: 0.35rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Math Marks:</label>
+              <input type="number" id="prop-math" value="98" min="0" max="100" oninput="updateStudentProp()" style="width: 100%; margin-top: 0.35rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.4rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+          </div>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">student.percentage (@property output)</div>
+              <div id="prop-result-val" style="font-size: 1.5rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono); margin-top: 0.25rem;">94.33%</div>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); max-width: 450px;">
+              Formula executed live: <code>(phy + chem + math) / 3</code>. No stale data!
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 9 Complete Reference
+      </div>
+      <div>
+        <a href="lecture-8.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Previous: Lecture 8 (OOPs Part 1)</a>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Python Modules List</a>
+        <a href="#del-keyword" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Tool A: Complex Number Overloader
+    function calcComplexAdd() {
+      const r1 = parseFloat(document.getElementById('c1-real').value) || 0;
+      const i1 = parseFloat(document.getElementById('c1-img').value) || 0;
+      const r2 = parseFloat(document.getElementById('c2-real').value) || 0;
+      const i2 = parseFloat(document.getElementById('c2-img').value) || 0;
+
+      const sumReal = r1 + r2;
+      const sumImg = i1 + i2;
+      const sign = sumImg >= 0 ? '+' : '-';
+
+      const box = document.getElementById('complex-result-box');
+      box.innerHTML = `<span style="color: #79c0ff;">c1.__add__(c2)</span> executed!<br>` +
+                      `(${r1} + ${i1}i) + (${r2} + ${i2}i) = <strong>${sumReal} ${sign} ${Math.abs(sumImg)}i</strong>`;
+    }
+
+    function calcComplexSub() {
+      const r1 = parseFloat(document.getElementById('c1-real').value) || 0;
+      const i1 = parseFloat(document.getElementById('c1-img').value) || 0;
+      const r2 = parseFloat(document.getElementById('c2-real').value) || 0;
+      const i2 = parseFloat(document.getElementById('c2-img').value) || 0;
+
+      const diffReal = r1 - r2;
+      const diffImg = i1 - i2;
+      const sign = diffImg >= 0 ? '+' : '-';
+
+      const box = document.getElementById('complex-result-box');
+      box.innerHTML = `<span style="color: #ff7b72;">c1.__sub__(c2)</span> executed!<br>` +
+                      `(${r1} + ${i1}i) - (${r2} + ${i2}i) = <strong>${diffReal} ${sign} ${Math.abs(diffImg)}i</strong>`;
+    }
+
+    // Tool B: @property Dynamic Percentage
+    function updateStudentProp() {
+      const p = parseFloat(document.getElementById('prop-phy').value) || 0;
+      const c = parseFloat(document.getElementById('prop-chem').value) || 0;
+      const m = parseFloat(document.getElementById('prop-math').value) || 0;
+
+      const avg = ((p + c + m) / 3).toFixed(2);
+      document.getElementById('prop-result-val').textContent = avg + '%';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      calcComplexAdd();
+      updateStudentProp();
+    });
+  </script>
+</body>
+</html>

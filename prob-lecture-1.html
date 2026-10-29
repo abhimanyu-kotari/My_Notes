@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Foundations, Random Variables & Distributions | Probability for ML Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Probability 01 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#prob-intro" class="sidebar-link">1. Why Probability for Machine Learning?</a></li>
+        <li><a href="#core-five-terms" class="sidebar-link">2. The 5 Core Foundational Terms</a></li>
+        <li><a href="#three-walkthroughs" class="sidebar-link">3. 3 Complete Walkthroughs (Coins, Dice &amp; Titanic)</a></li>
+        <li><a href="#event-taxonomy" class="sidebar-link">4. The 7 Classes of Events</a></li>
+        <li><a href="#empirical-theoretical" class="sidebar-link">5. Empirical vs. Theoretical &amp; Law of Large Numbers</a></li>
+        <li><a href="#random-variable-core" class="sidebar-link">6. What is a Random Variable? (Function Mapping $S \to \mathbb{R}$)</a></li>
+        <li><a href="#rv-logic-ml" class="sidebar-link">7. The Mathematical Logic: Transforming Events into Real Numbers</a></li>
+        <li><a href="#discrete-continuous-rv" class="sidebar-link">8. Discrete vs. Continuous Random Variables</a></li>
+        <li><a href="#prob-distribution-table" class="sidebar-link">9. Probability Distributions of Random Variables (PMF &amp; PDF)</a></li>
+        <li><a href="#expected-value" class="sidebar-link">10. Expected Value (Mean $\mathbb{E}[X]$) of a Random Variable</a></li>
+        <li><a href="#variance-proof" class="sidebar-link">11. Variance ($\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$) &amp; Full Algebraic Proof</a></li>
+        <li><a href="#interactive-rv-sim" class="sidebar-link">12. Interactive Random Variable &amp; Expectation Simulator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 01 Notes</span>
+          <span class="tag">Probability</span>
+          <span class="tag">Machine Learning</span>
+          <span class="tag">Random Variables</span>
+          <span class="tag">Distributions</span>
+          <span class="tag">Expected Value</span>
+          <span class="tag">Variance Proof</span>
+        </div>
+        <h1 class="lecture-main-title">Foundations of Probability, Random Variables &amp; Distributions</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This lecture introduces the fundamental mathematical language of uncertainty used in machine learning: starting with the 5 core terms (Random Experiment, Trial, Outcome, Sample Space, and Event), exploring the 7 classes of events, contrasting empirical observations with theoretical probability via the Law of Large Numbers, uncovering why a Random Variable is actually a mathematical function mapping sample spaces to real numbers, constructing probability distribution tables, and proving the exact algebraic formulas for Expected Value ($\mathbb{E}[X]$) and Variance ($\text{Var}(X)$).<br>
+          <strong>Why do we use it?</strong> Real-world machine learning deals with noisy, incomplete, and uncertain data. Core algorithms like Naive Bayes, Logistic Regression, Markov Decision Processes, and generative neural networks do not output rigid yes/no answers; they output probability distributions. Without understanding random variables and expectation, algorithms remain mysterious black boxes and tuning cost functions or loss gradients becomes impossible.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHY PROBABILITY FOR MACHINE LEARNING -->
+      <!-- ============================================================ -->
+      <section id="prob-intro" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Why Probability for Machine Learning?</h2>
+
+        <p>
+          In traditional deterministic programming (like writing a sorting algorithm or an accounting script), an input always yields a 100% predictable, guaranteed output. However, <strong>Machine Learning is fundamentally different</strong>. Real-world data is inherently noisy, incomplete, and filled with random fluctuations.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">The Three Foundational Pillars of Machine Learning Mathematics</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1rem;">
+            
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #58a6ff; border-radius: 6px;">
+              <strong style="color: #58a6ff;">1. Linear Algebra</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Provides the structural language: vectors, matrices, tensors, dot products, and coordinate projections to store and transform high-dimensional data points.
+              </p>
+            </div>
+
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #7ee787; border-radius: 6px;">
+              <strong style="color: #7ee787;">2. Multivariate Calculus</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Provides the optimization engine: partial derivatives, gradients, and chain rule to navigate loss surfaces and update model weights via gradient descent.
+              </p>
+            </div>
+
+            <div style="padding: 1.15rem; background: var(--bg-primary); border-top: 3px solid #ffa657; border-radius: 6px;">
+              <strong style="color: #ffa657;">3. Probability &amp; Statistics</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Provides the language of <strong>uncertainty and inference</strong>: quantifying belief, modeling noise, calculating likelihoods, and drawing population insights from finite training batches.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <h3>Where Probability Powers Core Machine Learning Algorithms</h3>
+        <p>
+          Probability is not an abstract exam exercise; it directly powers the mechanics of everyday algorithms:
+        </p>
+
+        <ul style="line-height: 1.8; color: var(--text-secondary);">
+          <li>
+            <strong style="color: var(--text-primary);">Naive Bayes Classifier:</strong> Built 100% on Bayes' Theorem. It computes posterior class probabilities $P(y \mid x_1, x_2, \dots, x_n)$ to classify spam emails, medical diagnoses, and customer sentiment.
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Logistic Regression:</strong> Uses the Sigmoid function $\sigma(z) = \frac{1}{1 + e^{-z}}$ to map raw linear scores to a probability score bounded strictly between $0$ and $1$, minimizing Binary Cross-Entropy loss (Log Loss).
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Decision Trees &amp; Random Forests:</strong> Measure impurity and split quality using probabilistic criteria like <strong>Shannon Entropy</strong> ($H(S) = -\sum p_i \log_2 p_i$) and <strong>Gini Impurity</strong> ($1 - \sum p_i^2$).
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Reinforcement Learning:</strong> Models decision-making as Markov Decision Processes (MDPs), where an agent transitions between environmental states with transition probabilities $P(s' \mid s, a)$.
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Generative Models (VAEs &amp; Diffusion):</strong> Learn the true latent probability density function $p(x)$ of human images or audio, allowing the model to generate brand new realistic samples.
+          </li>
+        </ul>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">The Engineer's Perspective</div>
+            <p>When an ML classification model flags a transaction as fraud with "94% confidence", it is evaluating a conditional probability distribution: $P(\text{Fraud}=1 \mid \mathbf{X}=\mathbf{x})$. To understand how models make decisions, you must master the mechanics of probability.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THE 5 CORE FOUNDATIONAL TERMS -->
+      <!-- ============================================================ -->
+      <section id="core-five-terms" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The 5 Core Foundational Terms</h2>
+
+        <p>
+          Before studying complex distributions or probabilistic machine learning models, every student must master the <strong>five fundamental vocabulary terms</strong> that form the bedrock of probability theory.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1.25rem; margin: 1.5rem 0;">
+          
+          <!-- TERM 1 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #58a6ff; border-radius: 6px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h3 style="margin: 0; color: #58a6ff; font-size: 1.15rem;">1. Random Experiment</h3>
+              <span class="badge" style="background: rgba(88,166,255,0.15); color: #58a6ff; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">FOUNDATION</span>
+            </div>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+              An experiment or procedure is classified as a <strong>Random Experiment</strong> if and only if it satisfies two mandatory scientific criteria:
+            </p>
+            <ol style="margin: 0.5rem 0 0; padding-left: 1.4rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6;">
+              <li><strong>More than one possible outcome:</strong> There is genuine unpredictability; the result is not single-valued or predetermined.</li>
+              <li><strong>Unpredictable in advance:</strong> While you may know all the possible outcomes that <em>could</em> occur, it is impossible to predict with 100% certainty which specific outcome will occur on any given run.</li>
+            </ol>
+            <div style="margin-top: 0.75rem; font-size: 0.88rem; color: var(--text-muted);">
+              <em>Counter-example:</em> Dropping a stone from a 10m height in a vacuum is a deterministic physics experiment ($s = \frac{1}{2}gt^2$), not a random experiment. But tossing a fair coin is a random experiment.
+            </div>
+          </div>
+
+          <!-- TERM 2 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h3 style="margin: 0; color: #7ee787; font-size: 1.15rem;">2. Trial</h3>
+              <span class="badge" style="background: rgba(126,231,135,0.15); color: #7ee787; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">EXECUTION</span>
+            </div>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+              A <strong>Trial</strong> is a single, concrete performance or execution of a random experiment. If your experiment is "tossing a coin 100 times", then each individual toss of the coin is a single trial.
+            </p>
+          </div>
+
+          <!-- TERM 3 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #ffa657; border-radius: 6px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h3 style="margin: 0; color: #ffa657; font-size: 1.15rem;">3. Outcome</h3>
+              <span class="badge" style="background: rgba(255,166,87,0.15); color: #ffa657; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">OBSERVATION</span>
+            </div>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+              An <strong>Outcome</strong> is the specific, observed result produced by a single trial of a random experiment. When you roll a die and it lands with the face "4" facing up, the number <strong>4</strong> is the outcome of that trial.
+            </p>
+          </div>
+
+          <!-- TERM 4 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #d2a8ff; border-radius: 6px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h3 style="margin: 0; color: #d2a8ff; font-size: 1.15rem;">4. Sample Space ($S$)</h3>
+              <span class="badge" style="background: rgba(210,168,255,0.15); color: #d2a8ff; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">SET THEORY</span>
+            </div>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+              The <strong>Sample Space</strong>, universally denoted by the capital letter $S$ (or Greek letter $\Omega$), is the <strong>exhaustive mathematical set</strong> containing every single possible outcome that could ever emerge from a random experiment.
+            </p>
+            <div style="margin-top: 0.5rem; font-size: 0.92rem; color: var(--text-primary); font-family: var(--font-mono);">
+              Single Coin Toss: &nbsp; S = {Heads, Tails} &implies; |S| = 2<br>
+              Single 6-Sided Die: S = {1, 2, 3, 4, 5, 6} &implies; |S| = 6
+            </div>
+          </div>
+
+          <!-- TERM 5 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #f85149; border-radius: 6px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h3 style="margin: 0; color: #f85149; font-size: 1.15rem;">5. Event ($E$)</h3>
+              <span class="badge" style="background: rgba(248,81,73,0.15); color: #f85149; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">SUBSET</span>
+            </div>
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+              An <strong>Event</strong> is formally defined as <strong>any subset of the sample space</strong> ($E \subseteq S$) that satisfies a specified research condition or question of interest.
+            </p>
+            <div style="margin-top: 0.5rem; font-size: 0.92rem; color: var(--text-primary); font-family: var(--font-mono);">
+              Condition: "Rolling an odd number on a die"<br>
+              Event Set: E = {1, 3, 5} &sube; S &implies; n(E) = 3
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: THREE COMPREHENSIVE WALKTHROUGHS -->
+      <!-- ============================================================ -->
+      <section id="three-walkthroughs" class="note-section content-section">
+        <h2><span class="section-number">03.</span> 3 Complete Walkthroughs (Coins, Dice &amp; Titanic)</h2>
+
+        <p>
+          To cement how these 5 terms interact in both classical probability and modern machine learning data analysis, let's step through three progressively richer walkthroughs.
+        </p>
+
+        <!-- WALKTHROUGH 1 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.2rem;">Walkthrough 1: The Single Die Roll</h3>
+          <div class="table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Probabilistic Concept</th>
+                  <th>Concrete Manifestation</th>
+                  <th>Mathematical Representation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Random Experiment</strong></td>
+                  <td>Rolling a fair six-sided die onto a flat table</td>
+                  <td>Unpredictable outcome with 6 possible faces</td>
+                </tr>
+                <tr>
+                  <td><strong>Trial</strong></td>
+                  <td>The specific physical act of picking up and rolling the die once</td>
+                  <td>$t_1$</td>
+                </tr>
+                <tr>
+                  <td><strong>Outcome</strong></td>
+                  <td>The number facing upward when the die settles (e.g. 5)</td>
+                  <td>$\omega = 5$</td>
+                </tr>
+                <tr>
+                  <td><strong>Sample Space ($S$)</strong></td>
+                  <td>The complete collection of all numbered faces</td>
+                  <td>$S = \{1, 2, 3, 4, 5, 6\}, \quad n(S) = 6$</td>
+                </tr>
+                <tr>
+                  <td><strong>Event 1 ($E_1$)</strong></td>
+                  <td>Condition: "Rolling an odd number"</td>
+                  <td>$E_1 = \{1, 3, 5\} \implies P(E_1) = \frac{3}{6} = 0.50$</td>
+                </tr>
+                <tr>
+                  <td><strong>Event 2 ($E_2$)</strong></td>
+                  <td>Condition: "Rolling a number strictly greater than 4"</td>
+                  <td>$E_2 = \{5, 6\} \implies P(E_2) = \frac{2}{6} = \frac{1}{3} \approx 0.333$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- WALKTHROUGH 2 -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #7ee787; font-size: 1.2rem;">Walkthrough 2: Tossing a Coin Twice</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            When an experiment involves multiple stages, the trial consists of the combined sequence of outcomes.
+          </p>
+          <div class="table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Probabilistic Concept</th>
+                  <th>Concrete Manifestation</th>
+                  <th>Mathematical Representation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Random Experiment</strong></td>
+                  <td>Flipping a fair coin twice in succession</td>
+                  <td>Sequential trials with independent outcomes</td>
+                </tr>
+                <tr>
+                  <td><strong>Trial</strong></td>
+                  <td>One full two-flip sequence</td>
+                  <td>Pair of flips $(flip_1, flip_2)$</td>
+                </tr>
+                <tr>
+                  <td><strong>Outcome</strong></td>
+                  <td>A single observed ordered pair (e.g. Head then Tail)</td>
+                  <td>$\omega = HT$</td>
+                </tr>
+                <tr>
+                  <td><strong>Sample Space ($S$)</strong></td>
+                  <td>All combinations of two coin faces</td>
+                  <td>$S = \{HH, HT, TH, TT\}, \quad n(S) = 2^2 = 4$</td>
+                </tr>
+                <tr>
+                  <td><strong>Event ($A$)</strong></td>
+                  <td>Condition: "Getting at least one Head"</td>
+                  <td>$A = \{HH, HT, TH\} \implies P(A) = \frac{3}{4} = 0.75$</td>
+                </tr>
+                <tr>
+                  <td><strong>Event ($B$)</strong></td>
+                  <td>Condition: "Getting exactly two Tails"</td>
+                  <td>$B = \{TT\} \implies P(B) = \frac{1}{4} = 0.25$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- WALKTHROUGH 3: MACHINE LEARNING TITANIC -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: #ffa657; font-size: 1.2rem;">Walkthrough 3: Machine Learning Real-World Dataset (The Titanic)</h3>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            In modern data science, datasets are treated as empirical sample spaces generated from an underlying real-world population distribution. Consider the classic Kaggle Titanic dataset ($N = 891$ training passengers).
+          </p>
+          <div class="table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Probabilistic Concept</th>
+                  <th>Data Science Equivalent</th>
+                  <th>Dataset Context ($N = 891$)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Random Experiment</strong></td>
+                  <td>Sampling an observation (row) at random from the dataset</td>
+                  <td>Drawing a passenger record uniformly at random</td>
+                </tr>
+                <tr>
+                  <td><strong>Trial</strong></td>
+                  <td>Inspecting the selected passenger's feature attributes</td>
+                  <td>Reading row features: <code>Pclass</code>, <code>Sex</code>, <code>Survived</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Outcome</strong></td>
+                  <td>The specific observed value of a column for that passenger</td>
+                  <td>Passenger traveled in class <code>1</code> and survived (<code>1</code>)</td>
+                </tr>
+                <tr>
+                  <td><strong>Sample Space ($S$)</strong></td>
+                  <td>The set of all possible categories for feature <code>Pclass</code></td>
+                  <td>$S = \{1, 2, 3\}$ (First, Second, Third class)</td>
+                </tr>
+                <tr>
+                  <td><strong>Event ($E_{\text{Upper}}$)</strong></td>
+                  <td>Condition: "Passenger traveled in Upper Class (1st or 2nd)"</td>
+                  <td>$E = \{1, 2\} \implies P(E) = \frac{\text{Count}(\text{Class } 1 \text{ or } 2)}{891}$</td>
+                </tr>
+                <tr>
+                  <td><strong>Target Event ($E_{\text{Surv}}$)</strong></td>
+                  <td>Condition: "Passenger survived the disaster"</td>
+                  <td>$E_{\text{Surv}} = \{1\} \implies P(\text{Survived}=1) = \frac{342}{891} \approx 0.384$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout callout-info" style="margin-top: 1rem;">
+            <div class="callout-icon">📊</div>
+            <div class="callout-content">
+              <div class="callout-title">Data Science Insight</div>
+              <p>In Exploratory Data Analysis (EDA), calculating frequency counts of categorical columns is literally estimating the empirical event probabilities $P(\text{Feature} = x)$.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: THE 7 CLASSES OF EVENTS -->
+      <!-- ============================================================ -->
+      <section id="event-taxonomy" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The 7 Classes of Events</h2>
+
+        <p>
+          Probability theory classifies events according to their internal structure, their mutual relationships, and their likelihood of occurrence. Below are the <strong>seven essential event classifications</strong>:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+          
+          <!-- CLASS 1 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #58a6ff; text-transform: uppercase;">Class 01</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Simple / Elementary Event</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              An event that contains <strong>exactly one single outcome</strong> from the sample space. It cannot be decomposed into smaller sub-events.
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #79c0ff;">
+              Example: E = {3} (Rolling specifically a 3 on a die)
+            </div>
+          </div>
+
+          <!-- CLASS 2 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #7ee787; text-transform: uppercase;">Class 02</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Compound Event</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              An event that contains <strong>two or more outcomes</strong>. It represents a composite condition formed by joining multiple elementary outcomes.
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #7ee787;">
+              Example: E = {2, 4, 6} (Rolling an even number)
+            </div>
+          </div>
+
+          <!-- CLASS 3 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #ffa657; text-transform: uppercase;">Class 03</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Independent Events</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              Two events $A$ and $B$ are independent if the occurrence of event $A$ provides zero information about and has <strong>zero effect on the probability of event $B$</strong>.
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #ffa657;">
+              Rule: P(A &cap; B) = P(A) &times; P(B)<br>
+              Example: Tossing a coin &amp; rolling a die simultaneously
+            </div>
+          </div>
+
+          <!-- CLASS 4 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #d2a8ff; text-transform: uppercase;">Class 04</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Dependent Events</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              Two events where the occurrence of event $A$ <strong>alters the probability</strong> of event $B$. Common in sampling without replacement.
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #d2a8ff;">
+              Rule: P(A &cap; B) = P(A) &times; P(B | A)<br>
+              Example: Drawing 2 Aces from a 52-card deck without replacement
+            </div>
+          </div>
+
+          <!-- CLASS 5 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #f85149; text-transform: uppercase;">Class 05</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Mutually Exclusive (Disjoint) Events</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              Events that <strong>cannot happen at the same time</strong> in a single trial. Their intersection is strictly the empty set ($\emptyset$).
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #f85149;">
+              Rule: A &cap; B = &empty; &implies; P(A &cap; B) = 0<br>
+              Example: Getting both Heads &amp; Tails in a single coin toss
+            </div>
+          </div>
+
+          <!-- CLASS 6 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #56d364; text-transform: uppercase;">Class 06</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Exhaustive Events</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55;">
+              A collection of events whose combined union <strong>covers the entire sample space</strong> ($S$). When conducting the experiment, at least one of these events is guaranteed to occur.
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; font-family: var(--font-mono); color: #56d364;">
+              Rule: &cup; E_i = S &implies; P(&cup; E_i) = 1.0<br>
+              Example: E_odd = {1,3,5} and E_even = {2,4,6}
+            </div>
+          </div>
+
+          <!-- CLASS 7 -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; grid-column: 1 / -1;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #e3b341; text-transform: uppercase;">Class 07</div>
+            <h3 style="margin: 0.25rem 0 0.5rem; font-size: 1.15rem;">Impossible vs. Certain Events</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+              <div style="padding: 0.75rem; background: var(--bg-primary); border-radius: 6px;">
+                <strong style="color: #f85149;">Impossible Event ($P = 0$):</strong> An event containing zero outcomes ($E = \emptyset$). It has no mathematical possibility of happening.<br>
+                <em>Example:</em> Rolling a "7" or a negative integer on a standard fair six-sided die.
+              </div>
+              <div style="padding: 0.75rem; background: var(--bg-primary); border-radius: 6px;">
+                <strong style="color: #7ee787;">Certain Event ($P = 1$):</strong> An event that equals the entire sample space ($E = S$). It is guaranteed to occur on every single trial.<br>
+                <em>Example:</em> Rolling a number between $1$ and $6$ inclusive on a standard die.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: EMPIRICAL VS THEORETICAL & LAW OF LARGE NUMBERS -->
+      <!-- ============================================================ -->
+      <section id="empirical-theoretical" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Empirical vs. Theoretical Probability &amp; Law of Large Numbers</h2>
+
+        <p>
+          One of the biggest sources of confusion for students transitioning from school mathematics to machine learning is the difference between <strong>Theoretical (Classical) Probability</strong> and <strong>Empirical (Experimental) Probability</strong>.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;">
+          
+          <!-- THEORETICAL PROBABILITY -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+            <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.15rem;">1. Theoretical (Classical) Probability</h3>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+              Calculated <strong>purely using mathematics and deductive logic</strong> under the assumption that all elementary outcomes in sample space $S$ are equally likely. No actual physical experiments are conducted.
+            </p>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin: 1rem 0; text-align: center;">
+              $$P_{\text{theo}}(E) = \frac{n(E)}{n(S)} = \frac{\text{Number of favorable outcomes}}{\text{Total number of possible outcomes}}$$
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+              <em>Example:</em> Since a coin has 2 symmetric faces, $P(\text{Heads}) = \frac{1}{2} = 0.50$ purely by mathematical definition.
+            </p>
+          </div>
+
+          <!-- EMPIRICAL PROBABILITY -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+            <h3 style="margin-top: 0; color: #7ee787; font-size: 1.15rem;">2. Empirical (Experimental) Probability</h3>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+              Calculated from <strong>actual real-world historical trials and observed data</strong>. It is the relative frequency of an event over a finite sample of trials.
+            </p>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; margin: 1rem 0; text-align: center;">
+              $$P_{\text{emp}}(E) = \frac{\text{Number of times event } E \text{ actually occurred}}{\text{Total number of experimental trials conducted } N}$$
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+              <em>Example from transcript:</em> You draw a marble from an unknown bag 200 times with replacement, observing 80 red marbles. $P_{\text{emp}}(\text{Red}) = \frac{80}{200} = 0.40$.
+            </p>
+          </div>
+
+        </div>
+
+        <h3>The Bridge: The Law of Large Numbers (LLN)</h3>
+        <p>
+          Suppose you toss a fair coin 10 times. You might get 7 Heads and 3 Tails, resulting in an empirical probability of $P_{\text{emp}}(\text{Heads}) = 0.70$, which is far from the theoretical $0.50$. Does this mean the coin is broken? <strong>No!</strong>
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #ffa657; border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0;">
+          <h4 style="margin: 0 0 0.5rem; color: #ffa657; font-size: 1.05rem;">Formal Statement of the Law of Large Numbers</h4>
+          <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            As the number of independently conducted trials $N$ grows toward infinity ($N \to \infty$), the empirical probability $P_{\text{emp}}(E)$ of an event converges mathematically to its true theoretical probability $P_{\text{theo}}(E)$:
+          </p>
+          <div style="text-align: center; margin: 0.75rem 0; font-size: 1.15rem;">
+            $$\lim_{N \to \infty} P_{\text{emp}}(E) = P_{\text{theo}}(E)$$
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Number of Coin Tosses ($N$)</th>
+                <th>Observed Heads Count</th>
+                <th>Empirical Probability $P_{\text{emp}}(H)$</th>
+                <th>Deviation from Theoretical ($0.50$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10</td>
+                <td>7</td>
+                <td><strong>0.7000</strong></td>
+                <td>+0.2000 (High Noise)</td>
+              </tr>
+              <tr>
+                <td>100</td>
+                <td>56</td>
+                <td><strong>0.5600</strong></td>
+                <td>+0.0600</td>
+              </tr>
+              <tr>
+                <td>1,000</td>
+                <td>518</td>
+                <td><strong>0.5180</strong></td>
+                <td>+0.0180</td>
+              </tr>
+              <tr>
+                <td>10,000</td>
+                <td>5,024</td>
+                <td><strong>0.5024</strong></td>
+                <td>+0.0024</td>
+              </tr>
+              <tr>
+                <td>1,000,000</td>
+                <td>500,089</td>
+                <td><strong>0.500089</strong></td>
+                <td>$\approx 0.0000$ (Near Perfect Convergence)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Why this matters in Machine Learning</div>
+            <p>When you train a model on a tiny dataset of 50 samples, your empirical distributions are noisy and unrepresentative (leading to severe overfitting). But when you train on 5,000,000 samples, the Law of Large Numbers guarantees that the empirical feature distributions converge to the true underlying real-world data generation process!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: WHAT IS A RANDOM VARIABLE? -->
+      <!-- ============================================================ -->
+      <section id="random-variable-core" class="note-section content-section">
+        <h2><span class="section-number">06.</span> What is a Random Variable? (Function Mapping $S \to \mathbb{R}$)</h2>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title" style="color: #ffa657;">CRITICAL INTELLECTUAL SHIFT</div>
+            <p>Despite the word <em>"variable"</em> in its name, in probability theory: <strong>A RANDOM VARIABLE IS NOT A VARIABLE &mdash; IT IS A MATHEMATICAL FUNCTION!</strong></p>
+          </div>
+        </div>
+
+        <p>
+          In traditional programming (Python, C++, Java), a variable is simply an identifier or memory container holding a scalar value:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># A traditional variable in Python</span>
+<span class="var">age</span> <span class="op">=</span> <span class="num">25</span>
+<span class="var">name</span> <span class="op">=</span> <span class="str">"Nitish"</span></code></pre>
+        </div>
+
+        <p>
+          In probability theory, however, a <strong>Random Variable</strong> (universally symbolized by capital letters like $X$, $Y$, or $Z$) is formally defined as:
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--text-primary); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.25rem;">Formal Definition of a Random Variable</h3>
+          <p style="font-size: 1rem; color: var(--text-secondary); max-width: 700px; margin: 0.5rem auto 1rem;">
+            A <strong>Random Variable $X$</strong> is a mathematical function that maps every outcome $\omega$ from the sample space $S$ to a unique real number on the real number line $\mathbb{R}$.
+          </p>
+          <div style="font-size: 1.4rem; font-family: var(--font-mono); color: #7ee787;">
+            $$X: S \longrightarrow \mathbb{R}$$
+          </div>
+        </div>
+
+        <h3>Why Do We Need to Map Outcomes to Real Numbers?</h3>
+        <p>
+          Why not just work directly with the raw outcomes in sample space $S$? Consider what sample space outcomes look like in real experiments:
+        </p>
+
+        <ul style="line-height: 1.8; color: var(--text-secondary);">
+          <li>Coin toss: $S = \{\text{Heads}, \text{Tails}\}$</li>
+          <li>Customer churn: $S = \{\text{Retained}, \text{Churned}\}$</li>
+          <li>Playing cards: $S = \{\text{Ace of Spades}, \text{King of Hearts}, \dots\}$</li>
+        </ul>
+
+        <p>
+          Now ask yourself:
+        </p>
+        <blockquote style="border-left: 4px solid #f85149; padding-left: 1rem; color: #ff7b72; font-style: italic;">
+          "What is the derivative of 'Heads'? What is the average of 'Ace of Spades' and 'King of Hearts'? What is the cosine similarity between 'Retained' and 'Churned'?"
+        </blockquote>
+
+        <p>
+          <strong>These questions are meaningless!</strong> Mathematical operators, calculus derivatives, loss functions, linear regression, and neural networks can only execute algebraic operations on <strong>numbers</strong> ($\mathbb{R}$). You cannot compute gradients or expected values on English words!
+        </p>
+
+        <p>
+          Therefore, the <strong>Random Variable acts as the universal translator</strong> that converts qualitative, abstract physical outcomes into real numbers that computers and mathematics can analyze.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THE MATHEMATICAL LOGIC -->
+      <!-- ============================================================ -->
+      <section id="rv-logic-ml" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The Mathematical Logic: Transforming Events into Real Numbers</h2>
+
+        <p>
+          Every Random Variable consists of three distinct mathematical components:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border-top: 3px solid #58a6ff; border-radius: 6px; padding: 1.15rem; text-align: center;">
+            <strong style="color: #58a6ff; font-size: 1.05rem;">1. The Domain (Input)</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">The Sample Space $S$ containing all physical outcomes $\omega$.</p>
+          </div>
+          <div style="background: var(--bg-card); border-top: 3px solid #ffa657; border-radius: 6px; padding: 1.15rem; text-align: center;">
+            <strong style="color: #ffa657; font-size: 1.05rem;">2. The Mapping Rule</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">The explicit logic defined by the experimenter's question.</p>
+          </div>
+          <div style="background: var(--bg-card); border-top: 3px solid #7ee787; border-radius: 6px; padding: 1.15rem; text-align: center;">
+            <strong style="color: #7ee787; font-size: 1.05rem;">3. The Codomain (Output)</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--text-secondary);">The set of Real Numbers $\mathbb{R}$ on the number line.</p>
+          </div>
+        </div>
+
+        <h3>Deep Walkthrough: Rolling Two Dice Together ($n = 36$)</h3>
+        <p>
+          Suppose our random experiment is rolling two standard six-sided dice simultaneously. The sample space $S$ consists of $36$ ordered pairs:
+        </p>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); text-align: center;">
+          S = {(1,1), (1,2), (1,3), (1,4), (1,5), (1,6),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2,1), (2,2), (2,3), (2,4), (2,5), (2,6),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3,1), (3,2), (3,3), (3,4), (3,5), (3,6),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4,1), (4,2), (4,3), (4,4), (4,5), (4,6),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(5,1), (5,2), (5,3), (5,4), (5,5), (5,6),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(6,1), (6,2), (6,3), (6,4), (6,5), (6,6)} &implies; |S| = 36
+        </div>
+
+        <p style="margin-top: 1.25rem;">
+          Now, notice that we can define <strong>completely different random variables on this exact same sample space</strong> simply by changing the mapping logic:
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0;">
+          
+          <!-- RV 1 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #58a6ff; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #58a6ff; font-size: 1.05rem;">Case A: Random Variable $X = \text{Sum of the two dice}$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.92rem; color: var(--text-secondary);">
+              Mapping rule: $X(d_1, d_2) = d_1 + d_2$.<br>
+              Examples: $X(1, 1) = 2$, &nbsp; $X(3, 4) = 7$, &nbsp; $X(6, 6) = 12$.<br>
+              <strong>Range of $X$:</strong> $\{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\}$ (11 discrete integer values).
+            </p>
+          </div>
+
+          <!-- RV 2 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #7ee787; font-size: 1.05rem;">Case B: Random Variable $Y = \text{Difference (Die 1 } - \text{ Die 2)}$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.92rem; color: var(--text-secondary);">
+              Mapping rule: $Y(d_1, d_2) = d_1 - d_2$.<br>
+              Examples: $Y(1, 6) = -5$, &nbsp; $Y(4, 4) = 0$, &nbsp; $Y(6, 1) = +5$.<br>
+              <strong>Range of $Y$:</strong> $\{-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5\}$ (Includes negative numbers!).
+            </p>
+          </div>
+
+          <!-- RV 3 -->
+          <div style="background: var(--bg-card); border-left: 4px solid #ffa657; border-radius: 6px; padding: 1rem;">
+            <strong style="color: #ffa657; font-size: 1.05rem;">Case C: Random Variable $Z = \text{Maximum value between the two dice}$</strong>
+            <p style="margin: 0.4rem 0 0; font-size: 0.92rem; color: var(--text-secondary);">
+              Mapping rule: $Z(d_1, d_2) = \max(d_1, d_2)$.<br>
+              Examples: $Z(2, 5) = 5$, &nbsp; $Z(6, 1) = 6$, &nbsp; $Z(3, 3) = 3$.<br>
+              <strong>Range of $Z$:</strong> $\{1, 2, 3, 4, 5, 6\}$.
+            </p>
+          </div>
+
+        </div>
+
+        <p>
+          <strong>Key Takeaway:</strong> The sample space $S$ was identical across all three cases ($36$ ordered pairs). The random variables $X, Y, Z$ yielded completely distinct numerical domains because each embodied a different mathematical function!
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: DISCRETE VS CONTINUOUS RANDOM VARIABLES -->
+      <!-- ============================================================ -->
+      <section id="discrete-continuous-rv" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Discrete vs. Continuous Random Variables</h2>
+
+        <p>
+          Just like general statistical variables, Random Variables are split into two major mathematical categories: <strong>Discrete</strong> and <strong>Continuous</strong>.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Dimension</th>
+                <th>Discrete Random Variable</th>
+                <th>Continuous Random Variable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Nature of Values</strong></td>
+                <td>Countable, isolated values with distinct gaps between them (can be finite or countably infinite).</td>
+                <td>Uncountably infinite values forming an unbroken continuum over a real interval $[a, b]$.</td>
+              </tr>
+              <tr>
+                <td><strong>Governing Function</strong></td>
+                <td><strong>Probability Mass Function (PMF)</strong>: $P(X = x)$ gives the exact point probability.</td>
+                <td><strong>Probability Density Function (PDF)</strong>: $f(x)$ gives the relative likelihood density.</td>
+              </tr>
+              <tr>
+                <td><strong>Probability at a Point</strong></td>
+                <td>Can be non-zero: $P(X = 3) = 0.25$.</td>
+                <td><strong>Always exactly ZERO</strong> at any single specific point: $P(X = 7.500000\dots) = 0$.</td>
+              </tr>
+              <tr>
+                <td><strong>How Probability is Calculated</strong></td>
+                <td>Summation of individual point probabilities: $P(a \le X \le b) = \sum_{x=a}^{b} P(X = x)$.</td>
+                <td>Definite integral (area under the curve): $P(a \le X \le b) = \int_{a}^{b} f(x) \, dx$.</td>
+              </tr>
+              <tr>
+                <td><strong>Total Probability Sum</strong></td>
+                <td>$\sum_{\text{all } x} P(X = x) = 1.0$</td>
+                <td>$\int_{-\infty}^{\infty} f(x) \, dx = 1.0$</td>
+              </tr>
+              <tr>
+                <td><strong>Real-World Examples</strong></td>
+                <td>
+                  • Number of clicks on an ad per hour<br>
+                  • Number of heads in 10 coin tosses<br>
+                  • Number of customer churns this month
+                </td>
+                <td>
+                  • Exact student CGPA between $0.00$ and $10.00$<br>
+                  • Temperature of a server room in Celsius<br>
+                  • Time taken for a neural network API response (ms)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Why is the probability of a continuous point zero?</div>
+            <p>Think of a student's CGPA. Between 7.0 and 8.0, there are infinite possible numbers (e.g., $7.4529184\dots$). Since $\text{Probability} = \frac{1}{\infty} = 0$, continuous probability only exists over an <strong>interval</strong> (the area under the curve), never at a zero-width point!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PROBABILITY DISTRIBUTIONS OF RANDOM VARIABLES -->
+      <!-- ============================================================ -->
+      <section id="prob-distribution-table" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Probability Distributions of Random Variables (PMF &amp; PDF)</h2>
+
+        <p>
+          Once you have converted your outcomes into real numbers via a Random Variable $X$, you can construct its <strong>Probability Distribution</strong>.
+        </p>
+
+        <p>
+          A <strong>Probability Distribution</strong> is a complete table, mathematical formula, or graph that describes how the total probability mass ($1.0$) is distributed across all possible values of $X$.
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0;">
+          <h4 style="margin: 0 0 0.5rem; color: #7ee787; font-size: 1.05rem;">The Two Mandatory Axioms of a Discrete Probability Distribution (PMF)</h4>
+          <ol style="margin: 0; padding-left: 1.4rem; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+            <li><strong>Non-negativity:</strong> Every individual probability must be between $0$ and $1$:<br>
+              $$0 \le P(X = x_i) \le 1 \quad \text{for all } i$$
+            </li>
+            <li><strong>Unit Sum (Exhaustiveness):</strong> The sum of all probabilities across all possible values must equal exactly $1$ ($100\%$):<br>
+              $$\sum_{i=1}^{n} P(X = x_i) = 1.0$$
+            </li>
+          </ol>
+        </div>
+
+        <h3>Full Walkthrough: The Probability Distribution of Two Dice Sum ($X = d_1 + d_2$)</h3>
+        <p>
+          Let's construct the complete discrete probability distribution table for our two-dice sum random variable $X$. Recall there are $36$ total equally likely pairs.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Sum ($x$)</th>
+                <th>Favorable Dice Pairs $(d_1, d_2)$</th>
+                <th>Frequency</th>
+                <th>Probability $P(X = x)$</th>
+                <th>Decimal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>$x = 2$</td>
+                <td>(1,1)</td>
+                <td>1</td>
+                <td>$\frac{1}{36}$</td>
+                <td>0.0278</td>
+              </tr>
+              <tr>
+                <td>$x = 3$</td>
+                <td>(1,2), (2,1)</td>
+                <td>2</td>
+                <td>$\frac{2}{36}$</td>
+                <td>0.0556</td>
+              </tr>
+              <tr>
+                <td>$x = 4$</td>
+                <td>(1,3), (2,2), (3,1)</td>
+                <td>3</td>
+                <td>$\frac{3}{36}$</td>
+                <td>0.0833</td>
+              </tr>
+              <tr>
+                <td>$x = 5$</td>
+                <td>(1,4), (2,3), (3,2), (4,1)</td>
+                <td>4</td>
+                <td>$\frac{4}{36}$</td>
+                <td>0.1111</td>
+              </tr>
+              <tr>
+                <td>$x = 6$</td>
+                <td>(1,5), (2,4), (3,3), (4,2), (5,1)</td>
+                <td>5</td>
+                <td>$\frac{5}{36}$</td>
+                <td>0.1389</td>
+              </tr>
+              <tr style="background: rgba(88,166,255,0.1); font-weight: bold;">
+                <td>$x = 7$ (Peak/Mode)</td>
+                <td>(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)</td>
+                <td>6</td>
+                <td>$\frac{6}{36} = \frac{1}{6}$</td>
+                <td><strong>0.1667</strong></td>
+              </tr>
+              <tr>
+                <td>$x = 8$</td>
+                <td>(2,6), (3,5), (4,4), (5,3), (6,2)</td>
+                <td>5</td>
+                <td>$\frac{5}{36}$</td>
+                <td>0.1389</td>
+              </tr>
+              <tr>
+                <td>$x = 9$</td>
+                <td>(3,6), (4,5), (5,4), (6,3)</td>
+                <td>4</td>
+                <td>$\frac{4}{36}$</td>
+                <td>0.1111</td>
+              </tr>
+              <tr>
+                <td>$x = 10$</td>
+                <td>(4,6), (5,5), (6,4)</td>
+                <td>3</td>
+                <td>$\frac{3}{36}$</td>
+                <td>0.0833</td>
+              </tr>
+              <tr>
+                <td>$x = 11$</td>
+                <td>(5,6), (6,5)</td>
+                <td>2</td>
+                <td>$\frac{2}{36}$</td>
+                <td>0.0556</td>
+              </tr>
+              <tr>
+                <td>$x = 12$</td>
+                <td>(6,6)</td>
+                <td>1</td>
+                <td>$\frac{1}{36}$</td>
+                <td>0.0278</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="font-weight: 700; border-top: 2px solid var(--border-color);">
+                <td colspan="2">TOTAL</td>
+                <td>36</td>
+                <td>$\frac{36}{36} = \mathbf{1.0}$</td>
+                <td><strong>1.0000</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p>
+          Notice the beautiful symmetric triangular shape! The sum $7$ is the most likely outcome because it has the highest number of combinations ($6$ ways).
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: EXPECTED VALUE OF A RANDOM VARIABLE -->
+      <!-- ============================================================ -->
+      <section id="expected-value" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Expected Value (Mean $\mathbb{E}[X]$) of a Random Variable</h2>
+
+        <p>
+          Now that we have the probability distribution of a random variable, how do we summarize its center with a single number? In descriptive statistics, we computed the sample mean $\bar{x}$. In probability theory, this central measure is called the <strong>Expected Value</strong> (or <strong>Mathematical Expectation</strong>), denoted by $\mathbb{E}[X]$ or $\mu_X$.
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid #58a6ff; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #58a6ff; font-size: 1.25rem;">Formal Definition &amp; Formula for Expected Value</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            The <strong>Expected Value $\mathbb{E}[X]$</strong> of a discrete random variable $X$ is the <strong>probability-weighted average</strong> of all possible values that $X$ can take:
+          </p>
+          <div style="text-align: center; margin: 1rem 0; font-size: 1.35rem; color: #79c0ff;">
+            $$\mathbb{E}[X] = \mu_X = \sum_{i=1}^{n} x_i \cdot P(X = x_i)$$
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            <em>Intuition:</em> If you were to conduct the random experiment an infinite number of times and record the observed value of $X$ on every trial, the mathematical average of all those millions of values would converge exactly to $\mathbb{E}[X]$.
+          </p>
+        </div>
+
+        <h3>Worked Calculation 1: Expected Value of a Single Die Roll</h3>
+        <p>
+          Let $X$ be the face obtained on rolling a single fair six-sided die:
+          $$X \in \{1, 2, 3, 4, 5, 6\}, \quad P(X = x_i) = \frac{1}{6} \quad \forall i$$
+        </p>
+        <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.7; color: var(--text-primary);">
+          &Epsilon;[X] = &sum; x_i &middot; P(X = x_i)<br>
+          &Epsilon;[X] = 1&middot;(1/6) + 2&middot;(1/6) + 3&middot;(1/6) + 4&middot;(1/6) + 5&middot;(1/6) + 6&middot;(1/6)<br>
+          &Epsilon;[X] = (1 + 2 + 3 + 4 + 5 + 6) / 6<br>
+          &Epsilon;[X] = 21 / 6 = <strong style="color: #7ee787;">3.5</strong>
+        </div>
+
+        <div class="callout callout-success" style="margin-top: 1rem;">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-content">
+            <div class="callout-title">Vital Observation</div>
+            <p>Can you ever roll a $3.5$ on a physical die? <strong>Never!</strong> The expected value is not guaranteed to be a possible physical outcome; it is the <em>theoretical center of mass (balance point)</em> of the probability distribution.</p>
+          </div>
+        </div>
+
+        <h3>Essential Properties of Expected Value</h3>
+        <p>
+          These algebraic properties are used constantly when deriving machine learning loss functions and statistical estimators:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Mathematical Formula</th>
+                <th>Meaning in Plain English</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Expectation of a Constant</strong></td>
+                <td>$\mathbb{E}[c] = c$</td>
+                <td>A constant never changes; its expected average is just itself.</td>
+              </tr>
+              <tr>
+                <td><strong>Scalar Multiplication</strong></td>
+                <td>$\mathbb{E}[c \cdot X] = c \cdot \mathbb{E}[X]$</td>
+                <td>Constants factor cleanly outside the expectation operator.</td>
+              </tr>
+              <tr>
+                <td><strong>Linearity of Expectation</strong></td>
+                <td>$\mathbb{E}[aX + b] = a\mathbb{E}[X] + b$</td>
+                <td>Scaling and shifting $X$ scales and shifts its mean identically.</td>
+              </tr>
+              <tr>
+                <td><strong>Sum of Random Variables</strong></td>
+                <td>$\mathbb{E}[X + Y] = \mathbb{E}[X] + \mathbb{E}[Y]$</td>
+                <td>The expected value of a sum is ALWAYS the sum of the expected values (even if $X$ and $Y$ are dependent!).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: VARIANCE & FULL ALGEBRAIC PROOF -->
+      <!-- ============================================================ -->
+      <section id="variance-proof" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Variance ($\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$) &amp; Full Algebraic Proof</h2>
+
+        <p>
+          While Expected Value $\mathbb{E}[X]$ tells us where the distribution is centered, <strong>Variance</strong> ($\text{Var}(X)$ or $\sigma^2$) tells us how much the random variable fluctuates or spreads around that center.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #ffa657; font-size: 1.15rem;">Conceptual Definition of Variance</h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
+            Variance is defined as the <strong>expected value of the squared deviations from the mean</strong>:
+          </p>
+          <div style="text-align: center; margin: 0.75rem 0; font-size: 1.25rem; color: #ffa657;">
+            $$\text{Var}(X) = \sigma^2 = \mathbb{E}\left[(X - \mu)^2\right] = \sum_{i=1}^{n} (x_i - \mu)^2 \cdot P(X = x_i)$$
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+            And the <strong>Standard Deviation</strong> ($\sigma$) is simply the square root: $\sigma = \sqrt{\text{Var}(X)}$.
+          </p>
+        </div>
+
+        <h3>The Full Algebraic Proof of the Computational Formula</h3>
+        <p>
+          In practice, calculating $(x_i - \mu)^2$ for every term is tedious. Instead, mathematicians and machine learning researchers use the famous computational shortcut formula:
+        </p>
+        <div style="text-align: center; font-size: 1.35rem; font-weight: bold; color: #7ee787; margin: 1rem 0;">
+          $$\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$$
+        </div>
+
+        <p>
+          Here is the step-by-step rigorous algebraic derivation of this formula:
+        </p>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #7ee787; border-radius: 6px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h4 style="margin-top: 0; color: #7ee787; font-size: 1.1rem;">Step-by-Step Mathematical Derivation</h4>
+
+          <div style="font-size: 0.95rem; line-height: 2; color: var(--text-primary);">
+            <p><strong>Step 1:</strong> Start with the foundational definition of variance:</p>
+            $$\text{Var}(X) = \mathbb{E}\left[(X - \mathbb{E}[X])^2\right]$$
+
+            <p><strong>Step 2:</strong> Expand the algebraic square inside the expectation using $(a - b)^2 = a^2 - 2ab + b^2$:</p>
+            $$\text{Var}(X) = \mathbb{E}\left[X^2 - 2X\mathbb{E}[X] + (\mathbb{E}[X])^2\right]$$
+
+            <p><strong>Step 3:</strong> Apply the Linearity of Expectation ($\mathbb{E}[A + B + C] = \mathbb{E}[A] + \mathbb{E}[B] + \mathbb{E}[C]$):</p>
+            $$\text{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[2X\mathbb{E}[X]] + \mathbb{E}\left[(\mathbb{E}[X])^2\right]$$
+
+            <p><strong>Step 4:</strong> Notice that $\mathbb{E}[X]$ is a fixed constant number (e.g. 3.5), NOT a variable! Therefore, by the constant rule ($\mathbb{E}[c \cdot Y] = c \cdot \mathbb{E}[Y]$ and $\mathbb{E}[c] = c$):</p>
+            $$\mathbb{E}[2X\mathbb{E}[X]] = 2\mathbb{E}[X] \cdot \mathbb{E}[X] = 2(\mathbb{E}[X])^2$$
+            $$\mathbb{E}\left[(\mathbb{E}[X])^2\right] = (\mathbb{E}[X])^2$$
+
+            <p><strong>Step 5:</strong> Substitute these simplified terms back into our expression:</p>
+            $$\text{Var}(X) = \mathbb{E}[X^2] - 2(\mathbb{E}[X])^2 + (\mathbb{E}[X])^2$$
+
+            <p><strong>Step 6:</strong> Combine the like terms ($-2(\mathbb{E}[X])^2 + 1(\mathbb{E}[X])^2 = -1(\mathbb{E}[X])^2$):</p>
+            <div style="background: var(--bg-primary); padding: 1rem; border-radius: 6px; border: 1px solid #7ee787; text-align: center; margin-top: 0.75rem;">
+              <span style="font-size: 1.3rem; font-weight: 700; color: #7ee787;">
+                $$\mathbf{\text{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2} \quad \blacksquare$$
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Complete Worked Numerical Example: Variance of a Single Die Roll</h3>
+        <p>
+          Let's use our proven shortcut formula to compute the variance of a single fair die roll ($X$):
+        </p>
+
+        <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.92rem; line-height: 1.75; color: var(--text-primary);">
+          1. We already calculated &Epsilon;[X] = 3.5<br>
+          &nbsp;&nbsp;&nbsp;(&Epsilon;[X])&sup2; = (3.5)&sup2; = <strong style="color: #79c0ff;">12.25</strong><br><br>
+
+          2. Now calculate &Epsilon;[X&sup2;]:<br>
+          &nbsp;&nbsp;&nbsp;&Epsilon;[X&sup2;] = &sum; x_i&sup2; &middot; P(X = x_i)<br>
+          &nbsp;&nbsp;&nbsp;&Epsilon;[X&sup2;] = 1&sup2;(1/6) + 2&sup2;(1/6) + 3&sup2;(1/6) + 4&sup2;(1/6) + 5&sup2;(1/6) + 6&sup2;(1/6)<br>
+          &nbsp;&nbsp;&nbsp;&Epsilon;[X&sup2;] = (1 + 4 + 9 + 16 + 25 + 36) / 6<br>
+          &nbsp;&nbsp;&nbsp;&Epsilon;[X&sup2;] = 91 / 6 &approx; <strong style="color: #79c0ff;">15.1667</strong><br><br>
+
+          3. Compute Variance:<br>
+          &nbsp;&nbsp;&nbsp;Var(X) = &Epsilon;[X&sup2;] - (&Epsilon;[X])&sup2;<br>
+          &nbsp;&nbsp;&nbsp;Var(X) = 15.1667 - 12.25 = <strong style="color: #7ee787;">2.9167</strong> (or 35/12)<br><br>
+
+          4. Compute Standard Deviation (&sigma;):<br>
+          &nbsp;&nbsp;&nbsp;&sigma; = &radic;2.9167 &approx; <strong style="color: #ffa657;">1.7078</strong>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE SIMULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-rv-sim" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive Random Variable &amp; Expectation Simulator</h2>
+
+        <p>
+          Use this interactive sandbox to observe the <strong>Law of Large Numbers</strong> and <strong>Random Variable distributions</strong> in real time. Select an experiment, choose the mapping function logic, run simulated trials, and watch the empirical distribution converge to the exact theoretical PMF and Expected Value!
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;">
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            
+            <div>
+              <label for="sim-experiment" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">Random Variable Logic $X$:</label>
+              <select id="sim-experiment" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem;">
+                <option value="dice_sum">Two Dice: Sum X = d1 + d2 (Range: 2..12)</option>
+                <option value="dice_max">Two Dice: Max X = max(d1, d2) (Range: 1..6)</option>
+                <option value="dice_diff">Two Dice: Diff X = |d1 - d2| (Range: 0..5)</option>
+                <option value="coin_heads">Three Coins: Heads Count X (Range: 0..3)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="sim-trial-count" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">Simulated Trials ($N$):</label>
+              <select id="sim-trial-count" style="width: 100%; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.88rem;">
+                <option value="50">50 Trials (High Sampling Noise)</option>
+                <option value="500">500 Trials</option>
+                <option value="5000" selected>5,000 Trials</option>
+                <option value="50000">50,000 Trials (Near-Perfect Convergence)</option>
+              </select>
+            </div>
+
+            <div style="display: flex; align-items: flex-end;">
+              <button onclick="runRVSimulator()" class="btn-primary" style="width: 100%; justify-content: center; height: 40px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Run Trials
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Live Metrics Display -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Theoretical Mean $\mathbb{E}[X]$</div>
+              <div id="sim-theo-mean" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">--</div>
+            </div>
+
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Empirical Mean $\bar{x}$</div>
+              <div id="sim-emp-mean" style="font-size: 1.25rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono);">--</div>
+            </div>
+
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Theoretical $\text{Var}(X)$</div>
+              <div id="sim-theo-var" style="font-size: 1.25rem; font-weight: 700; color: #d2a8ff; font-family: var(--font-mono);">--</div>
+            </div>
+
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.9rem; text-align: center;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Empirical $\text{Var}(x)$</div>
+              <div id="sim-emp-var" style="font-size: 1.25rem; font-weight: 700; color: #ffa657; font-family: var(--font-mono);">--</div>
+            </div>
+
+          </div>
+
+          <!-- Canvas for Live PMF Comparison -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.85rem; color: var(--text-muted);">
+              <span>Distribution Chart: <span style="color: #238636; font-weight: 700;">■ Empirical Trials</span> vs <span style="color: #58a6ff; font-weight: 700;">● Theoretical PMF</span></span>
+              <span id="sim-lln-status" style="font-size: 0.8rem; color: #7ee787;">LLN Active</span>
+            </div>
+            <canvas id="sim-rv-canvas" width="700" height="260" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Probability for Machine Learning</strong> &mdash; Lecture 1 Reference
+      </div>
+      <div>
+        <a href="probability.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Probability Portal</a>
+        <a href="prob-lecture-2.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Next: Lecture 2 (Joint, Marginal &amp; Bayes) →</a>
+        <a href="#prob-intro" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function runRVSimulator() {
+      const expType = document.getElementById('sim-experiment').value;
+      const N = parseInt(document.getElementById('sim-trial-count').value, 10);
+
+      let values = [];
+      let minVal, maxVal;
+      let theoP = {};
+      let theoMean = 0;
+      let theoVar = 0;
+
+      if (expType === 'dice_sum') {
+        minVal = 2; maxVal = 12;
+        // Theoretical distribution for sum of 2 dice
+        for (let x = 2; x <= 12; x++) {
+          const count = 6 - Math.abs(x - 7);
+          theoP[x] = count / 36;
+          theoMean += x * theoP[x];
+        }
+        let theoE2 = 0;
+        for (let x = 2; x <= 12; x++) theoE2 += (x * x) * theoP[x];
+        theoVar = theoE2 - (theoMean * theoMean);
+
+        // Simulation
+        for (let i = 0; i < N; i++) {
+          const d1 = Math.floor(Math.random() * 6) + 1;
+          const d2 = Math.floor(Math.random() * 6) + 1;
+          values.push(d1 + d2);
+        }
+      } else if (expType === 'dice_max') {
+        minVal = 1; maxVal = 6;
+        for (let x = 1; x <= 6; x++) {
+          // Max is x if (d1<=x & d2<=x) minus (d1<x & d2<x) = (x^2 - (x-1)^2) / 36 = (2x - 1)/36
+          theoP[x] = (2 * x - 1) / 36;
+          theoMean += x * theoP[x];
+        }
+        let theoE2 = 0;
+        for (let x = 1; x <= 6; x++) theoE2 += (x * x) * theoP[x];
+        theoVar = theoE2 - (theoMean * theoMean);
+
+        for (let i = 0; i < N; i++) {
+          const d1 = Math.floor(Math.random() * 6) + 1;
+          const d2 = Math.floor(Math.random() * 6) + 1;
+          values.push(Math.max(d1, d2));
+        }
+      } else if (expType === 'dice_diff') {
+        minVal = 0; maxVal = 5;
+        // Absolute difference
+        theoP[0] = 6 / 36;
+        theoP[1] = 10 / 36;
+        theoP[2] = 8 / 36;
+        theoP[3] = 6 / 36;
+        theoP[4] = 4 / 36;
+        theoP[5] = 2 / 36;
+        for (let x = 0; x <= 5; x++) theoMean += x * theoP[x];
+        let theoE2 = 0;
+        for (let x = 0; x <= 5; x++) theoE2 += (x * x) * theoP[x];
+        theoVar = theoE2 - (theoMean * theoMean);
+
+        for (let i = 0; i < N; i++) {
+          const d1 = Math.floor(Math.random() * 6) + 1;
+          const d2 = Math.floor(Math.random() * 6) + 1;
+          values.push(Math.abs(d1 - d2));
+        }
+      } else if (expType === 'coin_heads') {
+        minVal = 0; maxVal = 3;
+        theoP[0] = 1 / 8;
+        theoP[1] = 3 / 8;
+        theoP[2] = 3 / 8;
+        theoP[3] = 1 / 8;
+        for (let x = 0; x <= 3; x++) theoMean += x * theoP[x];
+        let theoE2 = 0;
+        for (let x = 0; x <= 3; x++) theoE2 += (x * x) * theoP[x];
+        theoVar = theoE2 - (theoMean * theoMean);
+
+        for (let i = 0; i < N; i++) {
+          let heads = 0;
+          for (let c = 0; c < 3; c++) {
+            if (Math.random() < 0.5) heads++;
+          }
+          values.push(heads);
+        }
+      }
+
+      // Empirical statistics
+      const empSum = values.reduce((a, b) => a + b, 0);
+      const empMean = empSum / N;
+      const empSumSq = values.reduce((a, b) => a + Math.pow(b - empMean, 2), 0);
+      const empVar = empSumSq / N;
+
+      document.getElementById('sim-theo-mean').textContent = theoMean.toFixed(3);
+      document.getElementById('sim-emp-mean').textContent = empMean.toFixed(3);
+      document.getElementById('sim-theo-var').textContent = theoVar.toFixed(3);
+      document.getElementById('sim-emp-var').textContent = empVar.toFixed(3);
+
+      // Counts
+      let counts = {};
+      for (let x = minVal; x <= maxVal; x++) counts[x] = 0;
+      values.forEach(v => counts[v]++);
+
+      drawRVChart(minVal, maxVal, counts, theoP, N);
+    }
+
+    function drawRVChart(minVal, maxVal, counts, theoP, N) {
+      const canvas = document.getElementById('sim-rv-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const numBins = maxVal - minVal + 1;
+      const paddingLeft = 45;
+      const paddingBottom = 35;
+      const chartWidth = canvas.width - paddingLeft - 25;
+      const chartHeight = canvas.height - paddingBottom - 25;
+      const barWidth = chartWidth / numBins;
+
+      // Find max probability for scaling
+      let maxP = 0;
+      for (let x = minVal; x <= maxVal; x++) {
+        const empP = counts[x] / N;
+        if (empP > maxP) maxP = empP;
+        if (theoP[x] > maxP) maxP = theoP[x];
+      }
+      maxP = Math.max(maxP * 1.15, 0.1);
+
+      for (let i = 0; i < numBins; i++) {
+        const val = minVal + i;
+        const empProb = counts[val] / N;
+        const theoProb = theoP[val];
+
+        const barH = (empProb / maxP) * chartHeight;
+        const x = paddingLeft + i * barWidth;
+        const y = canvas.height - paddingBottom - barH;
+
+        // Draw Empirical Bar
+        ctx.fillStyle = '#238636';
+        ctx.fillRect(x + 4, y, barWidth - 8, barH);
+        ctx.strokeStyle = '#2ea043';
+        ctx.strokeRect(x + 4, y, barWidth - 8, barH);
+
+        // Draw Theoretical Target Marker
+        const theoY = canvas.height - paddingBottom - (theoProb / maxP) * chartHeight;
+        ctx.fillStyle = '#58a6ff';
+        ctx.beginPath();
+        ctx.arc(x + barWidth / 2, theoY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Label below bar
+        ctx.fillStyle = '#8b949e';
+        ctx.font = '12px JetBrains Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(val, x + barWidth / 2, canvas.height - 12);
+
+        // Value text above bar
+        ctx.fillStyle = '#c9d1d9';
+        ctx.font = '10px Inter, sans-serif';
+        ctx.fillText((empProb * 100).toFixed(1) + '%', x + barWidth / 2, y - 5);
+      }
+
+      // Axis lines
+      ctx.strokeStyle = '#30363d';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, 15);
+      ctx.lineTo(paddingLeft, canvas.height - paddingBottom);
+      ctx.lineTo(canvas.width - 15, canvas.height - paddingBottom);
+      ctx.stroke();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runRVSimulator();
+    });
+  </script>
+</body>
+</html>

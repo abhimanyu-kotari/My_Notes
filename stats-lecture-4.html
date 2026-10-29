@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 4: Inferential Statistics, Confidence Intervals & Hypothesis Testing | Statistics Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 4 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#inferential-foundations" class="sidebar-link">1. Foundations of Inferential Statistics</a></li>
+        <li><a href="#point-estimate-ci" class="sidebar-link">2. Point Estimate vs. Confidence Interval</a></li>
+        <li><a href="#ci-z-known-sigma" class="sidebar-link">3. Confidence Intervals with Known &sigma; (Z-Test)</a></li>
+        <li><a href="#ci-t-unknown-sigma" class="sidebar-link">4. Confidence Intervals with Unknown &sigma; (t-Test)</a></li>
+        <li><a href="#hypothesis-testing-core" class="sidebar-link">5. The 4-Step Hypothesis Testing Framework</a></li>
+        <li><a href="#pvalue-alpha-analogy" class="sidebar-link">6. P-Values, Alpha &amp; The Mousepad Analogy</a></li>
+        <li><a href="#type1-type2-errors" class="sidebar-link">7. Type I &amp; II Errors (Confusion Matrix)</a></li>
+        <li><a href="#one-tailed-two-tailed" class="sidebar-link">8. One-Tailed vs. Two-Tailed Tests</a></li>
+        <li><a href="#parametric-tests" class="sidebar-link">9. Parametric Tests (Z-Test &amp; Student's t-Test)</a></li>
+        <li><a href="#anova-ftest" class="sidebar-link">10. ANOVA (Analysis of Variance / F-Test)</a></li>
+        <li><a href="#chisquare-test" class="sidebar-link">11. Chi-Square (&chi;&sup2;) Test of Independence</a></li>
+        <li><a href="#advanced-distributions" class="sidebar-link">12. Advanced Distributions (Log-Normal, Pareto, Binomial)</a></li>
+        <li><a href="#qq-plots-transforms" class="sidebar-link">13. Q-Q Plots &amp; Data Transformations</a></li>
+        <li><a href="#interactive-hypothesis-sim" class="sidebar-link">14. Interactive Hypothesis Testing Simulator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 04 Notes</span>
+          <span class="tag">Statistics</span>
+          <span class="tag">Inferential Stats</span>
+          <span class="tag">Confidence Intervals</span>
+          <span class="tag">Hypothesis Testing</span>
+          <span class="tag">P-Values &amp; Alpha</span>
+          <span class="tag">Type I &amp; II Errors</span>
+          <span class="tag">Z-Test &amp; t-Test</span>
+          <span class="tag">ANOVA &amp; Chi-Square</span>
+          <span class="tag">Advanced Distributions</span>
+        </div>
+        <h1 class="lecture-main-title">Inferential Statistics, Confidence Intervals &amp; Hypothesis Testing</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This module explores Inferential Statistics—the rigorous scientific methodology of drawing evidence-based conclusions about an entire population from sample data. We master Point Estimates ($\bar{x}$) vs. Confidence Intervals, Hypothesis Testing with Null ($H_0$) and Alternative ($H_1$) hypotheses, significance levels ($\alpha$) and P-values (using the intuitive laptop mousepad analogy), Type I ($\alpha$) and Type II ($\beta$) errors (and their direct mapping to Confusion Matrices), One-Tailed vs. Two-Tailed tests, Z-Tests, Student's T-Tests ($df = n - 1$), ANOVA (F-Test for 3+ groups), Chi-Square ($\chi^2$) tests for categorical independence, Log-Normal and Pareto/Power Law distributions, and Q-Q plots for normality checking.<br>
+          <strong>Why do we use it?</strong> In real-world data science and business analytics, you can never survey every single human or test every single product manufactured. Inferential statistics provides mathematical proof to validate claims: <em>"Did our new website layout genuinely increase sales, or was it pure luck?"</em>, <em>"Is this medical drug truly curing patients above placebo levels?"</em>, and <em>"Do placement rates genuinely differ across college campuses?"</em>
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: FOUNDATIONS OF INFERENTIAL STATS -->
+      <!-- ============================================================ -->
+      <section id="inferential-foundations" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Foundations of Inferential Statistics</h2>
+
+        <h3>1. Moving from Sample to Population</h3>
+        <p>
+          While descriptive statistics describes what has already happened inside an observed dataset, <strong>Inferential Statistics</strong> enables us to project those findings onto an unobserved population ($N$) using probability theory.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 1rem; text-align: center;">
+            <div style="padding: 1rem 1.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px;">
+              <strong style="color: #79c0ff; font-size: 1.1rem;">Sample Data ($n$)</strong><br>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Observed Statistics: $\bar{x}, s, p$</span>
+            </div>
+            <div style="font-size: 1.5rem; color: #58a6ff;">&rarr; Inferential Estimation &rarr;</div>
+            <div style="padding: 1rem 1.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px;">
+              <strong style="color: #7ee787; font-size: 1.1rem;">Population ($N$)</strong><br>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">True Parameters: $\mu, \sigma, P$</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: POINT ESTIMATE VS CONFIDENCE INTERVAL -->
+      <!-- ============================================================ -->
+      <section id="point-estimate-ci" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Point Estimate vs. Confidence Interval</h2>
+
+        <h3>1. What is a Point Estimate?</h3>
+        <p>
+          A <strong>Point Estimate</strong> is a single numerical value calculated from sample data that serves as our best single guess for an unknown population parameter:
+        </p>
+        <p>
+          $$\text{Sample Mean } \bar{x} \longrightarrow \text{Estimates Population Mean } \mu$$
+          $$\text{Sample Variance } s^2 \longrightarrow \text{Estimates Population Variance } \sigma^2$$
+        </p>
+
+        <h3>2. Why a Point Estimate Alone Fails</h3>
+        <p>
+          A point estimate will almost never equal the exact population mean ($\bar{x} \neq \mu$) due to natural <strong>sampling variation</strong>. If one sample gives $\bar{x} = 520$, another sample might give $515$, and a third $528$.
+        </p>
+
+        <h3>3. The Confidence Interval Solution</h3>
+        <p>
+          Instead of betting on a single number, an <strong>Interval Estimate (Confidence Interval)</strong> provides a range of values within which the true population parameter is expected to fall with a specified degree of confidence (e.g. 95%):
+        </p>
+        <p>
+          $$\mathbf{\text{Confidence Interval} = \text{Point Estimate} \pm \text{Margin of Error}}$$
+        </p>
+        <p>
+          Where:
+          $$\text{Margin of Error} = \text{Critical Value} \times \text{Standard Error}$$
+          $$\text{Standard Error (SE)} = \frac{\sigma}{\sqrt{n}}$$
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: CI WITH KNOWN SIGMA (Z-TEST) -->
+      <!-- ============================================================ -->
+      <section id="ci-z-known-sigma" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Confidence Intervals with Known $\sigma$ (Z-Distribution)</h2>
+
+        <h3>1. The Known $\sigma$ Formula</h3>
+        <p>
+          When the population standard deviation $\sigma$ is known and sample size is reasonably large ($n \ge 30$), the confidence interval for the population mean $\mu$ is:
+        </p>
+        <p>
+          $$\mathbf{\text{CI} = \bar{x} \pm Z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right)}$$
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Solved Problem from Lecture: CAT Exam Quant Score</div>
+          <p>
+            On the quantitative section of the CAT exam, the population standard deviation is known to be $\sigma = 100$. A sample of $n = 25$ test takers has a sample mean score of $\bar{x} = 520$. Construct a <strong>95% Confidence Interval</strong> for the true population mean.
+          </p>
+          <ol>
+            <li><strong>Given Parameters:</strong> $\bar{x} = 520$, $\sigma = 100$, $n = 25$.</li>
+            <li><strong>Significance Level:</strong> For 95% Confidence, $\alpha = 1 - 0.95 = 0.05$.</li>
+            <li><strong>Two-Tailed Critical Split:</strong> $\alpha / 2 = 0.05 / 2 = 0.025$.</li>
+            <li><strong>Z-Table Lookup:</strong> The cumulative area is $1 - 0.025 = 0.9750$. Looking up $0.9750$ in the Z-table gives:
+              $$Z_{0.025} = \mathbf{1.96}$$
+            </li>
+            <li><strong>Standard Error:</strong>
+              $$\text{SE} = \frac{\sigma}{\sqrt{n}} = \frac{100}{\sqrt{25}} = \frac{100}{5} = \mathbf{20}$$
+            </li>
+            <li><strong>Margin of Error:</strong>
+              $$\text{ME} = 1.96 \times 20 = \mathbf{39.2}$$
+            </li>
+            <li><strong>Confidence Bounds:</strong>
+              $$\text{Upper Bound} = 520 + 39.2 = \mathbf{559.2}$$
+              $$\text{Lower Bound} = 520 - 39.2 = \mathbf{480.8}$$
+            </li>
+          </ol>
+          <p style="margin-top: 0.5rem; font-weight: 600; color: #7ee787;">
+            Conclusion: We are 95% confident that the true population mean score of all CAT test takers lies between 480.8 and 559.2.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: CI WITH UNKNOWN SIGMA (T-TEST) -->
+      <!-- ============================================================ -->
+      <section id="ci-t-unknown-sigma" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Confidence Intervals with Unknown $\sigma$ (Student's t-Distribution)</h2>
+
+        <h3>1. The Reality of Unknown $\sigma$</h3>
+        <p>
+          In practical data science, you almost <em>never</em> know the true population standard deviation $\sigma$. When $\sigma$ is unknown, we must estimate it using the <strong>sample standard deviation $s$</strong>.
+        </p>
+        <p>
+          Because $s$ introduces additional sampling uncertainty, we replace the normal Z-distribution with <strong>Student's t-Distribution</strong>, governed by <strong>Degrees of Freedom ($df = n - 1$)</strong>:
+        </p>
+        <p>
+          $$\mathbf{\text{CI} = \bar{x} \pm t_{\alpha/2, \ df} \left(\frac{s}{\sqrt{n}}\right) \quad \text{where } df = n - 1}$$
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Standard Deviation Known?</th>
+                <th>Test Statistic</th>
+                <th>Critical Value Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Case 1</strong></td>
+                <td>Population $\sigma$ is <strong>Known</strong></td>
+                <td>Z-Statistic</td>
+                <td>$Z_{\alpha/2}$ from Z-Table (e.g. 1.96 for 95%)</td>
+              </tr>
+              <tr>
+                <td><strong>Case 2</strong></td>
+                <td>Population $\sigma$ is <strong>Unknown</strong> (Only $s$ known)</td>
+                <td>t-Statistic</td>
+                <td>$t_{\alpha/2, \ df}$ from t-Table with $df = n - 1$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: THE 4-STEP HYPOTHESIS TESTING FRAMEWORK -->
+      <!-- ============================================================ -->
+      <section id="hypothesis-testing-core" class="note-section content-section">
+        <h2><span class="section-number">05.</span> The 4-Step Hypothesis Testing Framework</h2>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #58a6ff; border-radius: 4px;">
+              <strong style="color: #58a6ff; font-size: 1.05rem;">Step 1: State the Hypotheses ($H_0$ and $H_1$)</strong>
+              <p style="margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                &bull; <strong>Null Hypothesis ($H_0$):</strong> The assumption of status quo, no difference, or fair condition (e.g. "The coin is fair, $P = 0.5$").<br>
+                &bull; <strong>Alternative Hypothesis ($H_1$ or $H_a$):</strong> The research claim or anomaly we suspect (e.g. "The coin is biased, $P \neq 0.5$").
+              </p>
+            </div>
+
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #ffa657; border-radius: 4px;">
+              <strong style="color: #ffa657; font-size: 1.05rem;">Step 2: Set the Significance Level ($\alpha$)</strong>
+              <p style="margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                The probability threshold for rejecting the null hypothesis when it is actually true (commonly $\alpha = 0.05$ or $5\%$, giving a $95\%$ confidence region).
+              </p>
+            </div>
+
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #d2a8ff; border-radius: 4px;">
+              <strong style="color: #d2a8ff; font-size: 1.05rem;">Step 3: Collect Data &amp; Compute Test Statistic / P-Value</strong>
+              <p style="margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Execute the experiment ($n = 100$ flips), compute the sample test statistic ($Z$ or $t$), and calculate the corresponding <strong>P-Value</strong>.
+              </p>
+            </div>
+
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #7ee787; border-radius: 4px;">
+              <strong style="color: #7ee787; font-size: 1.05rem;">Step 4: Make the Decision</strong>
+              <p style="margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                &bull; <strong>If $\text{P-Value} \le \alpha$:</strong> Reject $H_0$ (Statistically significant evidence supports $H_1$).<br>
+                &bull; <strong>If $\text{P-Value} &gt; \alpha$:</strong> Fail to reject $H_0$ (Insufficient evidence to overturn the null).
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: P-VALUES & MOUSEPAD ANALOGY -->
+      <!-- ============================================================ -->
+      <section id="pvalue-alpha-analogy" class="note-section content-section">
+        <h2><span class="section-number">06.</span> P-Values, Alpha &amp; The Mousepad Analogy</h2>
+
+        <h3>1. The Laptop Mousepad Analogy</h3>
+        <p>
+          Think of a laptop's trackpad. When using your laptop, where do your fingers touch?
+        </p>
+        <ul>
+          <li><strong>The Central Bulge ($P = 0.80 - 0.90$):</strong> You touch the middle 80-90% of the time. This represents normal, expected observations under the Null Hypothesis.</li>
+          <li><strong>The Far Extreme Corner ($P = 0.01$):</strong> You almost never touch the tiny top-left corner. If a sensor records 100 touches exclusively in that corner, it is so wildly improbable by chance that the system flags an anomaly!</li>
+        </ul>
+
+        <div class="concept-box">
+          <div class="concept-title">Formal Definition of P-Value</div>
+          <p>
+            The <strong>P-Value</strong> is the probability of observing a sample statistic at least as extreme as the one actually obtained, <em>assuming the Null Hypothesis ($H_0$) is strictly true</em>.
+          </p>
+          <p style="margin-top: 0.5rem; font-family: var(--font-mono); color: #7ee787;">
+            "If P is low, the Null must go!" (If $\text{P-Value} \le \alpha$, Reject $H_0$).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: TYPE I & TYPE II ERRORS -->
+      <!-- ============================================================ -->
+      <section id="type1-type2-errors" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Type I &amp; II Errors (The Confusion Matrix Mapping)</h2>
+
+        <h3>1. The 4 Decision Outcomes</h3>
+        <p>
+          When testing a hypothesis, our statistical conclusion can either align with reality or produce an error:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Statistical Decision</th>
+                <th>Reality: $H_0$ is Actually True</th>
+                <th>Reality: $H_0$ is Actually False</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Reject $H_0$</strong></td>
+                <td><strong style="color: #ff7b72;">Type I Error ($\alpha$)</strong><br>False Positive (Convicting an innocent person)</td>
+                <td><strong style="color: #7ee787;">Correct Decision ($1 - \beta$)</strong><br>Statistical Power (Convicting a guilty criminal)</td>
+              </tr>
+              <tr>
+                <td><strong>Fail to Reject $H_0$</strong></td>
+                <td><strong style="color: #7ee787;">Correct Decision ($1 - \alpha$)</strong><br>True Negative (Acquitting an innocent person)</td>
+                <td><strong style="color: #ffa657;">Type II Error ($\beta$)</strong><br>False Negative (Letting a guilty criminal walk free)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Direct Mapping to Machine Learning Confusion Matrix</div>
+          <ul>
+            <li><strong>Type I Error ($\alpha$) = False Positive (FP):</strong> Predicting a patient has cancer ($H_1$) when they are actually healthy ($H_0$).</li>
+            <li><strong>Type II Error ($\beta$) = False Negative (FN):</strong> Predicting a patient is healthy ($H_0$) when they actually have cancer ($H_1$).</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: ONE-TAILED VS TWO-TAILED TESTS -->
+      <!-- ============================================================ -->
+      <section id="one-tailed-two-tailed" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Directional Decisions: One-Tailed vs. Two-Tailed Tests</h2>
+
+        <p>
+          The wording of the problem statement dictates whether the critical rejection region $\alpha$ is concentrated in a single tail or split between two tails:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Test Type</th>
+                <th>Alternative Hypothesis ($H_1$)</th>
+                <th>Rejection Region Location</th>
+                <th>Lecture Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Two-Tailed Test</strong></td>
+                <td>$$H_1: \mu \neq \mu_0$$</td>
+                <td>Split equally: $\alpha/2$ in left tail, $\alpha/2$ in right tail.</td>
+                <td><em>"Does the new college have a <strong>different</strong> placement rate than 85%?"</em></td>
+              </tr>
+              <tr>
+                <td><strong>Right-Tailed Test</strong></td>
+                <td>$$H_1: \mu &gt; \mu_0$$</td>
+                <td>Entire $\alpha$ placed in the <strong>right tail</strong>.</td>
+                <td><em>"Does the new college have a placement rate <strong>greater than</strong> 85%?"</em></td>
+              </tr>
+              <tr>
+                <td><strong>Left-Tailed Test</strong></td>
+                <td>$$H_1: \mu &lt; \mu_0$$</td>
+                <td>Entire $\alpha$ placed in the <strong>left tail</strong>.</td>
+                <td><em>"Does the new fuel additive <strong>reduce</strong> engine emissions?"</em></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PARAMETRIC TESTS -->
+      <!-- ============================================================ -->
+      <section id="parametric-tests" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Parametric Tests: Z-Test &amp; Student's t-Test</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Test Name</th>
+                <th>When to Use</th>
+                <th>Test Statistic Formula</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>One-Sample Z-Test</strong></td>
+                <td>Comparing sample mean to known population mean $\mu$ when $\sigma$ is known ($n \ge 30$).</td>
+                <td>$$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$</td>
+              </tr>
+              <tr>
+                <td><strong>One-Sample t-Test</strong></td>
+                <td>Comparing sample mean to known mean $\mu$ when $\sigma$ is unknown ($s$ used, $df = n - 1$).</td>
+                <td>$$t = \frac{\bar{x} - \mu}{s / \sqrt{n}}$$</td>
+              </tr>
+              <tr>
+                <td><strong>Two-Sample Independent t-Test</strong></td>
+                <td>Comparing means of two independent groups (e.g. Treatment vs. Placebo).</td>
+                <td>$$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$</td>
+              </tr>
+              <tr>
+                <td><strong>Paired Samples t-Test</strong></td>
+                <td>Comparing the same subjects before and after a treatment ($d = x_1 - x_2$).</td>
+                <td>$$t = \frac{\bar{d}}{s_d / \sqrt{n}}$$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: ANOVA (F-TEST) -->
+      <!-- ============================================================ -->
+      <section id="anova-ftest" class="note-section content-section">
+        <h2><span class="section-number">10.</span> ANOVA (Analysis of Variance / F-Test)</h2>
+
+        <h3>1. Why Not Just Run Multiple t-Tests?</h3>
+        <p>
+          Suppose you want to test whether $k = 4$ different website layouts produce equal sales. If you ran pairwise t-tests, you would need $\binom{4}{2} = 6$ separate tests.
+        </p>
+        <p>
+          With each test having $\alpha = 0.05$, the probability of committing at least one False Positive explodes due to <strong>Type I Error Inflation</strong>:
+        </p>
+        <p>
+          $$P(\text{At least 1 false positive}) = 1 - (1 - 0.05)^6 = 1 - 0.735 = \mathbf{26.5\%}!$$
+        </p>
+
+        <h3>2. The ANOVA Solution</h3>
+        <p>
+          <strong>ANOVA</strong> tests all group means simultaneously in a single omnibus test:
+        </p>
+        <p>
+          $$H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k$$
+          $$H_1: \text{At least one group mean is significantly different.}$$
+        </p>
+        <p>
+          It compares variance between group means to variance within each group using the <strong>F-Statistic</strong>:
+        </p>
+        <p>
+          $$F = \frac{\text{Between-Group Variance (MSB)}}{\text{Within-Group Variance (MSW)}}$$
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: CHI-SQUARE TEST -->
+      <!-- ============================================================ -->
+      <section id="chisquare-test" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Chi-Square ($\chi^2$) Test of Independence</h2>
+
+        <h3>1. Testing Categorical Relationships</h3>
+        <p>
+          While t-tests and ANOVA compare numerical means, the <strong>Chi-Square ($\chi^2$) Test</strong> evaluates relationships between two <strong>Categorical / Qualitative variables</strong> (e.g. <em>"Is purchasing an electric vehicle independent of age bracket?"</em>).
+        </p>
+        <p>
+          $$\mathbf{\chi^2 = \sum \frac{(O - E)^2}{E}}$$
+        </p>
+        <p>
+          Where:
+          $$\text{Expected Frequency } E = \frac{\text{Row Total} \times \text{Column Total}}{\text{Grand Total}}$$
+          $$df = (\text{Rows} - 1) \times (\text{Columns} - 1)$$
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: ADVANCED DISTRIBUTIONS -->
+      <!-- ============================================================ -->
+      <section id="advanced-distributions" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Advanced Distributions (Log-Normal, Pareto, Binomial)</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Distribution</th>
+                <th>Mathematical Formula / Nature</th>
+                <th>Real-World Domain Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Log-Normal Distribution</strong></td>
+                <td>If $X$ is log-normal, then $Y = \ln(X)$ is normally distributed. Skewed right with long positive tail.</td>
+                <td>Stock market price returns, human income, network packet latencies.</td>
+              </tr>
+              <tr>
+                <td><strong>Pareto (Power Law)</strong></td>
+                <td>$P(X &gt; x) \propto x^{-\alpha}$. Heavy-tailed 80/20 rule (80% of effects come from 20% of causes).</td>
+                <td>Wealth distribution (80% of wealth held by 20% of population), open-source bug occurrences.</td>
+              </tr>
+              <tr>
+                <td><strong>Bernoulli Distribution</strong></td>
+                <td>Single discrete trial with binary outcome: Success ($1$) with probability $p$, Failure ($0$) with $q = 1 - p$.</td>
+                <td>Single coin toss, email spam filter (Spam or Not Spam).</td>
+              </tr>
+              <tr>
+                <td><strong>Binomial Distribution</strong></td>
+                <td>Sum of $n$ independent, identical Bernoulli trials:
+                  $$P(X = k) = \binom{n}{k} p^k (1 - p)^{n - k}$$
+                </td>
+                <td>Number of defective chips in a batch of 100 manufactured components.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: Q-Q PLOTS & TRANSFORMS -->
+      <!-- ============================================================ -->
+      <section id="qq-plots-transforms" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Q-Q Plots &amp; Data Transformations</h2>
+
+        <h3>1. The Quantile-Quantile (Q-Q) Plot</h3>
+        <p>
+          A <strong>Q-Q Plot</strong> is a graphical tool used to verify whether a sample dataset follows a theoretical normal distribution. It plots sample quantiles against theoretical normal quantiles:
+        </p>
+        <ul>
+          <li><strong>Normally Distributed:</strong> Points fall tightly along the straight $45^\circ$ reference line.</li>
+          <li><strong>Heavy-Tailed / Skewed:</strong> Points curve sharply away from the reference line at the extremities.</li>
+        </ul>
+
+        <h3>2. Fixing Skewed Data: Mathematical Transformations</h3>
+        <p>
+          Many machine learning algorithms (like Linear and Ridge Regression) assume normally distributed residuals. When data is positively skewed (like salary or housing prices), we apply mathematical transformations:
+        </p>
+        <ul>
+          <li><strong>Log Transformation:</strong> $X_{\text{new}} = \log(X)$ (compresses large values and expands small values).</li>
+          <li><strong>Box-Cox Transformation:</strong> A power transformation parameterized by $\lambda$ that automatically optimizes normality.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 14: INTERACTIVE HYPOTHESIS SIMULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-hypothesis-sim" class="note-section content-section">
+        <h2><span class="section-number">14.</span> Interactive Hypothesis Testing Simulator</h2>
+
+        <p>
+          Test your hypothesis live! Select your test direction, set your significance level ($\alpha$), and enter your computed test statistic ($Z$) to see the rejection region and statistical decision:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.15rem;">Live Hypothesis Testing Decision Engine</h3>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Test Type:</label>
+              <select id="hypo-sim-dir" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-sans);">
+                <option value="two">Two-Tailed (H1: &mu; &ne; &mu;0)</option>
+                <option value="right">Right-Tailed (H1: &mu; &gt; &mu;0)</option>
+                <option value="left">Left-Tailed (H1: &mu; &lt; &mu;0)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Significance Level (&alpha;):</label>
+              <select id="hypo-sim-alpha" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+                <option value="0.05">0.05 (95% CI)</option>
+                <option value="0.01">0.01 (99% CI)</option>
+                <option value="0.10">0.10 (90% CI)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display: block;">Test Statistic (Z):</label>
+              <input type="number" id="hypo-sim-z" value="2.15" step="0.05" style="width: 100px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem; border-radius: 4px; font-family: var(--font-mono);">
+            </div>
+            <div style="align-self: flex-end;">
+              <button class="btn-primary" onclick="runHypoSim()" style="background: #238636; border-color: #238636; padding: 0.48rem 1rem;">Evaluate Decision</button>
+            </div>
+          </div>
+
+          <!-- Result banner -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Critical Value(s):</div>
+              <div id="hypo-res-crit" style="font-size: 1.3rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">&plusmn;1.96</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Computed P-Value:</div>
+              <div id="hypo-res-pval" style="font-size: 1.3rem; font-weight: 700; color: #ffa657; font-family: var(--font-mono);">0.0316</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Statistical Verdict:</div>
+              <div id="hypo-res-verdict" style="font-size: 1.15rem; font-weight: 800; color: #ff7b72; font-family: var(--font-sans);">REJECT H0</div>
+            </div>
+          </div>
+
+          <!-- Canvas -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <canvas id="hypo-canvas" width="600" height="200" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Lecture 4 Reference
+      </div>
+      <div>
+        <a href="stats-lecture-3.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Previous: Lecture 3 (Probability &amp; Normal Distribution)</a>
+        <a href="statistics.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Return to Statistics Portal</a>
+        <a href="#inferential-foundations" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function normalCdf(z) {
+      let t = 1 / (1 + 0.2316419 * Math.abs(z));
+      let d = 0.3989423 * Math.exp(-z * z / 2);
+      let p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+      return z > 0 ? 1 - p : p;
+    }
+
+    function runHypoSim() {
+      const dir = document.getElementById('hypo-sim-dir').value;
+      const alpha = parseFloat(document.getElementById('hypo-sim-alpha').value);
+      const zStat = parseFloat(document.getElementById('hypo-sim-z').value) || 0;
+
+      let critLow = null;
+      let critHigh = null;
+      let pVal = 0;
+      let reject = false;
+
+      if (dir === 'two') {
+        const crit = alpha === 0.01 ? 2.576 : (alpha === 0.10 ? 1.645 : 1.96);
+        critLow = -crit;
+        critHigh = crit;
+        pVal = 2 * (1 - normalCdf(Math.abs(zStat)));
+        reject = Math.abs(zStat) >= crit;
+        document.getElementById('hypo-res-crit').textContent = `±${crit.toFixed(2)}`;
+      } else if (dir === 'right') {
+        const crit = alpha === 0.01 ? 2.326 : (alpha === 0.10 ? 1.282 : 1.645);
+        critHigh = crit;
+        pVal = 1 - normalCdf(zStat);
+        reject = zStat >= crit;
+        document.getElementById('hypo-res-crit').textContent = `+${crit.toFixed(2)}`;
+      } else {
+        const crit = alpha === 0.01 ? -2.326 : (alpha === 0.10 ? -1.282 : -1.645);
+        critLow = crit;
+        pVal = normalCdf(zStat);
+        reject = zStat <= crit;
+        document.getElementById('hypo-res-crit').textContent = `${crit.toFixed(2)}`;
+      }
+
+      document.getElementById('hypo-res-pval').textContent = pVal.toFixed(4);
+      const verdictEl = document.getElementById('hypo-res-verdict');
+      if (reject) {
+        verdictEl.textContent = 'REJECT H0 (Significant Effect)';
+        verdictEl.style.color = '#ff7b72';
+      } else {
+        verdictEl.textContent = 'FAIL TO REJECT H0 (Accept H0)';
+        verdictEl.style.color = '#7ee787';
+      }
+
+      drawHypoCurve(dir, critLow, critHigh, zStat);
+    }
+
+    function drawHypoCurve(dir, critLow, critHigh, zStat) {
+      const canvas = document.getElementById('hypo-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 30;
+      const graphW = width - padding * 2;
+      const graphH = height - padding * 2;
+
+      function pdf(z) {
+        return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z);
+      }
+
+      const zMin = -3.5;
+      const zMax = 3.5;
+      const maxPdf = pdf(0);
+
+      const toX = (z) => padding + ((z - zMin) / (zMax - zMin)) * graphW;
+      const toY = (p) => height - padding - (p / maxPdf) * graphH;
+
+      // Draw Critical Rejection Zones (Red)
+      ctx.fillStyle = 'rgba(255, 123, 114, 0.4)';
+      
+      if (critLow !== null) {
+        ctx.beginPath();
+        ctx.moveTo(toX(zMin), height - padding);
+        for (let z = zMin; z <= critLow; z += 0.05) ctx.lineTo(toX(z), toY(pdf(z)));
+        ctx.lineTo(toX(critLow), toY(pdf(critLow)));
+        ctx.lineTo(toX(critLow), height - padding);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      if (critHigh !== null) {
+        ctx.beginPath();
+        ctx.moveTo(toX(critHigh), height - padding);
+        for (let z = critHigh; z <= zMax; z += 0.05) ctx.lineTo(toX(z), toY(pdf(z)));
+        ctx.lineTo(toX(zMax), toY(pdf(zMax)));
+        ctx.lineTo(toX(zMax), height - padding);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Draw Normal Curve
+      ctx.strokeStyle = '#58a6ff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let z = zMin; z <= zMax; z += 0.05) {
+        const x = toX(z);
+        const y = toY(pdf(z));
+        if (z === zMin) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Baseline
+      ctx.strokeStyle = '#30363d';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+
+      // Draw Z Stat Marker
+      const clampedZ = Math.max(zMin, Math.min(zMax, zStat));
+      ctx.strokeStyle = '#7ee787';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(toX(clampedZ), toY(pdf(clampedZ)));
+      ctx.lineTo(toX(clampedZ), height - padding);
+      ctx.stroke();
+
+      ctx.fillStyle = '#7ee787';
+      ctx.font = 'bold 11px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Z_stat = ${zStat.toFixed(2)}`, toX(clampedZ), toY(pdf(clampedZ)) - 8);
+
+      // Label critical regions
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '10px Inter, sans-serif';
+      [-3, -2, -1, 0, 1, 2, 3].forEach(z => {
+        ctx.fillText(`${z}σ`, toX(z), height - 12);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runHypoSim();
+    });
+  </script>
+</body>
+</html>

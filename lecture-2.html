@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Strings &amp; Conditional Statements | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-strings" class="sidebar-link">1. Strings &amp; Quoting Styles</a></li>
+        <li><a href="#escape-sequences" class="sidebar-link">2. Escape Sequence Characters</a></li>
+        <li><a href="#string-operations" class="sidebar-link">3. Concatenation &amp; String Length</a></li>
+        <li><a href="#indexing-immutability" class="sidebar-link">4. Indexing &amp; String Immutability</a></li>
+        <li><a href="#slicing" class="sidebar-link">5. String Slicing Substrings</a></li>
+        <li><a href="#negative-indexing" class="sidebar-link">6. Negative Indexing &amp; Slicing</a></li>
+        <li><a href="#string-methods" class="sidebar-link">7. Built-in String Functions &amp; Methods</a></li>
+        <li><a href="#conditionals-intro" class="sidebar-link">8. Decision Making &amp; Conditionals</a></li>
+        <li><a href="#indentation-rules" class="sidebar-link">9. Python Indentation Syntax Rules</a></li>
+        <li><a href="#if-elif-else" class="sidebar-link">10. The if-elif-else Control Flow</a></li>
+        <li><a href="#logical-operators-conditions" class="sidebar-link">11. Logical Operators in Conditions</a></li>
+        <li><a href="#nesting-conditionals" class="sidebar-link">12. Nesting Conditional Statements</a></li>
+        <li><a href="#tasks" class="sidebar-link">13. Practice Tasks &amp; Solutions</a></li>
+        <li><a href="#cheat-sheet" class="sidebar-link">14. Summary &amp; Quick Reference</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 02 Notes</span>
+          <span class="tag">Strings</span>
+          <span class="tag">Control Flow</span>
+          <span class="tag">PEP 8 Standard</span>
+          <span class="tag">6 Solved Tasks</span>
+        </div>
+        <h1 class="lecture-main-title">Strings &amp; Conditional Statements</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Strings are pieces of text (like words, sentences, or characters) wrapped in quotes, while Conditional Statements (<code>if</code>, <code>elif</code>, <code>else</code>) are decision-making tools that run specific code only when certain conditions are met.<br>
+          <strong>Why do we use it?</strong> We use strings to display messages and process text, and we use conditions to make programs intelligent—such as checking if a password is correct, verifying if someone is eligible to vote, or applying a discount at checkout.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHAT IS A STRING & CREATION SYNTAX -->
+      <!-- ============================================================ -->
+      <section id="intro-strings" class="note-section">
+        <h2><span class="section-number">01.</span> What is a String &amp; String Creation Syntax</h2>
+        
+        <h3>1. Formal Definition of String</h3>
+        <p>
+          In computer science and Python, a <strong>string</strong> is an ordered, immutable sequence of Unicode characters used to represent textual data. In Python's type hierarchy, strings belong to the built-in primitive class <code>str</code>.
+        </p>
+        <p>
+          A string can represent a single character (such as <code>'a'</code> or <code>'$'</code>), a single word (<code>'Python'</code>), an entire sentence, or multiple paragraphs containing alphanumeric characters, punctuation marks, symbols, and whitespace.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Key Property: Sequence Data Type</div>
+          <p>
+            Because a string is a <strong>sequence</strong>, Python maintains the exact positional order of every character. Each character occupies a discrete numerical position called an <em>index</em>, allowing efficient access, slicing, and pattern searching.
+          </p>
+        </div>
+
+        <h3>2. The Three String Quoting Syntaxes</h3>
+        <p>
+          Python provides three distinct syntactic notations for declaring string literals. All three instantiate standard <code>str</code> objects in memory:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Style</th>
+                <th>Syntax Example</th>
+                <th>Primary Use Case &amp; Characteristics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Double Quotes</strong></td>
+                <td><code>"Hello, World!"</code></td>
+                <td><strong>Industry Standard:</strong> Most widely used convention in Python codebases (PEP 8). Recommended for general strings.</td>
+              </tr>
+              <tr>
+                <td><strong>Single Quotes</strong></td>
+                <td><code>'Hello, World!'</code></td>
+                <td>Functionally identical to double quotes. Useful when the string literal contains double quote characters.</td>
+              </tr>
+              <tr>
+                <td><strong>Triple Quotes</strong></td>
+                <td><code>'''Text'''</code> or <code>"""Text"""</code></td>
+                <td>Supports <strong>multiline strings</strong> preserving embedded line breaks, whitespace, and docstrings for functions or classes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3. Why Does Python Support Three Different Quoting Styles?</h3>
+        <p>
+          The existence of three separate quoting mechanisms is an intentional language design choice to solve <strong>quotation conflict syntax errors</strong> without requiring awkward escape characters.
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Apostrophe / Inner Quotation Conflict</div>
+            <p>
+              If you define a string containing an apostrophe using single quotes, Python treats the apostrophe as the terminating delimiter, resulting in a <code>SyntaxError: invalid syntax</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># INVALID: The interpreter interprets 'This is apna college' as a string, leaving 's tutorial' dangling</span>
+<span class="com"># str_err = 'This is apna college's tutorial'  --> SyntaxError: invalid syntax</span>
+
+<span class="com"># CORRECT 1: Use double quotes when the string contains a single quote / apostrophe</span>
+<span class="var">str1</span> = <span class="str">"This is apna college's tutorial"</span>
+
+<span class="com"># CORRECT 2: Use single quotes when the string contains literal double quotes</span>
+<span class="var">str2</span> = <span class="str">'The instructor announced, "Welcome to Python Lecture 2."'</span>
+
+<span class="com"># CORRECT 3: Use triple quotes for multiline paragraphs or docstrings</span>
+<span class="var">str3</span> = <span class="str">'''This is a multiline string.
+It preserves line breaks,
+indentation, and embedded 'single' and "double" quotes cleanly.'''</span>
+
+<span class="func">print</span>(<span class="var">str1</span>)
+<span class="func">print</span>(<span class="var">str2</span>)
+<span class="func">print</span>(<span class="var">str3</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>This is apna college's tutorial</div>
+          <div>The instructor announced, "Welcome to Python Lecture 2."</div>
+          <div>This is a multiline string.</div>
+          <div>It preserves line breaks,</div>
+          <div>indentation, and embedded 'single' and "double" quotes cleanly.</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: ESCAPE SEQUENCE CHARACTERS -->
+      <!-- ============================================================ -->
+      <section id="escape-sequences" class="note-section">
+        <h2><span class="section-number">02.</span> Escape Sequence Characters</h2>
+        
+        <h3>1. What is an Escape Sequence?</h3>
+        <p>
+          An <strong>escape sequence</strong> is a special character combination consisting of a backslash (<code>\</code>) followed by a specific letter or symbol. When the Python parser encounters a backslash inside a string literal, it "escapes" normal character interpretation and treats the combination as a single non-printable control character.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Escape Code</th>
+                <th>Name / Function</th>
+                <th>Behavior in Console</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>\n</code></td>
+                <td><strong>Newline</strong></td>
+                <td>Moves the cursor to the beginning of the next line immediately.</td>
+              </tr>
+              <tr>
+                <td><code>\t</code></td>
+                <td><strong>Horizontal Tab</strong></td>
+                <td>Inserts a horizontal tab whitespace gap (equivalent to 4 to 8 space columns).</td>
+              </tr>
+              <tr>
+                <td><code>\\</code></td>
+                <td><strong>Backslash</strong></td>
+                <td>Renders a single literal backslash character (<code>\</code>).</td>
+              </tr>
+              <tr>
+                <td><code>\'</code></td>
+                <td><strong>Single Quote</strong></td>
+                <td>Renders a literal single quote inside single-quoted strings.</td>
+              </tr>
+              <tr>
+                <td><code>\"</code></td>
+                <td><strong>Double Quote</strong></td>
+                <td>Renders a literal double quote inside double-quoted strings.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Demonstrating \n (Newline) and \t (Horizontal Tab)</span>
+<span class="var">msg_newline</span> = <span class="str">"Hello World.\nThis text renders on a new line."</span>
+<span class="func">print</span>(<span class="var">msg_newline</span>)
+
+<span class="var">msg_tab</span> = <span class="str">"Column1\tColumn2\tColumn3"</span>
+<span class="func">print</span>(<span class="var">msg_tab</span>)
+
+<span class="com"># Escaping literal quotes and backslashes</span>
+<span class="var">file_path</span> = <span class="str">"C:\\Users\\Abhimanyu\\python_projects\\lecture2.py"</span>
+<span class="func">print</span>(<span class="str">"File Path:"</span>, <span class="var">file_path</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Hello World.</div>
+          <div>This text renders on a new line.</div>
+          <div>Column1	Column2	Column3</div>
+          <div>File Path: C:\Users\Abhimanyu\python_projects\lecture2.py</div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Length Rule for Escape Sequences</div>
+            <p>
+              Although an escape sequence is written using two physical keystrokes (e.g. <code>\</code> and <code>n</code>), Python encodes it into memory as a <strong>single</strong> character. Therefore, <code>len("A\nB")</code> evaluates to <code>3</code>, not <code>4</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: BASIC STRING OPERATIONS -->
+      <!-- ============================================================ -->
+      <section id="string-operations" class="note-section">
+        <h2><span class="section-number">03.</span> Basic String Operations: Concatenation &amp; Length</h2>
+        
+        <h3>1. String Concatenation (<code>+</code> Operator)</h3>
+        <p>
+          <strong>Concatenation</strong> is the operation of joining two or more strings together end-to-end to form a single cohesive string. In Python, concatenation is performed using the addition operator (<code>+</code>) when both operands are of type <code>str</code>.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">str1</span> = <span class="str">"apna"</span>
+<span class="var">str2</span> = <span class="str">"college"</span>
+
+<span class="com"># Concatenation without space</span>
+<span class="var">final_str1</span> = <span class="var">str1</span> + <span class="var">str2</span>
+<span class="func">print</span>(<span class="var">final_str1</span>)  <span class="com"># Outputs: apnacollege</span>
+
+<span class="com"># Concatenation with an intermediate whitespace literal</span>
+<span class="var">final_str2</span> = <span class="var">str1</span> + <span class="str">" "</span> + <span class="var">str2</span>
+<span class="func">print</span>(<span class="var">final_str2</span>)  <span class="com"># Outputs: apna college</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>apnacollege</div>
+          <div>apna college</div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">Type Strictness in Concatenation</div>
+            <p>
+              Python does not automatically convert numbers to strings during concatenation. Attempting <code>"Score: " + 100</code> triggers a <code>TypeError: can only concatenate str (not "int") to str</code>. You must explicitly convert non-string variables using <code>str(100)</code> or separate arguments in <code>print("Score:", 100)</code>.
+            </p>
+          </div>
+        </div>
+
+        <h3>2. String Length: The <code>len()</code> Function</h3>
+        <p>
+          Python provides a built-in function named <code>len()</code> that accepts any sequential collection (such as a string, list, or tuple) and returns the total number of elements (characters) contained within it as an integer.
+        </p>
+        <p>
+          <strong>Syntax:</strong> <code>len(string_object)</code>
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Critical Counting Rule: Whitespace Counts as Characters</div>
+          <p>
+            The <code>len()</code> function counts <em>all</em> Unicode characters, including blank spaces, tabs, digits, and punctuation marks. Never forget to count spaces when analyzing string length:
+          </p>
+          <ul>
+            <li><code>len("apna")</code> &rarr; <code>4</code> characters</li>
+            <li><code>len("college")</code> &rarr; <code>7</code> characters</li>
+            <li><code>len("apna college")</code> &rarr; <code>4 + 1 (space) + 7 = 12</code> characters</li>
+          </ul>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">first_name</span> = <span class="str">"Shradha"</span>
+<span class="var">last_name</span> = <span class="str">"Khapra"</span>
+
+<span class="var">len1</span> = <span class="func">len</span>(<span class="var">first_name</span>)
+<span class="var">len2</span> = <span class="func">len</span>(<span class="var">last_name</span>)
+
+<span class="func">print</span>(<span class="str">"Length of first name:"</span>, <span class="var">len1</span>)
+<span class="func">print</span>(<span class="str">"Length of last name:"</span>, <span class="var">len2</span>)
+
+<span class="var">full_name</span> = <span class="var">first_name</span> + <span class="str">" "</span> + <span class="var">last_name</span>
+<span class="func">print</span>(<span class="str">"Full name:"</span>, <span class="var">full_name</span>)
+<span class="func">print</span>(<span class="str">"Total combined length:"</span>, <span class="func">len</span>(<span class="var">full_name</span>))</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Length of first name: 7</div>
+          <div>Length of last name: 6</div>
+          <div>Full name: Shradha Khapra</div>
+          <div>Total combined length: 14</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: INDEXING & IMMUTABILITY -->
+      <!-- ============================================================ -->
+      <section id="indexing-immutability" class="note-section">
+        <h2><span class="section-number">04.</span> String Indexing &amp; String Immutability</h2>
+        
+        <h3>1. Zero-Based Positive Indexing</h3>
+        <p>
+          In Python, positions in a sequence are zero-indexed. This means that the first character of a string is located at index <code>0</code>, the second character at index <code>1</code>, and the final character is always located at index <code>len(string) - 1</code>.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Memory Representation of String Indexing</div>
+          <p>Consider the string literal <code>"apna_college"</code> (length = 12):</p>
+          <div style="overflow-x: auto; margin-top: 0.75rem;">
+            <table style="text-align: center; font-family: var(--font-mono); font-size: 0.9rem;">
+              <tr style="background: var(--bg-secondary);">
+                <th style="padding: 6px 12px;">Character</th>
+                <td style="padding: 6px 10px;">a</td>
+                <td style="padding: 6px 10px;">p</td>
+                <td style="padding: 6px 10px;">n</td>
+                <td style="padding: 6px 10px;">a</td>
+                <td style="padding: 6px 10px;">_</td>
+                <td style="padding: 6px 10px;">c</td>
+                <td style="padding: 6px 10px;">o</td>
+                <td style="padding: 6px 10px;">l</td>
+                <td style="padding: 6px 10px;">l</td>
+                <td style="padding: 6px 10px;">e</td>
+                <td style="padding: 6px 10px;">g</td>
+                <td style="padding: 6px 10px;">e</td>
+              </tr>
+              <tr>
+                <th style="padding: 6px 12px; background: var(--bg-secondary);">Index</th>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">0</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">1</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">2</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">3</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">4</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">5</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">6</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">7</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">8</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">9</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">10</td>
+                <td style="padding: 6px 10px; color: var(--accent-blue);">11</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <p>
+          To access an individual character at a specific position, write the string variable name followed by square brackets enclosing the index: <code>str[index]</code>.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">text</span> = <span class="str">"apna_college"</span>
+
+<span class="func">print</span>(<span class="str">"Character at index 0:"</span>, <span class="var">text</span>[<span class="num">0</span>])   <span class="com"># 'a'</span>
+<span class="func">print</span>(<span class="str">"Character at index 2:"</span>, <span class="var">text</span>[<span class="num">2</span>])   <span class="com"># 'n'</span>
+<span class="func">print</span>(<span class="str">"Character at index 5:"</span>, <span class="var">text</span>[<span class="num">5</span>])   <span class="com"># 'c'</span>
+<span class="func">print</span>(<span class="str">"Character at index 11:"</span>, <span class="var">text</span>[<span class="num">11</span>]) <span class="com"># 'e'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Character at index 0: a</div>
+          <div>Character at index 2: n</div>
+          <div>Character at index 5: c</div>
+          <div>Character at index 11: e</div>
+        </div>
+
+        <h3>2. String Immutability: Read-Only Access</h3>
+        <p>
+          One of the foundational rules of the Python language is that <strong>strings are strictly immutable</strong>. Immutability means that once a string object has been created in memory, its contents cannot be altered, replaced, or modified in place.
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">Prohibited Operation: Item Assignment</div>
+            <p>
+              You can <em>access</em> any character using its index (e.g., <code>ch = text[0]</code>), but you CANNOT <em>reassign</em> a character (e.g., <code>text[0] = 'b'</code>). Doing so will immediately crash your program with a <code>TypeError: 'str' object does not support item assignment</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">name</span> = <span class="str">"apna"</span>
+
+<span class="com"># Reading a character is completely valid</span>
+<span class="func">print</span>(<span class="var">name</span>[<span class="num">0</span>])  <span class="com"># Output: 'a'</span>
+
+<span class="com"># Attempting to mutate an existing character triggers an error:</span>
+<span class="com"># name[0] = 'b'</span>
+<span class="com"># Python Interpreter Exception:</span>
+<span class="com"># TypeError: 'str' object does not support item assignment</span></code></pre>
+        </div>
+
+        <p>
+          <strong>Why are strings immutable in Python?</strong> Immutability guarantees memory safety, enables string interning (caching identical strings in a single memory address to save RAM), allows strings to be safely used as dictionary keys and set elements (which require constant hash values), and prevents unexpected side-effects across multi-threaded applications.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: STRING SLICING -->
+      <!-- ============================================================ -->
+      <section id="slicing" class="note-section">
+        <h2><span class="section-number">05.</span> String Slicing Substrings</h2>
+        
+        <h3>1. What is Slicing?</h3>
+        <p>
+          While indexing allows retrieving a single character, <strong>slicing</strong> allows extracting a continuous subsection (a substring) of a string.
+        </p>
+        <p>
+          <strong>Formal Syntax:</strong> <code>string[starting_index : ending_index]</code>
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Golden Rule of Slicing Boundaries</div>
+          <p>
+            In Python slicing:
+          </p>
+          <ul>
+            <li><code>starting_index</code> is <strong>INCLUSIVE</strong> (the character at this index is included in the resulting substring).</li>
+            <li><code>ending_index</code> is <strong>EXCLUSIVE</strong> (the character at this index is excluded; the slice halts at <code>ending_index - 1</code>).</li>
+            <li><strong>Slice Length Formula:</strong> The number of characters in the resulting slice is always equal to <code>(ending_index - starting_index)</code>.</li>
+          </ul>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">str_val</span> = <span class="str">"ApnaCollege"</span>
+<span class="com"># Indices:  012345678910</span>
+<span class="com"># Characters: A p n a C o l l e g e</span>
+
+<span class="com"># Slice from index 1 up to index 4 (exclusive of 4: characters 1, 2, 3)</span>
+<span class="func">print</span>(<span class="var">str_val</span>[<span class="num">1</span>:<span class="num">4</span>])   <span class="com"># 'pna' (length = 4 - 1 = 3)</span>
+
+<span class="com"># Slice from index 0 up to index 4 (exclusive of 4: characters 0, 1, 2, 3)</span>
+<span class="func">print</span>(<span class="var">str_val</span>[<span class="num">0</span>:<span class="num">4</span>])   <span class="com"># 'Apna'</span>
+
+<span class="com"># Slice from index 4 up to index 11</span>
+<span class="func">print</span>(<span class="var">str_val</span>[<span class="num">4</span>:<span class="num">11</span>])  <span class="com"># 'College'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>pna</div>
+          <div>Apna</div>
+          <div>College</div>
+        </div>
+
+        <h3>2. Slicing with Omitted Indices (Default Behaviors)</h3>
+        <p>
+          Python allows developers to omit either the <code>starting_index</code>, the <code>ending_index</code>, or both. The interpreter automatically substitutes default boundary values:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Syntax Pattern</th>
+                <th>Equivalent Explicit Form</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>str[:ending_idx]</code></td>
+                <td><code>str[0 : ending_idx]</code></td>
+                <td>Omitted start index automatically defaults to <code>0</code> (starts at the very beginning).</td>
+              </tr>
+              <tr>
+                <td><code>str[starting_idx:]</code></td>
+                <td><code>str[starting_idx : len(str)]</code></td>
+                <td>Omitted end index automatically defaults to <code>len(str)</code> (slices through the final character).</td>
+              </tr>
+              <tr>
+                <td><code>str[:]</code></td>
+                <td><code>str[0 : len(str)]</code></td>
+                <td>Both omitted: produces a complete copy of the entire string from index 0 to the end.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">text</span> = <span class="str">"Apple"</span>
+<span class="com"># Indices: 01234 (len = 5)</span>
+
+<span class="com"># 1. Omitting start index: defaults to 0</span>
+<span class="func">print</span>(<span class="var">text</span>[:<span class="num">4</span>])   <span class="com"># Equivalent to text[0:4] -> 'Appl'</span>
+
+<span class="com"># 2. Omitting end index: defaults to len(text) (5)</span>
+<span class="func">print</span>(<span class="var">text</span>[<span class="num">1</span>:])   <span class="com"># Equivalent to text[1:5] -> 'pple'</span>
+
+<span class="com"># 3. Omitting both:</span>
+<span class="func">print</span>(<span class="var">text</span>[:])    <span class="com"># Equivalent to text[0:5] -> 'Apple'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Appl</div>
+          <div>pple</div>
+          <div>Apple</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: NEGATIVE INDEXING & NEGATIVE SLICING -->
+      <!-- ============================================================ -->
+      <section id="negative-indexing" class="note-section">
+        <h2><span class="section-number">06.</span> Negative Indexing &amp; Negative Slicing</h2>
+        
+        <h3>1. The Concept of Negative Indexing</h3>
+        <p>
+          Unlike many traditional languages (such as C, C++, or Java) where negative indices are illegal and cause memory segmentation or bounds exceptions, Python provides first-class support for <strong>negative indexing</strong>.
+        </p>
+        <p>
+          Negative indices count backwards from the end of the sequence:
+        </p>
+        <ul>
+          <li>Index <code>-1</code> always references the <strong>last character</strong> of the string.</li>
+          <li>Index <code>-2</code> references the <strong>second-to-last character</strong>.</li>
+          <li>Index <code>-len(str)</code> references the <strong>first character</strong> of the string.</li>
+        </ul>
+
+        <div class="concept-box">
+          <div class="concept-title">Dual Indexing Mental Model: Positive vs Negative</div>
+          <p>Consider the 5-letter word <code>"Apple"</code>:</p>
+          <div style="overflow-x: auto; margin-top: 0.75rem;">
+            <table style="text-align: center; font-family: var(--font-mono); font-size: 0.9rem;">
+              <tr style="background: var(--bg-secondary);">
+                <th style="padding: 6px 14px;">Character</th>
+                <td style="padding: 6px 14px; font-weight: bold;">A</td>
+                <td style="padding: 6px 14px; font-weight: bold;">p</td>
+                <td style="padding: 6px 14px; font-weight: bold;">p</td>
+                <td style="padding: 6px 14px; font-weight: bold;">l</td>
+                <td style="padding: 6px 14px; font-weight: bold;">e</td>
+              </tr>
+              <tr>
+                <th style="padding: 6px 14px; background: var(--bg-secondary);">Positive Index (Left &rarr; Right)</th>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">0</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">1</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">2</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">3</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">4</td>
+              </tr>
+              <tr>
+                <th style="padding: 6px 14px; background: var(--bg-secondary);">Negative Index (Right &rarr; Left)</th>
+                <td style="padding: 6px 14px; color: #ff7b72;">-5</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-4</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-3</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-2</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-1</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <h3>2. Why Negative Indexing is Invaluable in Production</h3>
+        <p>
+          In production software, input strings (such as user names, uploaded file paths, or API tokens) have unpredictable lengths. To retrieve the final character without negative indexing, one must write verbose boilerplate: <code>text[len(text) - 1]</code>. With Python's negative indexing, this is expressed elegantly as <code>text[-1]</code>.
+        </p>
+
+        <h3>3. Slicing with Negative Indices</h3>
+        <p>
+          Negative indices can be passed directly as slice bounds. The same rule applies: execution proceeds strictly from <strong>left to right</strong>, where the start index is inclusive and the end index is exclusive.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">word</span> = <span class="str">"Apple"</span>
+
+<span class="com"># Slice from index -3 ('p') up to -1 ('e', exclusive)</span>
+<span class="func">print</span>(<span class="var">word</span>[-<span class="num">3</span>:-<span class="num">1</span>])  <span class="com"># Outputs: 'pl'</span>
+
+<span class="com"># Slice from index -5 ('A') up to -2 ('l', exclusive)</span>
+<span class="func">print</span>(<span class="var">word</span>[-<span class="num">5</span>:-<span class="num">2</span>])  <span class="com"># Outputs: 'App'</span>
+
+<span class="com"># Extract the last 3 characters using an omitted end index</span>
+<span class="func">print</span>(<span class="var">word</span>[-<span class="num">3</span>:])   <span class="com"># Outputs: 'ple'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>pl</div>
+          <div>App</div>
+          <div>ple</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: STRING FUNCTIONS & METHODS -->
+      <!-- ============================================================ -->
+      <section id="string-methods" class="note-section">
+        <h2><span class="section-number">07.</span> Built-in String Functions &amp; Methods</h2>
+        
+        <h3>1. Difference Between a Function and a Method</h3>
+        <p>
+          Before examining string operations, understand the technical difference in Python terminology:
+        </p>
+        <ul>
+          <li><strong>Function:</strong> A standalone callable routine that exists independently and takes arguments directly. Example: <code>len(str)</code>, <code>print(str)</code>, <code>type(str)</code>.</li>
+          <li><strong>Method:</strong> A specialized function bound to an object class. Methods are invoked specifically on an instance of that class using the dot notation (<code>object.method_name()</code>). Example: <code>str.capitalize()</code>, <code>str.find()</code>.</li>
+        </ul>
+
+        <div class="concept-box">
+          <div class="concept-title">Fundamental Architecture: Methods Never Mutate the Original String</div>
+          <p>
+            Because strings are immutable, <strong>no string method modifies the original string in memory</strong>. Every method computes its result and returns a <strong>brand-new string or value</strong>. If you wish to preserve the modified string, you must rebind the variable reference:
+          </p>
+          <code>str = str.capitalize()  # Rebinds variable 'str' to the new modified string object</code>
+        </div>
+
+        <h3>2. Deep Dive into the 5 Core String Methods</h3>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method Syntax</th>
+                <th>Return Type</th>
+                <th>Technical Operation &amp; Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>str.endswith(substr)</code></td>
+                <td><code>bool</code></td>
+                <td>Returns <code>True</code> if the string ends with the specified substring, otherwise <code>False</code>. Case-sensitive.</td>
+              </tr>
+              <tr>
+                <td><code>str.capitalize()</code></td>
+                <td><code>str</code></td>
+                <td>Returns a copy where the 1st character is uppercase and all remaining characters are converted to lowercase.</td>
+              </tr>
+              <tr>
+                <td><code>str.replace(old, new)</code></td>
+                <td><code>str</code></td>
+                <td>Returns a copy where all occurrences of the substring <code>old</code> are replaced by <code>new</code>.</td>
+              </tr>
+              <tr>
+                <td><code>str.find(substr)</code></td>
+                <td><code>int</code></td>
+                <td>Returns the 0-based index of the <strong>first occurrence</strong> of <code>substr</code>. Returns <code>-1</code> if not found.</td>
+              </tr>
+              <tr>
+                <td><code>str.count(substr)</code></td>
+                <td><code>int</code></td>
+                <td>Counts and returns the total frequency of non-overlapping occurrences of <code>substr</code> in the string.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">sentence</span> = <span class="str">"i am studying python from Apna College"</span>
+
+<span class="com"># 1. str.endswith()</span>
+<span class="func">print</span>(<span class="str">"Ends with 'College':"</span>, <span class="var">sentence</span>.<span class="func">endswith</span>(<span class="str">"College"</span>)) <span class="com"># True</span>
+<span class="func">print</span>(<span class="str">"Ends with 'ege':"</span>, <span class="var">sentence</span>.<span class="func">endswith</span>(<span class="str">"ege"</span>))         <span class="com"># True</span>
+<span class="func">print</span>(<span class="str">"Ends with 'python':"</span>, <span class="var">sentence</span>.<span class="func">endswith</span>(<span class="str">"python"</span>))   <span class="com"># False</span>
+
+<span class="com"># 2. str.capitalize()</span>
+<span class="var">cap_result</span> = <span class="var">sentence</span>.<span class="func">capitalize</span>()
+<span class="func">print</span>(<span class="str">"Capitalized copy:"</span>, <span class="var">cap_result</span>)
+<span class="func">print</span>(<span class="str">"Original unchanged:"</span>, <span class="var">sentence</span>)  <span class="com"># Original still starts with lowercase 'i'</span>
+
+<span class="com"># 3. str.replace(old, new)</span>
+<span class="var">modified</span> = <span class="var">sentence</span>.<span class="func">replace</span>(<span class="str">"python"</span>, <span class="str">"JavaScript"</span>)
+<span class="func">print</span>(<span class="str">"Replaced string:"</span>, <span class="var">modified</span>)
+
+<span class="com"># Replace single characters across the entire string</span>
+<span class="var">all_o_replaced</span> = <span class="var">sentence</span>.<span class="func">replace</span>(<span class="str">"o"</span>, <span class="str">"0"</span>)
+<span class="func">print</span>(<span class="str">"Replaced 'o' with '0':"</span>, <span class="var">all_o_replaced</span>)
+
+<span class="com"># 4. str.find(substr)</span>
+<span class="func">print</span>(<span class="str">"Index of 'python':"</span>, <span class="var">sentence</span>.<span class="func">find</span>(<span class="str">"python"</span>))       <span class="com"># Index 14</span>
+<span class="func">print</span>(<span class="str">"Index of letter 'a':"</span>, <span class="var">sentence</span>.<span class="func">find</span>(<span class="str">"a"</span>))          <span class="com"># First occurrence at index 2 ('am')</span>
+<span class="func">print</span>(<span class="str">"Index of 'Java' (missing):"</span>, <span class="var">sentence</span>.<span class="func">find</span>(<span class="str">"Java"</span>))  <span class="com"># Returns -1</span>
+
+<span class="com"># 5. str.count(substr)</span>
+<span class="func">print</span>(<span class="str">"Count of 'o':"</span>, <span class="var">sentence</span>.<span class="func">count</span>(<span class="str">"o"</span>))                <span class="com"># 3 occurrences</span>
+<span class="func">print</span>(<span class="str">"Count of word 'from':"</span>, <span class="var">sentence</span>.<span class="func">count</span>(<span class="str">"from"</span>))     <span class="com"># 1 occurrence</span>
+<span class="func">print</span>(<span class="str">"Count of 'xyz':"</span>, <span class="var">sentence</span>.<span class="func">count</span>(<span class="str">"xyz"</span>))            <span class="com"># 0 occurrences</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Ends with 'College': True</div>
+          <div>Ends with 'ege': True</div>
+          <div>Ends with 'python': False</div>
+          <div>Capitalized copy: I am studying python from apna college</div>
+          <div>Original unchanged: i am studying python from Apna College</div>
+          <div>Replaced string: i am studying JavaScript from Apna College</div>
+          <div>Replaced 'o' with '0': i am studying pyth0n fr0m Apna C0llege</div>
+          <div>Index of 'python': 14</div>
+          <div>Index of letter 'a': 2</div>
+          <div>Index of 'Java' (missing): -1</div>
+          <div>Count of 'o': 3</div>
+          <div>Count of word 'from': 1</div>
+          <div>Count of 'xyz': 0</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: INTRODUCTION TO CONDITIONALS -->
+      <!-- ============================================================ -->
+      <section id="conditionals-intro" class="note-section">
+        <h2><span class="section-number">08.</span> Decision Making &amp; Conditional Statements</h2>
+        
+        <h3>1. What are Conditional Statements?</h3>
+        <p>
+          In standard program execution, instructions run strictly sequentially line-by-line from top to bottom. However, real-world software requires <strong>decision-making logic</strong>—executing certain routines only when specific criteria are satisfied, and bypassing them otherwise.
+        </p>
+        <p>
+          <strong>Conditional statements</strong> inspect expressions that evaluate to boolean truth values (<code>True</code> or <code>False</code>). Based on the evaluation, control flow branches dynamically into alternate code blocks.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Three Conditional Keywords</div>
+          <ul>
+            <li><code>if</code>: The mandatory opening condition. Tests an initial boolean proposition.</li>
+            <li><code>elif</code>: Short for "else if". Evaluated sequentially only if all preceding <code>if</code> and <code>elif</code> statements evaluated to <code>False</code>.</li>
+            <li><code>else</code>: The catch-all fallback block. Executes if and only if every single preceding condition evaluated to <code>False</code>.</li>
+          </ul>
+        </div>
+
+        <h3>2. Real-World Decision Examples</h3>
+        <p>
+          Consider the everyday decisions we model in software:
+        </p>
+        <ul>
+          <li><strong>Traffic Light Controller:</strong> If light is <code>"red"</code> &rarr; Stop. Else if light is <code>"yellow"</code> &rarr; Look / Slow down. Else if light is <code>"green"</code> &rarr; Go.</li>
+          <li><strong>Voting Eligibility:</strong> If <code>age >= 18</code> &rarr; Eligible to vote. Else &rarr; Not eligible.</li>
+          <li><strong>Access Control:</strong> If user is authenticated and is an admin &rarr; Display dashboard. Else &rarr; Redirect to login.</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Simple Voting Eligibility Check</span>
+<span class="var">age</span> = <span class="num">21</span>
+
+<span class="kw">if</span> <span class="var">age</span> >= <span class="num">18</span>:
+    <span class="func">print</span>(<span class="str">"User can vote"</span>)
+    <span class="func">print</span>(<span class="str">"User can apply for a driving license"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"User is underage and cannot vote yet"</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>User can vote</div>
+          <div>User can apply for a driving license</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PYTHON INDENTATION SYNTAX RULES -->
+      <!-- ============================================================ -->
+      <section id="indentation-rules" class="note-section">
+        <h2><span class="section-number">09.</span> Python Indentation Syntax Rules</h2>
+        
+        <h3>1. Scope Definition: Whitespace vs. Curly Braces</h3>
+        <p>
+          In languages derived from C (such as C++, Java, C#, and JavaScript), the boundaries of code blocks are delineated using curly braces <code>{ }</code>. In Python, Guido van Rossum eliminated curly braces to enforce readability: <strong>Python uses indentation (leading whitespace) to define block scope.</strong>
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Language Paradigm</th>
+                <th>Syntax Example</th>
+                <th>Block Scope Delimiter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>C / C++ / Java</strong></td>
+                <td>
+                  <code>if (age >= 18) {<br>&nbsp;&nbsp;printf("Can vote");<br>}</code>
+                </td>
+                <td>Curly braces <code>{ ... }</code> (indentation is purely cosmetic)</td>
+              </tr>
+              <tr>
+                <td><strong>Python (PEP 8)</strong></td>
+                <td>
+                  <code>if age >= 18:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Can vote")</code>
+                </td>
+                <td>Colon <code>:</code> followed by <strong>4 leading spaces</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. The Three Indentation Rules in Python</h3>
+        <ol>
+          <li>
+            <strong>The Mandatory Colon (<code>:</code>):</strong> Every control header statement (such as <code>if</code>, <code>elif</code>, <code>else</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>class</code>) <em>must</em> end with a colon. The colon signals the parser that an indented block follows immediately.
+          </li>
+          <li>
+            <strong>Consistent 4-Space Standard:</strong> The official Python Style Guide (PEP 8) mandates exactly <strong>4 spaces</strong> per indentation level. While the tab key can be configured in editors like VS Code to insert 4 spaces, you must never mix literal tab characters and spaces in the same file.
+          </li>
+          <li>
+            <strong>Indentation Uniformity:</strong> All statements belonging to the same logical block must share the exact same column indentation. Any stray space triggers an <code>IndentationError</code>.
+          </li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">Common Indentation Errors</div>
+            <ul style="margin-bottom: 0; padding-left: 1.25rem;">
+              <li><code>IndentationError: expected an indented block after 'if' statement</code>: Occurs when an <code>if</code> statement has no indented body.</li>
+              <li><code>IndentationError: unindent does not match any outer indentation level</code>: Occurs when closing an indented block with inconsistent space counts.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: THE IF-ELIF-ELSE CONTROL FLOW -->
+      <!-- ============================================================ -->
+      <section id="if-elif-else" class="note-section">
+        <h2><span class="section-number">10.</span> The if-elif-else Control Flow</h2>
+        
+        <h3>1. The Execution Lifecycle of an if-elif-else Chain</h3>
+        <p>
+          An <code>if-elif-else</code> chain executes as a mutually exclusive pipeline:
+        </p>
+        <ol>
+          <li>The initial <code>if</code> condition is evaluated. If it evaluates to <code>True</code>, its associated indented block executes, and <strong>the entire remaining chain (all <code>elif</code> and <code>else</code> blocks) is immediately bypassed</strong>.</li>
+          <li>If the <code>if</code> condition evaluates to <code>False</code>, the interpreter moves down to the first <code>elif</code> statement.</li>
+          <li>Subsequent <code>elif</code> statements are evaluated in order until a condition evaluates to <code>True</code>.</li>
+          <li>If and only if <strong>all</strong> <code>if</code> and <code>elif</code> conditions evaluate to <code>False</code>, the terminal <code>else</code> block executes.</li>
+        </ol>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Classic Traffic Light Controller</span>
+<span class="var">light</span> = <span class="str">"green"</span>
+
+<span class="kw">if</span> <span class="var">light</span> == <span class="str">"red"</span>:
+    <span class="func">print</span>(<span class="str">"Stop"</span>)
+<span class="kw">elif</span> <span class="var">light</span> == <span class="str">"yellow"</span>:
+    <span class="func">print</span>(<span class="str">"Look / Slow Down"</span>)
+<span class="kw">elif</span> <span class="var">light</span> == <span class="str">"green"</span>:
+    <span class="func">print</span>(<span class="str">"Go"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"Invalid traffic light color!"</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Go</div>
+        </div>
+
+        <h3>2. Architectural Comparison: Chained if-elif vs. Multiple Independent if Statements</h3>
+        <p>
+          A frequent source of logical bugs for beginners is confusing a chain of <code>if-elif</code> statements with multiple independent <code>if</code> statements.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Execution Mechanics Compared</div>
+          <ul>
+            <li><strong>Multiple Independent <code>if</code> Statements:</strong> The Python interpreter evaluates <em>every single</em> <code>if</code> statement regardless of whether earlier conditions evaluated to <code>True</code>. Multiple blocks can execute.</li>
+            <li><strong>Chained <code>if-elif-else</code> Statement:</strong> The conditions are mutually exclusive. <em>At most one</em> block can ever execute. As soon as one branch triggers, the rest of the chain is skipped.</li>
+          </ul>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">num</span> = <span class="num">5</span>
+
+<span class="func">print</span>(<span class="str">"--- DEMO A: Multiple Independent if Statements ---"</span>)
+<span class="kw">if</span> <span class="var">num</span> > <span class="num">2</span>:
+    <span class="func">print</span>(<span class="str">"Condition 1: Greater than 2"</span>)
+<span class="kw">if</span> <span class="var">num</span> > <span class="num">3</span>:
+    <span class="func">print</span>(<span class="str">"Condition 2: Greater than 3"</span>)
+<span class="kw">if</span> <span class="var">num</span> > <span class="num">4</span>:
+    <span class="func">print</span>(<span class="str">"Condition 3: Greater than 4"</span>)
+
+<span class="func">print</span>(<span class="str">"\n--- DEMO B: Chained if-elif-else ---"</span>)
+<span class="kw">if</span> <span class="var">num</span> > <span class="num">2</span>:
+    <span class="func">print</span>(<span class="str">"Branch 1: Greater than 2 (CHAIN HALTS HERE)"</span>)
+<span class="kw">elif</span> <span class="var">num</span> > <span class="num">3</span>:
+    <span class="func">print</span>(<span class="str">"Branch 2: Greater than 3"</span>)
+<span class="kw">elif</span> <span class="var">num</span> > <span class="num">4</span>:
+    <span class="func">print</span>(<span class="str">"Branch 3: Greater than 4"</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>--- DEMO A: Multiple Independent if Statements ---</div>
+          <div>Condition 1: Greater than 2</div>
+          <div>Condition 2: Greater than 3</div>
+          <div>Condition 3: Greater than 4</div>
+          <div><br></div>
+          <div>--- DEMO B: Chained if-elif-else ---</div>
+          <div>Branch 1: Greater than 2 (CHAIN HALTS HERE)</div>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">✅</div>
+          <div class="callout-content">
+            <div class="callout-title">Best Practice: Chained vs. Independent if Statements</div>
+            <p>
+              Use multiple independent <code>if</code> statements when conditions are orthogonal and several actions can run concurrently. Use <code>if-elif-else</code> when categories are mutually exclusive and only one branch should execute.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: LOGICAL OPERATORS WITH CONDITIONS -->
+      <!-- ============================================================ -->
+      <section id="logical-operators-conditions" class="note-section">
+        <h2><span class="section-number">11.</span> Logical Operators in Conditions</h2>
+        
+        <h3>1. Combining Compound Conditions</h3>
+        <p>
+          Real-world decision logic frequently requires testing multiple conditions simultaneously. Python provides three logical operators:
+        </p>
+        <ul>
+          <li><code>and</code>: Returns <code>True</code> if and only if <strong>both</strong> conditions evaluate to <code>True</code>.</li>
+          <li><code>or</code>: Returns <code>True</code> if <strong>at least one</strong> condition evaluates to <code>True</code>.</li>
+          <li><code>not</code>: Reverses the boolean truth value of the operand (<code>not True</code> is <code>False</code>).</li>
+        </ul>
+
+        <h3>2. Case Study: University Student Grading System</h3>
+        <p>
+          Consider the standard grading matrix used in academic institutions:
+        </p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Marks Range</th>
+                <th>Compound Condition</th>
+                <th>Assigned Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>90 and above</td>
+                <td><code>marks &gt;= 90</code></td>
+                <td><strong>Grade A</strong></td>
+              </tr>
+              <tr>
+                <td>80 to 89</td>
+                <td><code>marks &gt;= 80 and marks &lt; 90</code></td>
+                <td><strong>Grade B</strong></td>
+              </tr>
+              <tr>
+                <td>70 to 79</td>
+                <td><code>marks &gt;= 70 and marks &lt; 80</code></td>
+                <td><strong>Grade C</strong></td>
+              </tr>
+              <tr>
+                <td>Below 70</td>
+                <td><code>marks &lt; 70</code></td>
+                <td><strong>Grade D</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Comprehensive Student Grading System</span>
+<span class="var">marks</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter student marks (0-100): "</span>))
+
+<span class="kw">if</span> <span class="var">marks</span> >= <span class="num">90</span>:
+    <span class="var">grade</span> = <span class="str">"A"</span>
+<span class="kw">elif</span> <span class="var">marks</span> >= <span class="num">80</span> <span class="kw">and</span> <span class="var">marks</span> < <span class="num">90</span>:
+    <span class="var">grade</span> = <span class="str">"B"</span>
+<span class="kw">elif</span> <span class="var">marks</span> >= <span class="num">70</span> <span class="kw">and</span> <span class="var">marks</span> < <span class="num">80</span>:
+    <span class="var">grade</span> = <span class="str">"C"</span>
+<span class="kw">else</span>:
+    <span class="var">grade</span> = <span class="str">"D"</span>
+
+<span class="func">print</span>(<span class="str">"Evaluated Grade:"</span>, <span class="var">grade</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Sample Terminal Run:</span>
+          <div>Enter student marks (0-100): 85.5</div>
+          <div>Evaluated Grade: B</div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Pythonic Chained Comparisons</div>
+            <p>
+              Python uniquely supports mathematical chained comparison syntax: <code>80 &lt;= marks &lt; 90</code> is completely valid and equivalent to <code>marks &gt;= 80 and marks &lt; 90</code>. Both forms are accepted and evaluated efficiently.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: NESTING CONDITIONAL STATEMENTS -->
+      <!-- ============================================================ -->
+      <section id="nesting-conditionals" class="note-section">
+        <h2><span class="section-number">12.</span> Nesting Conditional Statements</h2>
+        
+        <h3>1. What is Nesting?</h3>
+        <p>
+          <strong>Nesting</strong> refers to the practice of embedding one conditional block entirely inside another conditional block. This allows developers to construct hierarchical, multi-tiered decision trees where a secondary condition is only evaluated if a primary condition passes.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Indentation Rules for Nested Blocks</div>
+          <p>
+            With each deeper level of nesting, Python requires an additional level of indentation:
+          </p>
+          <ul>
+            <li>Outer level: <code>0 spaces</code></li>
+            <li>First conditional block: <code>4 spaces</code></li>
+            <li>Nested conditional header: <code>4 spaces</code></li>
+            <li>Nested conditional body: <code>8 spaces</code></li>
+          </ul>
+        </div>
+
+        <h3>2. Case Study: Driving Eligibility &amp; Senior Assessment</h3>
+        <p>
+          Suppose an agency requires applicants to be at least 18 years old to drive. Furthermore, if the applicant is 80 years old or above, they are legally eligible but must be issued a notice for an annual senior cognitive and health evaluation.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">age</span> = <span class="num">82</span>
+
+<span class="kw">if</span> <span class="var">age</span> >= <span class="num">18</span>:
+    <span class="com"># Inner Nested Condition (Evaluated only if age >= 18)</span>
+    <span class="kw">if</span> <span class="var">age</span> >= <span class="num">80</span>:
+        <span class="func">print</span>(<span class="str">"Status: Eligible to drive."</span>)
+        <span class="func">print</span>(<span class="str">"Notice: Annual senior medical fitness certification required."</span>)
+    <span class="kw">else</span>:
+        <span class="func">print</span>(<span class="str">"Status: Fully eligible to drive without additional clearance."</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"Status: Ineligible to drive. Applicant must be at least 18 years old."</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output (for age = 82):</span>
+          <div>Status: Eligible to drive.</div>
+          <div>Notice: Annual senior medical fitness certification required.</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: PRACTICE TASKS & SOLUTIONS -->
+      <!-- ============================================================ -->
+      <section id="tasks" class="note-section">
+        <h2><span class="section-number">13.</span> Practice Tasks &amp; Solutions</h2>
+        <p>
+          Review every practice task covered in Lecture 2. Each exercise includes a detailed logical breakdown, the complete Python source code adhering to PEP 8 standards, and sample console runs.
+        </p>
+
+        <!-- TASK 1 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 01</span>
+            <span class="tag">String Length</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to take the user's first name as keyboard input and print its total character length.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Use the built-in <code>input()</code> function to prompt the user for their first name.</li>
+              <li>Pass the retrieved string to the <code>len()</code> function to compute the integer character count.</li>
+              <li>Print the resulting length formatted cleanly.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 1: Input first name and display its length</span>
+<span class="var">first_name</span> = <span class="func">input</span>(<span class="str">"Enter your first name: "</span>)
+<span class="func">print</span>(<span class="str">"Length of your name is:"</span>, <span class="func">len</span>(<span class="var">first_name</span>))</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter your first name: Shradha</div>
+                <div>Length of your name is: 7</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 2 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 02</span>
+            <span class="tag">String Counting</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to find and count the occurrence of the <code>$</code> (currency symbol) in a given string.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Define or input a string containing multiple currency characters (e.g., <code>"$99.99 is the price, but $150 was the retail $"</code>).</li>
+              <li>Invoke the <code>.count("$")</code> method on the string.</li>
+              <li>Display the total frequency count returned by the method.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 2: Count occurrences of '$' symbol in a string</span>
+<span class="var">financial_str</span> = <span class="str">"The subscription costs $99 per year, with a $10 setup fee and $5 tax."</span>
+
+<span class="com"># Call the built-in .count() method</span>
+<span class="var">symbol_count</span> = <span class="var">financial_str</span>.<span class="func">count</span>(<span class="str">"$"</span>)
+
+<span class="func">print</span>(<span class="str">"Given String:"</span>, <span class="var">financial_str</span>)
+<span class="func">print</span>(<span class="str">"Number of '$' occurrences:"</span>, <span class="var">symbol_count</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Given String: The subscription costs $99 per year, with a $10 setup fee and $5 tax.</div>
+                <div>Number of '$' occurrences: 3</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 3 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 03</span>
+            <span class="tag">Modulo Operator</span>
+            <span class="tag">Conditionals</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to check whether a number entered by the user is <strong>Odd</strong> or <strong>Even</strong>.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Mathematical &amp; Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Take integer input using <code>int(input())</code>.</li>
+              <li>An integer is defined as <em>even</em> if it is completely divisible by 2 with no remainder. Mathematically, <code>number % 2 == 0</code>.</li>
+              <li>If the remainder is not 0 (i.e., <code>number % 2 != 0</code> or <code>== 1</code>), the number is <em>odd</em>.</li>
+              <li>Implement an <code>if-else</code> statement to print the appropriate classification.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 3: Check if integer is Odd or Even</span>
+<span class="var">num</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter an integer: "</span>))
+
+<span class="kw">if</span> <span class="var">num</span> % <span class="num">2</span> == <span class="num">0</span>:
+    <span class="func">print</span>(<span class="var">num</span>, <span class="str">"is an EVEN number"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="var">num</span>, <span class="str">"is an ODD number"</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run 1:</span>
+                <div>Enter an integer: 14</div>
+                <div>14 is an EVEN number</div>
+              </div>
+              <div class="output-box" style="margin-top: 0.5rem;">
+                <span class="output-label">Sample Terminal Run 2:</span>
+                <div>Enter an integer: 27</div>
+                <div>27 is an ODD number</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 4 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 04</span>
+            <span class="tag">Comparative Logic</span>
+            <span class="tag">if-elif-else</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to find the <strong>greatest (maximum) of 3 numbers</strong> entered by the user.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Input three numerical values: <code>a</code>, <code>b</code>, and <code>c</code>.</li>
+              <li>For <code>a</code> to be the greatest, it must satisfy: <code>a >= b and a >= c</code>.</li>
+              <li>If the first condition fails, check if <code>b</code> is greater than or equal to <code>c</code>: <code>b >= c</code>. If true, <code>b</code> is the greatest.</li>
+              <li>If both fail, then by mathematical deduction <code>c</code> must be the greatest.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 4: Find greatest of 3 numbers</span>
+<span class="var">a</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter first number (a): "</span>))
+<span class="var">b</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter second number (b): "</span>))
+<span class="var">c</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter third number (c): "</span>))
+
+<span class="kw">if</span> <span class="var">a</span> >= <span class="var">b</span> <span class="kw">and</span> <span class="var">a</span> >= <span class="var">c</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is a ="</span>, <span class="var">a</span>)
+<span class="kw">elif</span> <span class="var">b</span> >= <span class="var">c</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is b ="</span>, <span class="var">b</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is c ="</span>, <span class="var">c</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter first number (a): 45</div>
+                <div>Enter second number (b): 92.5</div>
+                <div>Enter third number (c): 71</div>
+                <div>The greatest number is b = 92.5</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- HOMEWORK BONUS TASK -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Homework Bonus</span>
+            <span class="tag">Comparative Logic</span>
+            <span class="tag">Scale to 4 Numbers</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to find the <strong>greatest (maximum) of 4 numbers</strong> entered by the user.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Extension:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Input four values: <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code>.</li>
+              <li>Check if <code>a</code> dominates all: <code>a >= b and a >= c and a >= d</code>.</li>
+              <li>Else check if <code>b</code> dominates the remaining: <code>b >= c and b >= d</code>.</li>
+              <li>Else check if <code>c</code> dominates <code>d</code>: <code>c >= d</code>.</li>
+              <li>Else, <code>d</code> is the greatest.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Homework Bonus: Find greatest of 4 numbers</span>
+<span class="var">a</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter a: "</span>))
+<span class="var">b</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter b: "</span>))
+<span class="var">c</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter c: "</span>))
+<span class="var">d</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter d: "</span>))
+
+<span class="kw">if</span> <span class="var">a</span> >= <span class="var">b</span> <span class="kw">and</span> <span class="var">a</span> >= <span class="var">c</span> <span class="kw">and</span> <span class="var">a</span> >= <span class="var">d</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is a ="</span>, <span class="var">a</span>)
+<span class="kw">elif</span> <span class="var">b</span> >= <span class="var">c</span> <span class="kw">and</span> <span class="var">b</span> >= <span class="var">d</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is b ="</span>, <span class="var">b</span>)
+<span class="kw">elif</span> <span class="var">c</span> >= <span class="var">d</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is c ="</span>, <span class="var">c</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"The greatest number is d ="</span>, <span class="var">d</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter a: 12</div>
+                <div>Enter b: 78</div>
+                <div>Enter c: 34</div>
+                <div>Enter d: 99.4</div>
+                <div>The greatest number is d = 99.4</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 5 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 05</span>
+            <span class="tag">Divisibility</span>
+            <span class="tag">Modulo Operator</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to check whether a given integer entered by the user is a <strong>multiple of 7</strong>.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Mathematical &amp; Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>An integer $X$ is a multiple of $Y$ if $X$ divided by $Y$ yields a remainder of 0 ($X \pmod Y = 0$).</li>
+              <li>In Python, this is tested with the expression <code>num % 7 == 0</code>.</li>
+              <li>If the condition holds true, print that the number is a multiple of 7; otherwise, print that it is not.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 5: Check if number is multiple of 7</span>
+<span class="var">num</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter a number: "</span>))
+
+<span class="kw">if</span> <span class="var">num</span> % <span class="num">7</span> == <span class="num">0</span>:
+    <span class="func">print</span>(<span class="var">num</span>, <span class="str">"is a MULTIPLE of 7"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="var">num</span>, <span class="str">"is NOT a multiple of 7"</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run 1:</span>
+                <div>Enter a number: 49</div>
+                <div>49 is a MULTIPLE of 7</div>
+              </div>
+              <div class="output-box" style="margin-top: 0.5rem;">
+                <span class="output-label">Sample Terminal Run 2:</span>
+                <div>Enter a number: 52</div>
+                <div>52 is NOT a multiple of 7</div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 14: SUMMARY & QUICK REFERENCE -->
+      <!-- ============================================================ -->
+      <section id="cheat-sheet" class="note-section">
+        <h2><span class="section-number">14.</span> Summary &amp; Quick Reference Cheat Sheet</h2>
+        <p>
+          A consolidated quick-reference matrix of every string method, syntax rule, and control flow pattern covered in Lecture 2:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation / Method</th>
+                <th>Syntax Example</th>
+                <th>Behavior &amp; Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>String Literal</strong></td>
+                <td><code>"text"</code> / <code>'text'</code></td>
+                <td>Immutable Unicode character sequence. Double quotes preferred by PEP 8.</td>
+              </tr>
+              <tr>
+                <td><strong>Triple Quotes</strong></td>
+                <td><code>'''line1\nline2'''</code></td>
+                <td>Allows multiline strings without explicit escape characters.</td>
+              </tr>
+              <tr>
+                <td><strong>Concatenation</strong></td>
+                <td><code>str1 + str2</code></td>
+                <td>Joins strings. Cannot concatenate with numbers without <code>str(num)</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>String Length</strong></td>
+                <td><code>len(str)</code></td>
+                <td>Counts all characters, including spaces, tabs, and punctuation.</td>
+              </tr>
+              <tr>
+                <td><strong>Positive Indexing</strong></td>
+                <td><code>str[0]</code> ... <code>str[len-1]</code></td>
+                <td>0-based indexing from left to right. Read-only due to immutability.</td>
+              </tr>
+              <tr>
+                <td><strong>Negative Indexing</strong></td>
+                <td><code>str[-1]</code> ... <code>str[-len]</code></td>
+                <td>Counts backwards from the end. <code>str[-1]</code> is the final character.</td>
+              </tr>
+              <tr>
+                <td><strong>Slicing Substrings</strong></td>
+                <td><code>str[start:end]</code></td>
+                <td>Start index is inclusive; end index is exclusive. Length = <code>end - start</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Default Slicing</strong></td>
+                <td><code>str[:end]</code> / <code>str[start:]</code></td>
+                <td>Omitted start defaults to <code>0</code>; omitted end defaults to <code>len(str)</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>.endswith()</code></strong></td>
+                <td><code>str.endswith("xyz")</code></td>
+                <td>Returns <code>True</code> if string terminates with substring, else <code>False</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>.capitalize()</code></strong></td>
+                <td><code>str.capitalize()</code></td>
+                <td>Returns copy with 1st character uppercase and the rest lowercase.</td>
+              </tr>
+              <tr>
+                <td><strong><code>.replace()</code></strong></td>
+                <td><code>str.replace("a", "b")</code></td>
+                <td>Replaces all occurrences of old substring with new substring.</td>
+              </tr>
+              <tr>
+                <td><strong><code>.find()</code></strong></td>
+                <td><code>str.find("abc")</code></td>
+                <td>Returns 0-based index of 1st match, or <code>-1</code> if not found.</td>
+              </tr>
+              <tr>
+                <td><strong><code>.count()</code></strong></td>
+                <td><code>str.count("abc")</code></td>
+                <td>Returns total count of non-overlapping occurrences.</td>
+              </tr>
+              <tr>
+                <td><strong><code>if-elif-else</code></strong></td>
+                <td><code>if: ... elif: ... else:</code></td>
+                <td>Mutually exclusive branching. Only the first truthy condition executes.</td>
+              </tr>
+              <tr>
+                <td><strong>Indentation</strong></td>
+                <td><code>4 spaces</code> after <code>:</code></td>
+                <td>Defines block scope in Python. Replaces curly braces <code>{ }</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive Expression Evaluator Widget -->
+        <div style="margin-top: 2.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: var(--accent-blue); display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡ Interactive Expression Evaluator</span>
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Test any Lecture 2 string expression, method, comparison, or boolean condition right in your browser:
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" id="sim-input" class="search-input" style="flex: 1; max-width: none;" placeholder="e.g. 'apna'.capitalize(), 'hello'.find('ll'), 49 % 7 == 0, 85 >= 80 and 85 < 90">
+            <button class="btn-primary" onclick="runSimulator()">Run Expression</button>
+          </div>
+          <div class="output-box" id="sim-output" style="margin-bottom: 0;">
+            <span class="output-label">Evaluation Output:</span>
+            <span style="color: #64748b;">Enter an expression above and click "Run Expression"</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 2 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-strings" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

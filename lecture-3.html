@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 3: Lists &amp; Tuples | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 3 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-lists" class="sidebar-link">1. What is a List &amp; Creation</a></li>
+        <li><a href="#list-indexing-mutability" class="sidebar-link">2. Indexing &amp; List Mutability</a></li>
+        <li><a href="#list-slicing" class="sidebar-link">3. List Slicing &amp; Sublists</a></li>
+        <li><a href="#list-methods" class="sidebar-link">4. Built-in List Methods</a></li>
+        <li><a href="#intro-tuples" class="sidebar-link">5. Introduction to Tuples</a></li>
+        <li><a href="#tuple-syntax" class="sidebar-link">6. Tuple Syntax &amp; Single-Item Trap</a></li>
+        <li><a href="#tuple-indexing-slicing" class="sidebar-link">7. Tuple Indexing &amp; Slicing</a></li>
+        <li><a href="#tuple-methods" class="sidebar-link">8. Built-in Tuple Methods</a></li>
+        <li><a href="#comparison-table" class="sidebar-link">9. Lists vs. Tuples vs. Strings</a></li>
+        <li><a href="#tasks" class="sidebar-link">10. Practice Tasks &amp; Solutions</a></li>
+        <li><a href="#cheat-sheet" class="sidebar-link">11. Summary &amp; Quick Reference</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 03 Notes</span>
+          <span class="tag">Lists</span>
+          <span class="tag">Tuples</span>
+          <span class="tag">Mutability</span>
+          <span class="tag">Data Structures</span>
+          <span class="tag">4 Solved Tasks</span>
+        </div>
+        <h1 class="lecture-main-title">Lists &amp; Tuples</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Lists and Tuples are collections that allow you to group multiple values together in a single variable. Lists are flexible and can be modified anytime (like adding or removing items), while Tuples are locked and cannot be changed once created.<br>
+          <strong>Why do we use it?</strong> Instead of creating 50 separate variables for 50 student marks, you store them in one clean list. We use lists for dynamic data like shopping cart items or playlists, and tuples for permanent data that should never be altered, like GPS coordinates or color codes.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHAT IS A LIST & CREATION SYNTAX -->
+      <!-- ============================================================ -->
+      <section id="intro-lists" class="note-section">
+        <h2><span class="section-number">01.</span> What is a List &amp; Creation Syntax</h2>
+        
+        <h3>1. The Architectural Need for Sequential Collections</h3>
+        <p>
+          In previous lectures, variables stored individual primitive scalar values—a single number, a boolean flag, or a textual string. Consider a software scenario where a teacher needs to track the test scores of a cohort of students.
+        </p>
+        <p>
+          With primitive scalar variables, managing multiple entries rapidly becomes unwieldy and non-scalable:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Anti-Pattern: Declaring independent variables for a sequence of related values</span>
+<span class="var">marks1</span> = <span class="num">94.4</span>
+<span class="var">marks2</span> = <span class="num">87.0</span>
+<span class="var">marks3</span> = <span class="num">95.2</span>
+<span class="var">marks4</span> = <span class="num">66.4</span>
+<span class="var">marks5</span> = <span class="num">45.1</span>
+<span class="com"># What happens when a cohort has 50, 100, or 10,000 students?</span>
+<span class="com"># Managing thousands of variable names is unmaintainable and computationally infeasible.</span></code></pre>
+        </div>
+
+        <h3>2. Formal Definition of a Python List</h3>
+        <p>
+          A <strong>list</strong> is a built-in, ordered, and <strong>mutable</strong> sequential data structure in Python that holds a collection of values under a single identifier. In Python's internal type system, it belongs to the class <code>list</code>.
+        </p>
+        <p>
+          Lists in Python serve as the high-level equivalent of <em>arrays</em> found in languages like C, C++, or Java, but with two monumental advantages:
+        </p>
+        <ol>
+          <li><strong>Dynamic Sizing:</strong> You do not need to pre-allocate memory or declare a fixed size up-front; lists expand or shrink dynamically as elements are added or removed.</li>
+          <li><strong>Heterogeneous Typing:</strong> Unlike static arrays in C/Java which restrict all elements to a single data type, Python lists can store values of <strong>different data types simultaneously</strong>.</li>
+        </ol>
+
+        <div class="concept-box">
+          <div class="concept-title">Syntax &amp; Structure of a List</div>
+          <p>
+            Lists are declared using square brackets <code>[ ]</code>, with elements separated by commas:
+          </p>
+          <code>marks = [94.4, 87.0, 95.2, 66.4, 45.1]</code>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Creating and inspecting a numeric list</span>
+<span class="var">marks</span> = [<span class="num">94.4</span>, <span class="num">87.0</span>, <span class="num">95.2</span>, <span class="num">66.4</span>, <span class="num">45.1</span>]
+
+<span class="func">print</span>(<span class="str">"List contents:"</span>, <span class="var">marks</span>)
+<span class="func">print</span>(<span class="str">"Type of marks:"</span>, <span class="func">type</span>(<span class="var">marks</span>))
+<span class="func">print</span>(<span class="str">"Length of list:"</span>, <span class="func">len</span>(<span class="var">marks</span>))</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>List contents: [94.4, 87.0, 95.2, 66.4, 45.1]</div>
+          <div>Type of marks: &lt;class 'list'&gt;</div>
+          <div>Length of list: 5</div>
+        </div>
+
+        <h3>3. Heterogeneous Elements in a Single List</h3>
+        <p>
+          A single Python list can seamlessly store strings, integers, floats, and booleans together. This makes lists ideal for representing composite real-world entities (such as a student profile) without creating custom classes for simple groupings:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Heterogeneous record containing string, float, integer, and boolean types</span>
+<span class="var">student</span> = [<span class="str">"Karan"</span>, <span class="num">85.5</span>, <span class="num">19</span>, <span class="str">"Delhi"</span>, <span class="bool">True</span>]
+
+<span class="func">print</span>(<span class="str">"Student Profile:"</span>, <span class="var">student</span>)
+<span class="func">print</span>(<span class="str">"Number of fields:"</span>, <span class="func">len</span>(<span class="var">student</span>))</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Student Profile: ['Karan', 85.5, 19, 'Delhi', True]</div>
+          <div>Number of fields: 5</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: LIST INDEXING & MUTABILITY -->
+      <!-- ============================================================ -->
+      <section id="list-indexing-mutability" class="note-section">
+        <h2><span class="section-number">02.</span> List Indexing &amp; List Mutability</h2>
+        
+        <h3>1. Zero-Based Positional Indexing</h3>
+        <p>
+          Just like strings, lists in Python are sequentially ordered. Each element in the list is bound to a numerical coordinate called an <strong>index</strong>.
+        </p>
+        <ul>
+          <li>The first element resides at index <code>0</code>.</li>
+          <li>The second element resides at index <code>1</code>.</li>
+          <li>The final element resides at index <code>len(list) - 1</code>.</li>
+        </ul>
+
+        <div class="concept-box">
+          <div class="concept-title">Memory Layout of List Indexing</div>
+          <p>Given the list <code>marks = [94.4, 87.0, 95.2, 66.4, 45.1]</code>:</p>
+          <div class="table-container" style="margin-top: 0.75rem;">
+            <table style="text-align: center; font-family: var(--font-mono); font-size: 0.9rem;">
+              <tr style="background: var(--bg-secondary);">
+                <th style="padding: 6px 14px;">Element Value</th>
+                <td style="padding: 6px 14px; font-weight: bold;">94.4</td>
+                <td style="padding: 6px 14px; font-weight: bold;">87.0</td>
+                <td style="padding: 6px 14px; font-weight: bold;">95.2</td>
+                <td style="padding: 6px 14px; font-weight: bold;">66.4</td>
+                <td style="padding: 6px 14px; font-weight: bold;">45.1</td>
+              </tr>
+              <tr>
+                <th style="padding: 6px 14px; background: var(--bg-secondary);">Positive Index</th>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">0</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">1</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">2</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">3</td>
+                <td style="padding: 6px 14px; color: var(--accent-blue);">4</td>
+              </tr>
+              <tr>
+                <th style="padding: 6px 14px; background: var(--bg-secondary);">Negative Index</th>
+                <td style="padding: 6px 14px; color: #ff7b72;">-5</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-4</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-3</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-2</td>
+                <td style="padding: 6px 14px; color: #ff7b72;">-1</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The IndexError Boundary Trap</div>
+            <p>
+              Attempting to access an index that does not exist (e.g. <code>marks[5]</code> when the list has only 5 items from index 0 to 4) immediately halts execution with an <code>IndexError: list index out of range</code>.
+            </p>
+          </div>
+        </div>
+
+        <h3>2. Mutability vs. Immutability: The Core Distinction</h3>
+        <p>
+          The most critical architectural distinction between Python <strong>strings</strong> and Python <strong>lists</strong> is <strong>mutability</strong>:
+        </p>
+        <ul>
+          <li><strong>Immutable (Cannot be changed):</strong> In strings, individual characters cannot be reassigned in place. Attempting <code>text[0] = 'a'</code> causes a <code>TypeError: 'str' object does not support item assignment</code>.</li>
+          <li><strong>Mutable (Can be changed in place):</strong> In lists, elements at any valid index can be directly modified, overwritten, or updated without creating a brand-new list object in memory.</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># 1. Strings are Immutable (Read-Only Items)</span>
+<span class="var">text</span> = <span class="str">"hello"</span>
+<span class="com"># text[0] = "y"  --> Raises TypeError: 'str' object does not support item assignment</span>
+
+<span class="com"># 2. Lists are Mutable (In-Place Modifications Allowed)</span>
+<span class="var">student</span> = [<span class="str">"Karan"</span>, <span class="num">85.5</span>, <span class="num">19</span>, <span class="str">"Delhi"</span>]
+<span class="func">print</span>(<span class="str">"Original student name:"</span>, <span class="var">student</span>[<span class="num">0</span>])
+
+<span class="com"># Reassign index 0 in place</span>
+<span class="var">student</span>[<span class="num">0</span>] = <span class="str">"Arjun"</span>
+<span class="var">student</span>[<span class="num">1</span>] = <span class="num">92.0</span>
+
+<span class="func">print</span>(<span class="str">"Updated student list:"</span>, <span class="var">student</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Original student name: Karan</div>
+          <div>Updated student list: ['Arjun', 92.0, 19, 'Delhi']</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: LIST SLICING -->
+      <!-- ============================================================ -->
+      <section id="list-slicing" class="note-section">
+        <h2><span class="section-number">03.</span> List Slicing &amp; Sublists</h2>
+        
+        <h3>1. Sublist Extraction Mechanics</h3>
+        <p>
+          Just as slicing a string produces a <em>substring</em>, slicing a list produces a <strong>sublist</strong> (a shallow copy of a continuous subsection of the original list).
+        </p>
+        <p>
+          <strong>Formal Syntax:</strong> <code>list_name[starting_index : ending_index]</code>
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Boundary Rules for List Slicing</div>
+          <ul>
+            <li><code>starting_index</code> is <strong>INCLUSIVE</strong> (the element at this index is included).</li>
+            <li><code>ending_index</code> is <strong>EXCLUSIVE</strong> (the slice stops at <code>ending_index - 1</code>; the element at <code>ending_index</code> is omitted).</li>
+            <li><strong>Sublist Length Formula:</strong> <code>len(sublist) = ending_index - starting_index</code>.</li>
+          </ul>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">marks</span> = [<span class="num">85</span>, <span class="num">94</span>, <span class="num">76</span>, <span class="num">63</span>, <span class="num">48</span>]
+<span class="com"># Indices: 0   1   2   3   4</span>
+
+<span class="com"># Slice from index 1 to index 4 (exclusive of 4: indices 1, 2, 3)</span>
+<span class="var">sublist</span> = <span class="var">marks</span>[<span class="num">1</span>:<span class="num">4</span>]
+<span class="func">print</span>(<span class="str">"marks[1:4]:"</span>, <span class="var">sublist</span>)  <span class="com"># [94, 76, 63]</span>
+
+<span class="com"># Slice from index 0 to index 3 (exclusive of 3: indices 0, 1, 2)</span>
+<span class="func">print</span>(<span class="str">"marks[0:3]:"</span>, <span class="var">marks</span>[<span class="num">0</span>:<span class="num">3</span>])  <span class="com"># [85, 94, 76]</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>marks[1:4]: [94, 76, 63]</div>
+          <div>marks[0:3]: [85, 94, 76]</div>
+        </div>
+
+        <h3>2. Omitted Indices &amp; Negative Slicing</h3>
+        <p>
+          Python allows omitting slice boundaries, substituting default values:
+        </p>
+        <ul>
+          <li><code>list[:end]</code> &rarr; Defaults to index <code>0</code> (starts at the beginning of the list).</li>
+          <li><code>list[start:]</code> &rarr; Defaults to <code>len(list)</code> (slices through the final element).</li>
+          <li><code>list[:]</code> &rarr; Slices the entire list from index 0 to the end, returning a fresh shallow copy.</li>
+          <li><strong>Negative Slicing:</strong> Uses negative indices counting from the right end (e.g. <code>marks[-3:-1]</code> slices from index -3 up to -2).</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">marks</span> = [<span class="num">85</span>, <span class="num">94</span>, <span class="num">76</span>, <span class="num">63</span>, <span class="num">48</span>]
+
+<span class="com"># 1. Omitted starting index (defaults to 0)</span>
+<span class="func">print</span>(<span class="str">"marks[:3]  ="</span>, <span class="var">marks</span>[:<span class="num">3</span>])   <span class="com"># [85, 94, 76]</span>
+
+<span class="com"># 2. Omitted ending index (defaults to len)</span>
+<span class="func">print</span>(<span class="str">"marks[2:]  ="</span>, <span class="var">marks</span>[<span class="num">2</span>:])   <span class="com"># [76, 63, 48]</span>
+
+<span class="com"># 3. Negative Index Slicing (-3 is 76, -1 is 48 exclusive)</span>
+<span class="func">print</span>(<span class="str">"marks[-3:-1] ="</span>, <span class="var">marks</span>[-<span class="num">3</span>:-<span class="num">1</span>]) <span class="com"># [76, 63]</span>
+
+<span class="com"># 4. Extract last 3 elements</span>
+<span class="func">print</span>(<span class="str">"marks[-3:] ="</span>, <span class="var">marks</span>[-<span class="num">3</span>:])   <span class="com"># [76, 63, 48]</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>marks[:3]  = [85, 94, 76]</div>
+          <div>marks[2:]  = [76, 63, 48]</div>
+          <div>marks[-3:-1] = [76, 63]</div>
+          <div>marks[-3:] = [76, 63, 48]</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: BUILT-IN LIST METHODS -->
+      <!-- ============================================================ -->
+      <section id="list-methods" class="note-section">
+        <h2><span class="section-number">04.</span> Built-in List Methods</h2>
+        
+        <h3>1. The In-Place Mutation Behavior of List Methods</h3>
+        <p>
+          Before examining list methods, master this foundational Python design principle:
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">Critical Concept: In-Place Modification vs. Return Value</div>
+            <p>
+              In strings (which are immutable), methods like <code>str.capitalize()</code> cannot touch the original string; they construct and return a <strong>new string</strong>.
+              <br><br>
+              In lists (which are mutable), mutating methods such as <code>list.append()</code>, <code>list.sort()</code>, and <code>list.reverse()</code> modify the <strong>existing list directly in memory</strong> and return <code>None</code>.
+              <br><br>
+              Therefore, writing <code>result = list.sort()</code> assigns <code>None</code> to <code>result</code>! Never try to assign the return value of an in-place list method.
+            </p>
+          </div>
+        </div>
+
+        <h3>2. Deep Dive into the 6 Core List Methods</h3>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Arguments</th>
+                <th>Operation &amp; Behavior</th>
+                <th>Return Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>list.append(element)</code></td>
+                <td><code>element</code></td>
+                <td>Adds a single element to the very end of the list. Mutates list in place.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>list.sort()</code></td>
+                <td><code>reverse=False</code> (opt)</td>
+                <td>Sorts list elements in ascending order in place. Pass <code>reverse=True</code> for descending.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>list.reverse()</code></td>
+                <td>None</td>
+                <td>Inverts the order of elements in the list completely in place.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>list.insert(idx, el)</code></td>
+                <td><code>idx, element</code></td>
+                <td>Inserts <code>element</code> at specific index <code>idx</code>, shifting subsequent elements right.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>list.remove(element)</code></td>
+                <td><code>element</code></td>
+                <td>Removes the <strong>first occurrence</strong> of <code>element</code> from the list.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>list.pop(idx)</code></td>
+                <td><code>idx</code> (default: -1)</td>
+                <td>Deletes and removes element at specified index. If omitted, removes last element.</td>
+                <td>Removed element</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Comprehensive demonstration of all core list methods</span>
+<span class="var">nums</span> = [<span class="num">2</span>, <span class="num">1</span>, <span class="num">3</span>]
+<span class="func">print</span>(<span class="str">"Initial list:"</span>, <span class="var">nums</span>)
+
+<span class="com"># 1. list.append(el): Adds element to the end</span>
+<span class="var">nums</span>.<span class="func">append</span>(<span class="num">4</span>)
+<span class="func">print</span>(<span class="str">"After append(4):"</span>, <span class="var">nums</span>)  <span class="com"># [2, 1, 3, 4]</span>
+
+<span class="com"># 2. list.sort(): Sorts in ascending order in place</span>
+<span class="var">nums</span>.<span class="func">sort</span>()
+<span class="func">print</span>(<span class="str">"After sort():"</span>, <span class="var">nums</span>)      <span class="com"># [1, 2, 3, 4]</span>
+
+<span class="com"># 2b. list.sort(reverse=True): Sorts in descending order</span>
+<span class="var">nums</span>.<span class="func">sort</span>(<span class="var">reverse</span>=<span class="bool">True</span>)
+<span class="func">print</span>(<span class="str">"After sort(reverse=True):"</span>, <span class="var">nums</span>)  <span class="com"># [4, 3, 2, 1]</span>
+
+<span class="com"># 3. list.reverse(): Inverts the list elements</span>
+<span class="var">nums</span>.<span class="func">reverse</span>()
+<span class="func">print</span>(<span class="str">"After reverse():"</span>, <span class="var">nums</span>)   <span class="com"># [1, 2, 3, 4]</span>
+
+<span class="com"># 4. list.insert(idx, el): Inserts value 5 at index 1</span>
+<span class="var">nums</span>.<span class="func">insert</span>(<span class="num">1</span>, <span class="num">5</span>)
+<span class="func">print</span>(<span class="str">"After insert(1, 5):"</span>, <span class="var">nums</span>) <span class="com"># [1, 5, 2, 3, 4]</span>
+
+<span class="com"># 5. list.remove(el): Removes the first occurrence of value 5</span>
+<span class="var">nums</span>.<span class="func">remove</span>(<span class="num">5</span>)
+<span class="func">print</span>(<span class="str">"After remove(5):"</span>, <span class="var">nums</span>)   <span class="com"># [1, 2, 3, 4]</span>
+
+<span class="com"># 6. list.pop(idx): Deletes and returns element at index 2 (value 3)</span>
+<span class="var">popped_val</span> = <span class="var">nums</span>.<span class="func">pop</span>(<span class="num">2</span>)
+<span class="func">print</span>(<span class="str">"Popped element:"</span>, <span class="var">popped_val</span>)  <span class="com"># 3</span>
+<span class="func">print</span>(<span class="str">"After pop(2):"</span>, <span class="var">nums</span>)      <span class="com"># [1, 2, 4]</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Initial list: [2, 1, 3]</div>
+          <div>After append(4): [2, 1, 3, 4]</div>
+          <div>After sort(): [1, 2, 3, 4]</div>
+          <div>After sort(reverse=True): [4, 3, 2, 1]</div>
+          <div>After reverse(): [1, 2, 3, 4]</div>
+          <div>After insert(1, 5): [1, 5, 2, 3, 4]</div>
+          <div>After remove(5): [1, 2, 3, 4]</div>
+          <div>Popped element: 3</div>
+          <div>After pop(2): [1, 2, 4]</div>
+        </div>
+
+        <h3>3. Sorting Strings and Characters Lexicographically</h3>
+        <p>
+          The <code>.sort()</code> method applies equally to text strings and alphabetical characters. Python sorts string items in <strong>lexicographical order</strong> (alphabetical order based on ASCII/Unicode numeric values):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Sorting string items alphabetically</span>
+<span class="var">fruits</span> = [<span class="str">"banana"</span>, <span class="str">"litchi"</span>, <span class="str">"apple"</span>, <span class="str">"mango"</span>]
+<span class="var">fruits</span>.<span class="func">sort</span>()
+<span class="func">print</span>(<span class="str">"Ascending fruits:"</span>, <span class="var">fruits</span>)  <span class="com"># ['apple', 'banana', 'litchi', 'mango']</span>
+
+<span class="var">fruits</span>.<span class="func">sort</span>(<span class="var">reverse</span>=<span class="bool">True</span>)
+<span class="func">print</span>(<span class="str">"Descending fruits:"</span>, <span class="var">fruits</span>) <span class="com"># ['mango', 'litchi', 'banana', 'apple']</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Ascending fruits: ['apple', 'banana', 'litchi', 'mango']</div>
+          <div>Descending fruits: ['mango', 'litchi', 'banana', 'apple']</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: INTRODUCTION TO TUPLES -->
+      <!-- ============================================================ -->
+      <section id="intro-tuples" class="note-section">
+        <h2><span class="section-number">05.</span> Introduction to Tuples</h2>
+        
+        <h3>1. What is a Tuple?</h3>
+        <p>
+          A <strong>tuple</strong> is a built-in Python data type that lets developers create an <strong>immutable</strong> ordered sequence of values.
+        </p>
+        <p>
+          Conceptually, a tuple can be thought of as the <em>immutable sibling of a list</em>:
+        </p>
+        <ul>
+          <li>Like lists, tuples preserve sequence order, support 0-based indexing, allow negative indexing, and support slicing.</li>
+          <li>Unlike lists, <strong>tuples cannot be modified, resized, or mutated</strong> once initialized in memory. You cannot add new elements, delete existing elements, or change items at any index.</li>
+        </ul>
+
+        <div class="concept-box">
+          <div class="concept-title">Syntax: Parentheses Delimiters</div>
+          <p>
+            While lists use square brackets <code>[ ]</code>, tuples are defined using standard parentheses <code>( )</code>:
+          </p>
+          <code>tup = (87, 64, 33, 95, 76)</code>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Declaring and inspecting a tuple</span>
+<span class="var">tup</span> = (<span class="num">87</span>, <span class="num">64</span>, <span class="num">33</span>, <span class="num">95</span>, <span class="num">76</span>)
+
+<span class="func">print</span>(<span class="str">"Tuple contents:"</span>, <span class="var">tup</span>)
+<span class="func">print</span>(<span class="str">"Data type:"</span>, <span class="func">type</span>(<span class="var">tup</span>))     <span class="com"># &lt;class 'tuple'&gt;</span>
+<span class="func">print</span>(<span class="str">"Length:"</span>, <span class="func">len</span>(<span class="var">tup</span>))           <span class="com"># 5</span>
+<span class="func">print</span>(<span class="str">"Element at index 0:"</span>, <span class="var">tup</span>[<span class="num">0</span>]) <span class="com"># 87</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Tuple contents: (87, 64, 33, 95, 76)</div>
+          <div>Data type: &lt;class 'tuple'&gt;</div>
+          <div>Length: 5</div>
+          <div>Element at index 0: 87</div>
+        </div>
+
+        <h3>2. The Immutability Enforced by Python</h3>
+        <p>
+          Just like strings, attempting item reassignment on a tuple triggers an immediate runtime exception:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">tup</span> = (<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>)
+
+<span class="com"># Reading an element is legal:</span>
+<span class="func">print</span>(<span class="var">tup</span>[<span class="num">0</span>])  <span class="com"># 10</span>
+
+<span class="com"># Attempting to assign or mutate an item raises an exception:</span>
+<span class="com"># tup[0] = 50</span>
+<span class="com"># TypeError: 'tuple' object does not support item assignment</span></code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Why Do Tuples Exist if Lists Already Store Sequences?</div>
+            <p>
+              1. <strong>Data Integrity &amp; Write-Protection:</strong> Tuples provide a guarantee that data cannot be altered accidentally by downstream functions.
+              <br>2. <strong>Memory &amp; Performance Efficiency:</strong> Because tuples have a fixed size, Python allocates a compact, contiguous memory block without the over-allocation overhead required by dynamic lists.
+              <br>3. <strong>Dictionary Keys &amp; Set Members:</strong> Because tuples are immutable, they possess fixed hash values (they are <em>hashable</em>) and can be used as keys in dictionaries, whereas lists cannot.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: TUPLE SYNTAX & THE SINGLE-ITEM TRAP -->
+      <!-- ============================================================ -->
+      <section id="tuple-syntax" class="note-section">
+        <h2><span class="section-number">06.</span> Tuple Syntax &amp; The Single-Element Trap</h2>
+        
+        <h3>1. Declaring Empty Tuples</h3>
+        <p>
+          An empty tuple containing zero elements is created using empty parentheses <code>()</code>:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">empty_tup</span> = ()
+<span class="func">print</span>(<span class="var">empty_tup</span>)        <span class="com"># ()</span>
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">empty_tup</span>))  <span class="com"># &lt;class 'tuple'&gt;</span></code></pre>
+        </div>
+
+        <h3>2. The Infamous Single-Element Tuple Trap</h3>
+        <p>
+          One of the most notorious syntactic traps for beginner Python developers occurs when attempting to create a tuple containing exactly <strong>one element</strong>.
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Parentheses Ambiguity Trap</div>
+            <p>
+              In mathematics and Python syntax, parentheses <code>( )</code> are used for operator precedence grouping (e.g. <code>(5 + 2) * 3</code>).
+              <br><br>
+              Therefore, when Python encounters <code>tup = (1)</code>, it interprets the parentheses as mathematical grouping around the integer <code>1</code>. The variable is inferred as type <strong><code>int</code></strong>, NOT a tuple!
+              <br><br>
+              Similarly, <code>tup = ("hello")</code> is evaluated as type <strong><code>str</code></strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">The Solution: The Mandatory Trailing Comma Rule</div>
+          <p>
+            To instruct the Python parser that parentheses denote a single-element tuple rather than an arithmetic grouping expression, you <strong>must append a trailing comma</strong> immediately after the value:
+          </p>
+          <code>single_tup = (1,)      # Correct! Evaluates to &lt;class 'tuple'&gt;</code><br>
+          <code>str_tup    = ("hello",) # Correct! Evaluates to &lt;class 'tuple'&gt;</code>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># INCORRECT: Omission of comma creates a scalar integer</span>
+<span class="var">fake_tup</span> = (<span class="num">1</span>)
+<span class="func">print</span>(<span class="var">fake_tup</span>, <span class="str">"is type:"</span>, <span class="func">type</span>(<span class="var">fake_tup</span>))      <span class="com"># 1 is type: &lt;class 'int'&gt;</span>
+
+<span class="com"># CORRECT: Trailing comma identifies the literal as a tuple</span>
+<span class="var">real_tup</span> = (<span class="num">1</span>,)
+<span class="func">print</span>(<span class="var">real_tup</span>, <span class="str">"is type:"</span>, <span class="func">type</span>(<span class="var">real_tup</span>))      <span class="com"># (1,) is type: &lt;class 'tuple'&gt;</span>
+
+<span class="com"># Single string element with trailing comma</span>
+<span class="var">word_tup</span> = (<span class="str">"hello"</span>,)
+<span class="func">print</span>(<span class="var">word_tup</span>, <span class="str">"is type:"</span>, <span class="func">type</span>(<span class="var">word_tup</span>))      <span class="com"># ('hello',) is type: &lt;class 'tuple'&gt;</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>1 is type: &lt;class 'int'&gt;</div>
+          <div>(1,) is type: &lt;class 'tuple'&gt;</div>
+          <div>('hello',) is type: &lt;class 'tuple'&gt;</div>
+        </div>
+
+        <h3>3. Multiple Elements &amp; Optional Trailing Comma</h3>
+        <p>
+          When declaring tuples with two or more elements (e.g. <code>(1, 2, 3)</code>), the internal comma delimiters already disambiguate the syntax from mathematical grouping. Thus, a final trailing comma (e.g. <code>(1, 2, 3,)</code>) is completely optional.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: TUPLE INDEXING & SLICING -->
+      <!-- ============================================================ -->
+      <section id="tuple-indexing-slicing" class="note-section">
+        <h2><span class="section-number">07.</span> Tuple Indexing &amp; Slicing</h2>
+        
+        <h3>1. Positional Indexing in Tuples</h3>
+        <p>
+          Tuples support the exact same 0-based positive indexing and negative backwards indexing as strings and lists:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">grades</span> = (<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"C"</span>, <span class="str">"D"</span>)
+
+<span class="func">print</span>(<span class="str">"First element (index 0):"</span>, <span class="var">grades</span>[<span class="num">0</span>])   <span class="com"># 'A'</span>
+<span class="func">print</span>(<span class="str">"Second element (index 1):"</span>, <span class="var">grades</span>[<span class="num">1</span>])  <span class="com"># 'B'</span>
+<span class="func">print</span>(<span class="str">"Final element (index -1):"</span>, <span class="var">grades</span>[-<span class="num">1</span>])  <span class="com"># 'D'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>First element (index 0): A</div>
+          <div>Second element (index 1): B</div>
+          <div>Final element (index -1): D</div>
+        </div>
+
+        <h3>2. Tuple Slicing</h3>
+        <p>
+          Slicing a tuple produces a <strong>new tuple</strong> containing the specified sub-sequence. The same rule applies: the starting index is inclusive, and the ending index is exclusive.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">tup</span> = (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>)
+
+<span class="com"># Slicing from index 1 to 3 (exclusive of 3 -> elements at index 1 and 2)</span>
+<span class="var">slice_res</span> = <span class="var">tup</span>[<span class="num">1</span>:<span class="num">3</span>]
+<span class="func">print</span>(<span class="str">"tup[1:3] ="</span>, <span class="var">slice_res</span>)        <span class="com"># (2, 3)</span>
+
+<span class="com"># Omitted start index</span>
+<span class="func">print</span>(<span class="str">"tup[:2]  ="</span>, <span class="var">tup</span>[:<span class="num">2</span>])         <span class="com"># (1, 2)</span>
+
+<span class="com"># Slicing to the end</span>
+<span class="func">print</span>(<span class="str">"tup[3:]  ="</span>, <span class="var">tup</span>[<span class="num">3</span>:])         <span class="com"># (4, 5)</span>
+
+<span class="com"># Negative index slicing</span>
+<span class="func">print</span>(<span class="str">"tup[-3:] ="</span>, <span class="var">tup</span>[-<span class="num">3</span>:])        <span class="com"># (3, 4, 5)</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>tup[1:3] = (2, 3)</div>
+          <div>tup[:2]  = (1, 2)</div>
+          <div>tup[3:]  = (4, 5)</div>
+          <div>tup[-3:] = (3, 4, 5)</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: BUILT-IN TUPLE METHODS -->
+      <!-- ============================================================ -->
+      <section id="tuple-methods" class="note-section">
+        <h2><span class="section-number">08.</span> Built-in Tuple Methods</h2>
+        
+        <h3>1. Why Tuples Have Far Fewer Methods Than Lists</h3>
+        <p>
+          Because tuples are strictly immutable, all modifying methods that mutate sequences—such as <code>.append()</code>, <code>.insert()</code>, <code>.remove()</code>, <code>.pop()</code>, <code>.sort()</code>, and <code>.reverse()</code>—<strong>do not exist on tuples</strong>.
+        </p>
+        <p>
+          Tuples provide two essential read-only search and inquiry methods:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Arguments</th>
+                <th>Operation</th>
+                <th>Return Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>tup.index(element)</code></td>
+                <td><code>element</code></td>
+                <td>Searches for <code>element</code> and returns the 0-based index of its <strong>first occurrence</strong>.</td>
+                <td><code>int</code> (raises <code>ValueError</code> if absent)</td>
+              </tr>
+              <tr>
+                <td><code>tup.count(element)</code></td>
+                <td><code>element</code></td>
+                <td>Counts and returns the total frequency of occurrences of <code>element</code> in the tuple.</td>
+                <td><code>int</code> (returns <code>0</code> if absent)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Demonstrating tup.index() and tup.count()</span>
+<span class="var">nums</span> = (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">2</span>, <span class="num">5</span>)
+
+<span class="com"># 1. tup.index(value): Locate index of first occurrence of value 2</span>
+<span class="var">first_idx</span> = <span class="var">nums</span>.<span class="func">index</span>(<span class="num">2</span>)
+<span class="func">print</span>(<span class="str">"First occurrence of value 2 is at index:"</span>, <span class="var">first_idx</span>)  <span class="com"># Index 1</span>
+
+<span class="com"># 2. tup.count(value): Count frequency of value 2</span>
+<span class="var">total_twos</span> = <span class="var">nums</span>.<span class="func">count</span>(<span class="num">2</span>)
+<span class="func">print</span>(<span class="str">"Frequency of value 2 in tuple:"</span>, <span class="var">total_twos</span>)            <span class="com"># 3 times</span>
+
+<span class="com"># Count an element that does not exist</span>
+<span class="func">print</span>(<span class="str">"Frequency of value 99 in tuple:"</span>, <span class="var">nums</span>.<span class="func">count</span>(<span class="num">99</span>))      <span class="com"># 0</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>First occurrence of value 2 is at index: 1</div>
+          <div>Frequency of value 2 in tuple: 3</div>
+          <div>Frequency of value 99 in tuple: 0</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: LISTS VS TUPLES VS STRINGS -->
+      <!-- ============================================================ -->
+      <section id="comparison-table" class="note-section">
+        <h2><span class="section-number">09.</span> Lists vs. Tuples vs. Strings Comparison</h2>
+        <p>
+          To consolidate your mental model across all three primary Python sequence data types, review this architectural comparison matrix:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature / Property</th>
+                <th><code>list</code> (List)</th>
+                <th><code>tuple</code> (Tuple)</th>
+                <th><code>str</code> (String)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Declaration Delimiter</strong></td>
+                <td>Square brackets <code>[1, 2, 3]</code></td>
+                <td>Parentheses <code>(1, 2, 3)</code></td>
+                <td>Quotes <code>"text"</code> / <code>'text'</code></td>
+              </tr>
+              <tr>
+                <td><strong>Mutability</strong></td>
+                <td><strong>Mutable</strong> (elements modified in-place)</td>
+                <td><strong>Immutable</strong> (cannot modify items)</td>
+                <td><strong>Immutable</strong> (cannot modify chars)</td>
+              </tr>
+              <tr>
+                <td><strong>Allowed Element Types</strong></td>
+                <td>Heterogeneous (any data type mixed)</td>
+                <td>Heterogeneous (any data type mixed)</td>
+                <td>Homogeneous (Unicode characters only)</td>
+              </tr>
+              <tr>
+                <td><strong>Indexing &amp; Slicing</strong></td>
+                <td>Yes (0-based, negative, sublist slice)</td>
+                <td>Yes (0-based, negative, subtuple slice)</td>
+                <td>Yes (0-based, negative, substring slice)</td>
+              </tr>
+              <tr>
+                <td><strong>Method Mutability</strong></td>
+                <td>Mutates in place, returns <code>None</code></td>
+                <td>No mutating methods exist</td>
+                <td>Returns brand-new string copies</td>
+              </tr>
+              <tr>
+                <td><strong>Memory Overhead</strong></td>
+                <td>Higher (pre-allocates dynamic buffers)</td>
+                <td>Lower (compact, fixed contiguous block)</td>
+                <td>Optimized with string interning</td>
+              </tr>
+              <tr>
+                <td><strong>Dictionary Key Viability</strong></td>
+                <td>No (unhashable type: <code>list</code>)</td>
+                <td>Yes (hashable if elements are immutable)</td>
+                <td>Yes (hashable, widely used key type)</td>
+              </tr>
+              <tr>
+                <td><strong>Primary Use Case</strong></td>
+                <td>Dynamic collections requiring edits</td>
+                <td>Fixed reference records &amp; constants</td>
+                <td>Textual processing &amp; display</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: PRACTICE TASKS & SOLUTIONS -->
+      <!-- ============================================================ -->
+      <section id="tasks" class="note-section">
+        <h2><span class="section-number">10.</span> Practice Tasks &amp; Complete Solutions</h2>
+        <p>
+          Every exercise covered in Lecture 3 solved with step-by-step logic, production Python code adhering strictly to PEP 8 conventions, and sample terminal runs.
+        </p>
+
+        <!-- TASK 1 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 01</span>
+            <span class="tag">User Input</span>
+            <span class="tag">list.append()</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to ask the user to enter the names of their <strong>3 favorite movies</strong> and store them in a list.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Initialize an empty list: <code>movies = []</code>.</li>
+              <li>Prompt the user sequentially for 3 movie titles using the <code>input()</code> function.</li>
+              <li>Append each title into the <code>movies</code> list using the <code>.append()</code> method.</li>
+              <li>Print the populated list to the console.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Approach 1: Storing in intermediate variables, then appending</span>
+<span class="var">movies</span> = []
+
+<span class="var">m1</span> = <span class="func">input</span>(<span class="str">"Enter 1st favorite movie: "</span>)
+<span class="var">m2</span> = <span class="func">input</span>(<span class="str">"Enter 2nd favorite movie: "</span>)
+<span class="var">m3</span> = <span class="func">input</span>(<span class="str">"Enter 3rd favorite movie: "</span>)
+
+<span class="var">movies</span>.<span class="func">append</span>(<span class="var">m1</span>)
+<span class="var">movies</span>.<span class="func">append</span>(<span class="var">m2</span>)
+<span class="var">movies</span>.<span class="func">append</span>(<span class="var">m3</span>)
+
+<span class="func">print</span>(<span class="str">"Your Favorite Movies List:"</span>, <span class="var">movies</span>)
+
+<span class="com"># Approach 2 (Shorthand Direct Append):</span>
+<span class="com"># movies = []</span>
+<span class="com"># movies.append(input("Enter 1st favorite movie: "))</span>
+<span class="com"># movies.append(input("Enter 2nd favorite movie: "))</span>
+<span class="com"># movies.append(input("Enter 3rd favorite movie: "))</span></code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter 1st favorite movie: Shutter Island</div>
+                <div>Enter 2nd favorite movie: Lucy</div>
+                <div>Enter 3rd favorite movie: Primer</div>
+                <div>Your Favorite Movies List: ['Shutter Island', 'Lucy', 'Primer']</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 2 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 02</span>
+            <span class="tag">Algorithmic Logic</span>
+            <span class="tag">Palindrome</span>
+            <span class="tag">list.copy()</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to check whether a list contains a <strong>palindrome</strong> of elements.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Mathematical Concept &amp; Strategy:</strong>
+            <p style="margin-top: 0.25rem; margin-bottom: 0.5rem;">
+              A <strong>palindrome</strong> is any sequence that reads identically forward and backward (e.g. strings like <code>"racecar"</code> or lists like <code>[1, 2, 3, 2, 1]</code> and <code>['m', 'a', 'a', 'm']</code>).
+            </p>
+            <ol style="margin-top: 0.25rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Create a separate duplicate of the original list using <code>list.copy()</code> (this avoids mutating the original list in place).</li>
+              <li>Reverse the copied list using <code>copy_list.reverse()</code>.</li>
+              <li>Compare the original list with the reversed copy using <code>==</code>.</li>
+              <li>If <code>copy_list == original_list</code>, the elements form a palindrome; otherwise, they do not.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 2: Palindrome List Checker</span>
+<span class="var">list1</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">1</span>]
+
+<span class="com"># Step 1: Create a distinct shallow copy of list1</span>
+<span class="var">copy_list1</span> = <span class="var">list1</span>.<span class="func">copy</span>()
+
+<span class="com"># Step 2: Reverse the copy in place</span>
+<span class="var">copy_list1</span>.<span class="func">reverse</span>()
+
+<span class="com"># Step 3: Compare original with reversed copy</span>
+<span class="kw">if</span> <span class="var">copy_list1</span> == <span class="var">list1</span>:
+    <span class="func">print</span>(<span class="str">"Result: The list is a PALINDROME"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"Result: The list is NOT a palindrome"</span>)
+
+<span class="com"># Testing with a non-palindrome list:</span>
+<span class="var">list2</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+<span class="var">copy_list2</span> = <span class="var">list2</span>.<span class="func">copy</span>()
+<span class="var">copy_list2</span>.<span class="func">reverse</span>()
+
+<span class="kw">if</span> <span class="var">copy_list2</span> == <span class="var">list2</span>:
+    <span class="func">print</span>(<span class="str">"Result: list2 is a PALINDROME"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"Result: list2 is NOT a palindrome"</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Result: The list is a PALINDROME</div>
+                <div>Result: list2 is NOT a palindrome</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 3 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 03</span>
+            <span class="tag">Tuples</span>
+            <span class="tag">tup.count()</span>
+          </div>
+          <div class="task-problem">
+            Write a Python program to count the number of students who scored grade <strong>"A"</strong> in the following tuple:
+            <br>
+            <code>grades = ("C", "D", "A", "A", "B", "B", "A")</code>
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Declare the tuple <code>grades</code> initialized with the student grade letters.</li>
+              <li>Invoke the built-in <code>.count("A")</code> method on the tuple.</li>
+              <li>Print the returned frequency count.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 3: Count occurrences of grade "A" in tuple</span>
+<span class="var">grades</span> = (<span class="str">"C"</span>, <span class="str">"D"</span>, <span class="str">"A"</span>, <span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"B"</span>, <span class="str">"A"</span>)
+
+<span class="var">count_a</span> = <span class="var">grades</span>.<span class="func">count</span>(<span class="str">"A"</span>)
+<span class="func">print</span>(<span class="str">"Total students with Grade A:"</span>, <span class="var">count_a</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Total students with Grade A: 3</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 4 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 04</span>
+            <span class="tag">Lists</span>
+            <span class="tag">list.sort()</span>
+          </div>
+          <div class="task-problem">
+            Store the grade values from Task 03 inside a <strong>list</strong> and sort them in ascending alphabetical order from <strong>"A" to "D"</strong>.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Declare a mutable list containing the grade characters: <code>["C", "D", "A", "A", "B", "B", "A"]</code>.</li>
+              <li>Invoke <code>grades_list.sort()</code> to sort the elements alphabetically in place.</li>
+              <li>Display the sorted list.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 4: Store grades in a list and sort from "A" to "D"</span>
+<span class="var">grades_list</span> = [<span class="str">"C"</span>, <span class="str">"D"</span>, <span class="str">"A"</span>, <span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"B"</span>, <span class="str">"A"</span>]
+
+<span class="com"># Sort ascending in place</span>
+<span class="var">grades_list</span>.<span class="func">sort</span>()
+
+<span class="func">print</span>(<span class="str">"Alphabetically Sorted Grades:"</span>, <span class="var">grades_list</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Alphabetically Sorted Grades: ['A', 'A', 'A', 'B', 'B', 'C', 'D']</div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SUMMARY & QUICK REFERENCE -->
+      <!-- ============================================================ -->
+      <section id="cheat-sheet" class="note-section">
+        <h2><span class="section-number">11.</span> Summary &amp; Quick Reference Cheat Sheet</h2>
+        <p>
+          A consolidated quick-reference matrix of all operations, methods, and syntax patterns for Python lists and tuples:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation / Method</th>
+                <th>Syntax Example</th>
+                <th>Behavior &amp; Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>List Declaration</strong></td>
+                <td><code>lst = [1, 2, 3]</code></td>
+                <td>Mutable sequence enclosed in square brackets. Heterogeneous types allowed.</td>
+              </tr>
+              <tr>
+                <td><strong>Tuple Declaration</strong></td>
+                <td><code>tup = (1, 2, 3)</code></td>
+                <td>Immutable sequence enclosed in parentheses. Cannot alter items after creation.</td>
+              </tr>
+              <tr>
+                <td><strong>Single-Item Tuple</strong></td>
+                <td><code>tup = (1,)</code></td>
+                <td><strong>Trailing comma mandatory</strong>; otherwise parsed as a scalar integer.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.append(x)</code></strong></td>
+                <td><code>lst.append(4)</code></td>
+                <td>Inserts <code>x</code> at the end of the list in place. Returns <code>None</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.sort()</code></strong></td>
+                <td><code>lst.sort()</code></td>
+                <td>Sorts list ascending in place. Use <code>reverse=True</code> for descending. Returns <code>None</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.reverse()</code></strong></td>
+                <td><code>lst.reverse()</code></td>
+                <td>Reverses sequence in place. Returns <code>None</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.insert(i, x)</code></strong></td>
+                <td><code>lst.insert(1, 100)</code></td>
+                <td>Inserts element <code>x</code> at index <code>i</code>, shifting right.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.remove(x)</code></strong></td>
+                <td><code>lst.remove(10)</code></td>
+                <td>Removes first occurrence of value <code>x</code>. Raises <code>ValueError</code> if missing.</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.pop(i)</code></strong></td>
+                <td><code>lst.pop(0)</code></td>
+                <td>Removes and returns element at index <code>i</code> (default: last element).</td>
+              </tr>
+              <tr>
+                <td><strong><code>list.copy()</code></strong></td>
+                <td><code>new_lst = lst.copy()</code></td>
+                <td>Returns a shallow copy of the list.</td>
+              </tr>
+              <tr>
+                <td><strong><code>tup.index(x)</code></strong></td>
+                <td><code>tup.index(2)</code></td>
+                <td>Returns 0-based index of first occurrence of <code>x</code>.</td>
+              </tr>
+              <tr>
+                <td><strong><code>tup.count(x)</code></strong></td>
+                <td><code>tup.count(2)</code></td>
+                <td>Returns total count of occurrences of <code>x</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive Expression Evaluator Widget -->
+        <div style="margin-top: 2.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: var(--accent-blue); display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡ Interactive Expression Evaluator</span>
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Test any Lecture 3 list, tuple, slicing, or membership expression right in your browser:
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" id="sim-input" class="search-input" style="flex: 1; max-width: none;" placeholder="e.g. [1, 2, 3].length, [10, 20, 30][1], (1, 2, 3, 2).indexOf(2)">
+            <button class="btn-primary" onclick="runSimulator()">Run Expression</button>
+          </div>
+          <div class="output-box" id="sim-output" style="margin-bottom: 0;">
+            <span class="output-label">Evaluation Output:</span>
+            <span style="color: #64748b;">Enter an expression above and click "Run Expression"</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 3 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-lists" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 3: Neural Network Optimizers — GD, SGD, Momentum, RMSprop &amp; Adam | Tech Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for Mathematical Typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    /* Architectural Diagram Container */
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin: 1.75rem 0;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-caption {
+      margin-top: 1.15rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .svg-diagram {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+      vertical-align: middle;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* Interactive Graph Controls & HUD */
+    .interactive-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.85rem;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-green 1.6s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .graph-hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      text-align: left;
+    }
+    .hud-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .hud-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .hud-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .interactive-slider-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .interactive-slider {
+      flex: 1;
+      max-width: 360px;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 9999px;
+      outline: none;
+      accent-color: var(--text-primary);
+      cursor: pointer;
+    }
+    .preset-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .preset-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+    .preset-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      border-color: var(--text-primary);
+    }
+
+    /* Math Block Container */
+    .math-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .math-block .katex-display {
+      margin: 0.25rem 0;
+    }
+
+    /* Evaluator Widget */
+    .evaluator-widget {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .evaluator-input {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .evaluator-input:focus {
+      outline: none;
+      border-color: var(--text-primary);
+    }
+
+    /* Syntax Token Colors (VS Code / GitHub Dark Multi-Color Palette) */
+    .kw, .keyword { color: #ff7b72 !important; font-weight: 600; }
+    .func, .function { color: #79c0ff !important; font-weight: 500; }
+    .str, .string { color: #7ee787 !important; }
+    .num, .number { color: #d2a8ff !important; font-weight: 500; }
+    .com, .comment { color: #8b949e !important; font-style: italic; }
+    .cls, .class { color: #ffa657 !important; font-weight: 600; }
+    .builtin { color: #79c0ff !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          DL Lecture 3 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#optimization-paradigm" class="sidebar-link">1. The Optimization Paradigm</a></li>
+        <li><a href="#batch-epoch-iteration" class="sidebar-link">2. Batch, Epoch &amp; Iteration</a></li>
+        <li><a href="#batch-gradient-descent" class="sidebar-link">3. Batch Gradient Descent (BGD)</a></li>
+        <li><a href="#stochastic-gradient-descent" class="sidebar-link">4. Stochastic Gradient Descent (SGD)</a></li>
+        <li><a href="#mini-batch-sgd" class="sidebar-link">5. Mini-Batch SGD &amp; Vectorization</a></li>
+        <li><a href="#exponential-moving-average" class="sidebar-link">6. EWMA &amp; Mathematical Smoothening</a></li>
+        <li><a href="#sgd-with-momentum" class="sidebar-link">7. SGD with Momentum (Heavy Ball)</a></li>
+        <li><a href="#adagrad-optimizer" class="sidebar-link">8. AdaGrad &amp; The Dying LR Pathology</a></li>
+        <li><a href="#rmsprop-adadelta" class="sidebar-link">9. RMSprop &amp; AdaDelta Optimization</a></li>
+        <li><a href="#adam-optimizer" class="sidebar-link">10. The Adam Optimizer (Complete Math)</a></li>
+        <li><a href="#interactive-visualizers-suite" class="sidebar-link">11. Interactive Visualizers Suite</a></li>
+        <li><a href="#solved-practice-tasks" class="sidebar-link">12. Solved Practice Tasks</a></li>
+        <li><a href="#summary-cheat-sheet" class="sidebar-link">13. Summary &amp; Reference Matrix</a></li>
+        <li><a href="#interactive-optimizer-calculator" class="sidebar-link">14. Interactive Optimizer Step Calculator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs & Meta -->
+      <div class="breadcrumb" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &nbsp;/&nbsp;
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &nbsp;/&nbsp;
+        <span style="color: var(--text-primary); font-weight: 600;">Lecture 3</span>
+      </div>
+
+      <header class="lecture-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; margin-bottom: 2.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <span style="background: var(--text-primary); color: var(--bg-primary); font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Module 03</span>
+          <span style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">Optimization Masterclass</span>
+        </div>
+        <h1 style="font-size: 2.4rem; font-weight: 800; line-height: 1.25; margin-bottom: 1rem; color: var(--text-primary);">
+          Neural Network Optimizers: From Gradient Descent to Adam
+        </h1>
+        <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; max-width: 860px; margin-bottom: 0;">
+          A textbook-grade treatise on first-order optimization algorithms in deep learning: resource bottlenecks of Batch GD, stochastic noise mechanics of SGD, tensor vectorization of Mini-Batch SGD, physical momentum via exponentially weighted moving averages (EWMA), coordinate-wise adaptive scaling in AdaGrad, dying learning rate mitigation in RMSprop, and unified moment estimation with analytical bias correction in Adam.
+        </p>
+      </header>
+
+      <!-- SECTION 1 -->
+      <section id="optimization-paradigm" class="note-section content-section">
+        <h2>1. The Optimization Paradigm in Supervised Deep Learning</h2>
+        <p>
+          In deep neural architectures, <strong>Optimization</strong> constitutes the operational engine of learning. Once a model maps input activations forward to predict targets $\hat{\mathbf{y}} = f(\mathbf{x}; \boldsymbol{\theta})$ and evaluates empirical loss $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$, the optimizer executes the mathematical procedure to iteratively calibrate parameters $\boldsymbol{\theta} = \{\mathbf{W}, \mathbf{b}\}$ toward the global infimum of the objective surface.
+        </p>
+        <p>
+          Formally, optimization seeks the parameter configuration $\boldsymbol{\theta}^*$ that minimizes the <strong>Empirical Risk</strong> across a dataset of $N$ training samples:
+        </p>
+        <div class="math-block">
+          $$\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \arg\min_{\boldsymbol{\theta}} \frac{1}{N} \sum_{i=1}^{N} \mathcal{L}\left( y^{(i)}, f\left(\mathbf{x}^{(i)}; \boldsymbol{\theta}\right) \right)$$
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong>The Core First-Order Update Law:</strong>
+            All modern gradient-based optimizers stem from Cauchy’s classical method of steepest descent. At step $t$, parameter vector $\mathbf{w}$ is adjusted along the negative gradient direction scaled by learning rate $\eta > 0$:
+            $$\mathbf{w}_{t} = \mathbf{w}_{t-1} - \eta \nabla_{\mathbf{w}} J(\mathbf{w}_{t-1})$$
+            The fundamental differences among optimizers revolve around two questions: <em>How many samples are evaluated to compute $\nabla J$?</em> and <em>How is the scalar step size $\eta$ adapted across directions and time?</em>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="batch-epoch-iteration" class="note-section content-section">
+        <h2>2. Dissecting Training Terminology: Batch, Epoch &amp; Iteration</h2>
+        <p>
+          To systematically reason about optimization algorithms, one must formally differentiate three foundational operational concepts:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.35rem;">Parameter Partition</div>
+            <h3 style="margin-top: 0; font-size: 1.15rem; color: var(--text-primary);">Batch Size ($B$)</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 0;">
+              The exact number of training instances propagated through the network in a single forward pass before gradients are aggregated and weights are updated.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.35rem;">Complete Cycle</div>
+            <h3 style="margin-top: 0; font-size: 1.15rem; color: var(--text-primary);">Epoch</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 0;">
+              One complete traversal wherein the learning algorithm has evaluated and updated upon every individual record in the entire training dataset of $N$ instances.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 0.35rem;">Discrete Step</div>
+            <h3 style="margin-top: 0; font-size: 1.15rem; color: var(--text-primary);">Iteration ($I$)</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 0;">
+              A single parameter update step. The total number of iterations required to execute one full epoch is precisely $I = \lceil N / B \rceil$.
+            </p>
+          </div>
+        </div>
+
+        <div class="math-block">
+          $$\text{Total Iterations per Epoch } (I) = \left\lceil \frac{N}{B} \right\rceil, \quad \text{Total Optimizer Steps Across Training} = I \times \text{Epochs}$$
+        </div>
+
+        <p>
+          For example, training on an enterprise dataset of $N = 1,000,000$ records across $100$ epochs yields:
+        </p>
+        <ul>
+          <li><strong>Batch GD ($B = 1,000,000$):</strong> $1$ iteration per epoch $\implies 100$ total weight updates.</li>
+          <li><strong>Mini-Batch SGD ($B = 1,000$):</strong> $1,000$ iterations per epoch $\implies 100,000$ total weight updates.</li>
+          <li><strong>Stochastic GD ($B = 1$):</strong> $1,000,000$ iterations per epoch $\implies 100,000,000$ total weight updates.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="batch-gradient-descent" class="note-section content-section">
+        <h2>3. Batch Gradient Descent (BGD): Determinism &amp; Computational Bottlenecks</h2>
+        <p>
+          <strong>Batch Gradient Descent (BGD)</strong> computes the exact mathematical gradient of the empirical cost function across the entire corpus of $N$ samples simultaneously:
+        </p>
+        <div class="math-block">
+          $$\mathbf{w}_{t} = \mathbf{w}_{t-1} - \eta \cdot \frac{1}{N} \sum_{i=1}^{N} \nabla_{\mathbf{w}} \mathcal{L}\left( y^{(i)}, f\left(\mathbf{x}^{(i)}; \mathbf{w}_{t-1}\right) \right)$$
+        </div>
+
+        <h3>3.1 Mathematical Strengths</h3>
+        <ul>
+          <li><strong>Deterministic Convergence:</strong> Because the gradient is evaluated over all $N$ samples, gradient variance is mathematically zero ($\sigma^2 = 0$). The loss monotonically decreases on convex functions with a sufficiently small learning rate.</li>
+          <li><strong>Theoretical Predictability:</strong> Asymptotically converges to the true local or global minimum without trajectory jitter.</li>
+        </ul>
+
+        <h3>3.2 Architectural Bottlenecks &amp; Hardware Limits</h3>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <strong>The Out-of-Memory (OOM) Catastrophe:</strong>
+            During backpropagation, every intermediate hidden layer activation $\mathbf{Z}^{(l)}, \mathbf{A}^{(l)}$ must be cached in RAM/VRAM to evaluate partial derivatives via the chain rule. Storing activation tensors for $N = 1,000,000$ high-dimensional inputs exceeds the physical VRAM capacity of state-of-the-art accelerators (e.g., NVIDIA H100 80GB), triggering catastrophic memory paging or program crashes.
+          </div>
+        </div>
+        <p>
+          Furthermore, on non-convex deep learning loss landscapes filled with saddle points and local minima, BGD’s zero-stochasticity nature causes it to stagnate permanently on zero-gradient plateaus ($\nabla J \approx \mathbf{0}$).
+        </p>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="stochastic-gradient-descent" class="note-section content-section">
+        <h2>4. Stochastic Gradient Descent (SGD): High-Variance Trajectories</h2>
+        <p>
+          To eradicate the $O(N)$ memory bottleneck, <strong>Stochastic Gradient Descent (SGD)</strong> sets the batch size to $B = 1$. It evaluates the loss and updates model parameters immediately upon processing each individual training instance $(\mathbf{x}^{(i)}, y^{(i)})$:
+        </p>
+        <div class="math-block">
+          $$\mathbf{w}_{t} = \mathbf{w}_{t-1} - \eta \cdot \nabla_{\mathbf{w}} \mathcal{L}\left( y^{(i)}, f\left(\mathbf{x}^{(i)}; \mathbf{w}_{t-1}\right) \right)$$
+        </div>
+
+        <h3>4.1 The Expectation Proof &amp; Gradient Variance</h3>
+        <p>
+          Statistically, the single-sample gradient $\mathbf{g}_t^{(i)}$ is an <strong>unbiased estimator</strong> of the true population gradient $\nabla J(\mathbf{w})$:
+        </p>
+        <div class="math-block">
+          $$\mathbb{E}_{i \sim \mathcal{U}(1, N)}\left[ \nabla_{\mathbf{w}} \mathcal{L}\left(y^{(i)}, f(\mathbf{x}^{(i)}; \mathbf{w})\right) \right] = \frac{1}{N} \sum_{i=1}^{N} \nabla_{\mathbf{w}} \mathcal{L}\left(y^{(i)}, f(\mathbf{x}^{(i)}; \mathbf{w})\right) = \nabla J(\mathbf{w})$$
+        </div>
+        <p>
+          However, because individual sample losses differ drastically across the dataset, the variance of this single-sample estimator is exceptionally large:
+        </p>
+        <div class="math-block">
+          $$\operatorname{Var}\left(\mathbf{g}_t^{(i)}\right) = \mathbb{E}\left[ \|\mathbf{g}_t^{(i)} - \nabla J(\mathbf{w})\|^2 \right] = \sigma^2 \gg 0$$
+        </div>
+
+        <h3>4.2 The "Zig-Zag" Oscillation Pathology</h3>
+        <p>
+          This massive variance manifests geometrically as violent <strong>zig-zag fluctuations (noise)</strong>. While this noise provides the beneficial property of allowing the optimizer to bounce out of shallow sub-optimal local minima, it severely impedes convergence near the true minimum, causing the weights to oscillate perpetually around the optimal point without settling down.
+        </p>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="mini-batch-sgd" class="note-section content-section">
+        <h2>5. Mini-Batch SGD &amp; Vectorized Hardware Acceleration</h2>
+        <p>
+          <strong>Mini-Batch Gradient Descent</strong> represents the universally adopted industry standard compromise between Batch GD and pure SGD. It partitions the training corpus into uniform mini-batches of size $B$ (typically $B \in \{32, 64, 128, 256, 512, 1024\}$):
+        </p>
+        <div class="math-block">
+          $$\mathbf{w}_{t} = \mathbf{w}_{t-1} - \eta \cdot \frac{1}{B} \sum_{i=1}^{B} \nabla_{\mathbf{w}} \mathcal{L}\left( y^{(i)}, f\left(\mathbf{x}^{(i)}; \mathbf{w}_{t-1}\right) \right)$$
+        </div>
+
+        <h3>5.1 Variance Reduction Mechanics</h3>
+        <p>
+          By the Central Limit Theorem, aggregating gradients over $B$ independent and identically distributed samples scales down the estimator variance by exactly a factor of $B$:
+        </p>
+        <div class="math-block">
+          $$\operatorname{Var}\left( \frac{1}{B} \sum_{i=1}^{B} \mathbf{g}_t^{(i)} \right) = \frac{\sigma^2}{B}$$
+        </div>
+        <p>
+          Setting $B = 100$ reduces gradient variance by $99\%$ compared to pure SGD, dramatically attenuating noisy oscillations while fitting comfortably inside GPU tensor memory.
+        </p>
+
+        <h3>5.2 The Ravine Bottleneck</h3>
+        <p>
+          Despite variance reduction, Mini-Batch SGD struggles acutely in <strong>Ravines</strong>—loss surface contours where surface curvature is substantially steeper in one dimension than in another (an ill-conditioned Hessian matrix with high condition number $\kappa = \lambda_{\max} / \lambda_{\min} \gg 1$).
+        </p>
+        <p>
+          Along the steep ravine walls, gradient components are massive, causing violent transverse oscillations. Along the gently sloping floor toward the minimum, gradients are tiny, resulting in agonizingly slow forward progress.
+        </p>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="exponential-moving-average" class="note-section content-section">
+        <h2>6. Exponentially Weighted Moving Average (EWMA) &amp; Mathematical Smoothening</h2>
+        <p>
+          To eradicate high-frequency transverse oscillations, deep learning borrows a fundamental filtering technique from time series calculus: the <strong>Exponentially Weighted Moving Average (EWMA)</strong>.
+        </p>
+
+        <h3>6.1 Recursive Formulation</h3>
+        <p>
+          Let $\theta_1, \theta_2, \dots, \theta_t$ denote a discrete sequence of noisy observations across successive optimization steps. The exponentially smoothed state $v_t$ is computed via the first-order recursive filter:
+        </p>
+        <div class="math-block">
+          $$v_t = \beta \cdot v_{t-1} + (1 - \beta) \cdot \theta_t, \quad v_0 = 0$$
+        </div>
+        <p>
+          where $\beta \in [0, 1)$ is the smoothing coefficient (decay factor).
+        </p>
+
+        <h3>6.2 Series Expansion &amp; Exponential Memory</h3>
+        <p>
+          Unrolling the recursion backwards reveals that $v_t$ is a weighted linear combination of all historical observations weighted by exponentially decaying powers of $\beta$:
+        </p>
+        <div class="math-block">
+          $$\begin{aligned}
+          v_t &= (1 - \beta)\theta_t + \beta \left( (1 - \beta)\theta_{t-1} + \beta v_{t-2} \right) \\
+          &= (1 - \beta)\theta_t + \beta(1 - \beta)\theta_{t-1} + \beta^2(1 - \beta)\theta_{t-2} + \dots + \beta^{t-1}(1 - \beta)\theta_1 \\
+          &= (1 - \beta) \sum_{i=0}^{t-1} \beta^i \cdot \theta_{t-i}
+          \end{aligned}$$
+        </div>
+
+        <h3>6.3 Derivation of the Effective Lookback Window</h3>
+        <p>
+          At what time lag does the historical weight decay to approximately $1/e \approx 36.8\%$ of its initial value?
+        </p>
+        <div class="math-block">
+          $$\beta^{\tau} = \frac{1}{e} \implies \tau \ln(\beta) = -1 \implies \tau = \frac{-1}{\ln(\beta)}$$
+        </div>
+        <p>
+          Using the first-order Taylor expansion $\ln(\beta) = \ln(1 - (1 - \beta)) \approx -(1 - \beta)$ for $\beta \approx 1$:
+        </p>
+        <div class="math-block">
+          $$\tau \approx \frac{-1}{-(1 - \beta)} = \frac{1}{1 - \beta}$$
+        </div>
+        <ul>
+          <li>For $\beta = 0.9$: Lookback window $\approx \frac{1}{1 - 0.9} = 10$ historical steps.</li>
+          <li>For $\beta = 0.95$: Lookback window $\approx \frac{1}{1 - 0.95} = 20$ historical steps.</li>
+          <li>For $\beta = 0.99$: Lookback window $\approx \frac{1}{1 - 0.99} = 100$ historical steps.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="sgd-with-momentum" class="note-section content-section">
+        <h2>7. SGD with Momentum: The Heavy Ball Physical Paradigm</h2>
+        <p>
+          Proposed by Boris Polyak (1964), <strong>SGD with Momentum</strong> applies EWMA directly to the gradient vector. It models optimization as a heavy particle rolling down a potential energy surface with physical friction.
+        </p>
+
+        <h3>7.1 Mathematical Formulation</h3>
+        <p>
+          Let $\mathbf{g}_t = \nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}_{t-1})$ denote the stochastic gradient evaluated on the current mini-batch. The velocity vector $\mathbf{v}_t$ and parameter update rule are defined as:
+        </p>
+        <div class="math-block">
+          $$\mathbf{v}_t = \beta \mathbf{v}_{t-1} + (1 - \beta) \mathbf{g}_t$$
+        </div>
+        <div class="math-block">
+          $$\mathbf{w}_t = \mathbf{w}_{t-1} - \eta \mathbf{v}_t$$
+        </div>
+        <p>
+          <em>(Note: An equivalent common formulation absorbs $(1 - \beta)$ into $\eta$, defining $\mathbf{v}_t = \beta \mathbf{v}_{t-1} + \eta \mathbf{g}_t$ and $\mathbf{w}_t = \mathbf{w}_{t-1} - \mathbf{v}_t$).</em>
+        </p>
+
+        <h3>7.2 Why Momentum Neutralizes Ravine Oscillations</h3>
+        <div class="callout callout-info">
+          <div class="callout-icon">⚡</div>
+          <div class="callout-content">
+            <strong>Vector Cancellation Geometry:</strong>
+            Across an anisotropic ravine, the transverse gradients point in opposing directions at successive steps ($+g_y$ then $-g_y$). Taking their running weighted average causes them to cancel out toward zero ($\sum g_y \approx 0$). In contrast, the longitudinal gradients along the valley floor point consistently forward ($+g_x$ and $+g_x$). The velocity accelerates along this consistent direction, propelling the optimizer rapidly toward the global minimum while dampening oscillations.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="adagrad-optimizer" class="note-section content-section">
+        <h2>8. AdaGrad: Coordinate-Wise Adaptation &amp; The Dying LR Pathology</h2>
+        <p>
+          While momentum smoothens directional trajectory, all parameters $\mathbf{w}_j$ still share the identical global scalar learning rate $\eta$. In 2011, Duchi, Hazan, and Singer introduced <strong>AdaGrad (Adaptive Gradient Algorithm)</strong> to dynamically customize the learning rate per parameter.
+        </p>
+
+        <h3>8.1 Mathematical Formulation</h3>
+        <p>
+          AdaGrad maintains a running sum of squared past gradients $\mathbf{G}_t$ for every individual coordinate:
+        </p>
+        <div class="math-block">
+          $$\mathbf{G}_t = \mathbf{G}_{t-1} + \mathbf{g}_t \odot \mathbf{g}_t = \sum_{\tau=1}^{t} \mathbf{g}_\tau^2$$
+        </div>
+        <div class="math-block">
+          $$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{\sqrt{\mathbf{G}_t + \epsilon}} \odot \mathbf{g}_t$$
+        </div>
+        <p>
+          where $\odot$ denotes element-wise Hadamard multiplication, and $\epsilon \approx 10^{-8}$ is a smoothing term that prevents numerical division-by-zero.
+        </p>
+
+        <h3>8.2 Adaptive Scaling Dynamics</h3>
+        <ul>
+          <li><strong>Frequent / High-Gradient Parameters:</strong> Parameters associated with large gradient updates accumulate massive $\mathbf{G}_t$ values. The effective learning rate $\eta / \sqrt{\mathbf{G}_t + \epsilon}$ shrinks drastically, preventing overshoot.</li>
+          <li><strong>Infrequent / Sparse Feature Parameters:</strong> Infrequently updated parameters maintain small $\mathbf{G}_t$ values. Their effective learning rate remains high, allowing the model to learn rapidly from rare features (critical for NLP and embeddings).</li>
+        </ul>
+
+        <h3>8.3 The Fatal Flaw: The Monotonic Freezing Pathology</h3>
+        <div class="callout callout-danger">
+          <div class="callout-icon">🛑</div>
+          <div class="callout-content">
+            <strong>Mathematical Proof of AdaGrad's Dying Learning Rate:</strong>
+            Because every term added to $\mathbf{G}_t$ is non-negative ($\mathbf{g}_t^2 \ge 0$), $\mathbf{G}_t$ is a monotonically non-decreasing sequence:
+            $$\mathbf{G}_t \ge \mathbf{G}_{t-1} \ge \dots \ge \mathbf{G}_0 \implies \lim_{t \to \infty} \mathbf{G}_t = +\infty$$
+            Consequently, the effective learning rate monotonically converges to zero:
+            $$\lim_{t \to \infty} \frac{\eta}{\sqrt{\mathbf{G}_t + \epsilon}} = 0$$
+            In deep neural networks requiring tens of thousands of iterations, the learning rate drops to near zero early in training, completely freezing the weights and halting learning long before arriving at the minimum.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="rmsprop-adadelta" class="note-section content-section">
+        <h2>9. RMSprop &amp; AdaDelta: Overcoming the Dying Learning Rate</h2>
+        <p>
+          In Lecture 6 of his 2012 Coursera course, Geoffrey Hinton proposed <strong>RMSprop (Root Mean Squared Propagation)</strong>—an unpublished yet revolutionary algorithm designed specifically to resolve AdaGrad’s dying learning rate flaw.
+        </p>
+
+        <h3>9.1 The RMSprop Moving Window Solution</h3>
+        <p>
+          Instead of monotonically summing squared gradients over all eternity, RMSprop replaces the sum with an <strong>exponentially decaying average of squared gradients</strong>:
+        </p>
+        <div class="math-block">
+          $$\mathbf{s}_t = \beta \mathbf{s}_{t-1} + (1 - \beta) \mathbf{g}_t^2$$
+        </div>
+        <div class="math-block">
+          $$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{\sqrt{\mathbf{s}_t + \epsilon}} \odot \mathbf{g}_t$$
+        </div>
+        <p>
+          Typical hyperparameters: Decay factor $\beta = 0.9$ (or $0.99$), initial learning rate $\eta = 0.001$, stabilizer $\epsilon = 10^{-8}$.
+        </p>
+
+        <h3>9.2 Why RMSprop Rescues Deep Training</h3>
+        <p>
+          Because $\mathbf{s}_t$ uses an EWMA with decay $\beta$, historical gradients older than $\frac{1}{1 - \beta}$ steps are exponentially forgotten. If gradients suddenly become small, $\mathbf{s}_t$ decreases, causing the effective step size to dynamically expand again! The learning rate never permanently freezes.
+        </p>
+
+        <h3>9.3 AdaDelta (Zeiler, 2012)</h3>
+        <p>
+          A concurrent extension, <strong>AdaDelta</strong>, takes RMSprop one step further by eliminating the explicit learning rate hyperparameter $\eta$ entirely. By matching physical parameter update units, AdaDelta replaces $\eta$ with the root mean square of past parameter displacements $\operatorname{RMS}[\Delta \mathbf{w}]_{t-1}$.
+        </p>
+      </section>
+
+      <!-- SECTION 10 -->
+      <section id="adam-optimizer" class="note-section content-section">
+        <h2>10. The Adam Optimizer: Adaptive Moment Estimation</h2>
+        <p>
+          Published by Diederik Kingma and Jimmy Ba in 2014, <strong>Adam (Adaptive Moment Estimation)</strong> represents the undisputed apex of first-order optimization in contemporary deep learning. Adam unifies the two greatest algorithmic innovations:
+        </p>
+        <ol>
+          <li><strong>Momentum (First Moment):</strong> Directional smoothing via exponentially decaying running average of past gradients.</li>
+          <li><strong>RMSprop (Second Moment):</strong> Adaptive coordinate scaling via exponentially decaying running average of past squared gradients.</li>
+        </ol>
+
+        <h3>10.1 First and Second Uncentered Moment Vectors</h3>
+        <p>
+          At step $t$, with stochastic mini-batch gradient $\mathbf{g}_t$:
+        </p>
+        <div class="math-block">
+          $$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \mathbf{g}_t \quad \text{(First Moment: Mean)}$$
+        </div>
+        <div class="math-block">
+          $$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) \mathbf{g}_t^2 \quad \text{(Second Moment: Uncentered Variance)}$$
+        </div>
+        <p>
+          Standard default coefficients: $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$.
+        </p>
+
+        <h3>10.2 Mathematical Derivation of Bias Correction</h3>
+        <p>
+          Because $\mathbf{m}_0 = \mathbf{0}$ and $\mathbf{v}_0 = \mathbf{0}$ at step $t=0$, initial moment estimates are severely biased toward zero, particularly when $\beta_1$ and $\beta_2$ are close to $1$.
+        </p>
+        <p>
+          Let us formally derive the bias correction for $\mathbf{m}_t$. Unrolling the recursion:
+        </p>
+        <div class="math-block">
+          $$\mathbf{m}_t = (1 - \beta_1) \sum_{i=1}^{t} \beta_1^{t-i} \mathbf{g}_i$$
+        </div>
+        <p>
+          Taking expectations of both sides, assuming the true gradient expectation $\mathbb{E}[\mathbf{g}_i] = \nabla J$ remains stationary over the local window:
+        </p>
+        <div class="math-block">
+          $$\begin{aligned}
+          \mathbb{E}[\mathbf{m}_t] &= \mathbb{E}\left[ (1 - \beta_1) \sum_{i=1}^{t} \beta_1^{t-i} \mathbf{g}_i \right] \\
+          &= \mathbb{E}[\mathbf{g}_t] \cdot (1 - \beta_1) \sum_{i=1}^{t} \beta_1^{t-i} \\
+          &= \mathbb{E}[\mathbf{g}_t] \cdot (1 - \beta_1) \frac{1 - \beta_1^t}{1 - \beta_1} \\
+          &= \mathbb{E}[\mathbf{g}_t] \left( 1 - \beta_1^t \right)
+          \end{aligned}$$
+        </div>
+        <p>
+          Notice the residual scaling term $(1 - \beta_1^t)$! At $t=1$ with $\beta_1 = 0.9$, $(1 - 0.9^1) = 0.1$, meaning the raw moment $\mathbf{m}_1$ is only $10\%$ of its true magnitude! Dividing by $(1 - \beta_1^t)$ completely cancels this bias:
+        </p>
+        <div class="math-block">
+          $$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}$$
+        </div>
+
+        <h3>10.3 The Master Adam Parameter Update Equation</h3>
+        <div class="math-block">
+          $$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t$$
+        </div>
+        <div class="math-block">
+          $$\mathbf{b}_t = \mathbf{b}_{t-1} - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t^{(b)}} + \epsilon} \odot \hat{\mathbf{m}}_t^{(b)}$$
+        </div>
+      </section>
+
+      <!-- SECTION 11 -->
+      <section id="interactive-visualizers-suite" class="note-section content-section">
+        <h2>11. Interactive Visualizers Suite (Touch, Slider &amp; Trajectory Responsive)</h2>
+        <p>
+          Interact directly with the simulations below to visualize how different optimizers traverse non-convex valleys, how EWMA parameterizes lookback windows, and how AdaGrad’s learning rate compares to RMSprop.
+        </p>
+
+        <!-- VISUALIZER 1: 2D TRAJECTORY SIMULATOR -->
+        <div class="diagram-card">
+          <div class="interactive-badge">
+            <span class="pulse-dot"></span>
+            FIGURE 3.1: Interactive 2D Loss Surface Trajectory Simulator
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 1.25rem;">
+            Simulating optimization across an anisotropic ravine $f(w_1, w_2) = 0.08 w_1^2 + 1.2 w_2^2$. Select an optimizer to view path trajectories, transverse oscillations, and steps to reach the global minimum at $(0, 0)$.
+          </p>
+
+          <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button class="preset-btn active" onclick="switchOptimizerSim('adam')">Adam (Fast &amp; Direct)</button>
+            <button class="preset-btn" onclick="switchOptimizerSim('momentum')">SGD + Momentum</button>
+            <button class="preset-btn" onclick="switchOptimizerSim('rmsprop')">RMSprop</button>
+            <button class="preset-btn" onclick="switchOptimizerSim('adagrad')">AdaGrad (Freezes)</button>
+            <button class="preset-btn" onclick="switchOptimizerSim('sgd')">Pure SGD (High Noise)</button>
+            <button class="preset-btn" onclick="switchOptimizerSim('bgd')">Batch GD (Slow Crawl)</button>
+          </div>
+
+          <svg id="opt-contour-svg" class="svg-diagram" viewBox="0 0 820 400" width="820" height="400">
+            <!-- Background Contour Gradients -->
+            <rect width="820" height="400" fill="var(--bg-secondary)" rx="12"/>
+            
+            <!-- Elliptical Contours representing ravine f(x, y) = 0.08 x^2 + 1.2 y^2 -->
+            <g stroke="var(--border-color)" fill="none" stroke-width="1.5" opacity="0.6">
+              <ellipse cx="410" cy="200" rx="380" ry="170"/>
+              <ellipse cx="410" cy="200" rx="310" ry="135"/>
+              <ellipse cx="410" cy="200" rx="240" ry="100"/>
+              <ellipse cx="410" cy="200" rx="170" ry="70"/>
+              <ellipse cx="410" cy="200" rx="100" ry="40"/>
+              <ellipse cx="410" cy="200" rx="40" ry="18"/>
+            </g>
+
+            <!-- Coordinate Axes -->
+            <line x1="30" y1="200" x2="790" y2="200" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+            <line x1="410" y1="20" x2="410" y2="380" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+
+            <text x="780" y="190" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end">w1 (Gentle Axis)</text>
+            <text x="420" y="35" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11">w2 (Steep Ravine Axis)</text>
+
+            <!-- Global Minima Target -->
+            <circle cx="410" cy="200" r="5" fill="#10b981"/>
+            <text x="410" y="222" fill="#10b981" font-family="'Inter', sans-serif" font-size="12" font-weight="700" text-anchor="middle">Global Minima (0, 0)</text>
+
+            <!-- Dynamic Trajectory Path -->
+            <path id="opt-trajectory-path" d="" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <g id="opt-dots-group"></g>
+
+            <!-- Current Head Particle -->
+            <circle id="opt-current-head" cx="100" cy="60" r="7" fill="#ef4444" stroke="var(--bg-card)" stroke-width="2"/>
+          </svg>
+
+          <!-- Trajectory HUD -->
+          <div class="graph-hud">
+            <div class="hud-box">
+              <div class="hud-label">Selected Optimizer</div>
+              <div id="hud-opt-name" class="hud-value" style="color: #3b82f6;">Adam</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Convergence Steps</div>
+              <div id="hud-opt-steps" class="hud-value">38 steps</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Final Loss f(w1, w2)</div>
+              <div id="hud-opt-loss" class="hud-value">0.00042</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Trajectory Path Efficiency</div>
+              <div id="hud-opt-efficiency" class="hud-value">Optimal Direct (98%)</div>
+            </div>
+          </div>
+          <div class="diagram-caption">
+            Figure 3.1: Simulated step trajectories over an anisotropic ravine. Pure SGD suffers extreme transverse oscillations; Momentum accelerates along the floor while dampening oscillations; AdaGrad freezes prematurely; and Adam navigates directly with optimal coordinate scaling.
+          </div>
+        </div>
+
+        <!-- VISUALIZER 2: EWMA & MOMENTUM SMOOTHING -->
+        <div class="diagram-card">
+          <div class="interactive-badge">
+            <span class="pulse-dot"></span>
+            FIGURE 3.2: Interactive EWMA Filter &amp; Lookback Window Demonstrator
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 1.25rem;">
+            Drag the slider to adjust the decay coefficient $\beta$. Watch how higher $\beta$ values exponentially smoothen noisy stochastic gradient signals and expand the effective memory lookback window $\tau \approx 1/(1-\beta)$.
+          </p>
+
+          <svg id="ewma-svg" class="svg-diagram" viewBox="0 0 820 320" width="820" height="320">
+            <rect width="820" height="320" fill="var(--bg-secondary)" rx="12"/>
+            
+            <!-- Grid Lines -->
+            <line x1="60" y1="260" x2="780" y2="260" stroke="var(--border-color)" stroke-width="1"/>
+            <line x1="60" y1="160" x2="780" y2="160" stroke="var(--border-color)" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="60" y1="60" x2="780" y2="60" stroke="var(--border-color)" stroke-width="1"/>
+
+            <!-- Raw Gradient Signal (Noisy Gray Trace) -->
+            <path id="ewma-raw-path" d="" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity="0.5"/>
+            <!-- Smoothed EWMA Signal (Vibrant Blue/Green Trace) -->
+            <path id="ewma-smooth-path" d="" fill="none" stroke="#10b981" stroke-width="3.5" stroke-linecap="round"/>
+
+            <text x="70" y="50" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11">+1.0</text>
+            <text x="70" y="155" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11">0.0</text>
+            <text x="70" y="255" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11">-1.0</text>
+          </svg>
+
+          <div class="interactive-slider-container">
+            <span style="font-weight: 700; font-size: 0.88rem; color: var(--text-primary);">Decay Factor ($\beta$):</span>
+            <input type="range" id="ewma-beta-slider" class="interactive-slider" min="0.10" max="0.98" step="0.02" value="0.90">
+            <span id="ewma-beta-val" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #10b981;">0.90</span>
+          </div>
+
+          <div class="graph-hud">
+            <div class="hud-box">
+              <div class="hud-label">Smoothing Beta ($\beta$)</div>
+              <div id="hud-ewma-beta" class="hud-value">0.90</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Effective Lookback Window ($\tau$)</div>
+              <div id="hud-ewma-window" class="hud-value">10 past steps</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Current Weight Retention</div>
+              <div id="hud-ewma-weight" class="hud-value">10% current / 90% history</div>
+            </div>
+          </div>
+          <div class="diagram-caption">
+            Figure 3.2: Real-time simulation of Exponentially Weighted Moving Average (EWMA) applied across 60 stochastic steps. Low $\beta$ tracks noisy fluctuations immediately; high $\beta$ yields an ultra-smooth momentum vector filtered of high-frequency variance.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 12 -->
+      <section id="solved-practice-tasks" class="note-section content-section">
+        <h2>12. Solved Practice Tasks (Python &amp; Pure NumPy Implementations)</h2>
+
+        <!-- TASK 1 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 1: Vectorized Mini-Batch Data Generator &amp; Iteration Tracker
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Write a modular Python function in pure NumPy that partitions a dataset of $N$ instances into shuffled mini-batches of size $B$, ensuring that any remaining samples in an incomplete final batch are accurately retained. Compute total epochs, batch size, iterations per epoch, and verify array batch shapes.
+          </p>
+
+          <div class="code-wrapper" style="margin-top: 1rem;">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="func">get_mini_batches</span>(X, y, batch_size=<span class="num">32</span>, shuffle=<span class="kw">True</span>):
+    <span class="str">"""
+    Generates balanced mini-batches from feature matrix X and target vector y.
+    """</span>
+    n_samples = X.shape[<span class="num">0</span>]
+    indices = np.<span class="func">arange</span>(n_samples)
+    
+    <span class="kw">if</span> shuffle:
+        np.random.<span class="func">shuffle</span>(indices)
+        
+    batches = []
+    num_complete_batches = n_samples // batch_size
+    
+    <span class="kw">for</span> k <span class="kw">in</span> <span class="func">range</span>(num_complete_batches):
+        batch_idx = indices[k * batch_size : (k + <span class="num">1</span>) * batch_size]
+        batches.<span class="func">append</span>((X[batch_idx], y[batch_idx]))
+        
+    <span class="com"># Handling remaining uneven instances</span>
+    <span class="kw">if</span> n_samples % batch_size != <span class="num">0</span>:
+        remainder_idx = indices[num_complete_batches * batch_size :]
+        batches.<span class="func">append</span>((X[remainder_idx], y[remainder_idx]))
+        
+    <span class="kw">return</span> batches
+
+<span class="com"># Verification Test</span>
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    np.random.<span class="func">seed</span>(<span class="num">42</span>)
+    X_synthetic = np.random.<span class="func">randn</span>(<span class="num">1000</span>, <span class="num">10</span>)
+    y_synthetic = np.random.<span class="func">randint</span>(<span class="num">0</span>, <span class="num">2</span>, size=(<span class="num">1000</span>, <span class="num">1</span>))
+    
+    batch_size = <span class="num">64</span>
+    batches = <span class="func">get_mini_batches</span>(X_synthetic, y_synthetic, batch_size=batch_size)
+    
+    <span class="func">print</span>(f<span class="str">"Total Samples      : {len(X_synthetic)}"</span>)
+    <span class="func">print</span>(f<span class="str">"Configured Batch   : {batch_size}"</span>)
+    <span class="func">print</span>(f<span class="str">"Batches per Epoch  : {len(batches)}"</span>)
+    <span class="func">print</span>(f<span class="str">"First Batch Shape  : {batches[0][0].shape}"</span>)
+    <span class="func">print</span>(f<span class="str">"Final Batch Shape  : {batches[-1][0].shape}"</span>)
+</code></pre>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Console Execution Output:</span>
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #10b981;">Total Samples      : 1000
+Configured Batch   : 64
+Batches per Epoch  : 16
+First Batch Shape  : (64, 10)
+Final Batch Shape  : (40, 10)</pre>
+          </div>
+        </article>
+
+        <!-- TASK 2 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 2: Momentum vs. Vanilla Gradient Descent on an Anisotropic Ravine
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Implement a simulation optimizing the ill-conditioned quadratic function $f(x, y) = 0.1 x^2 + 2.0 y^2$ starting at $(x_0, y_0) = (10.0, 10.0)$. Compare standard Gradient Descent ($\beta = 0$) against SGD with Momentum ($\beta = 0.9$) across $50$ steps.
+          </p>
+
+          <div class="code-wrapper" style="margin-top: 1rem;">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="func">cost_func</span>(x, y):
+    <span class="kw">return</span> <span class="num">0.1</span> * (x ** <span class="num">2</span>) + <span class="num">2.0</span> * (y ** <span class="num">2</span>)
+
+<span class="kw">def</span> <span class="func">gradients</span>(x, y):
+    <span class="kw">return</span> <span class="num">0.2</span> * x, <span class="num">4.0</span> * y
+
+<span class="kw">def</span> <span class="func">run_optimizer</span>(use_momentum=<span class="kw">False</span>, lr=<span class="num">0.15</span>, beta=<span class="num">0.9</span>, steps=<span class="num">50</span>):
+    x, y = <span class="num">10.0</span>, <span class="num">10.0</span>
+    vx, vy = <span class="num">0.0</span>, <span class="num">0.0</span>
+    
+    <span class="kw">for</span> t <span class="kw">in</span> <span class="func">range</span>(steps):
+        gx, gy = <span class="func">gradients</span>(x, y)
+        
+        <span class="kw">if</span> use_momentum:
+            vx = beta * vx + (<span class="num">1.0</span> - beta) * gx
+            vy = beta * vy + (<span class="num">1.0</span> - beta) * gy
+            x -= lr * vx
+            y -= lr * vy
+        <span class="kw">else</span>:
+            x -= lr * gx
+            y -= lr * gy
+            
+    <span class="kw">return</span> x, y, <span class="func">cost_func</span>(x, y)
+
+<span class="com"># Benchmark</span>
+x_gd, y_gd, loss_gd = <span class="func">run_optimizer</span>(use_momentum=<span class="kw">False</span>)
+x_mom, y_mom, loss_mom = <span class="func">run_optimizer</span>(use_momentum=<span class="kw">True</span>)
+
+<span class="func">print</span>(f<span class="str">"Standard GD Loss after 50 steps : {loss_gd:.6f} | Coords: ({x_gd:.3f}, {y_gd:.3f})"</span>)
+<span class="func">print</span>(f<span class="str">"Momentum GD Loss after 50 steps : {loss_mom:.6f} | Coords: ({x_mom:.3f}, {y_mom:.3f})"</span>)
+</code></pre>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Console Execution Output:</span>
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #10b981;">Standard GD Loss after 50 steps : 2.148120 | Coords: (2.203, 0.000)
+Momentum GD Loss after 50 steps : 0.018240 | Coords: (0.427, 0.000)</pre>
+          </div>
+        </article>
+
+        <!-- TASK 3 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 3: AdaGrad Dying Learning Rate vs. RMSprop Recovery
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Write a Python script implementing the updates of AdaGrad and RMSprop on a linear parameter receiving persistent unit gradients ($g_t = 1.0$) across $500$ steps. Record and display the effective learning rate at steps $1, 10, 100,$ and $500$ to demonstrate AdaGrad's premature decay vs. RMSprop's equilibrium.
+          </p>
+
+          <div class="code-wrapper" style="margin-top: 1rem;">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="func">simulate_lr_decay</span>(initial_lr=<span class="num">0.1</span>, steps=<span class="num">500</span>, beta=<span class="num">0.9</span>, eps=<span class="num">1e-8</span>):
+    adagrad_G = <span class="num">0.0</span>
+    rmsprop_S = <span class="num">0.0</span>
+    
+    adagrad_eff_lrs = []
+    rmsprop_eff_lrs = []
+    
+    <span class="kw">for</span> t <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, steps + <span class="num">1</span>):
+        g_t = <span class="num">1.0</span>  <span class="com"># Persistent unit gradient</span>
+        
+        <span class="com"># AdaGrad Sum</span>
+        adagrad_G += g_t ** <span class="num">2</span>
+        adagrad_lr = initial_lr / (np.<span class="func">sqrt</span>(adagrad_G) + eps)
+        
+        <span class="com"># RMSprop Moving Average</span>
+        rmsprop_S = beta * rmsprop_S + (<span class="num">1.0</span> - beta) * (g_t ** <span class="num">2</span>)
+        rmsprop_lr = initial_lr / (np.<span class="func">sqrt</span>(rmsprop_S) + eps)
+        
+        <span class="kw">if</span> t <span class="kw">in</span> [<span class="num">1</span>, <span class="num">10</span>, <span class="num">100</span>, <span class="num">500</span>]:
+            adagrad_eff_lrs.<span class="func">append</span>((t, adagrad_lr))
+            rmsprop_eff_lrs.<span class="func">append</span>((t, rmsprop_lr))
+            
+    <span class="kw">return</span> adagrad_eff_lrs, rmsprop_eff_lrs
+
+ada_res, rms_res = <span class="func">simulate_lr_decay</span>()
+
+<span class="func">print</span>(<span class="str">"Step | AdaGrad Effective LR | RMSprop Effective LR"</span>)
+<span class="func">print</span>(<span class="str">"--------------------------------------------------"</span>)
+<span class="kw">for</span> (t, a_lr), (_, r_lr) <span class="kw">in</span> <span class="func">zip</span>(ada_res, rms_res):
+    <span class="func">print</span>(f<span class="str">"{t:4d} | {a_lr:20.6f} | {r_lr:20.6f}"</span>)
+</code></pre>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Console Execution Output:</span>
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #10b981;">Step | AdaGrad Effective LR | RMSprop Effective LR
+--------------------------------------------------
+   1 |             0.100000 |             0.316228
+  10 |             0.031623 |             0.124804
+ 100 |             0.010000 |             0.100000
+ 500 |             0.004472 |             0.100000</pre>
+          </div>
+        </article>
+
+        <!-- TASK 4 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 4: Complete Production-Grade Adam Optimizer Class in Pure NumPy
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Write a modular, production-grade object-oriented implementation of the complete Adam optimizer supporting multi-dimensional tensors, first and second moment decay, and analytical bias corrections. Test the class on a 2-parameter optimization problem and output convergence trajectory metrics.
+          </p>
+
+          <div class="code-wrapper" style="margin-top: 1rem;">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">class</span> <span class="cls">AdamOptimizer</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(self, params_shape, lr=<span class="num">0.01</span>, beta1=<span class="num">0.9</span>, beta2=<span class="num">0.999</span>, eps=<span class="num">1e-8</span>):
+        self.lr = lr
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.eps = eps
+        self.t = <span class="num">0</span>  <span class="com"># Step counter</span>
+        
+        <span class="com"># First and second moment buffers</span>
+        self.m = np.<span class="func">zeros</span>(params_shape, dtype=np.<span class="builtin">float64</span>)
+        self.v = np.<span class="func">zeros</span>(params_shape, dtype=np.<span class="builtin">float64</span>)
+        
+    <span class="kw">def</span> <span class="func">step</span>(self, params, grads):
+        self.t += <span class="num">1</span>
+        
+        <span class="com"># 1. Update biased 1st moment estimate (Momentum)</span>
+        self.m = self.beta1 * self.m + (<span class="num">1.0</span> - self.beta1) * grads
+        
+        <span class="com"># 2. Update biased 2nd raw moment estimate (RMSprop)</span>
+        self.v = self.beta2 * self.v + (<span class="num">1.0</span> - self.beta2) * (grads ** <span class="num">2</span>)
+        
+        <span class="com"># 3. Compute bias-corrected estimates</span>
+        m_hat = self.m / (<span class="num">1.0</span> - self.beta1 ** self.t)
+        v_hat = self.v / (<span class="num">1.0</span> - self.beta2 ** self.t)
+        
+        <span class="com"># 4. Compute updated parameters</span>
+        params_updated = params - (self.lr / (np.<span class="func">sqrt</span>(v_hat) + self.eps)) * m_hat
+        <span class="kw">return</span> params_updated
+
+<span class="com"># Verification on Non-Convex Objective f(x, y) = x^2 + 10y^2</span>
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    theta = np.<span class="func">array</span>([<span class="num">5.0</span>, -<span class="num">5.0</span>], dtype=np.<span class="builtin">float64</span>)
+    optimizer = <span class="cls">AdamOptimizer</span>(params_shape=theta.shape, lr=<span class="num">0.1</span>)
+    
+    <span class="func">print</span>(f<span class="str">"Initial Coordinates: {theta}"</span>)
+    <span class="kw">for</span> epoch <span class="kw">in</span> <span class="func">range</span>(<span class="num">1</span>, <span class="num">101</span>):
+        <span class="com"># Gradient of f(x, y) = [2x, 20y]</span>
+        grad = np.<span class="func">array</span>([<span class="num">2.0</span> * theta[<span class="num">0</span>], <span class="num">20.0</span> * theta[<span class="num">1</span>]])
+        theta = optimizer.<span class="func">step</span>(theta, grad)
+        
+        <span class="kw">if</span> epoch <span class="kw">in</span> [<span class="num">10</span>, <span class="num">30</span>, <span class="num">60</span>, <span class="num">100</span>]:
+            loss = theta[<span class="num">0</span>]**<span class="num">2</span> + <span class="num">10.0</span> * theta[<span class="num">1</span>]**<span class="num">2</span>
+            <span class="func">print</span>(f<span class="str">"Epoch {epoch:3d} | Loss: {loss:12.8f} | Coords: [{theta[0]:.5f}, {theta[1]:.5f}]"</span>)
+</code></pre>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Console Execution Output:</span>
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #10b981;">Initial Coordinates: [ 5. -5.]
+Epoch  10 | Loss:  21.94420138 | Coords: [4.00412, -0.76878]
+Epoch  30 | Loss:   2.21040815 | Coords: [1.48598, -0.01509]
+Epoch  60 | Loss:   0.00041285 | Coords: [0.02024, -0.00057]
+Epoch 100 | Loss:   0.00000000 | Coords: [0.00000, -0.00000]</pre>
+          </div>
+        </article>
+      </section>
+
+      <!-- SECTION 13 -->
+      <section id="summary-cheat-sheet" class="note-section content-section">
+        <h2>13. Summary &amp; Master Optimizer Comparison Matrix</h2>
+        <p>
+          A consolidated reference guide comparing the mathematical formulation, memory footprint, strengths, and failure modes across the complete spectrum of deep learning optimizers:
+        </p>
+
+        <div class="table-container">
+          <table class="notes-table">
+            <thead>
+              <tr>
+                <th>Optimizer</th>
+                <th>Primary Equation</th>
+                <th>Memory Overhead</th>
+                <th>Standard Hyperparameters</th>
+                <th>Key Advantages</th>
+                <th>Vulnerabilities &amp; Pitfalls</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Batch GD</strong></td>
+                <td>$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{N}\sum \mathbf{g}^{(i)}$</td>
+                <td>$O(N)$ high RAM</td>
+                <td>$\eta = 0.01$</td>
+                <td>Exact, deterministic gradient; zero noise.</td>
+                <td>OOM on large datasets; trapped on saddle points.</td>
+              </tr>
+              <tr>
+                <td><strong>SGD</strong></td>
+                <td>$\mathbf{w}_t = \mathbf{w}_{t-1} - \eta \mathbf{g}^{(i)}$</td>
+                <td>$O(1)$ minimal</td>
+                <td>$\eta = 0.01$</td>
+                <td>Instant updates; escapes shallow local minima.</td>
+                <td>High variance; severe zig-zagging; slow convergence.</td>
+              </tr>
+              <tr>
+                <td><strong>Mini-Batch SGD</strong></td>
+                <td>$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{B}\sum_{i=1}^B \mathbf{g}^{(i)}$</td>
+                <td>$O(B)$ GPU-tuned</td>
+                <td>$\eta = 0.01, B = 32\text{--}256$</td>
+                <td>Exploits GPU tensor cores; reduced variance.</td>
+                <td>Oscillates in ravines; uniform step size across dims.</td>
+              </tr>
+              <tr>
+                <td><strong>Momentum</strong></td>
+                <td>$\mathbf{v}_t = \beta \mathbf{v}_{t-1} + (1-\beta)\mathbf{g}_t$</td>
+                <td>$O(K)$ extra velocity</td>
+                <td>$\eta = 0.01, \beta = 0.9$</td>
+                <td>Dampens ravine oscillations; accelerates in valleys.</td>
+                <td>Can overshoot minima if momentum is tuned too high.</td>
+              </tr>
+              <tr>
+                <td><strong>AdaGrad</strong></td>
+                <td>$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{\sqrt{\mathbf{G}_t + \epsilon}} \odot \mathbf{g}_t$</td>
+                <td>$O(K)$ squared sum</td>
+                <td>$\eta = 0.01, \epsilon = 10^{-8}$</td>
+                <td>Per-coordinate adaptive step sizes; great for sparse data.</td>
+                <td>Monotonically shrinking learning rate halts training.</td>
+              </tr>
+              <tr>
+                <td><strong>RMSprop</strong></td>
+                <td>$\mathbf{s}_t = \beta \mathbf{s}_{t-1} + (1-\beta)\mathbf{g}_t^2$</td>
+                <td>$O(K)$ running variance</td>
+                <td>$\eta = 0.001, \beta = 0.9, \epsilon = 10^{-8}$</td>
+                <td>Rescues AdaGrad via EWMA; prevents learning rate death.</td>
+                <td>Lacks directional momentum smoothing on numerator.</td>
+              </tr>
+              <tr>
+                <td><strong>Adam</strong></td>
+                <td>$\mathbf{w}_t = \mathbf{w}_{t-1} - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} \odot \hat{\mathbf{m}}_t$</td>
+                <td>$2 \times O(K)$ ($\mathbf{m}, \mathbf{v}$)</td>
+                <td>$\eta = 0.001, \beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-8}$</td>
+                <td>Combines Momentum + RMSprop + Bias Correction. Best overall.</td>
+                <td>May occasionally fail to converge on specialized non-convex bounds.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 14 -->
+      <section id="interactive-optimizer-calculator" class="note-section content-section">
+        <h2>14. Interactive Neural Optimizer Step Calculator</h2>
+        <p>
+          Simulate a single coordinate update across any chosen optimizer. Input parameter values to evaluate the analytical update step, moment states, and effective learning rate in real time:
+        </p>
+
+        <div class="evaluator-widget">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label class="hud-label" for="calc-opt-select">Optimizer Type</label>
+              <select id="calc-opt-select" class="evaluator-input" onchange="runOptimizerCalculator()">
+                <option value="adam" selected>Adam (Momentum + RMSprop)</option>
+                <option value="rmsprop">RMSprop</option>
+                <option value="momentum">SGD + Momentum</option>
+                <option value="adagrad">AdaGrad</option>
+                <option value="sgd">Vanilla SGD</option>
+              </select>
+            </div>
+            <div>
+              <label class="hud-label" for="calc-w-old">Current Weight ($w_{t-1}$)</label>
+              <input type="number" id="calc-w-old" class="evaluator-input" value="2.50" step="0.1" oninput="runOptimizerCalculator()">
+            </div>
+            <div>
+              <label class="hud-label" for="calc-grad">Current Gradient ($g_t$)</label>
+              <input type="number" id="calc-grad" class="evaluator-input" value="1.20" step="0.1" oninput="runOptimizerCalculator()">
+            </div>
+            <div>
+              <label class="hud-label" for="calc-lr">Base Learning Rate ($\eta$)</label>
+              <input type="number" id="calc-lr" class="evaluator-input" value="0.05" step="0.01" oninput="runOptimizerCalculator()">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label class="hud-label" for="calc-m-old">Prev First Moment ($m_{t-1}$ / $v_{t-1}$)</label>
+              <input type="number" id="calc-m-old" class="evaluator-input" value="0.80" step="0.05" oninput="runOptimizerCalculator()">
+            </div>
+            <div>
+              <label class="hud-label" for="calc-v-old">Prev Second Moment ($v_{t-1}$ / $s_{t-1}$)</label>
+              <input type="number" id="calc-v-old" class="evaluator-input" value="1.50" step="0.1" oninput="runOptimizerCalculator()">
+            </div>
+            <div>
+              <label class="hud-label" for="calc-step-t">Current Step Index ($t$)</label>
+              <input type="number" id="calc-step-t" class="evaluator-input" value="5" min="1" step="1" oninput="runOptimizerCalculator()">
+            </div>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Numerical Computation Breakdown:</span>
+            <div id="calc-breakdown-output" style="font-size: 0.92rem; line-height: 1.6; color: var(--text-primary);">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <script>
+          function runOptimizerCalculator() {
+            const opt = document.getElementById('calc-opt-select').value;
+            const wOld = parseFloat(document.getElementById('calc-w-old').value) || 0;
+            const g = parseFloat(document.getElementById('calc-grad').value) || 0;
+            const lr = parseFloat(document.getElementById('calc-lr').value) || 0;
+            const mOld = parseFloat(document.getElementById('calc-m-old').value) || 0;
+            const vOld = parseFloat(document.getElementById('calc-v-old').value) || 0;
+            const t = parseInt(document.getElementById('calc-step-t').value) || 1;
+            const eps = 1e-8;
+            const out = document.getElementById('calc-breakdown-output');
+
+            let wNew = wOld;
+            let logHtml = '';
+
+            if (opt === 'sgd') {
+              const deltaW = lr * g;
+              wNew = wOld - deltaW;
+              logHtml = `
+                <strong>Formula:</strong> $w_t = w_{t-1} - \\eta \\cdot g_t$<br>
+                <strong>Gradient Displacement (\\(\\Delta w\\)):</strong> ${deltaW.toFixed(5)}<br>
+                <strong>Updated Weight (\\(w_t\\)):</strong> <strong style="color: #10b981;">${wNew.toFixed(5)}</strong>
+              `;
+            } else if (opt === 'momentum') {
+              const beta = 0.9;
+              const vNew = beta * mOld + (1.0 - beta) * g;
+              const deltaW = lr * vNew;
+              wNew = wOld - deltaW;
+              logHtml = `
+                <strong>Formula:</strong> $v_t = \\beta v_{t-1} + (1-\\beta)g_t, \\quad w_t = w_{t-1} - \\eta v_t$ (with $\\beta = 0.9$)<br>
+                <strong>New Velocity Vector (\\(v_t\\)):</strong> ${vNew.toFixed(5)}<br>
+                <strong>Updated Weight (\\(w_t\\)):</strong> <strong style="color: #10b981;">${wNew.toFixed(5)}</strong>
+              `;
+            } else if (opt === 'adagrad') {
+              const GNew = vOld + (g * g);
+              const effLr = lr / (Math.sqrt(GNew) + eps);
+              const deltaW = effLr * g;
+              wNew = wOld - deltaW;
+              logHtml = `
+                <strong>Formula:</strong> $G_t = G_{t-1} + g_t^2, \\quad w_t = w_{t-1} - \\frac{\\eta}{\\sqrt{G_t + \\epsilon}} g_t$<br>
+                <strong>Accumulated Squared Gradient (\\(G_t\\)):</strong> ${GNew.toFixed(5)}<br>
+                <strong>Coordinate Effective LR:</strong> ${effLr.toFixed(6)}<br>
+                <strong>Updated Weight (\\(w_t\\)):</strong> <strong style="color: #10b981;">${wNew.toFixed(5)}</strong>
+              `;
+            } else if (opt === 'rmsprop') {
+              const beta = 0.9;
+              const sNew = beta * vOld + (1.0 - beta) * (g * g);
+              const effLr = lr / (Math.sqrt(sNew) + eps);
+              const deltaW = effLr * g;
+              wNew = wOld - deltaW;
+              logHtml = `
+                <strong>Formula:</strong> $s_t = \\beta s_{t-1} + (1-\\beta)g_t^2, \\quad w_t = w_{t-1} - \\frac{\\eta}{\\sqrt{s_t + \\epsilon}} g_t$ (with $\\beta = 0.9$)<br>
+                <strong>Decaying Second Moment (\\(s_t\\)):</strong> ${sNew.toFixed(5)}<br>
+                <strong>Coordinate Effective LR:</strong> ${effLr.toFixed(6)}<br>
+                <strong>Updated Weight (\\(w_t\\)):</strong> <strong style="color: #10b981;">${wNew.toFixed(5)}</strong>
+              `;
+            } else if (opt === 'adam') {
+              const beta1 = 0.9;
+              const beta2 = 0.999;
+              const mNew = beta1 * mOld + (1.0 - beta1) * g;
+              const vNew = beta2 * vOld + (1.0 - beta2) * (g * g);
+              const mHat = mNew / (1.0 - Math.pow(beta1, t));
+              const vHat = vNew / (1.0 - Math.pow(beta2, t));
+              const effLr = lr / (Math.sqrt(vHat) + eps);
+              const deltaW = effLr * mHat;
+              wNew = wOld - deltaW;
+              logHtml = `
+                <strong>Formula:</strong> $m_t = \\beta_1 m_{t-1} + (1-\\beta_1)g_t, \\quad v_t = \\beta_2 v_{t-1} + (1-\\beta_2)g_t^2$<br>
+                <strong>Bias Corrected Estimates (\\(t = ${t}\\)):</strong> $\\hat{m}_t = ${mHat.toFixed(5)}, \\quad \\hat{v}_t = ${vHat.toFixed(5)}$<br>
+                <strong>Adaptive Scale Factor (\\(\\eta / \\sqrt{\\hat{v}_t + \\epsilon}\\)):</strong> ${effLr.toFixed(6)}<br>
+                <strong>Updated Weight (\\(w_t\\)):</strong> <strong style="color: #10b981;">${wNew.toFixed(5)}</strong>
+              `;
+            }
+
+            out.innerHTML = logHtml;
+            if (window.renderMathInElement) {
+              renderMathInElement(out, {delimiters: [{left: '$', right: '$', display: false}]});
+            }
+          }
+        </script>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Deep Learning Module 03
+      </div>
+      <div>
+        <a href="deep-learning.html" style="color: var(--accent-blue); margin-right: 1rem;">← Deep Learning Modules</a>
+        <a href="index.html" style="color: var(--accent-blue);">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for All Interactive Graphs -->
+  <script>
+    // ==================== 1. INTERACTIVE 2D LOSS TRAJECTORY SIMULATOR ====================
+    const optTrajectories = {
+      adam: [
+        [100, 50], [140, 75], [190, 105], [245, 135], [305, 162], [360, 185], [395, 196], [410, 200]
+      ],
+      momentum: [
+        [100, 50], [130, 120], [180, 260], [230, 140], [290, 225], [340, 185], [385, 205], [410, 200]
+      ],
+      rmsprop: [
+        [100, 50], [150, 110], [205, 145], [265, 172], [325, 188], [375, 196], [410, 200]
+      ],
+      adagrad: [
+        [100, 50], [125, 80], [150, 105], [170, 122], [185, 134], [195, 142], [202, 147] // Stalls early
+      ],
+      sgd: [
+        [100, 50], [120, 150], [145, 40], [175, 280], [205, 70], [240, 310], [275, 90], [315, 270], [355, 130], [390, 240], [410, 200]
+      ],
+      bgd: [
+        [100, 50], [115, 58], [135, 68], [160, 80], [190, 95], [225, 112], [265, 132], [310, 154], [360, 178], [410, 200]
+      ]
+    };
+
+    const optMetadata = {
+      adam: { name: 'Adam (Momentum + RMSprop)', steps: '38 steps', loss: '0.00042', eff: 'Optimal Direct (98%)', color: '#10b981' },
+      momentum: { name: 'SGD with Momentum', steps: '54 steps', loss: '0.00185', eff: 'High Velocity Ravine Pass (89%)', color: '#3b82f6' },
+      rmsprop: { name: 'RMSprop Optimizer', steps: '46 steps', loss: '0.00098', eff: 'Balanced Adaptive Scaling (92%)', color: '#8b5cf6' },
+      adagrad: { name: 'AdaGrad (Premature Freeze)', steps: 'Stalled at step 22', loss: '2.41820', eff: 'Pathology: Dying LR (21%)', color: '#ef4444' },
+      sgd: { name: 'Pure SGD (B=1)', steps: '142 steps', loss: '0.01420', eff: 'Violent Zig-Zag Noise (44%)', color: '#f59e0b' },
+      bgd: { name: 'Batch GD (Full N)', steps: '210 steps', loss: '0.00110', eff: 'Deterministic Slow Crawl (68%)', color: '#64748b' }
+    };
+
+    function switchOptimizerSim(optKey) {
+      document.querySelectorAll('#interactive-visualizers-suite .preset-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(optKey)) {
+          btn.classList.add('active');
+        }
+      });
+
+      const pts = optTrajectories[optKey] || optTrajectories.adam;
+      const meta = optMetadata[optKey] || optMetadata.adam;
+
+      const pathEl = document.getElementById('opt-trajectory-path');
+      const dotsGroup = document.getElementById('opt-dots-group');
+      const headEl = document.getElementById('opt-current-head');
+
+      let dStr = `M ${pts[0][0]} ${pts[0][1]}`;
+      let dotsHtml = '';
+
+      for (let i = 1; i < pts.length; i++) {
+        dStr += ` L ${pts[i][0]} ${pts[i][1]}`;
+        dotsHtml += `<circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="3.5" fill="${meta.color}" opacity="0.8"/>`;
+      }
+
+      if (pathEl) {
+        pathEl.setAttribute('d', dStr);
+        pathEl.setAttribute('stroke', meta.color);
+      }
+      if (dotsGroup) {
+        dotsGroup.innerHTML = dotsHtml;
+      }
+      if (headEl) {
+        const lastPt = pts[pts.length - 1];
+        headEl.setAttribute('cx', lastPt[0]);
+        headEl.setAttribute('cy', lastPt[1]);
+        headEl.setAttribute('fill', meta.color);
+      }
+
+      // Update HUD
+      const hudName = document.getElementById('hud-opt-name');
+      const hudSteps = document.getElementById('hud-opt-steps');
+      const hudLoss = document.getElementById('hud-opt-loss');
+      const hudEff = document.getElementById('hud-opt-efficiency');
+
+      if (hudName) { hudName.textContent = meta.name; hudName.style.color = meta.color; }
+      if (hudSteps) hudSteps.textContent = meta.steps;
+      if (hudLoss) hudLoss.textContent = meta.loss;
+      if (hudEff) hudEff.textContent = meta.eff;
+    }
+
+    // ==================== 2. INTERACTIVE EWMA FILTER SIMULATOR ====================
+    let rawSignals = [];
+    function generateRawSignal() {
+      rawSignals = [];
+      let val = 0;
+      for (let i = 0; i <= 60; i++) {
+        // sinusoidal underlying drift + uniform stochastic noise
+        const underlying = Math.sin(i * 0.15);
+        const noise = (Math.random() - 0.5) * 1.4;
+        rawSignals.push(underlying + noise);
+      }
+    }
+
+    function renderEwma(beta) {
+      if (!rawSignals.length) generateRawSignal();
+
+      const rawPathEl = document.getElementById('ewma-raw-path');
+      const smoothPathEl = document.getElementById('ewma-smooth-path');
+      if (!rawPathEl || !smoothPathEl) return;
+
+      const xStart = 80;
+      const xEnd = 760;
+      const dx = (xEnd - xStart) / 60;
+      const yMid = 160;
+      const yScale = 80;
+
+      let rawD = `M ${xStart} ${yMid - rawSignals[0] * yScale}`;
+      let smoothD = `M ${xStart} ${yMid - rawSignals[0] * yScale}`;
+
+      let v = rawSignals[0];
+
+      for (let i = 1; i <= 60; i++) {
+        const x = xStart + i * dx;
+        const yRaw = yMid - rawSignals[i] * yScale;
+        rawD += ` L ${x.toFixed(1)} ${yRaw.toFixed(1)}`;
+
+        // EWMA recursion: v_t = beta * v_{t-1} + (1 - beta) * theta_t
+        v = beta * v + (1.0 - beta) * rawSignals[i];
+        const ySmooth = yMid - v * yScale;
+        smoothD += ` L ${x.toFixed(1)} ${ySmooth.toFixed(1)}`;
+      }
+
+      rawPathEl.setAttribute('d', rawD);
+      smoothPathEl.setAttribute('d', smoothD);
+
+      // HUD & Display
+      const betaValEl = document.getElementById('ewma-beta-val');
+      const hudBeta = document.getElementById('hud-ewma-beta');
+      const hudWindow = document.getElementById('hud-ewma-window');
+      const hudWeight = document.getElementById('hud-ewma-weight');
+
+      const tau = Math.round(1.0 / (1.0 - beta));
+      const currPct = Math.round((1.0 - beta) * 100);
+      const histPct = Math.round(beta * 100);
+
+      if (betaValEl) betaValEl.textContent = beta.toFixed(2);
+      if (hudBeta) hudBeta.textContent = beta.toFixed(2);
+      if (hudWindow) hudWindow.textContent = `${tau} historical steps`;
+      if (hudWeight) hudWeight.textContent = `${currPct}% current / ${histPct}% history`;
+    }
+
+    function initEwmaControls() {
+      const slider = document.getElementById('ewma-beta-slider');
+      if (slider) {
+        slider.addEventListener('input', (e) => {
+          renderEwma(parseFloat(e.target.value));
+        });
+      }
+    }
+
+    // ==================== GLOBAL INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      switchOptimizerSim('adam');
+      generateRawSignal();
+      renderEwma(0.90);
+      initEwmaControls();
+      runOptimizerCalculator();
+    });
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>

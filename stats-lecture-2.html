@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Central Tendency, Dispersion & Outlier Analysis | Statistics Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#central-tendency" class="sidebar-link">1. Measures of Central Tendency</a></li>
+        <li><a href="#outlier-impact" class="sidebar-link">2. Outlier Hazard: Mean vs. Median</a></li>
+        <li><a href="#mode-categorical" class="sidebar-link">3. Mode &amp; Missing Value Imputation</a></li>
+        <li><a href="#dispersion-intro" class="sidebar-link">4. Measures of Dispersion (Spread)</a></li>
+        <li><a href="#variance-std-dev" class="sidebar-link">5. Variance &amp; Standard Deviation</a></li>
+        <li><a href="#bessels-correction" class="sidebar-link">6. Bessel's Correction (Why n - 1)</a></li>
+        <li><a href="#percentiles-quartiles" class="sidebar-link">7. Percentiles &amp; Quartiles</a></li>
+        <li><a href="#five-number-summary" class="sidebar-link">8. 5-Number Summary &amp; IQR</a></li>
+        <li><a href="#outlier-detection-fences" class="sidebar-link">9. Detecting Outliers with IQR Fences</a></li>
+        <li><a href="#box-whisker-plots" class="sidebar-link">10. Box Plots (Whisker Plot Anatomy)</a></li>
+        <li><a href="#python-eda-code" class="sidebar-link">11. Python Implementation (NumPy &amp; Seaborn)</a></li>
+        <li><a href="#interactive-outlier-calc" class="sidebar-link">12. Interactive Central Tendency &amp; Box Plot Sandbox</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 02 Notes</span>
+          <span class="tag">Statistics</span>
+          <span class="tag">Mean, Median, Mode</span>
+          <span class="tag">Variance &amp; Std Dev</span>
+          <span class="tag">Bessel's Correction (n-1)</span>
+          <span class="tag">Percentiles &amp; Quartiles</span>
+          <span class="tag">IQR Fences</span>
+          <span class="tag">Box Plots</span>
+          <span class="tag">Python EDA</span>
+        </div>
+        <h1 class="lecture-main-title">Central Tendency, Measures of Dispersion &amp; Outlier Analysis</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> This module explores how to quantify the center and the spread of your data: calculating the Mean, Median, and Mode (and understanding why extreme outliers corrupt the mean), measuring data variability through Variance ($\sigma^2, s^2$) and Standard Deviation ($\sigma, s$), proving why sample variance divides by $n - 1$ (Bessel's Correction), ranking positions using Percentiles and Quartiles ($Q_1, Q_2, Q_3$), building the 5-Number Summary, and using Interquartile Range (IQR) fences to detect and isolate outliers graphically with Box Plots.<br>
+          <strong>Why do we use it?</strong> Two completely different datasets can share the exact same average (e.g. $[2, 2, 2, 2, 2]$ and $[0, 0, 0, 0, 10]$ both have an average of 2), so the mean alone can easily mislead you. Dispersion quantifies real-world risk and stability. Furthermore, rogue data points—like a recorded salary of \$10,000,000 in an entry-level survey—will violently skew machine learning models if not detected and filtered using robust metrics like Median and IQR fences.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: MEASURES OF CENTRAL TENDENCY -->
+      <!-- ============================================================ -->
+      <section id="central-tendency" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Measures of Central Tendency (Mean, Median, Mode)</h2>
+
+        <h3>1. What is Central Tendency?</h3>
+        <p>
+          <strong>Central Tendency</strong> refers to a single summary statistic that represents the <em>center, midpoint, or typical value</em> of a distribution. The three classic measures are:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+            
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #58a6ff; border-radius: 6px;">
+              <strong style="color: #58a6ff; font-size: 1.05rem;">1. Arithmetic Mean</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                The mathematical average obtained by summing all values and dividing by the total count.
+              </p>
+              <div style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: #a5d6ff;">
+                $$\mu = \frac{\sum x_i}{N} \quad \text{or} \quad \bar{x} = \frac{\sum x_i}{n}$$
+              </div>
+            </div>
+
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #7ee787; border-radius: 6px;">
+              <strong style="color: #7ee787; font-size: 1.05rem;">2. Median</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                The exact central value of an ordered (sorted) dataset. Splitting observations into equal top and bottom halves.
+              </p>
+              <div style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: #7ee787;">
+                Odd: $\text{Middle Element}$<br>
+                Even: $\text{Average of 2 Middle Elements}$
+              </div>
+            </div>
+
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #ffa657; border-radius: 6px;">
+              <strong style="color: #ffa657; font-size: 1.05rem;">3. Mode</strong>
+              <p style="margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                The most frequently occurring element in a dataset. Ideal for categorical and discrete labels.
+              </p>
+              <div style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: #ffa657;">
+                $\text{Element with Highest Frequency Count}$
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <h3>2. Calculating the Arithmetic Mean</h3>
+        <p>
+          Given the raw dataset: <code>[1, 1, 2, 2, 3, 3, 4, 5, 5, 6]</code> ($n = 10$).
+        </p>
+        <p>
+          $$\sum_{i=1}^{10} x_i = 1 + 1 + 2 + 2 + 3 + 3 + 4 + 5 + 5 + 6 = 32$$
+          $$\bar{x} = \frac{32}{10} = \mathbf{3.2}$$
+        </p>
+
+        <h3>3. Calculating the Median (Step-by-Step)</h3>
+        <p>
+          <strong>Step 1: Always sort the numbers in ascending order!</strong> (If unsorted, median is meaningless).<br>
+          Sorted: <code>[1, 1, 2, 2, 3, 3, 4, 5, 5, 6]</code> ($n = 10$, even count).<br>
+          <strong>Step 2: Find the middle pair:</strong> Indices $5$ and $6$ are $3$ and $3$.<br>
+          $$\text{Median} = \frac{3 + 3}{2} = \mathbf{3.0}$$
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THE OUTLIER HAZARD -->
+      <!-- ============================================================ -->
+      <section id="outlier-impact" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Outlier Hazard: Mean vs. Median Sensitivity</h2>
+
+        <h3>1. The Fragility of the Arithmetic Mean</h3>
+        <p>
+          An <strong>Outlier</strong> is an observation that lies an abnormal distance away from other values in a random sample. Watch what happens when we inject a single extreme value ($100$) into our dataset:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Dataset State</th>
+                <th>Values</th>
+                <th>Calculated Mean</th>
+                <th>Calculated Median</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Original (Clean)</strong></td>
+                <td><code>[1, 1, 2, 2, 3, 3, 4, 5, 5, 6]</code></td>
+                <td>$\mathbf{3.2}$</td>
+                <td>$\mathbf{3.0}$</td>
+              </tr>
+              <tr>
+                <td><strong>Corrupted (with 100 added)</strong></td>
+                <td><code>[1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 100]</code></td>
+                <td>$\frac{32 + 100}{11} = \mathbf{12.0}$ <span style="color: #ff7b72;">(275% Jump!)</span></td>
+                <td>Center element $= \mathbf{3.0}$ <span style="color: #7ee787;">(Zero change!)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Corrupted (with 100 and 112 added)</strong></td>
+                <td><code>[1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 100, 112]</code></td>
+                <td>$\frac{32 + 212}{12} = \mathbf{20.33}$</td>
+                <td>$\frac{3 + 4}{2} = \mathbf{3.5}$ <span style="color: #7ee787;">(Extremely stable)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Data Science Rule of Thumb: Robust Statistics</div>
+          <p>
+            The <strong>Mean is sensitive to outliers</strong> because every single data point directly influences the sum numerator. The <strong>Median is robust to outliers</strong> because it only cares about relative ranking and positional index.
+          </p>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+            <em>Real-World Example:</em> Whenever government agencies or economists publish salary distributions, household income, or real estate home prices, they report the <strong>Median Income</strong> rather than Mean Income. A few billionaires (outliers) would distort the mean and falsely make average citizens appear wealthy!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: MODE & MISSING VALUE IMPUTATION -->
+      <!-- ============================================================ -->
+      <section id="mode-categorical" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Mode &amp; Missing Value Imputation (Categorical Features)</h2>
+
+        <h3>1. Calculating the Mode</h3>
+        <p>
+          Given: <code>[1, 2, 3, 4, 5, 6, 6, 6, 7, 8, 100, 200]</code>. The number $6$ appears three times, while all others appear once. Therefore, $\text{Mode} = \mathbf{6}$.
+        </p>
+
+        <h3>2. When Does Mode Shine in Machine Learning?</h3>
+        <p>
+          While mean and median require ordered numeric quantities, the <strong>Mode is the only measure of central tendency that works on Qualitative / Categorical Data</strong>:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Flower Type</th>
+                <th>Petal Length</th>
+                <th>Petal Width</th>
+                <th>Missing Value Treatment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Rose</td>
+                <td>1.4 cm</td>
+                <td>0.2 cm</td>
+                <td>Observed</td>
+              </tr>
+              <tr>
+                <td>Lily</td>
+                <td>1.5 cm</td>
+                <td>0.3 cm</td>
+                <td>Observed</td>
+              </tr>
+              <tr>
+                <td><strong style="color: #ff7b72;">NaN (Missing)</strong></td>
+                <td>1.4 cm</td>
+                <td>0.2 cm</td>
+                <td><strong>Impute with Mode:</strong> Replace NaN with the most frequent flower in the dataset (e.g. <code>Lily</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Domain Knowledge in Imputation: Age of University Students vs. Global Wealth</div>
+          <p>
+            When imputing missing values in a feature like <code>student_age</code> in a college classroom (values range tightly between 18 and 24), using the <strong>Mean</strong> is safe and accurate.
+          </p>
+          <p style="margin-top: 0.5rem;">
+            However, when imputing <code>customer_wealth</code> or <code>transaction_amount</code>, using the mean would contaminate clean records due to massive multi-million dollar outliers. For skewed distributions, always impute with the <strong>Median</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: MEASURES OF DISPERSION (SPREAD) -->
+      <!-- ============================================================ -->
+      <section id="dispersion-intro" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Measures of Dispersion: Why Mean Alone is Misleading</h2>
+
+        <h3>1. The Identical Mean Paradox</h3>
+        <p>
+          Consider two different production lines producing steel rods:
+        </p>
+        <ul>
+          <li><strong>Machine A:</strong> Rod lengths = <code>[1, 1, 2, 2, 4]</code> cm $\implies \text{Mean} = \mathbf{2.0\text{ cm}}$</li>
+          <li><strong>Machine B:</strong> Rod lengths = <code>[2, 2, 2, 2, 2]</code> cm $\implies \text{Mean} = \mathbf{2.0\text{ cm}}$</li>
+        </ul>
+        <p>
+          Both machines produce an average of $2.0\text{ cm}$. But Machine B has zero errors, while Machine A is wildly unstable! <strong>Dispersion</strong> (also called <em>spread</em> or <em>variability</em>) tells us how closely clustered or widely scattered our data is around the center.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: VARIANCE & STANDARD DEVIATION -->
+      <!-- ============================================================ -->
+      <section id="variance-std-dev" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Variance ($\sigma^2, s^2$) &amp; Standard Deviation ($\sigma, s$)</h2>
+
+        <h3>1. Mathematical Formulations</h3>
+        <p>
+          <strong>Variance</strong> measures the average squared deviation of each data point from the mean.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Scope</th>
+                <th>Variance Formula</th>
+                <th>Standard Deviation Formula</th>
+                <th>Key Denominator</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Population</strong></td>
+                <td>$$\sigma^2 = \frac{\sum_{i=1}^N (x_i - \mu)^2}{N}$$</td>
+                <td>$$\sigma = \sqrt{\sigma^2} = \sqrt{\frac{\sum (x_i - \mu)^2}{N}}$$</td>
+                <td>Divided by total population size <strong>$N$</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Sample</strong></td>
+                <td>$$s^2 = \frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n - 1}$$</td>
+                <td>$$s = \sqrt{s^2} = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n - 1}}$$</td>
+                <td>Divided by degrees of freedom <strong>$n - 1$</strong> (Bessel's Correction)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Step-by-Step Variance Walkthrough</h3>
+        <p>
+          Let's manually compute the population variance for dataset: <code>[1, 2, 2, 3, 4, 5]</code> ($N = 6$).<br>
+          Mean: $\mu = \frac{1 + 2 + 2 + 3 + 4 + 5}{6} = \frac{17}{6} \approx \mathbf{2.83}$.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Data Point ($x_i$)</th>
+                <th>Mean ($\mu$)</th>
+                <th>Deviation ($x_i - \mu$)</th>
+                <th>Squared Deviation $(x_i - \mu)^2$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>2.83</td>
+                <td>$-1.83$</td>
+                <td>$3.3489$</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>2.83</td>
+                <td>$-0.83$</td>
+                <td>$0.6889$</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>2.83</td>
+                <td>$-0.83$</td>
+                <td>$0.6889$</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>2.83</td>
+                <td>$+0.17$</td>
+                <td>$0.0289$</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>2.83</td>
+                <td>$+1.17$</td>
+                <td>$1.3689$</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>2.83</td>
+                <td>$+2.17$</td>
+                <td>$4.7089$</td>
+              </tr>
+              <tr>
+                <td><strong>Sum ($\sum$)</strong></td>
+                <td>--</td>
+                <td><strong>0.00</strong> (Always sums to 0!)</td>
+                <td>$\sum (x_i - \mu)^2 = \mathbf{10.8344}$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          $$\sigma^2 = \frac{10.8344}{6} \approx \mathbf{1.81}$$
+          $$\sigma = \sqrt{1.81} \approx \mathbf{1.345}$$
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Why Do We Take the Square Root? (Variance vs. Standard Deviation)</div>
+          <p>
+            Notice that variance is measured in <strong>squared units</strong> (e.g. $\text{cm}^2$ or $\text{dollars}^2$). If you measure customer heights in centimeters, variance gives you $\text{cm}^2$, which cannot be added to or compared directly with the mean!
+          </p>
+          <p style="margin-top: 0.5rem;">
+            Taking the square root ($\sigma = \sqrt{\sigma^2}$) returns the metric back to the <strong>original unit of measurement</strong> ($\text{cm}$). A standard deviation of $1.345\text{ cm}$ means observations typically drift about $1.345\text{ cm}$ above or below the mean!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: BESSEL'S CORRECTION (WHY N - 1) -->
+      <!-- ============================================================ -->
+      <section id="bessels-correction" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Bessel's Correction: Why Sample Variance Divides by $n - 1$</h2>
+
+        <h3>1. The Classic Interview Question</h3>
+        <p>
+          <em>"Why do we divide by $N$ for population variance, but divide by $n - 1$ for sample variance?"</em>
+        </p>
+
+        <h3>2. Mathematical and Intuitive Proof</h3>
+        <ul>
+          <li><strong>Underestimation Bias:</strong> A small sample $n$ is naturally less spread out than the true population $N$ because extreme values in the tails are rarely picked in random draws. If we divided by $n$, our sample variance would systematically <em>underestimate</em> the true population spread.</li>
+          <li><strong>Degrees of Freedom ($df = n - 1$):</strong> In a sample, we calculate deviations not from the true population mean $\mu$ (which is unknown), but from our sample mean $\bar{x}$. Because $\bar{x}$ is fixed by the data ($\sum (x_i - \bar{x}) = 0$), only $n - 1$ data points are free to vary; the $n$-th point is mathematically constrained!</li>
+          <li><strong>Unbiased Estimator:</strong> Dividing by $n - 1$ mathematically corrects for this bias, ensuring that the expected value of sample variance equals the true population variance:
+            $$\mathbb{E}[s^2] = \sigma^2$$
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: PERCENTILES & QUARTILES -->
+      <!-- ============================================================ -->
+      <section id="percentiles-quartiles" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Percentiles &amp; Quartiles: Position vs. Percentage</h2>
+
+        <h3>1. Percentage vs. Percentile</h3>
+        <ul>
+          <li><strong>Percentage:</strong> A simple ratio of part to whole. <em>"Alice scored 85% on her exam."</em> (She got 85 out of 100 marks).</li>
+          <li><strong>Percentile:</strong> A positional ranking metric. <em>"Alice scored in the 96th percentile."</em> (Alice performed better than 96% of all students who took the test).</li>
+        </ul>
+
+        <h3>2. Percentile Rank Formula</h3>
+        <p>
+          Given a sorted dataset, the <strong>Percentile Rank</strong> of a value $X$ is:
+        </p>
+        <p>
+          $$\text{Percentile Rank}(X) = \frac{\text{Number of values below } X}{n} \times 100$$
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Lecture Dataset (Sorted, n = 20):</span>
+<span class="var">data</span> = [<span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">9</span>, <span class="num">10</span>, <span class="num">11</span>, <span class="num">11</span>, <span class="num">12</span>, <span class="num">12</span>]
+
+<span class="com"># Question 1: What is the percentile ranking of value 10?</span>
+<span class="com"># Values below 10 = 16 elements.</span>
+<span class="com"># Percentile = (16 / 20) * 100 = 80th Percentile!</span>
+<span class="com"># Meaning: 80% of the entire distribution is strictly less than 10.</span>
+
+<span class="com"># Question 2: What is the percentile ranking of value 11?</span>
+<span class="com"># Values below 11 = 17 elements.</span>
+<span class="com"># Percentile = (17 / 20) * 100 = 85th Percentile!</span></code></pre>
+        </div>
+
+        <h3>3. Finding the Value at a Given Percentile</h3>
+        <p>
+          To find the numerical value located at percentile $P$:
+        </p>
+        <p>
+          $$\text{Index Position} = \frac{P}{100} \times (n + 1)$$
+        </p>
+        <ul>
+          <li>For <strong>25th Percentile ($Q_1$)</strong>: $\text{Index} = \frac{25}{100} \times 21 = 5.25 \implies \text{Value} = \mathbf{5}$.</li>
+          <li>For <strong>75th Percentile ($Q_3$)</strong>: $\text{Index} = \frac{75}{100} \times 21 = 15.75 \implies \text{Value} = \mathbf{9}$.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: 5-NUMBER SUMMARY & IQR -->
+      <!-- ============================================================ -->
+      <section id="five-number-summary" class="note-section content-section">
+        <h2><span class="section-number">08.</span> The 5-Number Summary &amp; Interquartile Range (IQR)</h2>
+
+        <h3>1. The 5-Number Summary</h3>
+        <p>
+          The 5-Number Summary provides a complete statistical profile of a dataset's distribution:
+        </p>
+        <ol>
+          <li><strong>Minimum:</strong> Smallest non-outlier observation.</li>
+          <li><strong>First Quartile ($Q_1$):</strong> 25th percentile (splits bottom 25% from top 75%).</li>
+          <li><strong>Median ($Q_2$):</strong> 50th percentile (exact midpoint).</li>
+          <li><strong>Third Quartile ($Q_3$):</strong> 75th percentile (splits bottom 75% from top 25%).</li>
+          <li><strong>Maximum:</strong> Largest non-outlier observation.</li>
+        </ol>
+
+        <h3>2. What is Interquartile Range (IQR)?</h3>
+        <p>
+          The <strong>Interquartile Range (IQR)</strong> measures the spread of the middle $50\%$ of the data:
+        </p>
+        <p>
+          $$\text{IQR} = Q_3 - Q_1$$
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: OUTLIER DETECTION WITH FENCES -->
+      <!-- ============================================================ -->
+      <section id="outlier-detection-fences" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Detecting Outliers with IQR Lower &amp; Upper Fences</h2>
+
+        <h3>1. The Tukey Fence Formulas</h3>
+        <p>
+          Pioneered by John Tukey, any observation that falls outside the statistical "fences" is classified as an <strong>Outlier</strong>:
+        </p>
+        <p>
+          $$\text{Lower Fence} = Q_1 - 1.5 \times \text{IQR}$$
+          $$\text{Upper Fence} = Q_3 + 1.5 \times \text{IQR}$$
+        </p>
+
+        <h3>2. Solved Problem from Lecture</h3>
+        <p>
+          Given dataset ($n = 18$):<br>
+          <code>[1, 2, 2, 3, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 8, 8, 9, 27]</code>
+        </p>
+        <ul>
+          <li>$Q_1 = 3$</li>
+          <li>$Q_3 = 7$</li>
+          <li>$\text{IQR} = Q_3 - Q_1 = 7 - 3 = \mathbf{4}$</li>
+          <li>$\text{Lower Fence} = 3 - 1.5(4) = 3 - 6 = \mathbf{-3}$</li>
+          <li>$\text{Upper Fence} = 7 + 1.5(4) = 7 + 6 = \mathbf{13}$</li>
+        </ul>
+        <div class="concept-box">
+          <div class="concept-title">Outlier Evaluation:</div>
+          <p>
+            Acceptable range of clean data: $[-3, +13]$.<br>
+            The value $\mathbf{27}$ is greater than the Upper Fence of $13$. Therefore, <strong>27 is an outlier and must be removed!</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: BOX PLOTS -->
+      <!-- ============================================================ -->
+      <section id="box-whisker-plots" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Box Plots (Whisker Plot Anatomy)</h2>
+
+        <h3>1. Visual Structure of a Box Plot</h3>
+        <p>
+          A <strong>Box Plot</strong> is the visual translation of the 5-Number Summary and IQR fences:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; color: #e6edf3; background: var(--bg-primary); padding: 1.25rem; border-radius: 6px; overflow-x: auto;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[--- Q1 ---|--- Median ---|--- Q3 ---]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Outlier (27)<br>
+            |-----------|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|-----------|<br>
+            Min (1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q1 (3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Median (5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q3 (7)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max (9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upper Fence (13)
+          </div>
+          <ul style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">
+            <li><strong>The Box:</strong> Spans from $Q_1$ to $Q_3$, containing the central 50% of your data (height/width = IQR).</li>
+            <li><strong>The Center Line:</strong> Shows the Median ($Q_2$). If off-center, it reveals data skewness!</li>
+            <li><strong>The Whiskers:</strong> Extend to the minimum and maximum data points that lie <em>within</em> the lower and upper fences.</li>
+            <li><strong>Isolated Dots:</strong> Any data points plotted beyond the whiskers are confirmed statistical outliers!</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: PYTHON EDA IMPLEMENTATION -->
+      <!-- ============================================================ -->
+      <section id="python-eda-code" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Python Implementation (NumPy &amp; Seaborn)</h2>
+
+        <h3>1. Computing Descriptive Metrics</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> <span class="cls">numpy</span> <span class="kw">as</span> <span class="var">np</span>
+<span class="kw">import</span> <span class="cls">statistics</span> <span class="kw">as</span> <span class="var">stats</span>
+<span class="kw">import</span> <span class="cls">seaborn</span> <span class="kw">as</span> <span class="var">sns</span>
+<span class="kw">import</span> <span class="cls">matplotlib.pyplot</span> <span class="kw">as</span> <span class="var">plt</span>
+
+<span class="com"># Load standard Tips dataset</span>
+<span class="var">df</span> = <span class="var">sns</span>.<span class="func">load_dataset</span>(<span class="str">'tips'</span>)
+
+<span class="com"># 1. Central Tendency</span>
+<span class="var">mean_bill</span> = <span class="var">np</span>.<span class="func">mean</span>(<span class="var">df</span>[<span class="str">'total_bill'</span>])
+<span class="var">median_bill</span> = <span class="var">np</span>.<span class="func">median</span>(<span class="var">df</span>[<span class="str">'total_bill'</span>])
+<span class="var">mode_bill</span> = <span class="var">stats</span>.<span class="func">mode</span>(<span class="var">df</span>[<span class="str">'total_bill'</span>])
+
+<span class="func">print</span>(<span class="str">f"Mean: {mean_bill:.2f}, Median: {median_bill:.2f}, Mode: {mode_bill:.2f}"</span>)
+
+<span class="com"># 2. Quartiles and IQR</span>
+<span class="var">q1</span>, <span class="var">q3</span> = <span class="var">np</span>.<span class="func">percentile</span>(<span class="var">df</span>[<span class="str">'total_bill'</span>], [<span class="num">25</span>, <span class="num">75</span>])
+<span class="var">iqr</span> = <span class="var">q3</span> - <span class="var">q1</span>
+<span class="var">lower_fence</span> = <span class="var">q1</span> - <span class="num">1.5</span> * <span class="var">iqr</span>
+<span class="var">upper_fence</span> = <span class="var">q3</span> + <span class="num">1.5</span> * <span class="var">iqr</span>
+
+<span class="func">print</span>(<span class="str">f"Q1: {q1:.2f}, Q3: {q3:.2f}, IQR: {iqr:.2f}"</span>)
+<span class="func">print</span>(<span class="str">f"Fences: [{lower_fence:.2f}, {upper_fence:.2f}]"</span>)</code></pre>
+        </div>
+
+        <h3>2. Automated IQR Outlier Removal Function</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="func">remove_outliers_iqr</span>(<span class="var">data</span>):
+    <span class="str">\"\"\"Purge outliers from a 1D dataset using IQR fences.\"\"\"</span>
+    <span class="var">sorted_data</span> = <span class="func">sorted</span>(<span class="var">data</span>)
+    <span class="var">q1</span>, <span class="var">q3</span> = <span class="var">np</span>.<span class="func">percentile</span>(<span class="var">sorted_data</span>, [<span class="num">25</span>, <span class="num">75</span>])
+    <span class="var">iqr</span> = <span class="var">q3</span> - <span class="var">q1</span>
+    <span class="var">lower</span> = <span class="var">q1</span> - <span class="num">1.5</span> * <span class="var">iqr</span>
+    <span class="var">upper</span> = <span class="var">q3</span> + <span class="num">1.5</span> * <span class="var">iqr</span>
+    
+    <span class="var">cleaned</span> = [<span class="var">x</span> <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">sorted_data</span> <span class="kw">if</span> <span class="var">lower</span> &lt;= <span class="var">x</span> &lt;= <span class="var">upper</span>]
+    <span class="var">outliers</span> = [<span class="var">x</span> <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">sorted_data</span> <span class="kw">if</span> <span class="var">x</span> &lt; <span class="var">lower</span> <span class="kw">or</span> <span class="var">x</span> &gt; <span class="var">upper</span>]
+    <span class="kw">return</span> <span class="var">cleaned</span>, <span class="var">outliers</span>
+
+<span class="com"># Test with lecture data</span>
+<span class="var">sample_data</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">5</span>, <span class="num">6</span>, <span class="num">6</span>, <span class="num">6</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">27</span>]
+<span class="var">clean</span>, <span class="var">bad</span> = <span class="func">remove_outliers_iqr</span>(<span class="var">sample_data</span>)
+<span class="func">print</span>(<span class="str">"Identified Outliers:"</span>, <span class="var">bad</span>)  <span class="com"># Output: [27]</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE BOX PLOT SANDBOX -->
+      <!-- ============================================================ -->
+      <section id="interactive-outlier-calc" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive Central Tendency &amp; Box Plot Sandbox</h2>
+
+        <p>
+          Enter comma-separated numbers (or use our presets) to instantly compute the Mean, Median, Variance, Std Dev, IQR Fences, and see your live SVG Box Plot!
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #7ee787; font-size: 1.15rem;">Live 5-Number Summary &amp; Outlier Tester</h3>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">Dataset (comma-separated):</label>
+            <input type="text" id="calc-input-data" value="1, 2, 2, 3, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 8, 8, 9, 27" style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.92rem;">
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button class="btn-primary" onclick="processStatsData()" style="background: #238636; border-color: #238636;">Calculate &amp; Render</button>
+            <button class="btn-primary" onclick="setPreset('clean')" style="background: #1f6feb; border-color: #1f6feb;">Preset: Clean Data</button>
+            <button class="btn-primary" onclick="setPreset('extreme')" style="background: #da3633; border-color: #da3633;">Preset: Extreme Outlier</button>
+          </div>
+
+          <!-- Metric Cards Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Mean (&mu;)</div>
+              <div id="out-mean" style="font-size: 1.15rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Median (Q2)</div>
+              <div id="out-median" style="font-size: 1.15rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Std Dev (&sigma;)</div>
+              <div id="out-std" style="font-size: 1.15rem; font-weight: 700; color: #ffa657; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">IQR (Q3 - Q1)</div>
+              <div id="out-iqr" style="font-size: 1.15rem; font-weight: 700; color: #d2a8ff; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Fences [Low, High]</div>
+              <div id="out-fences" style="font-size: 0.95rem; font-weight: 700; color: #ff7b72; font-family: var(--font-mono);">--</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem;">
+              <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Outliers Found</div>
+              <div id="out-outliers" style="font-size: 1.05rem; font-weight: 700; color: #ff7b72; font-family: var(--font-mono);">None</div>
+            </div>
+          </div>
+
+          <!-- Canvas for Box Plot -->
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: left;">Live Box Plot Rendering:</div>
+            <canvas id="calc-boxplot-canvas" width="600" height="150" style="max-width: 100%; height: auto;"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Lecture 2 Reference
+      </div>
+      <div>
+        <a href="stats-lecture-1.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Previous: Lecture 1 (Descriptive Stats &amp; Sampling)</a>
+        <a href="stats-lecture-3.html" style="color: var(--accent-blue); margin-right: 1.5rem;">Next: Lecture 3 (Probability &amp; Normal Distribution) →</a>
+        <a href="#central-tendency" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function setPreset(type) {
+      if (type === 'clean') {
+        document.getElementById('calc-input-data').value = "10, 12, 14, 15, 16, 17, 18, 19, 20, 22, 24";
+      } else {
+        document.getElementById('calc-input-data').value = "1, 2, 2, 3, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 8, 8, 9, 27";
+      }
+      processStatsData();
+    }
+
+    function processStatsData() {
+      const raw = document.getElementById('calc-input-data').value;
+      const nums = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n)).sort((a, b) => a - b);
+      if (nums.length < 4) return;
+
+      const n = nums.length;
+      const mean = (nums.reduce((a, b) => a + b, 0) / n);
+      
+      let median;
+      if (n % 2 === 1) {
+        median = nums[Math.floor(n / 2)];
+      } else {
+        median = (nums[n / 2 - 1] + nums[n / 2]) / 2;
+      }
+
+      const variance = nums.reduce((acc, x) => acc + Math.pow(x - mean, 2), 0) / n;
+      const std = Math.sqrt(variance);
+
+      // Quartiles
+      const q1Index = Math.floor(n * 0.25);
+      const q3Index = Math.floor(n * 0.75);
+      const q1 = nums[q1Index];
+      const q3 = nums[q3Index];
+      const iqr = q3 - q1;
+      const lowerFence = q1 - 1.5 * iqr;
+      const upperFence = q3 + 1.5 * iqr;
+
+      const outliers = nums.filter(x => x < lowerFence || x > upperFence);
+
+      document.getElementById('out-mean').textContent = mean.toFixed(2);
+      document.getElementById('out-median').textContent = median.toFixed(2);
+      document.getElementById('out-std').textContent = std.toFixed(2);
+      document.getElementById('out-iqr').textContent = iqr.toFixed(2);
+      document.getElementById('out-fences').textContent = `[${lowerFence.toFixed(1)}, ${upperFence.toFixed(1)}]`;
+      document.getElementById('out-outliers').textContent = outliers.length > 0 ? outliers.join(', ') : 'None';
+
+      drawBoxPlot(nums, q1, median, q3, lowerFence, upperFence, outliers);
+    }
+
+    function drawBoxPlot(nums, q1, med, q3, lowFence, highFence, outliers) {
+      const canvas = document.getElementById('calc-boxplot-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const minVal = Math.min(nums[0], lowFence);
+      const maxVal = Math.max(nums[nums.length - 1], highFence);
+      const range = (maxVal - minVal) || 1;
+
+      const padX = 50;
+      const width = canvas.width - padX * 2;
+      const scaleX = (val) => padX + ((val - minVal) / range) * width;
+
+      const centerY = 65;
+      const boxHeight = 44;
+
+      // Filter non-outliers for whiskers
+      const cleanNums = nums.filter(x => x >= lowFence && x <= highFence);
+      const whiskerMin = cleanNums[0];
+      const whiskerMax = cleanNums[cleanNums.length - 1];
+
+      // Draw Whiskers (dashed or line)
+      ctx.strokeStyle = '#58a6ff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(scaleX(whiskerMin), centerY);
+      ctx.lineTo(scaleX(q1), centerY);
+      ctx.moveTo(scaleX(q3), centerY);
+      ctx.lineTo(scaleX(whiskerMax), centerY);
+      ctx.stroke();
+
+      // Whisker caps
+      ctx.beginPath();
+      ctx.moveTo(scaleX(whiskerMin), centerY - 12);
+      ctx.lineTo(scaleX(whiskerMin), centerY + 12);
+      ctx.moveTo(scaleX(whiskerMax), centerY - 12);
+      ctx.lineTo(scaleX(whiskerMax), centerY + 12);
+      ctx.stroke();
+
+      // Draw Box
+      const boxX = scaleX(q1);
+      const boxW = scaleX(q3) - boxX;
+      ctx.fillStyle = 'rgba(88, 166, 255, 0.15)';
+      ctx.fillRect(boxX, centerY - boxHeight / 2, boxW, boxHeight);
+      ctx.strokeStyle = '#58a6ff';
+      ctx.strokeRect(boxX, centerY - boxHeight / 2, boxW, boxHeight);
+
+      // Median Line
+      ctx.strokeStyle = '#7ee787';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(scaleX(med), centerY - boxHeight / 2);
+      ctx.lineTo(scaleX(med), centerY + boxHeight / 2);
+      ctx.stroke();
+
+      // Draw Outlier dots
+      outliers.forEach(outVal => {
+        const ox = scaleX(outVal);
+        ctx.fillStyle = '#ff7b72';
+        ctx.beginPath();
+        ctx.arc(ox, centerY, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.font = '11px JetBrains Mono, monospace';
+        ctx.fillText(outVal, ox, centerY - 12);
+      });
+
+      // Axis Line and labels
+      ctx.strokeStyle = '#30363d';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padX, 115);
+      ctx.lineTo(canvas.width - padX, 115);
+      ctx.stroke();
+
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '10px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Min: ${nums[0]}`, scaleX(nums[0]), 132);
+      ctx.fillText(`Q1: ${q1}`, scaleX(q1), 132);
+      ctx.fillText(`Med: ${med}`, scaleX(med), 132);
+      ctx.fillText(`Q3: ${q3}`, scaleX(q3), 132);
+      ctx.fillText(`Max: ${nums[nums.length - 1]}`, scaleX(nums[nums.length - 1]), 132);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      processStatsData();
+    });
+  </script>
+</body>
+</html>

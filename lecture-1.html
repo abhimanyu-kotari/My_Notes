@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Variables &amp; Data Types | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 1 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro" class="sidebar-link">1. What is Programming &amp; Python?</a></li>
+        <li><a href="#execution-model" class="sidebar-link">2. How Computers Run Python Code</a></li>
+        <li><a href="#first-program" class="sidebar-link">3. Your First Code: print()</a></li>
+        <li><a href="#character-set" class="sidebar-link">4. Python Character Set</a></li>
+        <li><a href="#variables" class="sidebar-link">5. Variables &amp; How Memory Works</a></li>
+        <li><a href="#identifiers" class="sidebar-link">6. Rules for Naming Variables</a></li>
+        <li><a href="#data-types" class="sidebar-link">7. The 5 Core Data Types</a></li>
+        <li><a href="#keywords" class="sidebar-link">8. Keywords &amp; Case Sensitivity</a></li>
+        <li><a href="#comments" class="sidebar-link">9. Comments in Python</a></li>
+        <li><a href="#operators" class="sidebar-link">10. Operators in Python</a></li>
+        <li><a href="#type-conversion" class="sidebar-link">11. Type Conversion vs. Casting</a></li>
+        <li><a href="#input-handling" class="sidebar-link">12. Taking User Input: input()</a></li>
+        <li><a href="#tasks" class="sidebar-link">13. Practice Tasks &amp; Solutions</a></li>
+        <li><a href="#cheat-sheet" class="sidebar-link">14. Summary &amp; Quick Reference</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 01 Notes</span>
+          <span class="tag">Beginner Friendly</span>
+          <span class="tag">Complete &amp; Thorough</span>
+          <span class="tag">PEP 8 Standard</span>
+        </div>
+        <h1 class="lecture-main-title">Variables and Data-Types</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Variables are like labeled storage boxes in your computer's memory that hold information, while Data-Types tell Python what kind of value is inside (like text, whole numbers, or decimals).<br>
+          <strong>Why do we use it?</strong> We use variables in every single program to store and track data—like a player's score in a game, a user's login name, or the price of an item in a shopping cart—so our program can remember and calculate with that data.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHAT IS PROGRAMMING & PYTHON -->
+      <!-- ============================================================ -->
+      <section id="intro" class="note-section">
+        <h2><span class="section-number">01.</span> What is Programming &amp; Why Python?</h2>
+        
+        <h3>1. What is Programming?</h3>
+        <p>
+          At its core, <strong>programming</strong> is the process of giving instructions to a computer (or machine) so it can perform specific tasks or solve problems.
+        </p>
+        <p>
+          Just like you use human languages (such as English, Spanish, or Hindi) to communicate with people in different countries, you use a <strong>Programming Language</strong> to communicate with a computer.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Python</div>
+          <p>
+            <strong>Python</strong> is a modern, high-level, general-purpose, and interpreted programming language created by <strong>Guido van Rossum</strong> and first released in 1991. It is designed to be easy to read and simple to write, resembling plain English.
+          </p>
+        </div>
+
+        <h3>Why is Python so Popular?</h3>
+        <ul>
+          <li>
+            <strong>Simple and Beginner-Friendly:</strong> Python syntax looks almost like normal English sentences. You don't have to worry about complex syntax like semicolons or manual memory management.
+          </li>
+          <li>
+            <strong>Free and Open Source:</strong> Anyone can download Python completely free from <a href="https://www.python.org" target="_blank" rel="noopener">python.org</a>, inspect its source code, and use it for commercial or personal projects.
+          </li>
+          <li>
+            <strong>Platform-Independent (Portable):</strong> A Python program written on Windows runs on macOS and Linux without changing a single line of code.
+          </li>
+          <li>
+            <strong>Extremely Versatile:</strong> With Python, you can build:
+            <ul>
+              <li><strong>Artificial Intelligence &amp; Machine Learning</strong> (using libraries like TensorFlow, PyTorch, scikit-learn)</li>
+              <li><strong>Data Science &amp; Analysis</strong> (using Pandas, NumPy, Matplotlib)</li>
+              <li><strong>Web Development Backends</strong> (using frameworks like Django, Flask, FastAPI)</li>
+              <li><strong>Automation &amp; Scripting</strong> (automating boring manual tasks, web scraping)</li>
+              <li><strong>Games &amp; Desktop Software</strong> (using Pygame, Tkinter)</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: HOW COMPUTERS RUN PYTHON CODE -->
+      <!-- ============================================================ -->
+      <section id="execution-model" class="note-section">
+        <h2><span class="section-number">02.</span> How Computers Run Python Code</h2>
+
+        <h3>1. The Problem: Computers Don't Understand English or Python Directly</h3>
+        <p>
+          Inside every computer, your CPU (processor) is composed of billions of tiny electronic switches (transistors). These switches can only be in one of two states:
+        </p>
+        <ul>
+          <li><strong>Current flowing (High voltage):</strong> Represented as <code>1</code></li>
+          <li><strong>No current flowing (Low voltage):</strong> Represented as <code>0</code></li>
+        </ul>
+        <p>
+          This language of zeros and ones (<code>0</code> and <code>1</code>) is called <strong>Machine Language (Binary Code)</strong>. Physical computer hardware can <em>only</em> understand and execute binary machine code. It does not understand English words like <code>print</code>, <code>if</code>, or <code>while</code>.
+        </p>
+
+        <h3>2. High-Level vs. Low-Level Languages</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>High-Level Languages (e.g. Python, Java, C++)</th>
+                <th>Low-Level Languages (Machine Code, Assembly)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Readability</strong></td>
+                <td>Easy for humans to read, write, and understand (resembles English).</td>
+                <td>Hard for humans to read; written in raw binary (<code>01010101</code>) or hardware mnemonics.</td>
+              </tr>
+              <tr>
+                <td><strong>Portability</strong></td>
+                <td>Can run on any operating system (Windows, Mac, Linux).</td>
+                <td>Tied strictly to one specific processor architecture (x86, ARM).</td>
+              </tr>
+              <tr>
+                <td><strong>Execution</strong></td>
+                <td>Cannot run directly on CPU; must be translated first.</td>
+                <td>Executed directly by the computer processor.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3. The Role of a Translator: Compilers vs. Interpreters</h3>
+        <p>
+          Since we write code in a human-friendly <strong>High-Level Language (Python)</strong>, but the computer only understands <strong>Machine Language (0s and 1s)</strong>, we need a <strong>Translator</strong> in between.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: var(--accent-blue);">Compiler (e.g., C, C++)</h4>
+            <p style="font-size: 0.9rem; margin-bottom: 0;">
+              Translates the <strong>entire program all at once</strong> into a standalone machine executable file (like a <code>.exe</code>) before running it. If there is even one error anywhere, it will not run at all.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: var(--accent-blue);">Interpreter (e.g., Python)</h4>
+            <p style="font-size: 0.9rem; margin-bottom: 0;">
+              Translates and executes the program <strong>line by line</strong>. It reads Line 1, translates it, executes it, then moves to Line 2. If it encounters an error on Line 5, Lines 1 to 4 will still run successfully before the program stops.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">The Complete Execution Pipeline</div>
+            <p style="margin-bottom: 0.5rem;">
+              When you write Python code and click <strong>Run</strong> in VS Code:
+            </p>
+            <ol style="margin-bottom: 0; padding-left: 1.2rem;">
+              <li>You write readable Python code in a file ending with <code>.py</code> (e.g., <code>first_program.py</code>).</li>
+              <li>The <strong>Python Interpreter</strong> reads your file line by line.</li>
+              <li>It converts the Python instructions into an intermediate form called <em>Bytecode</em> and then directly executes it on your computer CPU.</li>
+              <li>The result appears on your terminal screen as the <strong>Output</strong>!</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: FIRST PROGRAM & PRINT -->
+      <!-- ============================================================ -->
+      <section id="first-program" class="note-section">
+        <h2><span class="section-number">03.</span> Your First Code &amp; The <code>print()</code> Function</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: The print() Function</div>
+          <p>
+            In Python, <code>print()</code> is a built-in function used to <strong>display output</strong> (messages, numbers, calculations, or variables) on the computer screen or console.
+          </p>
+        </div>
+
+        <h3>1. Writing Your First Program</h3>
+        <p>
+          By tradition in programming, the very first program you write in any language is "Hello World". Create a file named <code>first_program.py</code> and write:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="func">print</span>(<span class="str">"Hello World"</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Hello World</div>
+        </div>
+
+        <h3>2. When to Use Quotes vs. When NOT to Use Quotes</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Item to Print</th>
+                <th>Do you use Quotes?</th>
+                <th>Example Code</th>
+                <th>Output</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Plain Text / Words / Sentences</strong></td>
+                <td><span style="color: #34d399; font-weight: 700;">YES</span> (Must be inside quotes)</td>
+                <td><code>print("My name is John")</code></td>
+                <td><code>My name is John</code></td>
+              </tr>
+              <tr>
+                <td><strong>Numbers (Integers, Decimals)</strong></td>
+                <td><span style="color: #f87171; font-weight: 700;">NO</span> (Write directly)</td>
+                <td><code>print(23)</code></td>
+                <td><code>23</code></td>
+              </tr>
+              <tr>
+                <td><strong>Math Calculations</strong></td>
+                <td><span style="color: #f87171; font-weight: 700;">NO</span> (Evaluates the math)</td>
+                <td><code>print(35 + 23)</code></td>
+                <td><code>58</code></td>
+              </tr>
+              <tr>
+                <td><strong>Variables</strong></td>
+                <td><span style="color: #f87171; font-weight: 700;">NO</span> (Prints value inside variable)</td>
+                <td><code>print(age)</code></td>
+                <td><code>23</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Quotes Trap: Value vs. Text</div>
+            <p>
+              Compare these two lines:
+              <br>• <code>print("23 + 35")</code> &rarr; Outputs exact text: <code>23 + 35</code>
+              <br>• <code>print(23 + 35)</code> &rarr; Computes and outputs: <code>58</code>
+              <br>Anything inside quotes is treated strictly as literal text (a string). Outside quotes, Python evaluates it as numbers and code!
+            </p>
+          </div>
+        </div>
+
+        <h3>3. Printing Multiple Items on the Same Line</h3>
+        <p>
+          You can print multiple items together in a single <code>print()</code> call by separating them with a <strong>comma (<code>,</code>)</strong>. Python will automatically insert a space between each item:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="func">print</span>(<span class="str">"My name is John."</span>, <span class="str">"My age is"</span>, <span class="num">23</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>My name is John. My age is 23</div>
+        </div>
+
+        <h3>4. How <code>print()</code> Handles New Lines</h3>
+        <p>
+          By default, every separate <code>print()</code> statement automatically moves the cursor to the <strong>next line</strong>:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="func">print</span>(<span class="str">"Line 1"</span>)
+<span class="func">print</span>(<span class="str">"Line 2"</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Line 1</div>
+          <div>Line 2</div>
+        </div>
+
+        <p>
+          If you want to prevent a newline, you can customize the <code>end</code> parameter:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="func">print</span>(<span class="str">"Hello"</span>, end=<span class="str">" "</span>)
+<span class="func">print</span>(<span class="str">"World!"</span>)</code></pre>
+        </div>
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Hello World!</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: CHARACTER SET -->
+      <!-- ============================================================ -->
+      <section id="character-set" class="note-section">
+        <h2><span class="section-number">04.</span> Python Character Set</h2>
+        <p>
+          A <strong>character set</strong> is the complete set of valid characters that Python can recognize in code:
+        </p>
+        <ul>
+          <li><strong>Letters:</strong> Both uppercase <code>A &ndash; Z</code> and lowercase <code>a &ndash; z</code>.</li>
+          <li><strong>Digits:</strong> Numbers from <code>0 &ndash; 9</code>.</li>
+          <li><strong>Special Symbols:</strong> Standard keyboard symbols like <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>=</code>, <code>_</code>, <code>( )</code>, <code>[ ]</code>, <code>{ }</code>, <code>:</code>, <code>" "</code>, <code>' '</code>, <code>#</code>.</li>
+          <li><strong>Whitespaces:</strong> Blank space, Tab (<code>\t</code>), Newline (<code>\n</code>).</li>
+          <li><strong>Unicode:</strong> Python 3 supports full UTF-8 encoding (supporting characters and symbols from world languages inside text strings).</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: VARIABLES & MEMORY -->
+      <!-- ============================================================ -->
+      <section id="variables" class="note-section">
+        <h2><span class="section-number">05.</span> Variables &amp; How Memory Works</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Variable</div>
+          <p>
+            A <strong>variable</strong> is a named container in computer memory used to store data values. Whenever you need to save a number, a piece of text, or a calculation result to use later in your program, you store it inside a variable.
+          </p>
+        </div>
+
+        <h3>1. The Storage Box Analogy</h3>
+        <p>
+          Imagine your computer's RAM memory as a large warehouse full of empty storage boxes.
+        </p>
+        <p>
+          When you write:
+          <br><code>age = 23</code>
+        </p>
+        <p>
+          Python does two things behind the scenes:
+        </p>
+        <ol>
+          <li>It reserves a spot in memory and puts the value <code>23</code> inside it.</li>
+          <li>It sticks a label named <code>age</code> on that memory spot.</li>
+        </ol>
+        <p>
+          Whenever you write <code>print(age)</code> later in your program, Python looks up the box labeled <code>age</code>, reads its value (<code>23</code>), and displays it.
+        </p>
+
+        <h3>2. The Assignment Operator (<code>=</code>)</h3>
+        <p>
+          In Python, the single equal sign <code>=</code> is called the <strong>Assignment Operator</strong>.
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">Important: In Python, = does NOT mean "Equal To"</div>
+            <p>
+              In school mathematics, <code>x = y</code> means $x$ is equal to $y$.
+              <br>In Python programming, <code>=</code> means:
+              <br><strong>"Take whatever value is on the RIGHT side, and store it into the variable on the LEFT side."</strong>
+              <br>Data always flows from <strong>Right &rarr; Left</strong>.
+            </p>
+          </div>
+        </div>
+
+        <h3>3. Dynamic Typing (No Need to Declare Types)</h3>
+        <p>
+          In older languages like C, C++, or Java, you are forced to tell the computer what type of data you want to store in advance (e.g., <code>int age = 23;</code>).
+        </p>
+        <p>
+          In Python, you <strong>never</strong> have to declare data types manually. Python is <strong>dynamically typed</strong>: it looks at whatever value you put on the right side and automatically figures out the data type!
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Creating variables of different types</span>
+<span class="var">name</span> = <span class="str">"Shraddha"</span>    <span class="com"># Python automatically knows this is text (string)</span>
+<span class="var">age</span> = <span class="num">23</span>             <span class="com"># Python automatically knows this is an integer</span>
+<span class="var">price</span> = <span class="num">25.99</span>        <span class="com"># Python automatically knows this is a decimal number (float)</span>
+
+<span class="func">print</span>(<span class="str">"My Name is:"</span>, <span class="var">name</span>)
+<span class="func">print</span>(<span class="str">"My Age is:"</span>, <span class="var">age</span>)
+<span class="func">print</span>(<span class="str">"Product Price is:"</span>, <span class="var">price</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>My Name is: Shraddha</div>
+          <div>My Age is: 23</div>
+          <div>Product Price is: 25.99</div>
+        </div>
+
+        <h3>4. Variable Reassignment (Values Can Change)</h3>
+        <p>
+          The word <em>variable</em> comes from the word <em>vary</em> (meaning to change). You can change the value stored in a variable at any point:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">age</span> = <span class="num">23</span>
+<span class="func">print</span>(<span class="var">age</span>)  <span class="com"># Prints 23</span>
+
+<span class="com"># Next year, update the age</span>
+<span class="var">age</span> = <span class="num">24</span>
+<span class="func">print</span>(<span class="var">age</span>)  <span class="com"># Now prints 24! The old value 23 is replaced.</span></code></pre>
+        </div>
+
+        <h3>5. Assigning One Variable to Another</h3>
+        <p>
+          You can copy the value of one variable into a second variable:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">age</span> = <span class="num">25</span>
+<span class="var">age2</span> = <span class="var">age</span>  <span class="com"># Takes value of 'age' (25) and puts it into 'age2'</span>
+
+<span class="func">print</span>(<span class="var">age2</span>)  <span class="com"># Prints 25</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: RULES FOR IDENTIFIERS -->
+      <!-- ============================================================ -->
+      <section id="identifiers" class="note-section">
+        <h2><span class="section-number">06.</span> Rules for Naming Variables (Identifiers)</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Identifier</div>
+          <p>
+            An <strong>identifier</strong> is simply the name you give to something in your Python code — such as a variable name, a function name, or a class name.
+          </p>
+        </div>
+
+        <h3>The 5 Strict Rules You Must Follow (Syntax Errors if Broken)</h3>
+        <ol>
+          <li>
+            <strong>Permitted Characters:</strong> An identifier can only consist of:
+            <ul>
+              <li>Letters: <code>a &ndash; z</code> and <code>A &ndash; Z</code></li>
+              <li>Digits: <code>0 &ndash; 9</code></li>
+              <li>Underscore: <code>_</code></li>
+            </ul>
+          </li>
+          <li>
+            <strong>Cannot Start with a Digit:</strong> A variable name can have numbers in the middle or end, but <strong>never at the very beginning</strong>.
+            <br>&bull; <code>var1</code> &rarr; <span style="color: #34d399; font-weight: 700;">Valid</span>
+            <br>&bull; <code>1var</code> &rarr; <span style="color: #f87171; font-weight: 700;">SyntaxError</span>
+          </li>
+          <li>
+            <strong>No Special Symbols or Spaces:</strong> Symbols like <code>@</code>, <code>$</code>, <code>%</code>, <code>#</code>, <code>!</code>, <code>-</code> or blank spaces are strictly forbidden in variable names.
+            <br>&bull; <code>my_age</code> &rarr; <span style="color: #34d399; font-weight: 700;">Valid</span>
+            <br>&bull; <code>my age</code> &rarr; <span style="color: #f87171; font-weight: 700;">Invalid (Space not allowed)</span>
+            <br>&bull; <code>user-id</code> &rarr; <span style="color: #f87171; font-weight: 700;">Invalid (Hyphen is treated as minus sign)</span>
+          </li>
+          <li>
+            <strong>Cannot Use Python Keywords:</strong> You cannot name a variable after reserved language words like <code>class</code>, <code>def</code>, <code>for</code>, <code>True</code>, or <code>None</code>.
+          </li>
+          <li>
+            <strong>Python is Case-Sensitive:</strong> Uppercase and lowercase letters are treated as completely different things!
+            <br>&bull; <code>age</code>, <code>Age</code>, and <code>AGE</code> are <strong>three completely separate variables</strong> in memory.
+          </li>
+        </ol>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Variable Name</th>
+                <th>Valid?</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>user_score</code></td>
+                <td><span style="color: #34d399; font-weight: 700;">Valid</span></td>
+                <td>Contains lowercase letters and underscore. Excellent name.</td>
+              </tr>
+              <tr>
+                <td><code>score_1</code></td>
+                <td><span style="color: #34d399; font-weight: 700;">Valid</span></td>
+                <td>Digits are allowed after the first character.</td>
+              </tr>
+              <tr>
+                <td><code>_internal_val</code></td>
+                <td><span style="color: #34d399; font-weight: 700;">Valid</span></td>
+                <td>Starting with an underscore is fully permitted.</td>
+              </tr>
+              <tr>
+                <td><code>2nd_user</code></td>
+                <td><span style="color: #f87171; font-weight: 700;">INVALID</span></td>
+                <td>Cannot begin with the number <code>2</code>.</td>
+              </tr>
+              <tr>
+                <td><code>total$price</code></td>
+                <td><span style="color: #f87171; font-weight: 700;">INVALID</span></td>
+                <td>The <code>$</code> symbol is illegal in identifiers.</td>
+              </tr>
+              <tr>
+                <td><code>user name</code></td>
+                <td><span style="color: #f87171; font-weight: 700;">INVALID</span></td>
+                <td>Spaces are not allowed. Use <code>user_name</code> instead.</td>
+              </tr>
+              <tr>
+                <td><code>True</code></td>
+                <td><span style="color: #f87171; font-weight: 700;">INVALID</span></td>
+                <td><code>True</code> is a reserved Python keyword.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">✨</div>
+          <div class="callout-content">
+            <div class="callout-title">Professional Tip: Best Naming Practices (PEP 8)</div>
+            <p>
+              Always choose names that are <strong>short, simple, and meaningful</strong>:
+              <br>&bull; Bad name: <code>x</code> or <code>xybde</code> (Nobody knows what data is inside it).
+              <br>&bull; Bad name: <code>this_is_the_total_sum_of_all_items_in_the_cart</code> (Too long and tedious to type).
+              <br>&bull; Good names: <code>age</code>, <code>name</code>, <code>total_price</code>, <code>count</code>, <code>sum_result</code>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: CORE DATA TYPES -->
+      <!-- ============================================================ -->
+      <section id="data-types" class="note-section">
+        <h2><span class="section-number">07.</span> The 5 Fundamental Data Types &amp; <code>type()</code></h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Data Type</div>
+          <p>
+            A <strong>data type</strong> tells Python what kind of value a variable is holding. Knowing the data type is critical because it determines what operations you are allowed to perform.
+            <br><em>(For example, you can multiply two numbers together, but you cannot multiply a person's name by a shoe size!)</em>
+          </p>
+        </div>
+
+        <h3>The 5 Core Primary Types in Python:</h3>
+
+        <!-- 1. Integer -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem;">
+          <h4 style="margin-top: 0; color: var(--accent-blue);">1. Integer (<code>int</code>)</h4>
+          <p style="margin-bottom: 0.5rem;">
+            Represents <strong>whole numbers</strong> without any decimal point. They can be positive, negative, or zero:
+          </p>
+          <p style="font-family: var(--font-mono); color: #38bdf8; margin-bottom: 0;">
+            Examples: <code>25</code>, <code>-25</code>, <code>0</code>, <code>1000</code>
+          </p>
+        </div>
+
+        <!-- 2. Float -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem;">
+          <h4 style="margin-top: 0; color: var(--accent-blue);">2. Floating-Point Number (<code>float</code>)</h4>
+          <p style="margin-bottom: 0.5rem;">
+            Represents <strong>decimal numbers</strong> (fractions). Any number containing a decimal point is treated as a float:
+          </p>
+          <p style="font-family: var(--font-mono); color: #38bdf8; margin-bottom: 0;">
+            Examples: <code>25.99</code>, <code>3.14</code>, <code>-0.5</code>, <code>2.0</code> (even 2.0 is a float because of the decimal point!)
+          </p>
+        </div>
+
+        <!-- 3. String -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem;">
+          <h4 style="margin-top: 0; color: var(--accent-blue);">3. String (<code>str</code>)</h4>
+          <p style="margin-bottom: 0.5rem;">
+            Represents <strong>text</strong> — characters, words, or sentences enclosed in quotes. You can write strings in three ways:
+          </p>
+          <ul style="margin-bottom: 0;">
+            <li>Double quotes: <code>name = "Shraddha"</code> (Standard convention)</li>
+            <li>Single quotes: <code>name = 'Shraddha'</code> (Useful if your text contains double quotes)</li>
+            <li>Triple quotes: <code>name = '''Shraddha'''</code> or <code>"""Shraddha"""</code> (Useful for multi-line paragraphs)</li>
+          </ul>
+        </div>
+
+        <!-- 4. Boolean -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.25rem;">
+          <h4 style="margin-top: 0; color: var(--accent-blue);">4. Boolean (<code>bool</code>)</h4>
+          <p style="margin-bottom: 0.5rem;">
+            Represents a logical truth condition. A boolean can only ever have one of two values:
+          </p>
+          <p style="font-family: var(--font-mono); color: #38bdf8; margin-bottom: 0.5rem;">
+            <code>True</code> or <code>False</code>
+          </p>
+          <p style="font-size: 0.88rem; color: #fbbf24; margin-bottom: 0;">
+            ⚠️ <strong>Crucial Rule:</strong> The first letter MUST be capitalized: <code>True</code> and <code>False</code>. Writing <code>true</code> or <code>false</code> with lowercase letters will give a <code>NameError</code>!
+          </p>
+        </div>
+
+        <!-- 5. None -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem;">
+          <h4 style="margin-top: 0; color: var(--accent-blue);">5. None (<code>NoneType</code>)</h4>
+          <p style="margin-bottom: 0.5rem;">
+            Used to represent the <strong>absence of any value</strong> (similar to <code>null</code> in other programming languages). If you create a variable but don't want to store any data in it yet, you assign it <code>None</code>:
+          </p>
+          <p style="font-family: var(--font-mono); color: #38bdf8; margin-bottom: 0;">
+            Example: <code>a = None</code> (Capital <code>N</code> is required).
+          </p>
+        </div>
+
+        <h3>Checking a Variable's Data Type with <code>type()</code></h3>
+        <p>
+          Python has a built-in function called <code>type()</code> that inspects any variable and tells you its exact data type:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">name</span> = <span class="str">"Shraddha"</span>
+<span class="var">age</span> = <span class="num">23</span>
+<span class="var">price</span> = <span class="num">25.99</span>
+<span class="var">is_adult</span> = <span class="bool">True</span>
+<span class="var">a</span> = <span class="kw">None</span>
+
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">name</span>))
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">age</span>))
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">price</span>))
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">is_adult</span>))
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">a</span>))</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>&lt;class 'str'&gt;    &larr; string</div>
+          <div>&lt;class 'int'&gt;    &larr; integer</div>
+          <div>&lt;class 'float'&gt;  &larr; floating-point number</div>
+          <div>&lt;class 'bool'&gt;   &larr; boolean</div>
+          <div>&lt;class 'NoneType'&gt;&larr; none type</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: KEYWORDS & CASE SENSITIVITY -->
+      <!-- ============================================================ -->
+      <section id="keywords" class="note-section">
+        <h2><span class="section-number">08.</span> Python Keywords &amp; Case Sensitivity</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Keywords</div>
+          <p>
+            <strong>Keywords</strong> are special words that are reserved by Python for its own internal syntax and rules. Each keyword has a specific, fixed meaning.
+          </p>
+        </div>
+
+        <p>
+          Because these words are reserved, <strong>you cannot use them as variable names</strong>. For instance, you cannot name your variable <code>True</code>, <code>class</code>, or <code>break</code>.
+        </p>
+
+        <h3>Common Python Keywords:</h3>
+        <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.88rem; display: flex; flex-wrap: wrap; gap: 0.65rem;">
+          <code>False</code> <code>None</code> <code>True</code> <code>and</code> <code>as</code> <code>assert</code> 
+          <code>break</code> <code>class</code> <code>continue</code> <code>def</code> <code>del</code> <code>elif</code> 
+          <code>else</code> <code>except</code> <code>finally</code> <code>for</code> <code>from</code> <code>if</code> 
+          <code>import</code> <code>in</code> <code>is</code> <code>lambda</code> <code>not</code> <code>or</code> 
+          <code>pass</code> <code>return</code> <code>try</code> <code>while</code>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Do you need to memorize all keywords now?</div>
+            <p>
+              <strong>No!</strong> You will learn them naturally one by one as we progress through loops, conditionals, and functions. Just remember that reserved words cannot be used as variable names.
+            </p>
+          </div>
+        </div>
+
+        <h3>Understanding Case Sensitivity</h3>
+        <p>
+          In SQL, <code>SELECT</code> and <code>select</code> are the same. But <strong>Python is strictly case-sensitive</strong>:
+        </p>
+        <ul>
+          <li><code>apple</code>, <code>Apple</code>, and <code>APPLE</code> are 3 completely separate variables.</li>
+          <li>Keywords like <code>True</code>, <code>False</code>, and <code>None</code> must begin with a capital letter. If you write <code>true</code>, Python thinks you are searching for a variable named <code>true</code> and gives a <code>NameError</code>!</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: COMMENTS -->
+      <!-- ============================================================ -->
+      <section id="comments" class="note-section">
+        <h2><span class="section-number">09.</span> Comments in Python</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Comments</div>
+          <p>
+            A <strong>comment</strong> is a note written by the programmer inside the code to explain what the code does. Comments are <strong>completely ignored by the Python interpreter</strong> and will never execute.
+          </p>
+        </div>
+
+        <h3>Why Write Comments?</h3>
+        <ul>
+          <li>To make your code easy to understand for team members or your future self.</li>
+          <li>To temporarily disable ("comment out") lines of code during debugging without deleting them.</li>
+        </ul>
+
+        <h3>Types of Comments:</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># 1. Single-Line Comment: Starts with a '#' symbol</span>
+<span class="var">age</span> = <span class="num">23</span>  <span class="com"># This is an inline comment explaining this variable</span>
+
+<span class="com"># 2. Multi-Line Comment using multiple '#' symbols (Recommended PEP 8 way)</span>
+<span class="com"># This program calculates the</span>
+<span class="com"># final price of groceries</span>
+<span class="com"># after applying holiday discounts.</span>
+
+<span class="com"># 3. Multi-Line Comments using Triple Quotes (""" or ''')</span>
+<span class="str">"""
+You can also write multi-line explanations
+inside triple quotation marks. If not assigned
+to a variable, Python discards it.
+"""</span>
+
+<span class="func">print</span>(<span class="str">"Hello World"</span>)  <span class="com"># Only this line will actually execute!</span></code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">⌨️</div>
+          <div class="callout-content">
+            <div class="callout-title">VS Code Shortcut</div>
+            <p>
+              Select any line or block of code and press:
+              <br>&bull; <strong>Windows / Linux:</strong> <kbd>Ctrl</kbd> + <kbd>/</kbd>
+              <br>&bull; <strong>macOS:</strong> <kbd>Cmd</kbd> + <kbd>/</kbd>
+              <br>This instantly comments or uncomments the selected lines.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: OPERATORS -->
+      <!-- ============================================================ -->
+      <section id="operators" class="note-section">
+        <h2><span class="section-number">10.</span> Operators in Python</h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Operators &amp; Operands</div>
+          <p>
+            An <strong>operator</strong> is a symbol that performs a specific operation on values or variables.
+            <br>The values on which the operation is performed are called <strong>operands</strong>.
+            <br><em>In the expression <code>5 + 2</code>, the numbers <code>5</code> and <code>2</code> are operands, and <code>+</code> is the operator.</em>
+          </p>
+        </div>
+
+        <!-- 10.1 Arithmetic Operators -->
+        <h3>10.1 Arithmetic Operators (Mathematical Calculations)</h3>
+        <p>Used to carry out basic math:</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Example ($a=5, b=2$)</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>+</code></td>
+                <td>Addition</td>
+                <td>Adds two values together.</td>
+                <td><code>a + b</code></td>
+                <td><code>7</code></td>
+              </tr>
+              <tr>
+                <td><code>-</code></td>
+                <td>Subtraction</td>
+                <td>Subtracts right value from left value.</td>
+                <td><code>a - b</code></td>
+                <td><code>3</code></td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>Multiplication</td>
+                <td>Multiplies two numbers.</td>
+                <td><code>a * b</code></td>
+                <td><code>10</code></td>
+              </tr>
+              <tr>
+                <td><code>/</code></td>
+                <td>Division</td>
+                <td>Divides numerator by denominator. <strong>Always gives a float!</strong></td>
+                <td><code>a / b</code></td>
+                <td><code>2.5</code></td>
+              </tr>
+              <tr>
+                <td><code>//</code></td>
+                <td>Floor Division</td>
+                <td>Divides and drops the decimal part (rounds down to whole number).</td>
+                <td><code>a // b</code></td>
+                <td><code>2</code></td>
+              </tr>
+              <tr>
+                <td><code>%</code></td>
+                <td>Modulus (Remainder)</td>
+                <td>Returns the remainder after division.</td>
+                <td><code>a % b</code></td>
+                <td><code>1</code> (because $5 \div 2 = 2$ with remainder $1$)</td>
+              </tr>
+              <tr>
+                <td><code>**</code></td>
+                <td>Power / Exponent</td>
+                <td>Calculates $a$ raised to the power of $b$ ($a^b$).</td>
+                <td><code>a ** b</code></td>
+                <td><code>25</code> (because $5^2 = 25$)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Golden Rule: Division in Python Always Produces a Float</div>
+            <p>
+              In Python, the division operator <code>/</code> <strong>always returns a decimal number (float)</strong>, even if the division is perfectly even!
+              <br>&bull; <code>print(4 / 2)</code> &rarr; outputs <code>2.0</code> (not <code>2</code>).
+              <br>If you want an integer answer without decimals, use floor division: <code>4 // 2</code> &rarr; outputs <code>2</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- 10.2 Relational Operators -->
+        <h3>10.2 Relational / Comparison Operators</h3>
+        <p>
+          Used to compare two values. <strong>Relational operators always return a boolean: either <code>True</code> or <code>False</code>.</strong>
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Meaning</th>
+                <th>Example ($a=50, b=20$)</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>==</code></td>
+                <td>Equal to (checks if both values are equal)</td>
+                <td><code>a == b</code> &rarr; Is 50 equal to 20?</td>
+                <td><code>False</code></td>
+              </tr>
+              <tr>
+                <td><code>!=</code></td>
+                <td>Not equal to (checks if values are different)</td>
+                <td><code>a != b</code> &rarr; Is 50 not equal to 20?</td>
+                <td><code>True</code></td>
+              </tr>
+              <tr>
+                <td><code>></code></td>
+                <td>Greater than</td>
+                <td><code>a > b</code> &rarr; Is 50 greater than 20?</td>
+                <td><code>True</code></td>
+              </tr>
+              <tr>
+                <td><code><</code></td>
+                <td>Less than</td>
+                <td><code>a < b</code> &rarr; Is 50 less than 20?</td>
+                <td><code>False</code></td>
+              </tr>
+              <tr>
+                <td><code>>=</code></td>
+                <td>Greater than or equal to</td>
+                <td><code>a >= b</code> &rarr; Is 50 greater than or equal to 20?</td>
+                <td><code>True</code></td>
+              </tr>
+              <tr>
+                <td><code><=</code></td>
+                <td>Less than or equal to</td>
+                <td><code>a <= b</code> &rarr; Is 50 less than or equal to 20?</td>
+                <td><code>False</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 10.3 Assignment Operators -->
+        <h3>10.3 Assignment Operators (Compound / In-Place)</h3>
+        <p>
+          We already learned the basic assignment operator (<code>=</code>). Python also gives you convenient <strong>shorthand assignment operators</strong> to modify a variable's value in-place:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Shorthand</th>
+                <th>Full Equivalent</th>
+                <th>Example ($num = 10$)</th>
+                <th>New Value of $num$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>num += 10</code></td>
+                <td><code>num = num + 10</code></td>
+                <td>Adds 10 to current value</td>
+                <td><code>20</code></td>
+              </tr>
+              <tr>
+                <td><code>num -= 5</code></td>
+                <td><code>num = num - 5</code></td>
+                <td>Subtracts 5 from current value</td>
+                <td><code>5</code></td>
+              </tr>
+              <tr>
+                <td><code>num *= 2</code></td>
+                <td><code>num = num * 2</code></td>
+                <td>Multiplies current value by 2</td>
+                <td><code>20</code></td>
+              </tr>
+              <tr>
+                <td><code>num /= 2</code></td>
+                <td><code>num = num / 2</code></td>
+                <td>Divides current value by 2</td>
+                <td><code>5.0</code></td>
+              </tr>
+              <tr>
+                <td><code>num %= 3</code></td>
+                <td><code>num = num % 3</code></td>
+                <td>Stores remainder after dividing by 3</td>
+                <td><code>1</code></td>
+              </tr>
+              <tr>
+                <td><code>num **= 2</code></td>
+                <td><code>num = num ** 2</code></td>
+                <td>Raises current value to power of 2</td>
+                <td><code>100</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 10.4 Logical Operators -->
+        <h3>10.4 Logical Operators (<code>not</code>, <code>and</code>, <code>or</code>)</h3>
+        <p>
+          Logical operators work on boolean values (<code>True</code> and <code>False</code>) to build decision logic:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: var(--accent-blue);">1. <code>not</code> (Opposite)</h4>
+            <p style="font-size: 0.9rem;">
+              Flips the boolean value to its exact opposite:
+              <br>&bull; <code>not True</code> &rarr; <code>False</code>
+              <br>&bull; <code>not False</code> &rarr; <code>True</code>
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: var(--accent-blue);">2. <code>and</code> (Both must be True)</h4>
+            <p style="font-size: 0.9rem;">
+              Returns <code>True</code> <strong>only if BOTH conditions are True</strong>. If even one condition is False, the result is False:
+              <br>&bull; <code>True and True</code> &rarr; <code>True</code>
+              <br>&bull; <code>True and False</code> &rarr; <code>False</code>
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: var(--accent-blue);">3. <code>or</code> (At least one True)</h4>
+            <p style="font-size: 0.9rem;">
+              Returns <code>True</code> if <strong>either of the conditions is True</strong>. It only returns False if both are False:
+              <br>&bull; <code>True or False</code> &rarr; <code>True</code>
+              <br>&bull; <code>False or False</code> &rarr; <code>False</code>
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">a</span> = <span class="num">50</span>
+<span class="var">b</span> = <span class="num">30</span>
+
+<span class="func">print</span>(<span class="kw">not</span> (<span class="var">a</span> > <span class="var">b</span>))           <span class="com"># not (50 > 30) -> not (True) -> False</span>
+<span class="func">print</span>((<span class="var">a</span> > <span class="num">20</span>) <span class="kw">and</span> (<span class="var">b</span> > <span class="num">20</span>))  <span class="com"># (True) and (True) -> True</span>
+<span class="func">print</span>((<span class="var">a</span> == <span class="var">b</span>) <span class="kw">or</span> (<span class="var">a</span> > <span class="var">b</span>))   <span class="com"># (False) or (True) -> True</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>False</div>
+          <div>True</div>
+          <div>True</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: TYPE CONVERSION VS CASTING -->
+      <!-- ============================================================ -->
+      <section id="type-conversion" class="note-section">
+        <h2><span class="section-number">11.</span> Type Conversion vs. Type Casting</h2>
+
+        <p>
+          Often in programming, you need to change a variable from one data type to another (for example, turning the string <code>"25"</code> into the actual integer number <code>25</code>).
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Fundamental Difference</div>
+          <ul>
+            <li><strong>Type Conversion (Automatic / Implicit):</strong> Python converts the type automatically behind the scenes to protect you from losing data.</li>
+            <li><strong>Type Casting (Manual / Explicit):</strong> You, the programmer, manually tell Python to convert a type using built-in functions like <code>int()</code>, <code>float()</code>, or <code>str()</code>.</li>
+          </ul>
+        </div>
+
+        <h3>1. Type Conversion (Automatic)</h3>
+        <p>
+          When you add an integer and a float together, Python automatically promotes the integer to a float:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">a</span> = <span class="num">2</span>       <span class="com"># int</span>
+<span class="var">b</span> = <span class="num">4.25</span>    <span class="com"># float</span>
+
+<span class="var">sum_val</span> = <span class="var">a</span> + <span class="var">b</span>  <span class="com"># Python automatically treats 'a' as 2.0</span>
+<span class="func">print</span>(<span class="var">sum_val</span>)        <span class="com"># 6.25</span>
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">sum_val</span>))  <span class="com"># &lt;class 'float'&gt;</span></code></pre>
+        </div>
+
+        <h3>2. Type Casting (Manual)</h3>
+        <p>
+          If you have a number trapped inside quotes as a string (like <code>"25"</code>), Python will <strong>NOT</strong> automatically convert it for you. If you try to add <code>"2" + 4.25</code>, Python will throw a <code>TypeError</code>.
+        </p>
+        <p>
+          You must manually convert it using type casting functions:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Converting String to Integer: int()</span>
+<span class="var">a</span> = <span class="str">"2"</span>
+<span class="var">a_converted</span> = <span class="func">int</span>(<span class="var">a</span>)    <span class="com"># Now 'a_converted' is the integer number 2</span>
+<span class="func">print</span>(<span class="var">a_converted</span> + <span class="num">5</span>)  <span class="com"># Prints 7</span>
+
+<span class="com"># Converting String to Float: float()</span>
+<span class="var">price_str</span> = <span class="str">"25.99"</span>
+<span class="var">price_num</span> = <span class="func">float</span>(<span class="var">price_str</span>)
+<span class="func">print</span>(<span class="var">price_num</span> + <span class="num">1.0</span>)  <span class="com"># Prints 26.99</span>
+
+<span class="com"># Converting Number to String: str()</span>
+<span class="var">age</span> = <span class="num">23</span>
+<span class="var">age_str</span> = <span class="func">str</span>(<span class="var">age</span>)      <span class="com"># Becomes the string "23"</span>
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">age_str</span>))   <span class="com"># &lt;class 'str'&gt;</span></code></pre>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">🚨</div>
+          <div class="callout-content">
+            <div class="callout-title">Watch Out: Converting Invalid Text Causes ValueError</div>
+            <p>
+              Type casting only works if the string actually looks like a number!
+              <br>&bull; <code>int("25")</code> &rarr; Works cleanly! (Becomes <code>25</code>)
+              <br>&bull; <code>int("shraddha")</code> &rarr; <strong>Crashes with ValueError</strong>! Python cannot turn English letters into a number.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: TAKING USER INPUT -->
+      <!-- ============================================================ -->
+      <section id="input-handling" class="note-section">
+        <h2><span class="section-number">12.</span> Taking User Input in Python: <code>input()</code></h2>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: The input() Function</div>
+          <p>
+            The <code>input()</code> statement pauses program execution and waits for the user to type something on their keyboard and press the <kbd>Enter</kbd> key. Whatever the user types is saved into a variable.
+          </p>
+        </div>
+
+        <h3>1. Basic Syntax</h3>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">name</span> = <span class="func">input</span>(<span class="str">"Enter your name: "</span>)
+<span class="func">print</span>(<span class="str">"Welcome"</span>, <span class="var">name</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Execution:</span>
+          <div>Enter your name: Shraddha</div>
+          <div>Welcome Shraddha</div>
+        </div>
+
+        <h3>2. THE GOLDEN RULE of <code>input()</code>: It ALWAYS Returns a String!</h3>
+        <p>
+          No matter what the user types into the terminal — whether it is their name, an integer like <code>25</code>, or a decimal like <code>99.99</code> — <strong>Python will ALWAYS read it as a String (<code>str</code>)</strong>!
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Classic Beginner Bug: "10" + "20" = "1020"</div>
+            <p style="margin-bottom: 0.5rem;">
+              Look at what happens if you don't convert input when taking numbers:
+            </p>
+            <pre style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0;"><code>a = input("Enter first number: ")   # User types 10 -> a is "10"
+b = input("Enter second number: ")  # User types 20 -> b is "20"
+print(a + b)                         # Prints "1020", NOT 30!</code></pre>
+            <p style="margin-bottom: 0;">
+              Because <code>a</code> and <code>b</code> are strings, the <code>+</code> operator concatenates (glues) them together rather than adding them mathematically!
+            </p>
+          </div>
+        </div>
+
+        <h3>3. How to Properly Take Number Inputs (Wrapping with <code>int()</code> or <code>float()</code>)</h3>
+        <p>
+          To take numbers from a user, wrap the <code>input()</code> call directly inside <code>int()</code> or <code>float()</code>:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Taking an Integer Input</span>
+<span class="var">age</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter your age: "</span>))
+
+<span class="com"># Taking a Floating-Point (Decimal) Input</span>
+<span class="var">price</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter item price: "</span>))
+
+<span class="com"># Taking a String Input (No casting needed)</span>
+<span class="var">name</span> = <span class="func">input</span>(<span class="str">"Enter your name: "</span>)
+
+<span class="func">print</span>(<span class="str">"User:"</span>, <span class="var">name</span>)
+<span class="func">print</span>(<span class="str">"Age in 5 years:"</span>, <span class="var">age</span> + <span class="num">5</span>)  <span class="com"># Real math works!</span>
+<span class="func">print</span>(<span class="str">"Price with tax:"</span>, <span class="var">price</span> + <span class="num">2.50</span>)</code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: PRACTICE TASKS & SOLUTIONS -->
+      <!-- ============================================================ -->
+      <section id="tasks" class="note-section">
+        <h2><span class="section-number">13.</span> Practice Tasks &amp; Complete Solutions</h2>
+        <p>
+          These 4 tasks are the exact practice exercises given at the conclusion of Lecture 1. For each task, we provide the <strong>problem statement</strong>, the <strong>thought process &amp; logic</strong>, the <strong>clean Python code</strong>, and a <strong>step-by-step test run</strong>.
+        </p>
+
+        <!-- TASK 1 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 01</span>
+            <span class="tag">Basic Input &amp; Math</span>
+          </div>
+          <div class="task-problem">
+            Write a program to input 2 numbers from the user and print their sum.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Ask the user for the first number and wrap <code>input()</code> with <code>int()</code> so it converts into an integer.</li>
+              <li>Ask the user for the second number, converting it with <code>int()</code>.</li>
+              <li>Add both numbers using the <code>+</code> operator and store the answer in a variable <code>sum</code>.</li>
+              <li>Print the sum to the screen using <code>print()</code>.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 1: Sum of Two Numbers</span>
+<span class="var">first</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter first number: "</span>))
+<span class="var">second</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter second number: "</span>))
+
+<span class="var">sum</span> = <span class="var">first</span> + <span class="var">second</span>
+
+<span class="func">print</span>(<span class="str">"Sum ="</span>, <span class="var">sum</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter first number: 15</div>
+                <div>Enter second number: 25</div>
+                <div>Sum = 40</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 2 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 02</span>
+            <span class="tag">Math Formula</span>
+          </div>
+          <div class="task-problem">
+            Write a program to input the side of a square and print its area.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Recall the math formula: $\text{Area of a square} = \text{side} \times \text{side}$ (or $\text{side}^2$).</li>
+              <li>Ask the user for the side length. Because a side can have decimals (e.g. <code>5.5</code>), use <code>float(input())</code>.</li>
+              <li>Calculate area using <code>side * side</code> or <code>side ** 2</code>.</li>
+              <li>Print the calculated area.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 2: Area of a Square</span>
+<span class="var">side</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter square side length: "</span>))
+
+<span class="com"># Formula: side * side (or side ** 2)</span>
+<span class="var">area</span> = <span class="var">side</span> * <span class="var">side</span>
+
+<span class="func">print</span>(<span class="str">"Area of square ="</span>, <span class="var">area</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter square side length: 5</div>
+                <div>Area of square = 25.0</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 3 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 03</span>
+            <span class="tag">Operator Precedence</span>
+          </div>
+          <div class="task-problem">
+            Write a program to input 2 floating-point numbers and print their average.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>The formula for average is $\text{Average} = \frac{\text{num1} + \text{num2}}{2}$.</li>
+              <li>Input two numbers using <code>float(input())</code>.</li>
+              <li><strong>Parentheses Warning:</strong> You must write <code>(num1 + num2) / 2</code>. If you write <code>num1 + num2 / 2</code>, Python will divide <code>num2</code> by <code>2</code> first because division has higher priority than addition!</li>
+              <li>Print the resulting average.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 3: Average of Two Floating Point Numbers</span>
+<span class="var">num1</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter first number: "</span>))
+<span class="var">num2</span> = <span class="func">float</span>(<span class="func">input</span>(<span class="str">"Enter second number: "</span>))
+
+<span class="com"># Must use parentheses to add first, then divide by 2</span>
+<span class="var">avg</span> = (<span class="var">num1</span> + <span class="var">num2</span>) / <span class="num">2</span>
+
+<span class="func">print</span>(<span class="str">"Average ="</span>, <span class="var">avg</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter first number: 10.5</div>
+                <div>Enter second number: 20.5</div>
+                <div>Average = 15.5</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 4 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 04</span>
+            <span class="tag">Comparison Operator</span>
+          </div>
+          <div class="task-problem">
+            Write a program to input 2 integer numbers, <code>a</code> and <code>b</code>. Print <code>True</code> if <code>a</code> is greater than or equal to <code>b</code>. If not, print <code>False</code>.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Steps:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Input two integer values <code>a</code> and <code>b</code> using <code>int(input())</code>.</li>
+              <li>You don't need any complex <code>if</code> statements here! The relational operator <code>a >= b</code> directly evaluates to either <code>True</code> or <code>False</code>.</li>
+              <li>Print the result of <code>a >= b</code>.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 4: Compare if a is greater than or equal to b</span>
+<span class="var">a</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter integer a: "</span>))
+<span class="var">b</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter integer b: "</span>))
+
+<span class="com"># The expression (a >= b) directly produces True or False</span>
+<span class="func">print</span>(<span class="var">a</span> >= <span class="var">b</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run 1:</span>
+                <div>Enter integer a: 50</div>
+                <div>Enter integer b: 20</div>
+                <div>True</div>
+                <div style="margin-top: 0.5rem; color: #64748b;">--- Sample Terminal Run 2 ---</div>
+                <div>Enter integer a: 10</div>
+                <div>Enter integer b: 30</div>
+                <div>False</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 14: SUMMARY & CHEAT SHEET -->
+      <!-- ============================================================ -->
+      <section id="cheat-sheet" class="note-section">
+        <h2><span class="section-number">14.</span> Lecture 1 Quick Reference Summary</h2>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Syntax / Example</th>
+                <th>Key Takeaway</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Printing</strong></td>
+                <td><code>print("Hello", name)</code></td>
+                <td>Displays text to console; separates multiple arguments with spaces.</td>
+              </tr>
+              <tr>
+                <td><strong>Variable Assignment</strong></td>
+                <td><code>age = 23</code></td>
+                <td>Stores value on the right into the variable name on the left.</td>
+              </tr>
+              <tr>
+                <td><strong>Checking Type</strong></td>
+                <td><code>type(age)</code></td>
+                <td>Returns the class: <code>&lt;class 'int'&gt;</code>, <code>&lt;class 'str'&gt;</code>, etc.</td>
+              </tr>
+              <tr>
+                <td><strong>User Input</strong></td>
+                <td><code>input("Enter: ")</code></td>
+                <td>Always returns a <code>str</code>. Wrap with <code>int()</code> or <code>float()</code> for numbers.</td>
+              </tr>
+              <tr>
+                <td><strong>Integer Cast</strong></td>
+                <td><code>int("25")</code> &rarr; <code>25</code></td>
+                <td>Converts string representation of a whole number into an integer.</td>
+              </tr>
+              <tr>
+                <td><strong>Float Cast</strong></td>
+                <td><code>float("25.9")</code> &rarr; <code>25.9</code></td>
+                <td>Converts string representation of a decimal number into a float.</td>
+              </tr>
+              <tr>
+                <td><strong>Division (<code>/</code>)</strong></td>
+                <td><code>5 / 2</code> &rarr; <code>2.5</code></td>
+                <td>Always returns a float in Python, even for <code>4 / 2 = 2.0</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Floor Division (<code>//</code>)</strong></td>
+                <td><code>5 // 2</code> &rarr; <code>2</code></td>
+                <td>Discards the decimal remainder and rounds down.</td>
+              </tr>
+              <tr>
+                <td><strong>Modulus (<code>%</code>)</strong></td>
+                <td><code>5 % 2</code> &rarr; <code>1</code></td>
+                <td>Gives the remainder after division.</td>
+              </tr>
+              <tr>
+                <td><strong>Power (<code>**</code>)</strong></td>
+                <td><code>2 ** 3</code> &rarr; <code>8</code></td>
+                <td>Calculates base raised to power ($2^3 = 8$).</td>
+              </tr>
+              <tr>
+                <td><strong>Comparison (<code>==</code>)</strong></td>
+                <td><code>a == b</code></td>
+                <td>Tests if values are equal. Do not confuse with assignment (<code>=</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>Comments</strong></td>
+                <td><code># Comment text</code></td>
+                <td>Ignored by Python. Use to explain code for humans.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive Playground Widget -->
+        <div style="margin-top: 2.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: var(--accent-blue); display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡ Interactive Expression Evaluator</span>
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Test any Lecture 1 operator, mathematical calculation, or boolean comparison right in your browser:
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" id="sim-input" class="search-input" style="flex: 1; max-width: none;" placeholder="e.g. 5 ** 2, 50 >= 20, 10 + 20, True and not False">
+            <button class="btn-primary" onclick="runSimulator()">Run Expression</button>
+          </div>
+          <div class="output-box" id="sim-output" style="margin-bottom: 0;">
+            <span class="output-label">Evaluation Output:</span>
+            <span style="color: #64748b;">Enter an expression above and click "Run Expression"</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents (visible on mobile or when sidebar is hidden) -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 1 Complete Reference
+      </div>
+      <div>
+        <a href="index.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to All Lectures</a>
+        <a href="#intro" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

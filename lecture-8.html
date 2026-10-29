@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 8: Object-Oriented Programming (Part 1) | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 8 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-oops" class="sidebar-link">1. Evolution: Procedural to Functional to OOP</a></li>
+        <li><a href="#classes-objects" class="sidebar-link">2. Classes &amp; Objects: Blueprint vs. Instance</a></li>
+        <li><a href="#constructor-init" class="sidebar-link">3. The __init__() Constructor</a></li>
+        <li><a href="#self-parameter" class="sidebar-link">4. The 'self' Parameter Explained</a></li>
+        <li><a href="#attributes-deep-dive" class="sidebar-link">5. Class Attributes vs. Instance Attributes</a></li>
+        <li><a href="#methods-functions" class="sidebar-link">6. Methods: Giving Actions to Objects</a></li>
+        <li><a href="#static-methods" class="sidebar-link">7. Static Methods &amp; @staticmethod</a></li>
+        <li><a href="#pillars-intro" class="sidebar-link">8. Core Pillars: Abstraction &amp; Encapsulation</a></li>
+        <li><a href="#practice-task-1" class="sidebar-link">9. Practice 1: Student Class &amp; Average Marks</a></li>
+        <li><a href="#practice-task-2" class="sidebar-link">10. Practice 2: Banking System (Debit/Credit)</a></li>
+        <li><a href="#summary-matrix" class="sidebar-link">11. Quick Reference &amp; Summary Matrix</a></li>
+        <li><a href="#interactive-simulator" class="sidebar-link">12. Interactive OOP Bank Account Sandbox</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 08 Notes</span>
+          <span class="tag">OOPs Part 1</span>
+          <span class="tag">Classes &amp; Objects</span>
+          <span class="tag">__init__()</span>
+          <span class="tag">self</span>
+          <span class="tag">Abstraction</span>
+          <span class="tag">Encapsulation</span>
+          <span class="tag">2 Solved Projects</span>
+        </div>
+        <h1 class="lecture-main-title">Object-Oriented Programming (Part 1): Classes &amp; Objects</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Object-Oriented Programming (OOP) is a way of organizing code by modeling real-world entities using <strong>Classes</strong> (blueprints) and <strong>Objects</strong> (instances) that bundle together data (attributes) and actions (methods).<br>
+          <strong>Why do we use it?</strong> As programs grow, writing loose functions and scattered variables becomes messy and confusing. We use OOP to build structured, reusable, and secure real-world systems—like bank accounts, user profiles, shopping carts, or game characters—where each object manages its own data and behavior.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: EVOLUTION OF PROGRAMMING -->
+      <!-- ============================================================ -->
+      <section id="intro-oops" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Evolution: Procedural to Functional to OOP</h2>
+
+        <h3>1. How Did Programming Evolve?</h3>
+        <p>
+          To understand why Object-Oriented Programming exists, look at how developers wrote code through history:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- Step 1 -->
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #f85149; border-radius: 4px;">
+              <strong style="color: #ff7b72; font-size: 1.05rem;">1. Procedural Programming (Step-by-Step Execution)</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                In the beginning, code was written as one long, top-to-bottom sequence of instructions (e.g. <code>a = 10; b = 20; sum = a + b; diff = a - b</code>). While fine for 10-line scripts, it quickly became an unmaintainable tangle of repeated code as projects grew.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #d29922; border-radius: 4px;">
+              <strong style="color: #e3b341; font-size: 1.05rem;">2. Functional / Modular Programming (Reusable Functions)</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                Next came <strong>Functions</strong>. Instead of repeating identical code 50 times, we grouped logic inside <code>def calculate_sum(a, b):</code>. This decreased code repetition (redundancy) and made code reusable.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="padding: 1rem; background: var(--bg-primary); border-left: 4px solid #2ea043; border-radius: 4px;">
+              <strong style="color: #7ee787; font-size: 1.05rem;">3. Object-Oriented Programming (OOP) &mdash; Real-World Modeling</strong>
+              <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">
+                The modern standard for large applications! Instead of managing scattered variables and loose functions, OOP lets us map our code directly to <strong>real-world entities</strong> (like a Student, a Bank Account, or a Car). An object bundles its own data and its own actions together.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">Fun Fact: You Have Already Been Using Objects!</div>
+          <p>
+            In Python, almost everything is already an object behind the scenes:
+          </p>
+          <ul>
+            <li>A string like <code>name = "Rahul"</code> is actually an object of class <code>str</code>! That's why you can call string methods like <code>name.upper()</code> or <code>name.find()</code>.</li>
+            <li>A list like <code>marks = [95, 80]</code> is an object of class <code>list</code>, giving you methods like <code>marks.append()</code> and <code>marks.sort()</code>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: CLASSES & OBJECTS -->
+      <!-- ============================================================ -->
+      <section id="classes-objects" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Classes &amp; Objects: Blueprint vs. Instance</h2>
+
+        <h3>1. The Blueprint &amp; Factory Analogy</h3>
+        <p>
+          Before a factory produces a single physical car, engineers must design an architectural <strong>blueprint</strong> specifying what parts the car has (color, engine size, wheels) and what actions it can perform (drive, stop, accelerate).
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>What is it?</th>
+                <th>Real-Life Analogy</th>
+                <th>In Python Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Class</strong></td>
+                <td>A design template or blueprint used to create objects.</td>
+                <td>The architectural drawing of a house or car.</td>
+                <td><code>class Student:</code></td>
+              </tr>
+              <tr>
+                <td><strong>Object (Instance)</strong></td>
+                <td>The actual, real entity constructed using that blueprint.</td>
+                <td>The physical house built on the plot, or the physical car on the road.</td>
+                <td><code>s1 = Student()</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Defining a Class and Creating an Object in Python</h3>
+        <p>
+          To define a class in Python, use the <code>class</code> keyword followed by the class name (by convention, class names start with a <strong>Capital letter</strong>, such as <code>Student</code> or <code>Car</code>):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Step 1: Define the Blueprint (Class)</span>
+<span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="var">name</span> = <span class="str">"Karan"</span>
+
+<span class="com"># Step 2: Create an actual Object (Instance) from the Blueprint</span>
+<span class="var">s1</span> = <span class="cls">Student</span>()
+<span class="func">print</span>(<span class="var">s1</span>.<span class="var">name</span>)  <span class="com"># Output: Karan</span>
+
+<span class="com"># Step 3: We can create another Student object!</span>
+<span class="var">s2</span> = <span class="cls">Student</span>()
+<span class="func">print</span>(<span class="var">s2</span>.<span class="var">name</span>)  <span class="com"># Output: Karan</span></code></pre>
+        </div>
+
+        <p>
+          In the example above, both students share the same hard-coded name. But in real life, every student has their own unique name and marks! How do we give each object its own unique data? That's where the <strong>Constructor</strong> comes in!
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: THE CONSTRUCTOR -->
+      <!-- ============================================================ -->
+      <section id="constructor-init" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The __init__() Constructor</h2>
+
+        <h3>1. What is a Constructor?</h3>
+        <p>
+          A <strong>Constructor</strong> is a special function inside a class that <strong>automatically executes the instant a new object is created</strong>.
+        </p>
+        <p>
+          In Python, this constructor function is always named <code>__init__()</code> (short for <em>initialization</em>, with two underscores before and after):
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="com"># The Constructor method</span>
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"Adding new student into database..."</span>)
+
+<span class="com"># Notice: We never explicitly called s1.__init__()!</span>
+<span class="com"># The moment Student() is instantiated, __init__ runs automatically!</span>
+<span class="var">s1</span> = <span class="cls">Student</span>()  <span class="com"># Prints: Adding new student into database...</span>
+<span class="var">s2</span> = <span class="cls">Student</span>()  <span class="com"># Prints: Adding new student into database...</span></code></pre>
+        </div>
+
+        <h3>2. Passing Custom Data into the Constructor</h3>
+        <p>
+          We can pass arguments directly into the class parentheses when creating the object, just like calling a function:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">marks</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">marks</span> = <span class="var">marks</span>
+        <span class="func">print</span>(<span class="str">f"Registered: {self.name} with {self.marks} marks"</span>)
+
+<span class="com"># Creating two distinct students with their own custom information</span>
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>, <span class="num">97</span>)   <span class="com"># Prints: Registered: Karan with 97 marks</span>
+<span class="var">s2</span> = <span class="cls">Student</span>(<span class="str">"Arjun"</span>, <span class="num">88</span>)   <span class="com"># Prints: Registered: Arjun with 88 marks</span>
+
+<span class="func">print</span>(<span class="var">s1</span>.<span class="var">name</span>, <span class="var">s1</span>.<span class="var">marks</span>)  <span class="com"># Karan 97</span>
+<span class="func">print</span>(<span class="var">s2</span>.<span class="var">name</span>, <span class="var">s2</span>.<span class="var">marks</span>)  <span class="com"># Arjun 88</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: THE SELF PARAMETER -->
+      <!-- ============================================================ -->
+      <section id="self-parameter" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The 'self' Parameter Explained (Who am I?)</h2>
+
+        <h3>1. What Exactly is 'self'?</h3>
+        <p>
+          Beginners often get confused by <code>self</code>. But the concept is very simple:
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Simple Definition: 'self' means "This Current Object"</div>
+          <p>
+            When you create 100 students from the <code>Student</code> class, how does Python know whose <code>name</code> or <code>marks</code> you are talking about?
+          </p>
+          <p>
+            <strong><code>self</code> is a pointer/reference to the specific object that is currently being created or operated on.</strong>
+          </p>
+          <ul>
+            <li>When creating <code>s1</code>, <code>self</code> points to <code>s1</code>. So <code>self.name = "Karan"</code> creates <code>s1.name = "Karan"</code>.</li>
+            <li>When creating <code>s2</code>, <code>self</code> points to <code>s2</code>. So <code>self.name = "Arjun"</code> creates <code>s2.name = "Arjun"</code>.</li>
+          </ul>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="func">print</span>(<span class="str">"Memory address of self:"</span>, <span class="var">self</span>)
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>)
+<span class="func">print</span>(<span class="str">"Memory address of s1:  "</span>, <span class="var">s1</span>)
+<span class="com"># Both print the exact same memory location: &lt;__main__.Student object at 0x00000...&gt;!</span></code></pre>
+        </div>
+
+        <p>
+          <strong>Rule:</strong> The first parameter of <code>__init__()</code> (and any normal method inside a class) must always be <code>self</code>. Python automatically passes the object into <code>self</code> behind the scenes whenever you call it.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: CLASS VS INSTANCE ATTRIBUTES -->
+      <!-- ============================================================ -->
+      <section id="attributes-deep-dive" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Class Attributes vs. Instance Attributes</h2>
+
+        <p>
+          Any variable stored inside a class is called an <strong>Attribute</strong>. But attributes come in two distinct flavors:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Attribute Type</th>
+                <th>Where is it defined?</th>
+                <th>Memory Allocation</th>
+                <th>Real-Life Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Instance Attribute</strong> (Object level)</td>
+                <td>Inside <code>__init__</code> using <code>self.var_name</code></td>
+                <td>Saved separately for <strong>each individual object</strong>.</td>
+                <td>Student's <code>name</code>, <code>roll_no</code>, <code>marks</code> (unique to each student).</td>
+              </tr>
+              <tr>
+                <td><strong>Class Attribute</strong> (Class level)</td>
+                <td>Directly inside the <code>class</code> body, outside any function.</td>
+                <td>Saved <strong>only once in memory</strong> and shared across all objects!</td>
+                <td><code>college_name = "ABC College"</code> (common for all 1,000 students).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Why do we need Class Attributes? (Saving Memory)</h3>
+        <p>
+          If a college has 5,000 students, storing <code>college_name = "ABC College"</code> inside every student's individual memory wastes 5,000 slots of RAM for the exact same text!
+          <br>
+          By creating a <strong>Class Attribute</strong>, Python allocates it once in memory, and all 5,000 student objects share that single piece of data.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="com"># Class Attribute (Shared by ALL students)</span>
+    <span class="var">college_name</span> = <span class="str">"ABC College"</span>
+
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">marks</span>):
+        <span class="com"># Instance Attributes (Unique to EACH student)</span>
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">marks</span> = <span class="var">marks</span>
+
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>, <span class="num">95</span>)
+<span class="var">s2</span> = <span class="cls">Student</span>(<span class="str">"Arjun"</span>, <span class="num">88</span>)
+
+<span class="com"># Accessing Class Attribute: can be accessed via object OR class name</span>
+<span class="func">print</span>(<span class="var">s1</span>.<span class="var">college_name</span>)       <span class="com"># ABC College</span>
+<span class="func">print</span>(<span class="cls">Student</span>.<span class="var">college_name</span>)  <span class="com"># ABC College (Recommended Pythonic syntax)</span></code></pre>
+        </div>
+
+        <h3>The Precedence Rule (What if names clash?)</h3>
+        <div class="concept-box">
+          <div class="concept-title">Priority Rule: Instance Attribute &gt; Class Attribute</div>
+          <p>
+            If a class attribute and an instance attribute share the exact same variable name, <strong>Python always gives higher priority to the Instance (Object) attribute!</strong>
+          </p>
+          <div class="code-wrapper">
+            <div class="code-header"><span class="code-lang">python</span><button class="btn-copy" onclick="copyCode(this)">Copy</button></div>
+            <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="var">name</span> = <span class="str">"Anonymous"</span>  <span class="com"># Class attribute</span>
+
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>  <span class="com"># Instance attribute</span>
+
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>)
+<span class="func">print</span>(<span class="var">s1</span>.<span class="var">name</span>)  <span class="com"># Prints "Karan", NOT "Anonymous"!</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: METHODS -->
+      <!-- ============================================================ -->
+      <section id="methods-functions" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Methods: Giving Actions to Objects</h2>
+
+        <h3>1. What is a Method?</h3>
+        <p>
+          A class represents two things:
+        </p>
+        <ul>
+          <li><strong>Attributes (Data):</strong> What the object <em>has</em> (e.g. name, marks, balance).</li>
+          <li><strong>Methods (Actions):</strong> What the object <em>can do</em> (e.g. calculate average, deposit money, drive).</li>
+        </ul>
+        <p>
+          A <strong>Method</strong> is simply a function defined inside a class that belongs to the object.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">marks</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">marks</span> = <span class="var">marks</span>
+
+    <span class="com"># Method 1: Greets the student using their specific name</span>
+    <span class="kw">def</span> <span class="func">welcome</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">f"Welcome to college, {self.name}!"</span>)
+
+    <span class="com"># Method 2: Returns the student's marks</span>
+    <span class="kw">def</span> <span class="func">get_marks</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="var">self</span>.<span class="var">marks</span>
+
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>, <span class="num">97</span>)
+<span class="var">s1</span>.<span class="func">welcome</span>()              <span class="com"># Output: Welcome to college, Karan!</span>
+<span class="func">print</span>(<span class="var">s1</span>.<span class="func">get_marks</span>())     <span class="com"># Output: 97</span></code></pre>
+        </div>
+
+        <h3>2. Modifying Attributes</h3>
+        <p>
+          Attributes are not locked permanently. You can change them directly at any point:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header"><span class="code-lang">python</span><button class="btn-copy" onclick="copyCode(this)">Copy</button></div>
+          <pre><code><span class="var">s1</span>.<span class="var">name</span> = <span class="str">"Iron Man"</span>
+<span class="var">s1</span>.<span class="func">welcome</span>()  <span class="com"># Output: Welcome to college, Iron Man!</span></code></pre>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: STATIC METHODS -->
+      <!-- ============================================================ -->
+      <section id="static-methods" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Static Methods &amp; The @staticmethod Decorator</h2>
+
+        <h3>1. Why do we need Static Methods?</h3>
+        <p>
+          Normal methods always require <code>self</code> as the first argument because they read or modify an object's specific data (like <code>self.name</code>).
+        </p>
+        <p>
+          What if you want a utility function inside your class that doesn't need to read any student's name or marks (for example, a simple helper that prints a general greeting or does a math formula)?
+        </p>
+        <p>
+          If you define a normal method without <code>self</code>, Python throws an error:
+          <br>
+          <code>TypeError: welcome() takes 0 positional arguments but 1 was given</code>.
+        </p>
+
+        <h3>2. The @staticmethod Solution</h3>
+        <p>
+          To tell Python <em>"This method belongs to the class, not to any individual object instance, so do NOT pass self"</em>, we place the <strong><code>@staticmethod</code></strong> decorator above the function:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+
+    <span class="com"># Regular Method (uses self to access student name)</span>
+    <span class="kw">def</span> <span class="func">say_name</span>(<span class="var">self</span>):
+        <span class="func">print</span>(<span class="str">"My name is:"</span>, <span class="var">self</span>.<span class="var">name</span>)
+
+    <span class="com"># Static Method (does not need self or any instance data!)</span>
+    <span class="kw">@staticmethod</span>
+    <span class="kw">def</span> <span class="func">college_motto</span>():
+        <span class="func">print</span>(<span class="str">"Motto: Learn, Build, and Innovate!"</span>)
+
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Karan"</span>)
+<span class="var">s1</span>.<span class="func">say_name</span>()          <span class="com"># My name is: Karan</span>
+<span class="var">s1</span>.<span class="func">college_motto</span>()     <span class="com"># Motto: Learn, Build, and Innovate!</span>
+<span class="cls">Student</span>.<span class="func">college_motto</span>() <span class="com"># Can also be called directly on the class!</span></code></pre>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-title">What is a Decorator?</div>
+          <p>
+            In Python, anything starting with an <code>@</code> symbol above a function is called a <strong>Decorator</strong>. A decorator wraps around a function to adjust or enhance its behavior without permanently altering the function's internal code.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: PILLARS OF OOPS -->
+      <!-- ============================================================ -->
+      <section id="pillars-intro" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Core Pillars: Abstraction &amp; Encapsulation</h2>
+
+        <p>
+          In computer science and software interviews, you will frequently hear about the <strong>4 Pillars of OOP</strong>:
+        </p>
+        <ol>
+          <li><strong>Abstraction</strong> (Covered today)</li>
+          <li><strong>Encapsulation</strong> (Covered today)</li>
+          <li><strong>Inheritance</strong> (Covered in Part 2)</li>
+          <li><strong>Polymorphism</strong> (Covered in Part 2)</li>
+        </ol>
+
+        <h3>1. Abstraction (Hiding Complexity, Showing Essentials)</h3>
+        <div class="concept-box">
+          <div class="concept-title">Real-Life Analogy: Driving a Car</div>
+          <p>
+            When you sit in a car and turn the key or press the accelerator, you only see a simple dashboard and a foot pedal. You do not need to see fuel injecting into the engine, pistons firing, spark plugs sparking, or transmission gears shifting!
+          </p>
+          <p>
+            The car manufacturer <strong>abstracts away</strong> (hides) all the complicated mechanical machinery and exposes only the essential controls you need to drive.
+          </p>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="kw">class</span> <span class="cls">Car</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>):
+        <span class="var">self</span>.<span class="var">clutch</span> = <span class="kw">False</span>
+        <span class="var">self</span>.<span class="var">acc</span> = <span class="kw">False</span>
+        <span class="var">self</span>.<span class="var">brake</span> = <span class="kw">False</span>
+
+    <span class="kw">def</span> <span class="func">start</span>(<span class="var">self</span>):
+        <span class="com"># Complex internal mechanics are handled inside the class:</span>
+        <span class="var">self</span>.<span class="var">clutch</span> = <span class="kw">True</span>
+        <span class="var">self</span>.<span class="var">acc</span> = <span class="kw">True</span>
+        <span class="func">print</span>(<span class="str">"Car started safely."</span>)
+
+<span class="com"># The user only interacts with the clean, simple interface:</span>
+<span class="var">my_car</span> = <span class="cls">Car</span>()
+<span class="var">my_car</span>.<span class="func">start</span>()  <span class="com"># Prints: Car started safely.</span></code></pre>
+        </div>
+
+        <h3>2. Encapsulation (The Protective Capsule)</h3>
+        <div class="concept-box">
+          <div class="concept-title">Real-Life Analogy: A Medical Capsule</div>
+          <p>
+            Think of a medicinal capsule. Inside the single shell, multiple ingredients are wrapped together into one clean pill.
+          </p>
+          <p>
+            In programming, <strong>Encapsulation</strong> means <strong>wrapping data (attributes) and related functions (methods) together into a single unit (the class/object)</strong>.
+          </p>
+          <p>
+            Every class we have written today—like <code>Student</code> holding both <code>name</code> and <code>get_marks()</code>—is a live demonstration of encapsulation!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: PRACTICE TASK 1 -->
+      <!-- ============================================================ -->
+      <section id="practice-task-1" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Practice 1: Student Class &amp; Average Marks</h2>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #58a6ff;">Problem Statement:</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Create a <code>Student</code> class that takes the student's <code>name</code> and a list of <code>marks</code> for 3 subjects in its constructor. Then create a method <code>get_average()</code> that computes and prints their average score.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">class</span> <span class="cls">Student</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">marks</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">marks</span> = <span class="var">marks</span>  <span class="com"># Expecting a list of numbers</span>
+
+    <span class="kw">def</span> <span class="func">get_average</span>(<span class="var">self</span>):
+        <span class="com"># Calculate the sum of all marks in the list</span>
+        <span class="var">total_sum</span> = <span class="num">0</span>
+        <span class="kw">for</span> <span class="var">val</span> <span class="kw">in</span> <span class="var">self</span>.<span class="var">marks</span>:
+            <span class="var">total_sum</span> += <span class="var">val</span>
+        
+        <span class="com"># Divide by total subjects to find average</span>
+        <span class="var">avg</span> = <span class="var">total_sum</span> / <span class="func">len</span>(<span class="var">self</span>.<span class="var">marks</span>)
+        <span class="func">print</span>(<span class="str">f"Hi {self.name}, your average score is: {avg:.2f}"</span>)
+
+<span class="com"># Create student Tony Stark with 3 subject scores</span>
+<span class="var">s1</span> = <span class="cls">Student</span>(<span class="str">"Tony Stark"</span>, [<span class="num">99</span>, <span class="num">98</span>, <span class="num">97</span>])
+<span class="var">s1</span>.<span class="func">get_average</span>()  <span class="com"># Output: Hi Tony Stark, your average score is: 98.00</span>
+
+<span class="com"># Changing attribute dynamically:</span>
+<span class="var">s1</span>.<span class="var">name</span> = <span class="str">"Iron Man"</span>
+<span class="var">s1</span>.<span class="func">get_average</span>()  <span class="com"># Output: Hi Iron Man, your average score is: 98.00</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: PRACTICE TASK 2 -->
+      <!-- ============================================================ -->
+      <section id="practice-task-2" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Practice 2: Real-World Banking System</h2>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="margin-top: 0; color: #58a6ff;">Problem Statement:</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Create an <code>Account</code> class with two attributes: <code>balance</code> and <code>account_no</code>.
+            <br>
+            Implement methods to:
+          </p>
+          <ul>
+            <li><code>debit(amount)</code>: Subtracts money from balance and displays updated total.</li>
+            <li><code>credit(amount)</code>: Adds money into balance and displays updated total.</li>
+            <li><code>get_balance()</code>: Returns current balance.</li>
+          </ul>
+
+          <div class="code-wrapper">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">class</span> <span class="cls">Account</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(<span class="var">self</span>, <span class="var">balance</span>, <span class="var">account_no</span>):
+        <span class="var">self</span>.<span class="var">balance</span> = <span class="var">balance</span>
+        <span class="var">self</span>.<span class="var">account_no</span> = <span class="var">account_no</span>
+
+    <span class="com"># Debit (Withdraw) Method</span>
+    <span class="kw">def</span> <span class="func">debit</span>(<span class="var">self</span>, <span class="var">amount</span>):
+        <span class="kw">if</span> <span class="var">amount</span> &gt; <span class="var">self</span>.<span class="var">balance</span>:
+            <span class="func">print</span>(<span class="str">f"Declined: Insufficient funds to withdraw Rs {amount}"</span>)
+            <span class="kw">return</span>
+        <span class="var">self</span>.<span class="var">balance</span> -= <span class="var">amount</span>
+        <span class="func">print</span>(<span class="str">f"Rs {amount} was debited."</span>)
+        <span class="func">print</span>(<span class="str">f"Total remaining balance = Rs {self.get_balance()}"</span>)
+
+    <span class="com"># Credit (Deposit) Method</span>
+    <span class="kw">def</span> <span class="func">credit</span>(<span class="var">self</span>, <span class="var">amount</span>):
+        <span class="var">self</span>.<span class="var">balance</span> += <span class="var">amount</span>
+        <span class="func">print</span>(<span class="str">f"Rs {amount} was credited."</span>)
+        <span class="func">print</span>(<span class="str">f"Total remaining balance = Rs {self.get_balance()}"</span>)
+
+    <span class="com"># Helper method to get current balance</span>
+    <span class="kw">def</span> <span class="func">get_balance</span>(<span class="var">self</span>):
+        <span class="kw">return</span> <span class="var">self</span>.<span class="var">balance</span>
+
+<span class="com"># --- Simulating Customer Transactions ---</span>
+<span class="var">acc1</span> = <span class="cls">Account</span>(<span class="num">10000</span>, <span class="num">12345</span>)
+<span class="func">print</span>(<span class="str">f"Account #{acc1.account_no} initialized with Rs {acc1.get_balance()}"</span>)
+
+<span class="var">acc1</span>.<span class="func">debit</span>(<span class="num">1000</span>)    <span class="com"># Debits 1,000 -&gt; Balance: Rs 9,000</span>
+<span class="var">acc1</span>.<span class="func">credit</span>(<span class="num">500</span>)    <span class="com"># Credits 500  -&gt; Balance: Rs 9,500</span>
+<span class="var">acc1</span>.<span class="func">credit</span>(<span class="num">40000</span>)  <span class="com"># Salary credited -&gt; Balance: Rs 49,500</span>
+<span class="var">acc1</span>.<span class="func">debit</span>(<span class="num">10000</span>)   <span class="com"># Rent debited    -&gt; Balance: Rs 39,500</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SUMMARY MATRIX -->
+      <!-- ============================================================ -->
+      <section id="summary-matrix" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Quick Reference &amp; Summary Matrix</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Term</th>
+                <th>Syntax</th>
+                <th>Role in Python</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Class</strong></td>
+                <td><code>class MyClass:</code></td>
+                <td>Blueprint defining structure and behavior.</td>
+              </tr>
+              <tr>
+                <td><strong>Object</strong></td>
+                <td><code>obj = MyClass()</code></td>
+                <td>Real instance created from the blueprint.</td>
+              </tr>
+              <tr>
+                <td><strong>Constructor</strong></td>
+                <td><code>def __init__(self, ...):</code></td>
+                <td>Automatically runs when an object is created.</td>
+              </tr>
+              <tr>
+                <td><strong>self</strong></td>
+                <td>First parameter in methods</td>
+                <td>Points directly to the current instance being manipulated.</td>
+              </tr>
+              <tr>
+                <td><strong>Instance Attribute</strong></td>
+                <td><code>self.data = value</code></td>
+                <td>Unique to each individual object.</td>
+              </tr>
+              <tr>
+                <td><strong>Class Attribute</strong></td>
+                <td><code>shared_var = value</code></td>
+                <td>Shared across all objects, saved once in memory.</td>
+              </tr>
+              <tr>
+                <td><strong>Method</strong></td>
+                <td><code>def my_method(self):</code></td>
+                <td>Function belonging to the class operating on object data.</td>
+              </tr>
+              <tr>
+                <td><strong>Static Method</strong></td>
+                <td><code>@staticmethod</code></td>
+                <td>Class-level function that doesn't need <code>self</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Abstraction</strong></td>
+                <td>Hide internal logic</td>
+                <td>Exposes simple controls and hides complex engine details.</td>
+              </tr>
+              <tr>
+                <td><strong>Encapsulation</strong></td>
+                <td>Class wrapper</td>
+                <td>Bundles data and methods together into a protective capsule.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: INTERACTIVE SIMULATOR -->
+      <!-- ============================================================ -->
+      <section id="interactive-simulator" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Interactive OOP Bank Account Sandbox</h2>
+
+        <p>
+          Test the real-world OOP Banking System live! Click the buttons to deposit, withdraw, and inspect the state of two distinct <code>Account</code> objects running in memory:
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+          
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button class="btn-primary" onclick="selectAccount(1)" id="acc-btn-1" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Customer 1 (Acc #101)</button>
+            <button class="btn-primary" onclick="selectAccount(2)" id="acc-btn-2" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">Customer 2 (Acc #102)</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Active Account Object:</div>
+              <div id="sim-acc-no" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono); margin-top: 0.25rem;">Account #101 (Alice)</div>
+            </div>
+            <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Current Object Balance:</div>
+              <div id="sim-acc-bal" style="font-size: 1.35rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono); margin-top: 0.25rem;">Rs 10,000</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <input type="number" id="sim-amt-input" value="1000" min="100" step="100" style="width: 140px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 0.8rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.95rem;">
+            <button class="btn-primary" onclick="simCredit()" style="background: #2ea043; border-color: #2ea043;">+ Credit (Deposit)</button>
+            <button class="btn-primary" onclick="simDebit()" style="background: #da3633; border-color: #da3633;">- Debit (Withdraw)</button>
+          </div>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; font-family: var(--font-mono); font-size: 0.85rem; max-height: 180px; overflow-y: auto;" id="sim-tx-log">
+            <span style="color: var(--text-muted);">// System initialized. Click deposit or withdraw to test OOP methods.</span>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 8 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-oops" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Live Account Object State Machine
+    const accounts = {
+      1: { name: "Alice", accNo: 101, balance: 10000 },
+      2: { name: "Bob", accNo: 102, balance: 5000 }
+    };
+    let activeAccId = 1;
+
+    function selectAccount(id) {
+      activeAccId = id;
+      document.getElementById('acc-btn-1').style.background = id === 1 ? '#238636' : 'var(--bg-primary)';
+      document.getElementById('acc-btn-1').style.color = id === 1 ? '#fff' : 'var(--text-primary)';
+      document.getElementById('acc-btn-2').style.background = id === 2 ? '#238636' : 'var(--bg-primary)';
+      document.getElementById('acc-btn-2').style.color = id === 2 ? '#fff' : 'var(--text-primary)';
+      updateUi();
+    }
+
+    function updateUi() {
+      const acc = accounts[activeAccId];
+      document.getElementById('sim-acc-no').textContent = `Account #${acc.accNo} (${acc.name})`;
+      document.getElementById('sim-acc-bal').textContent = `Rs ${acc.balance.toLocaleString('en-IN')}`;
+    }
+
+    function logMsg(msg, color = 'var(--text-primary)') {
+      const logBox = document.getElementById('sim-tx-log');
+      const time = new Date().toLocaleTimeString();
+      logBox.innerHTML += `<div style="margin-top: 4px; color: ${color};">[${time}] ${msg}</div>`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function simCredit() {
+      const amt = parseInt(document.getElementById('sim-amt-input').value, 10);
+      if (isNaN(amt) || amt <= 0) return;
+      const acc = accounts[activeAccId];
+      acc.balance += amt;
+      logMsg(`acc${activeAccId}.credit(${amt}) &rarr; Rs ${amt.toLocaleString()} credited. Total balance = Rs ${acc.balance.toLocaleString()}`, '#7ee787');
+      updateUi();
+    }
+
+    function simDebit() {
+      const amt = parseInt(document.getElementById('sim-amt-input').value, 10);
+      if (isNaN(amt) || amt <= 0) return;
+      const acc = accounts[activeAccId];
+      if (amt > acc.balance) {
+        logMsg(`acc${activeAccId}.debit(${amt}) &rarr; Insufficient funds! Current balance is Rs ${acc.balance.toLocaleString()}`, '#ff7b72');
+        return;
+      }
+      acc.balance -= amt;
+      logMsg(`acc${activeAccId}.debit(${amt}) &rarr; Rs ${amt.toLocaleString()} debited. Remaining balance = Rs ${acc.balance.toLocaleString()}`, '#ffa657');
+      updateUi();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUi();
+    });
+  </script>
+</body>
+</html>

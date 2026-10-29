@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 4: Dictionary &amp; Sets | Complete Python Study Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 4 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro-dictionaries" class="sidebar-link">1. What is a Dictionary &amp; Syntax</a></li>
+        <li><a href="#dict-properties" class="sidebar-link">2. Core Properties &amp; Mutability</a></li>
+        <li><a href="#nested-dictionaries" class="sidebar-link">3. Nested Dictionaries</a></li>
+        <li><a href="#dict-methods" class="sidebar-link">4. Built-in Dictionary Methods</a></li>
+        <li><a href="#intro-sets" class="sidebar-link">5. Introduction to Sets in Python</a></li>
+        <li><a href="#set-properties" class="sidebar-link">6. Set Properties &amp; Empty Set Trap</a></li>
+        <li><a href="#hashability" class="sidebar-link">7. Mutability vs. Hashability</a></li>
+        <li><a href="#set-methods" class="sidebar-link">8. Built-in Set Methods (Union &amp; Intersect)</a></li>
+        <li><a href="#comparison-table" class="sidebar-link">9. Data Structures Master Matrix</a></li>
+        <li><a href="#tasks" class="sidebar-link">10. Solved Practice Tasks &amp; Solutions</a></li>
+        <li><a href="#cheat-sheet" class="sidebar-link">11. Summary &amp; Quick Reference</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 04 Notes</span>
+          <span class="tag">Dictionary</span>
+          <span class="tag">Sets</span>
+          <span class="tag">Hashability</span>
+          <span class="tag">Key-Value Pairs</span>
+          <span class="tag">4 Solved Tasks</span>
+        </div>
+        <h1 class="lecture-main-title">Dictionary &amp; Sets</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> A Dictionary stores related information in <code>key : value</code> pairs (just like looking up a word to find its definition), while a Set is an unordered collection that automatically removes all duplicate values.<br>
+          <strong>Why do we use it?</strong> We use dictionaries to represent real-world entities—such as a student profile (<code>"name": "Rahul", "marks": 95</code>) or a product catalog—so you can find details instantly by name. We use sets whenever we need unique items, like filtering out duplicate phone numbers or finding common friends.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHAT IS A DICTIONARY & SYNTAX -->
+      <!-- ============================================================ -->
+      <section id="intro-dictionaries" class="note-section">
+        <h2><span class="section-number">01.</span> What is a Dictionary &amp; Syntax</h2>
+        
+        <h3>1. Real-World Analogy &amp; Architectural Need</h3>
+        <p>
+          In human linguistics, a physical dictionary is structured around <strong>word-to-meaning pairs</strong>. Each unique word represents an identifier, and beside it sits its associated definition. When looking up information, a person does not search through arbitrary page numbers or sequential indices; they query the dictionary directly by the <em>word</em>.
+        </p>
+        <p>
+          In computer science, this associative model is called an <strong>Associative Array</strong>, <strong>Map</strong>, or <strong>Hash Map</strong>. In Python, this core concept is implemented via the built-in <code>dict</code> data type.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Definition: Python Dictionary</div>
+          <p>
+            A <strong>dictionary</strong> is a built-in, mutable, associative data structure used to store collections of data in <strong>key:value pairs</strong>. It belongs to the class <code>dict</code>.
+          </p>
+          <ul>
+            <li><strong>Key:</strong> The unique lookup identifier (acts like the word in a dictionary).</li>
+            <li><strong>Value:</strong> The data associated with that specific key (acts like the definition in a dictionary).</li>
+          </ul>
+        </div>
+
+        <h3>2. Dictionary Syntax</h3>
+        <p>
+          Dictionaries are declared using curly braces <code>{ }</code>. Each entry consists of a key and a value separated by a colon <code>:</code>, with multiple pairs delimited by commas:
+        </p>
+        <code>dictionary_name = { "key1": value1, "key2": value2 }</code>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Declaring a dictionary holding a profile record</span>
+<span class="var">info</span> = {
+    <span class="str">"name"</span>: <span class="str">"Apna College"</span>,
+    <span class="str">"age"</span>: <span class="num">25</span>,
+    <span class="str">"is_adult"</span>: <span class="bool">True</span>,
+    <span class="str">"marks"</span>: <span class="num">94.4</span>,
+    <span class="str">"subjects"</span>: [<span class="str">"Python"</span>, <span class="str">"C"</span>, <span class="str">"Java"</span>],
+    <span class="str">"topics"</span>: (<span class="str">"dict"</span>, <span class="str">"set"</span>)
+}
+
+<span class="func">print</span>(<span class="str">"Dictionary contents:"</span>, <span class="var">info</span>)
+<span class="func">print</span>(<span class="str">"Data type:"</span>, <span class="func">type</span>(<span class="var">info</span>))    <span class="com"># &lt;class 'dict'&gt;</span>
+<span class="func">print</span>(<span class="str">"Number of pairs:"</span>, <span class="func">len</span>(<span class="var">info</span>)) <span class="com"># 6</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Dictionary contents: {'name': 'Apna College', 'age': 25, 'is_adult': True, 'marks': 94.4, 'subjects': ['Python', 'C', 'Java'], 'topics': ('dict', 'set')}</div>
+          <div>Data type: &lt;class 'dict'&gt;</div>
+          <div>Number of pairs: 6</div>
+        </div>
+
+        <h3>3. Allowed Types for Keys and Values</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Permitted Python Types</th>
+                <th>Restrictions &amp; Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Values</strong></td>
+                <td><strong>Any data type</strong>: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>, <code>list</code>, <code>tuple</code>, <code>dict</code>, <code>set</code></td>
+                <td>Zero restrictions. Values can be duplicates, mutable, or complex nested structures.</td>
+              </tr>
+              <tr>
+                <td><strong>Keys</strong></td>
+                <td><strong>Immutable types only</strong>: <code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code>, <code>tuple</code></td>
+                <td><strong>Must be hashable.</strong> Mutable containers like <code>list</code> or <code>dict</code> cannot be keys. In production, strings are the gold standard for keys.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: CORE DICTIONARY PROPERTIES -->
+      <!-- ============================================================ -->
+      <section id="dict-properties" class="note-section">
+        <h2><span class="section-number">02.</span> Core Properties &amp; Mutability</h2>
+        
+        <h3>1. The Three Fundamental Architectural Rules of Dictionaries</h3>
+        <ol>
+          <li>
+            <strong>Unindexed &amp; Key-Addressed:</strong> Unlike lists or strings where elements are addressed by numerical coordinates (<code>0, 1, 2...</code>), dictionary elements are looked up strictly by their <strong>key</strong>: <code>dict[key]</code>.
+          </li>
+          <li>
+            <strong>Mutable:</strong> You can add new key-value pairs, update existing values, or delete entries dynamically after creation.
+          </li>
+          <li>
+            <strong>Unique Keys (No Duplicate Keys Allowed):</strong> A dictionary cannot contain duplicate keys. If you assign to an already existing key, Python <strong>overwrites</strong> the old value with the new one.
+          </li>
+        </ol>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Bracket Notation KeyError Trap</div>
+            <p>
+              When retrieving a value using square bracket notation <code>dict[key]</code>, if the specified key does not exist in the dictionary, Python raises a fatal <code>KeyError</code> and crashes the program.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">student</span> = {
+    <span class="str">"name"</span>: <span class="str">"Karan"</span>,
+    <span class="str">"score"</span>: <span class="num">92.5</span>,
+    <span class="str">"age"</span>: <span class="num">20</span>
+}
+
+<span class="com"># 1. Accessing values via key</span>
+<span class="func">print</span>(<span class="str">"Student Name:"</span>, <span class="var">student</span>[<span class="str">"name"</span>])   <span class="com"># Karan</span>
+<span class="func">print</span>(<span class="str">"Student Score:"</span>, <span class="var">student</span>[<span class="str">"score"</span>]) <span class="com"># 92.5</span>
+
+<span class="com"># 2. Mutating an existing key (Overwrites previous value)</span>
+<span class="var">student</span>[<span class="str">"score"</span>] = <span class="num">97.0</span>
+<span class="func">print</span>(<span class="str">"Updated Score:"</span>, <span class="var">student</span>[<span class="str">"score"</span>]) <span class="com"># 97.0</span>
+
+<span class="com"># 3. Adding a brand-new key-value pair</span>
+<span class="var">student</span>[<span class="str">"city"</span>] = <span class="str">"Delhi"</span>
+<span class="func">print</span>(<span class="str">"After adding city:"</span>, <span class="var">student</span>)
+
+<span class="com"># 4. Attempting to access a nonexistent key</span>
+<span class="com"># print(student["address"])  --> Raises KeyError: 'address'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Student Name: Karan</div>
+          <div>Student Score: 92.5</div>
+          <div>Updated Score: 97.0</div>
+          <div>After adding city: {'name': 'Karan', 'score': 97.0, 'age': 20, 'city': 'Delhi'}</div>
+        </div>
+
+        <h3>2. Initializing an Empty (Null) Dictionary</h3>
+        <p>
+          In production programming, algorithms frequently instantiate an empty dictionary and populate it incrementally based on user inputs or network requests:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Empty dictionary initialization</span>
+<span class="var">null_dict</span> = {}
+<span class="func">print</span>(<span class="str">"Empty dictionary:"</span>, <span class="var">null_dict</span>)
+<span class="func">print</span>(<span class="str">"Type:"</span>, <span class="func">type</span>(<span class="var">null_dict</span>))  <span class="com"># &lt;class 'dict'&gt;</span>
+
+<span class="com"># Populating dynamically</span>
+<span class="var">null_dict</span>[<span class="str">"title"</span>] = <span class="str">"Python Masterclass"</span>
+<span class="func">print</span>(<span class="str">"Populated:"</span>, <span class="var">null_dict</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Empty dictionary: {}</div>
+          <div>Type: &lt;class 'dict'&gt;</div>
+          <div>Populated: {'title': 'Python Masterclass'}</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: NESTED DICTIONARIES -->
+      <!-- ============================================================ -->
+      <section id="nested-dictionaries" class="note-section">
+        <h2><span class="section-number">03.</span> Nested Dictionaries</h2>
+        
+        <h3>1. What is Nesting in Dictionaries?</h3>
+        <p>
+          Similar to nesting conditional statements within one another, <strong>dictionary nesting</strong> refers to storing a dictionary as the value of another dictionary's key.
+        </p>
+        <p>
+          This pattern mirrors real-world hierarchical data formats like JSON (JavaScript Object Notation), which forms the backbone of web APIs and modern database documents.
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Nested Dictionary representing a student academic record</span>
+<span class="var">student</span> = {
+    <span class="str">"name"</span>: <span class="str">"Rahul Kumar"</span>,
+    <span class="str">"subjects"</span>: {
+        <span class="str">"physics"</span>: <span class="num">97</span>,
+        <span class="str">"chemistry"</span>: <span class="num">98</span>,
+        <span class="str">"math"</span>: <span class="num">95</span>
+    }
+}
+
+<span class="func">print</span>(<span class="str">"Full student record:"</span>, <span class="var">student</span>)
+<span class="func">print</span>(<span class="str">"Subjects dictionary:"</span>, <span class="var">student</span>[<span class="str">"subjects"</span>])
+
+<span class="com"># Accessing a nested value using chained bracket lookups:</span>
+<span class="func">print</span>(<span class="str">"Chemistry Marks:"</span>, <span class="var">student</span>[<span class="str">"subjects"</span>][<span class="str">"chemistry"</span>]) <span class="com"># 98</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Full student record: {'name': 'Rahul Kumar', 'subjects': {'physics': 97, 'chemistry': 98, 'math': 95}}</div>
+          <div>Subjects dictionary: {'physics': 97, 'chemistry': 98, 'math': 95}</div>
+          <div>Chemistry Marks: 98</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: BUILT-IN DICTIONARY METHODS -->
+      <!-- ============================================================ -->
+      <section id="dict-methods" class="note-section">
+        <h2><span class="section-number">04.</span> Built-in Dictionary Methods</h2>
+        
+        <h3>1. Deep Dive into the 5 Core Dictionary Methods</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Description</th>
+                <th>Return Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dict.keys()</code></td>
+                <td>Returns a view object of all outer keys in the dictionary.</td>
+                <td><code>dict_keys</code> (convertible to <code>list</code>)</td>
+              </tr>
+              <tr>
+                <td><code>dict.values()</code></td>
+                <td>Returns a view object of all values in the dictionary.</td>
+                <td><code>dict_values</code> (convertible to <code>list</code>)</td>
+              </tr>
+              <tr>
+                <td><code>dict.items()</code></td>
+                <td>Returns all <code>(key, value)</code> pairs as a collection of <strong>tuples</strong>.</td>
+                <td><code>dict_items</code> (convertible to <code>list</code> of tuples)</td>
+              </tr>
+              <tr>
+                <td><code>dict.get(key)</code></td>
+                <td>Returns the value of <code>key</code> safely. Returns <code>None</code> if key does not exist.</td>
+                <td>Value or <code>None</code> (no crash)</td>
+              </tr>
+              <tr>
+                <td><code>dict.update(new_dict)</code></td>
+                <td>Merges new key-value pairs into the dictionary in place. Overwrites duplicates.</td>
+                <td><code>None</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Architectural Comparison: <code>dict[key]</code> vs. <code>dict.get(key)</code></h3>
+        <p>
+          Understanding why Python provides both bracket notation and the <code>.get()</code> method is a hallmark of professional software engineering:
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">Production Stability: Why .get() is Safer</div>
+            <p>
+              When you write <code>student["name2"]</code> and the key is missing, Python raises an uncaught <code>KeyError</code>, which terminates the entire application and prevents all subsequent lines of code from executing.
+              <br><br>
+              In contrast, <code>student.get("name2")</code> gracefully returns <code>None</code>. This prevents application crashes and allows developers to handle missing data cleanly using fallback logic.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">student</span> = {
+    <span class="str">"name"</span>: <span class="str">"Rahul Kumar"</span>,
+    <span class="str">"subjects"</span>: {<span class="str">"phy"</span>: <span class="num">97</span>, <span class="str">"chem"</span>: <span class="num">98</span>, <span class="str">"math"</span>: <span class="num">95</span>}
+}
+
+<span class="com"># 1. dict.keys()</span>
+<span class="var">all_keys</span> = <span class="var">student</span>.<span class="func">keys</span>()
+<span class="func">print</span>(<span class="str">"dict_keys view:"</span>, <span class="var">all_keys</span>)
+<span class="func">print</span>(<span class="str">"Typecast to list:"</span>, <span class="func">list</span>(<span class="var">all_keys</span>)) <span class="com"># ['name', 'subjects']</span>
+
+<span class="com"># 2. dict.values()</span>
+<span class="func">print</span>(<span class="str">"dict_values:"</span>, <span class="func">list</span>(<span class="var">student</span>.<span class="func">values</span>()))
+
+<span class="com"># 3. dict.items(): Key-Value pairs as Tuples</span>
+<span class="func">print</span>(<span class="str">"dict_items:"</span>, <span class="func">list</span>(<span class="var">student</span>.<span class="func">items</span>()))
+<span class="com"># Output: [('name', 'Rahul Kumar'), ('subjects', {'phy': 97, 'chem': 98, 'math': 95})]</span>
+
+<span class="com"># 4. dict.get(key) vs dict[key]</span>
+<span class="func">print</span>(<span class="str">"Safe get on valid key:"</span>, <span class="var">student</span>.<span class="func">get</span>(<span class="str">"name"</span>))      <span class="com"># Rahul Kumar</span>
+<span class="func">print</span>(<span class="str">"Safe get on missing key:"</span>, <span class="var">student</span>.<span class="func">get</span>(<span class="str">"address"</span>))  <span class="com"># None (No error!)</span>
+
+<span class="com"># 5. dict.update(new_dict)</span>
+<span class="var">student</span>.<span class="func">update</span>({<span class="str">"city"</span>: <span class="str">"Delhi"</span>, <span class="str">"age"</span>: <span class="num">16</span>})
+<span class="func">print</span>(<span class="str">"After update:"</span>, <span class="var">student</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>dict_keys view: dict_keys(['name', 'subjects'])</div>
+          <div>Typecast to list: ['name', 'subjects']</div>
+          <div>dict_values: ['Rahul Kumar', {'phy': 97, 'chem': 98, 'math': 95}]</div>
+          <div>dict_items: [('name', 'Rahul Kumar'), ('subjects', {'phy': 97, 'chem': 98, 'math': 95})]</div>
+          <div>Safe get on valid key: Rahul Kumar</div>
+          <div>Safe get on missing key: None</div>
+          <div>After update: {'name': 'Rahul Kumar', 'subjects': {'phy': 97, 'chem': 98, 'math': 95}, 'city': 'Delhi', 'age': 16}</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: INTRODUCTION TO SETS -->
+      <!-- ============================================================ -->
+      <section id="intro-sets" class="note-section">
+        <h2><span class="section-number">05.</span> Introduction to Sets in Python</h2>
+        
+        <h3>1. Mathematical Foundation</h3>
+        <p>
+          In mathematics, a <strong>set</strong> is defined as a well-defined collection of distinct, unique objects. Python mirrors this mathematical construct directly through its built-in primitive collection <code>set</code>.
+        </p>
+        <p>
+          A set is an <strong>unordered, unindexed collection of unique elements</strong>.
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">Syntax: Curly Braces Without Key-Value Pairs</div>
+          <p>
+            Like dictionaries, sets use curly braces <code>{ }</code>, but contain individual comma-separated values rather than key:value associations:
+          </p>
+          <code>collection = {1, 2, 3, 4, 5}</code>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">collection</span> = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>}
+
+<span class="func">print</span>(<span class="str">"Set contents:"</span>, <span class="var">collection</span>)
+<span class="func">print</span>(<span class="str">"Data type:"</span>, <span class="func">type</span>(<span class="var">collection</span>))  <span class="com"># &lt;class 'set'&gt;</span>
+<span class="func">print</span>(<span class="str">"Length:"</span>, <span class="func">len</span>(<span class="var">collection</span>))        <span class="com"># 4</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Set contents: {1, 2, 3, 4}</div>
+          <div>Data type: &lt;class 'set'&gt;</div>
+          <div>Length: 4</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: SET PROPERTIES & EMPTY SET TRAP -->
+      <!-- ============================================================ -->
+      <section id="set-properties" class="note-section">
+        <h2><span class="section-number">06.</span> Set Properties &amp; The Empty Set Trap</h2>
+        
+        <h3>1. Automatic Deduplication of Elements</h3>
+        <p>
+          The most famous property of a Python set is that <strong>duplicate values are strictly forbidden</strong>. When duplicate items are provided in a set declaration or added later, Python silently ignores the duplicates and retains only a single instance of each value:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># Set with intentional duplicate values</span>
+<span class="var">nums</span> = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="str">"hello"</span>, <span class="str">"world"</span>, <span class="str">"world"</span>}
+
+<span class="func">print</span>(<span class="str">"Deduplicated Set:"</span>, <span class="var">nums</span>)
+<span class="func">print</span>(<span class="str">"Total unique count:"</span>, <span class="func">len</span>(<span class="var">nums</span>)) <span class="com"># 4</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Deduplicated Set: {1, 2, 3, 'hello', 'world'}</div>
+          <div>Total unique count: 5</div>
+        </div>
+
+        <h3>2. Unordered &amp; Unindexed</h3>
+        <p>
+          Sets have no sequential index. You cannot write <code>nums[0]</code> or slice a set with <code>nums[1:3]</code>. Doing so raises <code>TypeError: 'set' object is not subscriptable</code>. The print order of elements can vary across runs.
+        </p>
+
+        <h3>3. The Empty Set Syntax Trap</h3>
+        <p>
+          Because dictionaries historically came first in Python, empty curly braces <code>{}</code> are reserved for creating an empty <strong>dictionary</strong>, NOT an empty set!
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Empty Set Syntax Trap</div>
+            <p>
+              <code>s = {}</code> creates an empty <code>dict</code> (class dictionary).
+              <br><br>
+              To create an empty <strong>set</strong>, you MUST invoke the built-in constructor function: <strong><code>s = set()</code></strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="com"># WRONG: Creates an empty dict, not a set</span>
+<span class="var">wrong_empty</span> = {}
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">wrong_empty</span>))  <span class="com"># &lt;class 'dict'&gt;</span>
+
+<span class="com"># CORRECT: Creates an empty set</span>
+<span class="var">real_empty_set</span> = <span class="func">set</span>()
+<span class="func">print</span>(<span class="func">type</span>(<span class="var">real_empty_set</span>))  <span class="com"># &lt;class 'set'&gt;</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>&lt;class 'dict'&gt;</div>
+          <div>&lt;class 'set'&gt;</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: MUTABILITY VS HASHABILITY -->
+      <!-- ============================================================ -->
+      <section id="hashability" class="note-section">
+        <h2><span class="section-number">07.</span> Mutability vs. Hashability</h2>
+        
+        <h3>1. Set Container Mutability vs. Element Immutability</h3>
+        <p>
+          A common interview and conceptual question is: <em>"Are sets mutable or immutable in Python?"</em>
+        </p>
+
+        <div class="concept-box">
+          <div class="concept-title">The Dual Nature of Sets</div>
+          <ul>
+            <li><strong>The Set Container itself is MUTABLE:</strong> You can dynamically add new elements with <code>.add()</code> and remove items with <code>.remove()</code>.</li>
+            <li><strong>The Elements INSIDE a Set must be strictly IMMUTABLE (Hashable):</strong> Every item stored inside a set must be an immutable type (<code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>, <code>tuple</code>). Mutable types like <code>list</code>, <code>dict</code>, or other <code>set</code> objects cannot be stored inside a set.</li>
+          </ul>
+        </div>
+
+        <h3>2. What is Hashability?</h3>
+        <p>
+          Sets in Python are implemented under the hood as <strong>Hash Tables</strong>. When an element is added to a set, Python passes the element through a mathematical <strong>hash function</strong> (<code>hash(x)</code>) that generates a fixed integer hash value.
+        </p>
+        <p>
+          This hash value dictates the exact memory address (bucket) where the item is stored, allowing Python to achieve lightning-fast $O(1)$ constant-time lookup and deduplication.
+        </p>
+
+        <div class="callout callout-caution">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Unhashable Type Error</div>
+            <p>
+              If an object is mutable (like a <code>list</code>), its contents can change at any moment. If its contents changed, its hash value would change, corrupting the hash table's lookup integrity.
+              <br><br>
+              Therefore, Python strictly prohibits mutable types inside sets:
+              <br><code>s.add([1, 2, 3])  # Raises TypeError: unhashable type: 'list'</code>
+            </p>
+          </div>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">s</span> = <span class="func">set</span>()
+
+<span class="com"># Valid: Adding immutable types</span>
+<span class="var">s</span>.<span class="func">add</span>(<span class="num">1</span>)
+<span class="var">s</span>.<span class="func">add</span>(<span class="str">"hello"</span>)
+<span class="var">s</span>.<span class="func">add</span>((<span class="num">10</span>, <span class="num">20</span>))  <span class="com"># Tuples are immutable and hashable!</span>
+<span class="func">print</span>(<span class="str">"Valid set:"</span>, <span class="var">s</span>)
+
+<span class="com"># Invalid: Attempting to store a list</span>
+<span class="com"># s.add([1, 2])  --> TypeError: unhashable type: 'list'</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>Valid set: {1, 'hello', (10, 20)}</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: BUILT-IN SET METHODS -->
+      <!-- ============================================================ -->
+      <section id="set-methods" class="note-section">
+        <h2><span class="section-number">08.</span> Built-in Set Methods (Union &amp; Intersection)</h2>
+        
+        <h3>1. Modification Methods: add, remove, clear, pop</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Operation &amp; Behavior</th>
+                <th>Return Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>set.add(el)</code></td>
+                <td>Adds immutable element <code>el</code> to the set. Duplicates silently ignored.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>set.remove(el)</code></td>
+                <td>Removes <code>el</code> from the set. Raises <code>KeyError</code> if element is absent.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>set.clear()</code></td>
+                <td>Empties all elements from the set, resetting it to <code>set()</code>.</td>
+                <td><code>None</code></td>
+              </tr>
+              <tr>
+                <td><code>set.pop()</code></td>
+                <td>Removes and returns an <strong>arbitrary (random)</strong> element from the set.</td>
+                <td>Popped element</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">tech</span> = <span class="func">set</span>()
+
+<span class="com"># 1. set.add()</span>
+<span class="var">tech</span>.<span class="func">add</span>(<span class="str">"Python"</span>)
+<span class="var">tech</span>.<span class="func">add</span>(<span class="str">"Java"</span>)
+<span class="var">tech</span>.<span class="func">add</span>(<span class="str">"C++"</span>)
+<span class="func">print</span>(<span class="str">"After add:"</span>, <span class="var">tech</span>)
+
+<span class="com"># 2. set.remove()</span>
+<span class="var">tech</span>.<span class="func">remove</span>(<span class="str">"Java"</span>)
+<span class="func">print</span>(<span class="str">"After remove('Java'):"</span>, <span class="var">tech</span>)
+
+<span class="com"># 3. set.pop(): Removes an arbitrary element</span>
+<span class="var">popped</span> = <span class="var">tech</span>.<span class="func">pop</span>()
+<span class="func">print</span>(<span class="str">"Popped element:"</span>, <span class="var">popped</span>)
+<span class="func">print</span>(<span class="str">"Remaining in set:"</span>, <span class="var">tech</span>)
+
+<span class="com"># 4. set.clear()</span>
+<span class="var">tech</span>.<span class="func">clear</span>()
+<span class="func">print</span>(<span class="str">"After clear:"</span>, <span class="var">tech</span>)  <span class="com"># set()</span></code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>After add: {'Python', 'C++', 'Java'}</div>
+          <div>After remove('Java'): {'Python', 'C++'}</div>
+          <div>Popped element: Python</div>
+          <div>Remaining in set: {'C++'}</div>
+          <div>After clear: set()</div>
+        </div>
+
+        <h3>2. Set Operations: Union &amp; Intersection</h3>
+        <p>
+          Python sets natively implement mathematical set operations:
+        </p>
+        <ul>
+          <li><strong>Union (<code>set1.union(set2)</code>):</strong> Merges all unique elements from both sets into a <strong>new set</strong> ($A \cup B$). Any common elements are retained exactly once. Neither original set is mutated.</li>
+          <li><strong>Intersection (<code>set1.intersection(set2)</code>):</strong> Returns a <strong>new set</strong> containing exclusively the elements present in <em>both</em> sets ($A \cap B$).</li>
+        </ul>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="var">set1</span> = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
+<span class="var">set2</span> = {<span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>}
+
+<span class="com"># Union: Combines all unique elements (1, 2, 3, 4)</span>
+<span class="var">u_res</span> = <span class="var">set1</span>.<span class="func">union</span>(<span class="var">set2</span>)
+<span class="func">print</span>(<span class="str">"set1 union set2:"</span>, <span class="var">u_res</span>)
+
+<span class="com"># Intersection: Returns common elements only (2, 3)</span>
+<span class="var">i_res</span> = <span class="var">set1</span>.<span class="func">intersection</span>(<span class="var">set2</span>)
+<span class="func">print</span>(<span class="str">"set1 intersection set2:"</span>, <span class="var">i_res</span>)
+
+<span class="com"># Original sets remain completely untouched</span>
+<span class="func">print</span>(<span class="str">"Original set1 intact:"</span>, <span class="var">set1</span>)
+<span class="func">print</span>(<span class="str">"Original set2 intact:"</span>, <span class="var">set2</span>)</code></pre>
+        </div>
+
+        <div class="output-box">
+          <span class="output-label">Terminal Output:</span>
+          <div>set1 union set2: {1, 2, 3, 4}</div>
+          <div>set1 intersection set2: {2, 3}</div>
+          <div>Original set1 intact: {1, 2, 3}</div>
+          <div>Original set2 intact: {2, 3, 4}</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: DATA STRUCTURES MASTER MATRIX -->
+      <!-- ============================================================ -->
+      <section id="comparison-table" class="note-section">
+        <h2><span class="section-number">09.</span> Python Data Structures Master Comparison Matrix</h2>
+        <p>
+          A consolidated comparative summary across all four built-in collection data types studied so far:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th><code>list</code></th>
+                <th><code>tuple</code></th>
+                <th><code>dict</code></th>
+                <th><code>set</code></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Syntax</strong></td>
+                <td><code>[1, 2, 3]</code></td>
+                <td><code>(1, 2, 3)</code></td>
+                <td><code>{"k": "v"}</code></td>
+                <td><code>{1, 2, 3}</code></td>
+              </tr>
+              <tr>
+                <td><strong>Order</strong></td>
+                <td>Ordered (0-based index)</td>
+                <td>Ordered (0-based index)</td>
+                <td>Key-addressed</td>
+                <td>Unordered (No index)</td>
+              </tr>
+              <tr>
+                <td><strong>Mutability</strong></td>
+                <td><strong>Mutable</strong></td>
+                <td><strong>Immutable</strong></td>
+                <td><strong>Mutable</strong></td>
+                <td><strong>Mutable container</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Duplicates</strong></td>
+                <td>Allowed</td>
+                <td>Allowed</td>
+                <td>Keys: Unique | Values: Allowed</td>
+                <td><strong>Strictly unique</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Empty Syntax</strong></td>
+                <td><code>[]</code></td>
+                <td><code>()</code></td>
+                <td><code>{}</code></td>
+                <td><strong><code>set()</code></strong></td>
+              </tr>
+              <tr>
+                <td><strong>Item Element Types</strong></td>
+                <td>Any type</td>
+                <td>Any type</td>
+                <td>Keys: Hashable | Values: Any</td>
+                <td><strong>Hashable types only</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Primary Purpose</strong></td>
+                <td>Dynamic ordered data</td>
+                <td>Fixed reference tuples</td>
+                <td>Key-based mapping / lookups</td>
+                <td>Deduplication &amp; membership</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: PRACTICE TASKS & SOLUTIONS -->
+      <!-- ============================================================ -->
+      <section id="tasks" class="note-section">
+        <h2><span class="section-number">10.</span> Practice Tasks &amp; Complete Solutions</h2>
+        <p>
+          All 4 practice exercises from Lecture 4 solved with logical analysis, production PEP 8 code, and sample terminal output runs.
+        </p>
+
+        <!-- TASK 1 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 01</span>
+            <span class="tag">Dictionary</span>
+            <span class="tag">Nested Values</span>
+          </div>
+          <div class="task-problem">
+            Store the following word meanings in a Python dictionary:
+            <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li><strong>table:</strong> "a piece of furniture", "list of facts &amp; figures"</li>
+              <li><strong>cat:</strong> "a small animal"</li>
+            </ul>
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>The word <code>cat</code> has a single string definition: <code>"cat": "a small animal"</code>.</li>
+              <li>The word <code>table</code> possesses <em>two</em> distinct definitions. In Python, multiple associated values can be neatly stored inside a <strong>list</strong>: <code>"table": ["a piece of furniture", "list of facts &amp; figures"]</code>.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 1: Storing Word Meanings in a Dictionary</span>
+<span class="var">word_dict</span> = {
+    <span class="str">"cat"</span>: <span class="str">"a small animal"</span>,
+    <span class="str">"table"</span>: [
+        <span class="str">"a piece of furniture"</span>,
+        <span class="str">"list of facts &amp; figures"</span>
+    ]
+}
+
+<span class="func">print</span>(<span class="str">"Dictionary Contents:"</span>)
+<span class="func">print</span>(<span class="var">word_dict</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Dictionary Contents:</div>
+                <div>{'cat': 'a small animal', 'table': ['a piece of furniture', 'list of facts &amp; figures']}</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 2 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 02</span>
+            <span class="tag">Sets</span>
+            <span class="tag">Deduplication</span>
+            <span class="tag">len()</span>
+          </div>
+          <div class="task-problem">
+            You are given a list of subjects selected by various students in a school:
+            <br>
+            <code>["python", "java", "C++", "python", "javascript", "java", "python", "java", "C++", "C"]</code>
+            <br>
+            Assume each unique subject requires 1 classroom. Write a program to determine how many total classrooms are needed.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Multiple students take the same subject (e.g. <code>"python"</code> appears 3 times, <code>"java"</code> appears 3 times). However, they can all share a single classroom for that subject.</li>
+              <li>Therefore, the total number of classrooms required is simply the number of <strong>unique subjects</strong>.</li>
+              <li>Pass the subjects list into a <code>set()</code> to automatically deduplicate redundant entries.</li>
+              <li>Compute the length of the set using <code>len()</code> to obtain the classroom count.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 2: Calculating required classrooms using Set Deduplication</span>
+<span class="var">subjects</span> = {
+    <span class="str">"python"</span>, <span class="str">"java"</span>, <span class="str">"C++"</span>, <span class="str">"python"</span>, <span class="str">"javascript"</span>,
+    <span class="str">"java"</span>, <span class="str">"python"</span>, <span class="str">"java"</span>, <span class="str">"C++"</span>, <span class="str">"C"</span>
+}
+
+<span class="func">print</span>(<span class="str">"Unique subjects identified:"</span>, <span class="var">subjects</span>)
+<span class="func">print</span>(<span class="str">"Total classrooms needed:"</span>, <span class="func">len</span>(<span class="var">subjects</span>))</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Unique subjects identified: {'python', 'java', 'C++', 'javascript', 'C'}</div>
+                <div>Total classrooms needed: 5</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 3 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 03</span>
+            <span class="tag">Dictionary Input</span>
+            <span class="tag">dict.update()</span>
+          </div>
+          <div class="task-problem">
+            Write a program to enter marks of 3 subjects from the user and store them in a dictionary. Start with an empty dictionary and populate it sequentially.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>Logical Breakdown:</strong>
+            <ol style="margin-top: 0.35rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li>Initialize an empty dictionary: <code>marks = {}</code>.</li>
+              <li>Input numerical marks for Physics, Mathematics, and Chemistry using <code>int(input())</code>.</li>
+              <li>Insert each subject into the dictionary using <code>marks.update({"physics": m1})</code> or direct key assignment <code>marks["physics"] = m1</code>.</li>
+              <li>Print the completed dictionary.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Task 3: Populate empty dictionary with user scores</span>
+<span class="var">marks</span> = {}
+
+<span class="var">m_phy</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter Physics marks: "</span>))
+<span class="var">marks</span>.<span class="func">update</span>({<span class="str">"physics"</span>: <span class="var">m_phy</span>})
+
+<span class="var">m_math</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter Math marks: "</span>))
+<span class="var">marks</span>.<span class="func">update</span>({<span class="str">"math"</span>: <span class="var">m_math</span>})
+
+<span class="var">m_chem</span> = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"Enter Chemistry marks: "</span>))
+<span class="var">marks</span>.<span class="func">update</span>({<span class="str">"chemistry"</span>: <span class="var">m_chem</span>})
+
+<span class="func">print</span>(<span class="str">"Final Marks Dictionary:"</span>, <span class="var">marks</span>)</code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Sample Terminal Run:</span>
+                <div>Enter Physics marks: 95</div>
+                <div>Enter Math marks: 98</div>
+                <div>Enter Chemistry marks: 92</div>
+                <div>Final Marks Dictionary: {'physics': 95, 'math': 98, 'chemistry': 92}</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- TASK 4 -->
+        <div class="task-card">
+          <div class="task-card-header">
+            <span class="task-number">Task 04</span>
+            <span class="tag">Sets Puzzle</span>
+            <span class="tag">Hash Equality</span>
+            <span class="tag">Tuples</span>
+          </div>
+          <div class="task-problem">
+            Figure out a way to store <strong>9</strong> (integer) and <strong>9.0</strong> (float) as separate, distinct values in a Python set.
+          </div>
+          
+          <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+            <strong>The Technical Dilemma:</strong>
+            <p style="margin-top: 0.25rem; margin-bottom: 0.5rem;">
+              In Python, <code>9 == 9.0</code> evaluates to <code>True</code>, and their hash values are identical (<code>hash(9) == hash(9.0)</code>).
+              Because sets enforce equality and hash uniqueness, declaring <code>{9, 9.0}</code> automatically deduplicates into a single value <code>{9}</code>.
+            </p>
+            <strong>Two Production Solutions:</strong>
+            <ol style="margin-top: 0.25rem; margin-bottom: 0.5rem; padding-left: 1.25rem;">
+              <li><strong>String Representation:</strong> Store one or both values as textual strings: <code>{9, "9.0"}</code> or <code>{"9", 9.0}</code>.</li>
+              <li><strong>Type-Value Tuples (Best Practice):</strong> Wrap each value in an immutable tuple paired with its explicit type tag: <code>{("int", 9), ("float", 9.0)}</code>.</li>
+            </ol>
+          </div>
+
+          <details class="solution-details">
+            <summary class="solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              View Python Solution &amp; Explanation
+            </summary>
+            <div class="solution-body">
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span class="code-lang">python</span>
+                  <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code><span class="com"># Demonstration of the 9 vs 9.0 issue:</span>
+<span class="var">vanilla_set</span> = {<span class="num">9</span>, <span class="num">9.0</span>}
+<span class="func">print</span>(<span class="str">"Vanilla deduplication:"</span>, <span class="var">vanilla_set</span>) <span class="com"># {9}</span>
+
+<span class="com"># Solution Method 1: Using String Conversion</span>
+<span class="var">sol1</span> = {<span class="num">9</span>, <span class="str">"9.0"</span>}
+<span class="func">print</span>(<span class="str">"Solution 1 (String):"</span>, <span class="var">sol1</span>)           <span class="com"># {9, '9.0'}</span>
+
+<span class="com"># Solution Method 2: Using Type-Value Tuples (Recommended)</span>
+<span class="var">sol2</span> = {
+    (<span class="str">"int"</span>, <span class="num">9</span>),
+    (<span class="str">"float"</span>, <span class="num">9.0</span>)
+}
+<span class="func">print</span>(<span class="str">"Solution 2 (Tuples):"</span>, <span class="var">sol2</span>)           <span class="com"># {('float', 9.0), ('int', 9)}</span></code></pre>
+              </div>
+
+              <div class="output-box">
+                <span class="output-label">Terminal Output:</span>
+                <div>Vanilla deduplication: {9}</div>
+                <div>Solution 1 (String): {9, '9.0'}</div>
+                <div>Solution 2 (Tuples): {('float', 9.0), ('int', 9)}</div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: SUMMARY & QUICK REFERENCE -->
+      <!-- ============================================================ -->
+      <section id="cheat-sheet" class="note-section">
+        <h2><span class="section-number">11.</span> Summary &amp; Quick Reference Cheat Sheet</h2>
+        <p>
+          A consolidated quick-reference matrix of all dictionary and set methods, complexity rules, and syntax behaviors:
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Operation / Method</th>
+                <th>Syntax Example</th>
+                <th>Behavior &amp; Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dict Declaration</strong></td>
+                <td><code>d = {"a": 1, "b": 2}</code></td>
+                <td>Key:value mapping. Keys must be unique &amp; hashable.</td>
+              </tr>
+              <tr>
+                <td><strong>Empty Dict</strong></td>
+                <td><code>d = {}</code></td>
+                <td>Creates an empty dictionary.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict[key]</code></strong></td>
+                <td><code>d["a"]</code></td>
+                <td>Direct lookup. Raises <code>KeyError</code> if missing.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict.get(key)</code></strong></td>
+                <td><code>d.get("a")</code></td>
+                <td>Safe lookup. Returns <code>None</code> if key missing without crashing.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict.keys()</code></strong></td>
+                <td><code>d.keys()</code></td>
+                <td>Returns view object containing all outer keys.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict.values()</code></strong></td>
+                <td><code>d.values()</code></td>
+                <td>Returns view object containing all values.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict.items()</code></strong></td>
+                <td><code>d.items()</code></td>
+                <td>Returns collection of <code>(key, value)</code> tuples.</td>
+              </tr>
+              <tr>
+                <td><strong><code>dict.update()</code></strong></td>
+                <td><code>d.update({"c": 3})</code></td>
+                <td>Inserts new pairs or updates existing keys in place.</td>
+              </tr>
+              <tr>
+                <td><strong>Set Declaration</strong></td>
+                <td><code>s = {1, 2, 3}</code></td>
+                <td>Unordered, unindexed collection of unique, hashable items.</td>
+              </tr>
+              <tr>
+                <td><strong>Empty Set</strong></td>
+                <td><code>s = set()</code></td>
+                <td><strong>Must use set()</strong>. Writing <code>{}</code> creates a dict!</td>
+              </tr>
+              <tr>
+                <td><strong><code>set.add(x)</code></strong></td>
+                <td><code>s.add(4)</code></td>
+                <td>Inserts element into set. Duplicates ignored.</td>
+              </tr>
+              <tr>
+                <td><strong><code>set.remove(x)</code></strong></td>
+                <td><code>s.remove(2)</code></td>
+                <td>Removes item. Raises <code>KeyError</code> if missing.</td>
+              </tr>
+              <tr>
+                <td><strong><code>set.clear()</code></strong></td>
+                <td><code>s.clear()</code></td>
+                <td>Removes all items from set.</td>
+              </tr>
+              <tr>
+                <td><strong><code>set.pop()</code></strong></td>
+                <td><code>s.pop()</code></td>
+                <td>Removes and returns an arbitrary item.</td>
+              </tr>
+              <tr>
+                <td><strong><code>s1.union(s2)</code></strong></td>
+                <td><code>s1.union(s2)</code></td>
+                <td>Returns new set with all unique elements ($A \cup B$).</td>
+              </tr>
+              <tr>
+                <td><strong><code>s1.intersection(s2)</code></strong></td>
+                <td><code>s1.intersection(s2)</code></td>
+                <td>Returns new set with common elements only ($A \cap B$).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive Expression Evaluator Widget -->
+        <div style="margin-top: 2.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;">
+          <h3 style="margin-top: 0; color: var(--accent-blue); display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡ Interactive Expression Evaluator</span>
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Test any Lecture 4 dictionary or set expression, lookup, or calculation right in your browser:
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <input type="text" id="sim-input" class="search-input" style="flex: 1; max-width: none;" placeholder="e.g. {'name': 'Alice'}['name'], {1, 2, 3}.size, 9 == 9.0">
+            <button class="btn-primary" onclick="runSimulator()">Run Expression</button>
+          </div>
+          <div class="output-box" id="sim-output" style="margin-bottom: 0;">
+            <span class="output-label">Evaluation Output:</span>
+            <span style="color: #64748b;">Enter an expression above and click "Run Expression"</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Python Masterclass Notes</strong> &mdash; Lecture 4 Complete Reference
+      </div>
+      <div>
+        <a href="python.html" style="color: var(--accent-blue); margin-right: 1rem;">← Return to Python Modules</a>
+        <a href="#intro-dictionaries" style="color: var(--accent-blue);">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

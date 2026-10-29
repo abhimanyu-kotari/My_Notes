@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Excel Fundamentals, Dynamic Modeling & Financial Analytics | Microsoft Excel Masterclass Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    /* Excel Table Styling Enhancements */
+    .excel-grid-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .excel-grid-table th, .excel-grid-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 0.85rem;
+      text-align: left;
+    }
+    .excel-grid-table th {
+      background: rgba(16, 124, 65, 0.12);
+      color: #2ea043;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+    [data-theme="light"] .excel-grid-table th {
+      background: #e8f5e9;
+      color: #137333;
+    }
+    .excel-row-num {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: center !important;
+      width: 48px;
+      user-select: none;
+    }
+    .excel-formula-badge {
+      background: rgba(16, 124, 65, 0.18);
+      color: #3fb950;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      display: inline-block;
+      border: 1px solid rgba(63, 185, 80, 0.3);
+    }
+    [data-theme="light"] .excel-formula-badge {
+      background: #e6f4ea;
+      color: #137333;
+      border-color: #ceead6;
+    }
+    .interactive-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .sim-slider-group {
+      margin-bottom: 1.25rem;
+    }
+    .sim-slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .sim-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      outline: none;
+      accent-color: #2ea043;
+    }
+    .sim-result-box {
+      background: var(--bg-primary);
+      border: 2px solid #2ea043;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo" style="background: #107c41; border-color: #0b5c30;">XL</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Excel Master Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#decisions-on-spreadsheet" class="sidebar-link">1. The Philosophy: Decisions on a Spreadsheet</a></li>
+        <li><a href="#excel-ecosystem" class="sidebar-link">2. The Excel Ecosystem: Workbooks &amp; Sheets</a></li>
+        <li><a href="#cell-addressing" class="sidebar-link">3. The Coordinate System: Cell Addressing (A1, G9)</a></li>
+        <li><a href="#references-vs-hardcoding" class="sidebar-link">4. Dynamic Cell References vs. Static Hardcoding</a></li>
+        <li><a href="#monthly-budget-project" class="sidebar-link">5. Hands-on Project 1: September Monthly Budget</a></li>
+        <li><a href="#fill-handle-autofill" class="sidebar-link">6. The Magic Fill Handle &amp; Auto-Sequencing</a></li>
+        <li><a href="#fifty-thirty-twenty" class="sidebar-link">7. The 50/30/20 Rule: Needs, Wants &amp; Investments</a></li>
+        <li><a href="#sum-range-mechanics" class="sidebar-link">8. Aggregating Data: Mastering =SUM() &amp; Ranges</a></li>
+        <li><a href="#annualizing-relative-shifts" class="sidebar-link">9. Annualizing Expenses &amp; Relative Formula Shifts</a></li>
+        <li><a href="#multi-sheet-sumif" class="sidebar-link">10. Hands-on Project 2: Multi-Sheet Analytics &amp; =SUMIF()</a></li>
+        <li><a href="#pivot-tables-mastery" class="sidebar-link">11. Mastering Pivot Tables: Formula-Free Analytics</a></li>
+        <li><a href="#compounding-financial-model" class="sidebar-link">12. Hands-on Project 3: Compound Interest Sensitivity</a></li>
+        <li><a href="#interactive-excel-playground" class="sidebar-link">13. Interactive Financial Simulator &amp; Playground</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Master Lecture Notes</span>
+          <span class="tag">Microsoft Excel</span>
+          <span class="tag">Financial Modeling</span>
+          <span class="tag">Cell References</span>
+          <span class="tag">=SUM()</span>
+          <span class="tag">=SUMIF()</span>
+          <span class="tag">Pivot Tables</span>
+          <span class="tag">Multi-Sheet</span>
+          <span class="tag">Compound Interest</span>
+        </div>
+        <h1 class="lecture-main-title">Excel Fundamentals, Dynamic Modeling &amp; Financial Analytics</h1>
+        <p class="lecture-lead">
+          <strong>What is this topic?</strong> Microsoft Excel is the world's most ubiquitous spreadsheet and analytical computation engine. At its foundation, it is an intelligent coordinate grid of rows and columns where every piece of data lives at a unique, addressable location (like <code>A1</code> or <code>G9</code>). Instead of performing static arithmetic on paper or using a basic handheld calculator, Excel lets you build interconnected mathematical models using formulas (like <code>=SUM()</code> and <code>=SUMIF()</code>) as well as formula-free drag-and-drop engines like Pivot Tables that automatically summarize complex data in seconds.<br>
+          <strong>Why do we use it?</strong> Crucial real-world decisions—managing a personal household budget, evaluating a startup's runway, planning mortgage payoffs, or analyzing multi-million row datasets—should never be made purely on emotional intuition or guesswork. Excel bridges the gap between human intent and mathematical precision: by converting decisions into structured spreadsheets, you can test sensitivity scenarios (e.g., <em>"What happens if market returns drop from 15% to 12%?"</em>) in milliseconds with zero manual rework.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: THE CORE PHILOSOPHY -->
+      <!-- ============================================================ -->
+      <section id="decisions-on-spreadsheet" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Core Philosophy: Decisions on a Spreadsheet</h2>
+
+        <p>
+          In life and business, humans are routinely confronted with high-stakes financial and strategic choices: <em>Should I buy a home or rent? How much should I invest in equities each month? Can our business afford two additional full-time hires?</em>
+        </p>
+
+        <p>
+          According to entrepreneur and investor <strong>Ankur Warikoo</strong> (who has used Excel daily for over 20 years across ventures like Groupon, Nearbuy, and personal investment portfolios), most individuals make one of two catastrophic mistakes when faced with these decisions:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+          <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.5rem;">
+            <h3 style="color: #f87171; margin-top: 0; font-size: 1.15rem;">Mistake A: Pure Emotional Decision Making</h3>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0;">
+              Making choices purely based on sentiment, fear, peer pressure, or fleeting gut impulses (e.g., buying an overpriced luxury car because you feel like you deserve it, without calculating its monthly EMI, insurance, fuel, and depreciation burden on your savings rate).
+            </p>
+          </div>
+
+          <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 1.5rem;">
+            <h3 style="color: #60a5fa; margin-top: 0; font-size: 1.15rem;">Mistake B: Cold, Context-Free Rationalism</h3>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0;">
+              Ignoring qualitative human needs, comfort, peace of mind, family stability, and psychological risk tolerance by treating life solely as an unyielding mathematical optimization problem.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">The Balanced Spreadsheet Invariant</div>
+            <p>
+              The purpose of putting a decision onto an Excel sheet is <strong>not</strong> to eliminate emotion entirely. Rather, it is to <strong>translate qualitative intentions into quantifiable numbers</strong>. Once the mathematical reality is laid out in black and white on a spreadsheet, you can evaluate the true trade-offs with complete clarity.
+            </p>
+          </div>
+        </div>
+
+        <p>
+          Excel is not merely an electronic ledger—it is a <strong>decision-making simulator</strong>. It allows you to simulate the future before spending a single dollar or committing to an irreversible life choice.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THE EXCEL ECOSYSTEM -->
+      <!-- ============================================================ -->
+      <section id="excel-ecosystem" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Excel Ecosystem: Workbooks, Worksheets &amp; The Grid</h2>
+
+        <p>
+          When you launch Microsoft Excel, you are presented with the Start Screen containing two primary entry pathways:
+        </p>
+
+        <ol style="margin-left: 1.5rem; line-height: 1.7; color: var(--text-secondary);">
+          <li>
+            <strong style="color: var(--text-primary);">Pre-Built Templates:</strong> Ready-made applications created by Microsoft (e.g., Household Monthly Budgets, Wedding Expense Trackers, Employee Attendance Calendars, Project Gantt Charts).
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Blank Workbook:</strong> A clean, unformatted canvas where you design custom financial models, databases, and calculation engines from first principles.
+          </li>
+        </ol>
+
+        <h3>Dissecting a Pre-Built Template: The Wedding Budget Example</h3>
+        <p>
+          To demonstrate the architectural power of Excel, consider the built-in <strong>Wedding Budget Template</strong> examined in the lecture:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Expense Category</th>
+                <th>Item Description</th>
+                <th>Estimated Cost ($)</th>
+                <th>Actual Cost ($)</th>
+                <th>Over / Under ($)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Apparel</strong></td>
+                <td>Engagement Ring</td>
+                <td>$50,000</td>
+                <td>$47,000</td>
+                <td style="color: #3fb950; font-weight: 600;">-$3,000 (Favorable Under)</td>
+              </tr>
+              <tr>
+                <td><strong>Apparel</strong></td>
+                <td>Wedding Suit</td>
+                <td>$15,000</td>
+                <td>$17,000</td>
+                <td style="color: #f85149; font-weight: 600;">+$2,000 (Unfavorable Over)</td>
+              </tr>
+              <tr style="background: rgba(255, 255, 255, 0.04); font-weight: 700;">
+                <td colspan="2"><strong>Apparel Category Total</strong></td>
+                <td><strong>$65,000</strong></td>
+                <td><strong>$64,000</strong></td>
+                <td style="color: #3fb950;"><strong>-$1,000 (Net Savings)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Notice the key engineering feature of this template: <strong>automation</strong>. When you alter the actual cost of the suit, the variance ($1,000), category total ($64,000), summary cards, and embedded pie charts <em>auto-populate</em> and re-render instantly without user intervention.
+        </p>
+
+        <h3>The Workbook vs. Worksheet Hierarchy</h3>
+        <p>
+          To master Excel from scratch, we leave pre-built templates behind and build from a <strong>Blank Workbook</strong>. Understanding the fundamental vocabulary is mandatory:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📁</div>
+            <h4 style="margin: 0 0 0.5rem; color: #79c0ff;">Workbook (The File)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.55;">
+              The entire file saved onto your hard drive with the extension <code>.xlsx</code>. A workbook is the parent container that holds one or more individual worksheets.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📄</div>
+            <h4 style="margin: 0 0 0.5rem; color: #7ee787;">Worksheet / Sheet (The Tab)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.55;">
+              An individual two-dimensional grid of cells within a workbook, represented by bottom tabs (<code>Sheet1</code>, <code>Sheet2</code>, <code>Testing</code>). You can add (<code>+</code>), rename, reorder, color-code, or delete sheets at will.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: THE COORDINATE SYSTEM -->
+      <!-- ============================================================ -->
+      <section id="cell-addressing" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Coordinate System: Cell Addressing ($A1, G9$) &amp; The Name Box</h2>
+
+        <p>
+          Every spreadsheet in Excel is structured as a Cartesian coordinate grid consisting of two axes:
+        </p>
+
+        <ul style="margin-left: 1.5rem; line-height: 1.7; color: var(--text-secondary);">
+          <li>
+            <strong style="color: var(--text-primary);">Columns (Vertical Axis):</strong> Identified by alphabetical letters starting at $A, B, C, \dots, Z$, then continuing as two-letter combinations $AA, AB, AC, \dots, ZZ$, and three-letter combinations up to $XFD$ (16,384 total columns).
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Rows (Horizontal Axis):</strong> Identified by positive counting integers $1, 2, 3, 4, \dots$ all the way up to $1,048,576$ rows.
+          </li>
+        </ul>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.25rem;">The Anatomy of a Cell Address</h3>
+          <p style="color: var(--text-secondary); max-width: 650px; margin: 0.5rem auto 1rem;">
+            A <strong>Cell</strong> is the atomic intersection of a specific Column and a specific Row. Its address is formed by concatenating the Column Letter followed by the Row Number:
+          </p>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; font-family: var(--font-mono); font-size: 2rem; font-weight: 800;">
+            <span style="color: #79c0ff; background: rgba(56, 139, 253, 0.15); padding: 0.4rem 1rem; border-radius: 8px;">G</span>
+            <span style="color: var(--text-muted);">+</span>
+            <span style="color: #7ee787; background: rgba(63, 185, 80, 0.15); padding: 0.4rem 1rem; border-radius: 8px;">9</span>
+            <span style="color: var(--text-muted);">&rarr;</span>
+            <span style="color: #ffa657; background: rgba(210, 153, 34, 0.15); padding: 0.4rem 1.2rem; border-radius: 8px;">G9</span>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 1rem;">
+            (Look at the <strong>Name Box</strong> in the top-left corner above column A to see the active cell's address at any second).
+          </p>
+        </div>
+
+        <!-- REAL EXCEL INTERFACE SCREENSHOT MAP -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">🖥️ Real Microsoft Excel Interface: Annotated Architecture Map</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Visual UI Guide</span>
+          </div>
+          <img src="assets/excel-annotated-interface.png" alt="Microsoft Excel Interface Architecture Map" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          
+          <div style="padding: 1.5rem;">
+            <h4 style="margin: 0 0 1rem; color: var(--text-primary); font-size: 1.05rem;">The 7 Anatomical Zones of the Excel Workspace:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">① The Ribbon Toolbar:</strong> Categorized command tabs (<kbd>Home</kbd>, <kbd>Insert</kbd>, <kbd>Formulas</kbd>, <kbd>Data</kbd>) grouping formatting, alignment, styles, and tools into functional clusters.
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">② The Name Box:</strong> Located on the far-left above column A. Displays the coordinate of the currently active cell (e.g. <code>A1</code>). Type any cell coordinate here and hit Enter to jump there instantly!
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">③ The Formula Bar (<code>fx</code>):</strong> The central control bar. Displays the underlying mathematical formula or raw string text of the active cell, regardless of what formatted result appears on screen.
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">④ Column Headers:</strong> Alphabetical letter banners ($A, B, C, \dots, Z, AA, \dots, XFD$) marking vertical columns. Double-clicking the dividing lines auto-fits column width.
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">⑤ Row Numbers:</strong> Sequential counting integer banners ($1, 2, 3, \dots, 1048576$) marking horizontal rows down the left spine of the worksheet.
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem;">
+                <strong style="color: #2ea043;">⑥ Active Cell &amp; Fill Handle:</strong> The green bounding box indicating current cursor focus. The tiny square at its bottom-right corner is the <em>Fill Handle</em> used to auto-drag series and formulas.
+              </div>
+              <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; font-size: 0.9rem; grid-column: 1 / -1;">
+                <strong style="color: #2ea043;">⑦ Worksheet Tabs &amp; New Sheet Button (<code>+</code>):</strong> Bottom navigation strip showing open tabs (<code>Sheet1</code>, <code>Sheet2</code>). Right-click to rename, color-code, or click <code>+</code> to spawn a fresh blank sheet.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">The Fundamental Architectural Principle of Excel</div>
+            <p>
+              In Microsoft Excel, <strong>the value inside a cell is secondary; the address of the cell is primary</strong>. When you write formulas, you do not manipulate numbers directly—you manipulate <em>addresses</em> that hold numbers. This separation of reference from value is the secret engine of modern computing.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: DYNAMIC CELL REFERENCES VS STATIC HARDCODING -->
+      <!-- ============================================================ -->
+      <section id="references-vs-hardcoding" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Dynamic Cell References vs. Static Hardcoding</h2>
+
+        <p>
+          To understand why cell addressing is revolutionary, imagine you are given a series of raw numbers in row 4 across columns F, G, H, I:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="excel-grid-table">
+            <thead>
+              <tr>
+                <th class="excel-row-num">#</th>
+                <th>Column F</th>
+                <th>Column G</th>
+                <th>Column H</th>
+                <th>Column I</th>
+                <th>Formula / Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="excel-row-num">4</td>
+                <td>1</td>
+                <td>7</td>
+                <td>45</td>
+                <td>6</td>
+                <td><span class="excel-formula-badge">? Total Sum</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          There are two fundamentally different ways to calculate the sum of these values:
+        </p>
+
+        <h3>Approach A: The Novice Method (Hardcoding Static Literals)</h3>
+        <p>
+          The beginner types literal numbers directly into the formula bar:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula (bad practice)</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>= 1 + 7 + 45 + 6</code></pre>
+        </div>
+        <p style="color: #f85149; font-weight: 500;">
+          ❌ Why this fails: If tomorrow you realize the number 45 was a typo and must be corrected to 90, the formula does not care! Its result remains frozen at 59. You must manually locate every single formula containing 45 and retype it by hand. In a financial model with 10,000 cells, this guarantees catastrophic human error.
+        </p>
+
+        <h3>Approach B: The Engineering Method (Dynamic Cell References)</h3>
+        <p>
+          The professional identifies each cell by its spatial address:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula (good practice)</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>= F4 + G4 + H4 + I4</code></pre>
+        </div>
+        <p style="color: #3fb950; font-weight: 500;">
+          ✅ Why this triumphs: If you change cell <code>H4</code> from 45 to 90 and press <kbd>Enter</kbd>, the formula immediately re-evaluates and outputs 104 in less than 1 millisecond. The calculation is permanently tied to the location, not the transient value.
+        </p>
+
+        <h3>Approach C: The Scalable Function Method (<code>=SUM(...)</code>)</h3>
+        <p>
+          Writing <code>= F4 + G4 + H4 + I4 + J4 + ...</code> becomes exhausting when summing 500 cells. Excel provides the built-in <strong>SUM function</strong> combined with the <strong>Range Operator (<code>:</code>)</strong>:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula (pro standard)</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>=SUM(F4:I4)</code></pre>
+        </div>
+        <p>
+          Here, the colon (<code>:</code>) tells Excel: <em>"Start at cell F4, select every contiguous cell up to and including I4, and add them together."</em>
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: HANDS-ON PROJECT 1 -->
+      <!-- ============================================================ -->
+      <section id="monthly-budget-project" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Hands-on Project 1: Building a Real-World Monthly Budget</h2>
+
+        <p>
+          To cement these concepts, the lecture constructs a comprehensive <strong>September Monthly Household Expense Tracker</strong> from a blank sheet.
+        </p>
+
+        <h3>1. Table Architecture &amp; Column Definitions</h3>
+        <p>
+          In row 1, we establish our table schema with 5 descriptive headers:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Column</th>
+                <th>Header Name</th>
+                <th>Data Type</th>
+                <th>Purpose &amp; Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A</strong></td>
+                <td><code>Number</code></td>
+                <td>Integer Series</td>
+                <td>Sequential row transaction index ($1, 2, 3, \dots, 26$).</td>
+              </tr>
+              <tr>
+                <td><strong>B</strong></td>
+                <td><code>Item Name</code></td>
+                <td>Text / String</td>
+                <td>The specific item or service purchased (e.g., Rent, Mobile Bill, Groceries).</td>
+              </tr>
+              <tr>
+                <td><strong>C</strong></td>
+                <td><code>Date</code></td>
+                <td>Date / Timestamp</td>
+                <td>Calendar date of expenditure (e.g., <code>01/09/2021</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>D</strong></td>
+                <td><code>Amount</code></td>
+                <td>Currency (₹)</td>
+                <td>The exact monetary expenditure in Rupees.</td>
+              </tr>
+              <tr>
+                <td><strong>E</strong></td>
+                <td><code>Category</code></td>
+                <td>Categorical Factor</td>
+                <td>Financial classification (<code>Need</code>, <code>Want</code>, <code>Investment</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. UI Polish: Adjusting Column Widths</h3>
+        <p>
+          When you type longer headers like <em>"Over or Below Budget"</em>, text may spill over or appear truncated by adjacent cells.
+        </p>
+        <p>
+          <strong>To fix this:</strong> Hover your mouse cursor over the dividing boundary line between column headers (e.g., between the letters <strong>B</strong> and <strong>C</strong>). The cursor changes to a two-directional arrow (<kbd>⟷</kbd>). Click and drag horizontally to expand the width, or <strong>double-click the boundary line</strong> to automatically auto-fit the column to its longest text string!
+        </p>
+
+        <h3>3. Automatic Date Formatting</h3>
+        <p>
+          When you type <code>1 Sep</code> into cell <code>C2</code> and press Enter, Excel's intelligent date parsing engine activates. It recognizes the entry as a calendar date and auto-formats it to standard date syntax: <code>01/09/2021</code> (Day/Month/Year). If you click the cell, the formula bar displays the full normalized date structure.
+        </p>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: THE MAGIC FILL HANDLE -->
+      <!-- ============================================================ -->
+      <section id="fill-handle-autofill" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The Magic Fill Handle: Auto-Sequencing &amp; Relative Shifts</h2>
+
+        <p>
+          How do you generate serial numbers $1, 2, 3, 4, \dots$ down Column A?
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Technique</th>
+                <th>Speed &amp; Efficiency</th>
+                <th>Evaluation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>The Novice Way</strong></td>
+                <td>Typing 1, 2, 3, 4, 5 manually with the keyboard.</td>
+                <td>Painfully slow; unusable for 1,000 rows.</td>
+                <td style="color: #f85149;">❌ Unacceptable</td>
+              </tr>
+              <tr>
+                <td><strong>The Static Formula</strong></td>
+                <td>Writing <code>= 1 + 1</code> in cell A3, <code>= 2 + 1</code> in A4.</td>
+                <td>Even worse; requires manual re-typing.</td>
+                <td style="color: #f85149;">❌ Flawed</td>
+              </tr>
+              <tr>
+                <td><strong>The Dynamic Formula</strong></td>
+                <td>In cell <code>A3</code>, write <code>= A2 + 1</code>.</td>
+                <td>Generates 2. Copying with <kbd>Ctrl+C</kbd> and pasting with <kbd>Ctrl+V</kbd> down the column dynamically changes to <code>= A3 + 1</code>, <code>= A4 + 1</code>, etc.</td>
+                <td style="color: #3fb950;">✅ Smart</td>
+              </tr>
+              <tr>
+                <td><strong>The Fill Handle (Pro)</strong></td>
+                <td>Click cell <code>A2</code>. Hover over the tiny green square at the bottom-right corner until cursor becomes a black cross (<kbd>+</kbd>). Drag downwards!</td>
+                <td>Instantly fills 200+ rows in 0.5 seconds with perfect auto-incrementation.</td>
+                <td style="color: #3fb950; font-weight: 700;">🚀 Industry Standard</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- REAL EXCEL BUDGET & FILL HANDLE SCREENSHOT -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">📊 Hands-on September Budget &amp; Fill Handle in Action</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Practical Grid View</span>
+          </div>
+          <img src="assets/excel-budget-fill-handle.png" alt="Excel Budget Table and Fill Handle Dragging" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          <div style="padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-primary);">
+            <strong>Visual Note:</strong> Notice cell <code>A3</code> selected with the active green border. In the formula bar, Excel evaluates <code>=A2+1</code>. Dragging the small green fill handle box down applies the dynamic increment across all 26 expense rows in 1 second!
+          </div>
+        </div>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="margin-top: 0; color: #79c0ff; font-size: 1.25rem;">Why Did Copying <code>=A2+1</code> Turn Into <code>=A3+1</code>?</h3>
+          <p style="color: var(--text-secondary); line-height: 1.6;">
+            This behavior is called <strong>Relative Referencing</strong>. When you write <code>=A2+1</code> inside cell <code>A3</code>, Excel does not remember the absolute coordinate <em>"A2"</em>. Instead, it internally records a relative vector instruction:
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 1.05rem; color: #7ee787; text-align: center; margin: 1rem 0; padding: 0.75rem; background: var(--bg-primary); border-radius: 6px;">
+            "Take the cell immediately 1 position ABOVE me, and add 1 to it."
+          </div>
+          <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 0;">
+            When you copy this formula down to row 4, <em>"1 position above me"</em> naturally evaluates to <strong>A3</strong>. In row 5, it evaluates to <strong>A4</strong>. This spatial relativity allows a single formula to scale across millions of rows!
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: THE 50/30/20 RULE -->
+      <!-- ============================================================ -->
+      <section id="fifty-thirty-twenty" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Expense Classification: The 50/30/20 Rule (Needs, Wants, Investments)</h2>
+
+        <p>
+          In Column E, each expenditure is categorized according to personal finance principles into three distinct buckets:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: rgba(56, 139, 253, 0.08); border: 1px solid rgba(56, 139, 253, 0.25); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #79c0ff; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">1. Needs (Essential Survival)</div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Non-negotiable living costs required for health, basic shelter, and employment: Rent, groceries, electricity, water, basic mobile connection.
+            </p>
+          </div>
+
+          <div style="background: rgba(238, 108, 77, 0.08); border: 1px solid rgba(238, 108, 77, 0.25); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #ffa657; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">2. Wants (Discretionary Lifestyle)</div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Desires that improve quality of life but can be eliminated in a financial crisis: Zomato/Swiggy food deliveries, weekend dining out, movie tickets, fashion shopping.
+            </p>
+          </div>
+
+          <div style="background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.25); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #7ee787; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">3. Investments (Future Wealth)</div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Capital allocated to productive assets that generate compounding returns: Mutual fund SIPs, stocks, PPF, emergency fund deposits.
+            </p>
+          </div>
+        </div>
+
+        <h3>Sample Recorded Transaction Ledger (Sheet 1)</h3>
+        <p>
+          The lecture records 26 distinct transactions for the month of September. Here is an excerpt of the raw transaction data:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="excel-grid-table">
+            <thead>
+              <tr>
+                <th class="excel-row-num">Row</th>
+                <th>A: Number</th>
+                <th>B: Item Name</th>
+                <th>C: Date</th>
+                <th>D: Amount (₹)</th>
+                <th>E: Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="excel-row-num">2</td>
+                <td>1</td>
+                <td>Apartment Rent</td>
+                <td>01/09/2021</td>
+                <td>₹5,000</td>
+                <td>Need</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">3</td>
+                <td>2</td>
+                <td>Mobile Phone Bill</td>
+                <td>01/09/2021</td>
+                <td>₹500</td>
+                <td>Need</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">4</td>
+                <td>3</td>
+                <td>Electricity &amp; Utilities</td>
+                <td>02/09/2021</td>
+                <td>₹1,000</td>
+                <td>Need</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">5</td>
+                <td>4</td>
+                <td>Zomato Online Delivery</td>
+                <td>02/09/2021</td>
+                <td>₹450</td>
+                <td>Want</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">6</td>
+                <td>5</td>
+                <td>Weekend Mall Shopping</td>
+                <td>03/09/2021</td>
+                <td>₹3,200</td>
+                <td>Want</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">7</td>
+                <td>6</td>
+                <td>Restaurant Dining Out</td>
+                <td>03/09/2021</td>
+                <td>₹1,800</td>
+                <td>Want</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+                <td>...</td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">27</td>
+                <td>26</td>
+                <td>Monthly Grocery Run</td>
+                <td>28/09/2021</td>
+                <td>₹1,000</td>
+                <td>Need</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: AGGREGATING DATA WITH =SUM() -->
+      <!-- ============================================================ -->
+      <section id="sum-range-mechanics" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Aggregating Data: Mastering =SUM() &amp; Range Syntax (D2:D27)</h2>
+
+        <p>
+          At the bottom of the table (in cell <code>D28</code>), we need to compute the <strong>Total Monthly Spend</strong> across all 26 expense rows.
+        </p>
+
+        <h3>Writing the Range Formula</h3>
+        <p>
+          Instead of writing <code>= D2 + D3 + D4 + ... + D27</code>, we invoke the <code>=SUM()</code> formula:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>=SUM(D2:D27)</code></pre>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-content">
+            <div class="callout-title">The Pro Selection Shortcut</div>
+            <p>
+              To select the range without typing cell names: type <code>=SUM(</code>, click cell <code>D2</code> with your mouse, hold down <kbd>Shift</kbd>, and click cell <code>D27</code>. Excel automatically populates <code>D2:D27</code>. Close the bracket <code>)</code> and hit <kbd>Enter</kbd>!
+            </p>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-card); border-left: 4px solid #2ea043; border-radius: 4px; padding: 1.25rem; margin: 1.5rem 0;">
+          <div style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Calculated Output</div>
+          <div style="font-size: 2rem; font-weight: 800; color: #2ea043; font-family: var(--font-mono); margin: 0.35rem 0;">
+            ₹46,408
+          </div>
+          <div style="font-size: 0.92rem; color: var(--text-secondary);">
+            The exact total September expenditure computed across all 26 line items.
+          </div>
+        </div>
+
+        <!-- REAL EXCEL SUM FUNCTION SCREENSHOT -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">🧮 Excel Range Selection &amp; =SUM(D2:D27) Live View</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Practical Grid View</span>
+          </div>
+          <img src="assets/excel-sum-function.png" alt="Excel SUM Function Range Selection" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          <div style="padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-primary);">
+            <strong>Visual Note:</strong> Notice the blue boundary box outlining the contiguous range <code>D2:D27</code>. When typing <code>=SUM(</code>, Excel displays the inline tooltip helper. Upon pressing <kbd>Enter</kbd>, cell <code>D28</code> instantly evaluates to <strong>₹46,408</strong>.
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 9: ANNUALIZING EXPENSES & RELATIVE SHIFTS -->
+      <!-- ============================================================ -->
+      <section id="annualizing-relative-shifts" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Annualizing Expenses &amp; Relative Spatial Column Shifts (=D2*12)</h2>
+
+        <p>
+          Suppose you want to know: <em>"If my monthly rent is ₹5,000, what is my total annual rent over 12 months?"</em>
+        </p>
+
+        <h3>1. Creating the Annualized Column</h3>
+        <p>
+          We create Column F: <code>Annualized Expense</code>. In cell <code>F2</code>, we enter:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>= D2 * 12</code></pre>
+        </div>
+        <p>
+          Cell <code>F2</code> evaluates to <strong>₹60,000</strong> ($5,000 \times 12$).
+        </p>
+
+        <h3>2. Applying Across All Rows</h3>
+        <p>
+          We grab the Fill Handle on <code>F2</code> and drag it down to row 27. Excel automatically translates the formula for every row:
+        </p>
+        <ul style="margin-left: 1.5rem; line-height: 1.6; color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem;">
+          <li>Row 3: <code>= D3 * 12</code> &rarr; ₹6,000 (Mobile)</li>
+          <li>Row 4: <code>= D4 * 12</code> &rarr; ₹12,000 (Utilities)</li>
+          <li>Row 5: <code>= D5 * 12</code> &rarr; ₹5,400 (Zomato)</li>
+        </ul>
+
+        <h3>3. Spatial Column Shift: Copying the SUM Formula</h3>
+        <p>
+          Now, how do we calculate the total annual expense in cell <code>F28</code>? You could type <code>=SUM(F2:F27)</code> from scratch. However, observe what happens if you simply <strong>copy cell <code>D28</code></strong> (<kbd>Ctrl+C</kbd>) and <strong>paste it into cell <code>F28</code></strong> (<kbd>Ctrl+V</kbd>):
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem; text-align: center;">
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700;">ORIGINAL CELL (D28)</div>
+              <div style="font-family: var(--font-mono); font-size: 1.2rem; color: #79c0ff; margin-top: 0.25rem;">=SUM(D2:D27)</div>
+            </div>
+            <div style="font-size: 1.5rem; color: var(--text-muted);">➔ Pasted 2 Columns Right ➔</div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700;">DESTINATION CELL (F28)</div>
+              <div style="font-family: var(--font-mono); font-size: 1.2rem; color: #7ee787; margin-top: 0.25rem;">=SUM(F2:F27)</div>
+            </div>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 1rem; text-align: center;">
+            Excel understands relative vectors in 2D space: moving 2 columns to the right shifts every column letter inside the formula by +2 ($D \to E \to F$).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 10: HANDS-ON PROJECT 2: SUMIF -->
+      <!-- ============================================================ -->
+      <section id="multi-sheet-sumif" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Hands-on Project 2: Multi-Sheet Analytics &amp; =SUMIF()</h2>
+
+        <p>
+          Now comes the executive challenge: <strong>How much money did you spend on Needs, how much on Wants, and how much on Investments?</strong>
+        </p>
+
+        <h3>Why Manual Filtering Fails</h3>
+        <p>
+          A novice might try scanning Column E by eye, hunting for every cell that says <em>"Need"</em>, and adding them manually: <code>= 5000 + 500 + 1000 + ...</code>.
+        </p>
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Inevitable Human Error</div>
+            <p>
+              In a ledger with 26 rows, it is almost certain you will miss an isolated entry—for example, the ₹1,000 grocery bill buried in row 27. In a corporate dataset with 50,000 rows, manual classification is impossible and dangerous.
+            </p>
+          </div>
+        </div>
+
+        <h3>The Multi-Sheet Architecture</h3>
+        <p>
+          Instead of cluttering our raw transaction sheet, we click the <kbd>+</kbd> button at the bottom of Excel to create a brand new worksheet: <strong>Sheet2</strong> (the Executive Summary Dashboard).
+        </p>
+
+        <p>
+          In Sheet2, we construct our summary table:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="excel-grid-table">
+            <thead>
+              <tr>
+                <th class="excel-row-num">#</th>
+                <th>A: Category</th>
+                <th>B: Total Spend (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="excel-row-num">2</td>
+                <td>Need</td>
+                <td><span class="excel-formula-badge">=SUMIF(...)</span></td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">3</td>
+                <td>Want</td>
+                <td><span class="excel-formula-badge">=SUMIF(...)</span></td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">4</td>
+                <td>Investment</td>
+                <td><span class="excel-formula-badge">=SUMIF(...)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Deconstructing the <code>=SUMIF()</code> Function</h3>
+        <p>
+          The <code>SUMIF</code> function performs <strong>conditional aggregation</strong>. It inspects a range of cells, checks whether each cell satisfies a specific condition, and only sums the numbers from corresponding rows that match:
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <div style="font-family: var(--font-mono); font-size: 1.15rem; color: #79c0ff; text-align: center; margin-bottom: 1rem;">
+            =SUMIF(range, criteria, [sum_range])
+          </div>
+          <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
+            <li><strong style="color: #79c0ff;">range:</strong> The range of cells to test against your condition (e.g., Column E in Sheet1 where category names live: <code>Sheet1!E:E</code>).</li>
+            <li><strong style="color: #ffa657;">criteria:</strong> The condition that must be met (e.g., <code>"Need"</code> or pointing to cell <code>A2</code>).</li>
+            <li><strong style="color: #7ee787;">sum_range:</strong> The actual numbers to sum when the condition evaluates to TRUE (e.g., Column D in Sheet1 where expense amounts live: <code>Sheet1!D:D</code>).</li>
+          </ul>
+        </div>
+
+        <h3>Static Criteria vs. Dynamic Cell Referencing</h3>
+        <p>
+          You could write the formula using a hardcoded string:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula (acceptable)</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>=SUMIF(Sheet1!E:E, "Need", Sheet1!D:D)</code></pre>
+        </div>
+
+        <p>
+          However, the <strong>pro method</strong> references cell <code>A2</code> directly:
+        </p>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula (pro dynamic standard)</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>=SUMIF(Sheet1!E:E, A2, Sheet1!D:D)</code></pre>
+        </div>
+
+        <p>
+          <strong>Why is this infinitely superior?</strong> Because now, you can simply drag the formula down! When dragged to row 3 (Wants), <code>A2</code> automatically shifts to <code>A3</code>. When dragged to row 4 (Investments), it shifts to <code>A4</code>. One single dynamic formula solves the entire report!
+        </p>
+
+        <h3>The Reconciliation Check</h3>
+        <p>
+          Let's examine the computed category totals from the lecture:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Formula</th>
+                <th>Calculated Total (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Needs</strong></td>
+                <td><code>=SUMIF(Sheet1!E:E, A2, Sheet1!D:D)</code></td>
+                <td><strong>₹9,532</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Wants</strong></td>
+                <td><code>=SUMIF(Sheet1!E:E, A3, Sheet1!D:D)</code></td>
+                <td><strong>₹10,438</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Investments</strong></td>
+                <td><code>=SUMIF(Sheet1!E:E, A4, Sheet1!D:D)</code></td>
+                <td><strong>₹26,438</strong></td>
+              </tr>
+              <tr style="background: rgba(46, 160, 67, 0.1); font-weight: 700;">
+                <td><strong>Total Reconciled</strong></td>
+                <td><code>=SUM(B2:B4)</code></td>
+                <td style="color: #2ea043; font-size: 1.1rem;"><strong>₹46,408</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-content">
+            <div class="callout-title">Perfect Reconciliation!</div>
+            <p>
+              Notice that $\text{Needs } (₹9,532) + \text{Wants } (₹10,438) + \text{Investments } (₹26,438) = ₹46,408$. This precisely matches the <code>=SUM(D2:D27)</code> total from Sheet1! If you ever add or modify a transaction in Sheet1, Sheet2 updates automatically.
+            </p>
+          </div>
+        </div>
+
+        <!-- REAL EXCEL MULTI-SHEET & SUMIF SCREENSHOT -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">📑 Multi-Sheet Architecture &amp; =SUMIF() Dashboard</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Practical Grid View</span>
+          </div>
+          <img src="assets/excel-multisheet-sumif.png" alt="Multi-Sheet Architecture and SUMIF Formula Breakdown" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          <div style="padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-primary);">
+            <strong>Visual Note:</strong> Notice the active tab at the bottom is <code>Sheet2 (Summary)</code> while the formula bar explicitly inspects columns from <code>Sheet1!</code>. The dynamic criteria cell <code>A2</code> allows the single formula to be dragged down for Wants and Investments, producing a verified ₹46,408 match.
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 11: MASTERING PIVOT TABLES -->
+      <!-- ============================================================ -->
+      <section id="pivot-tables-mastery" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Mastering Pivot Tables: The Formula-Free Analytics Engine</h2>
+
+        <p>
+          In Section 10, we solved the challenge of categorizing our monthly expenses using the <code>=SUMIF()</code> formula. While <code>=SUMIF()</code> is clean and flexible, real-world analytical questions quickly become multidimensional:
+        </p>
+
+        <blockquote style="border-left: 3px solid #107c41; padding-left: 1rem; color: var(--text-secondary); margin: 1.25rem 0;">
+          <em>"Can you show me spending by Category, broken down by individual Item Name, along with the Transaction Count, the Average Spend per transaction, and what % of our total budget each category consumed?"</em>
+        </blockquote>
+
+        <p>
+          Answering that question with formulas would require writing dozens of complex, nested <code>=SUMIFS()</code>, <code>=COUNTIFS()</code>, and <code>=AVERAGEIFS()</code> calculations across multiple sheets. If a single comma or cell range is misplaced, the entire report breaks.
+        </p>
+
+        <p>
+          This is where <strong>Pivot Tables</strong> enter. A Pivot Table answers all of those questions in <strong>less than 5 seconds with zero formulas</strong>!
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">What is a Pivot Table? (Beginner-Friendly Definition)</div>
+            <p>
+              A <strong>Pivot Table</strong> is an interactive data summarization engine built directly into Excel. It takes a detailed table of raw, transactional rows and automatically aggregates, sorts, groups, and calculates totals without writing a single line of code or formula. It is called a <em>"Pivot"</em> table because you can effortlessly rotate ("pivot") fields between rows and columns with a mouse click to view your dataset from completely different business perspectives.
+            </p>
+          </div>
+        </div>
+
+        <h3>The 4 Quadrant Architecture of the PivotTable Fields Pane</h3>
+        <p>
+          When you create a Pivot Table, Excel displays the <strong>PivotTable Fields</strong> side panel. It contains a list of all your table headers at the top, and <strong>four drag-and-drop quadrant boxes</strong> at the bottom:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #79c0ff; font-size: 1.05rem; margin-bottom: 0.35rem;">🗂️ 1. Filters (Report Filter)</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Acts as a global master switch for the entire report. E.g., placing <code>Date</code> or <code>Month</code> here lets you filter the entire dashboard to show only a specific time window.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #ffa657; font-size: 1.05rem; margin-bottom: 0.35rem;">↔️ 2. Columns (Horizontal Axis)</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Fields placed here become horizontal column headers across the top of the summary table (e.g., placing Payment Method or Month across columns).
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #7ee787; font-size: 1.05rem; margin-bottom: 0.35rem;">↕️ 3. Rows (Vertical Axis)</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Fields placed here become vertical row labels down the left side of the table (e.g., placing <code>Category</code> displays Need, Want, and Investment).
+            </p>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-weight: 700; color: #f87171; font-size: 1.05rem; margin-bottom: 0.35rem;">🧮 4. Values (&sum; Aggregations)</div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              The numerical measurement to calculate. By default, numerical columns placed here are summed (<code>Sum of Amount</code>), while text columns are counted.
+            </p>
+          </div>
+        </div>
+
+        <h3>Hands-on Tutorial: Summarizing the September Budget in 4 Steps</h3>
+        <p>
+          Let's reproduce our entire Section 10 <code>=SUMIF</code> report using a Pivot Table:
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h4 style="margin-top: 0; color: #2ea043; font-size: 1.15rem;">Step 1: Convert Raw Data to an Official Excel Table (<kbd>Ctrl + T</kbd>)</h4>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+            <strong>Industry Best Practice:</strong> Never build a Pivot Table directly on a raw unformatted cell range like <code>A1:E27</code>! If you add new expense rows later, a raw range will ignore them.<br>
+            Instead, click any cell inside your data and press <kbd>Ctrl + T</kbd> (or go to <strong>Insert &gt; Table</strong>). Check <em>"My table has headers"</em> and hit OK. Excel converts it into a dynamic named table (e.g., <code>SeptemberExpenses</code>). Now, whenever you add row 28 or row 100, the table expands automatically!
+          </p>
+
+          <h4 style="color: #2ea043; font-size: 1.15rem;">Step 2: Insert the Pivot Table</h4>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+            Click any cell inside the table &rarr; Go to the top Excel Ribbon &rarr; Click <strong>Insert &gt; PivotTable</strong>. In the popup dialog, keep the default option <em>"New Worksheet"</em> selected and click <strong>OK</strong>. Excel creates a fresh worksheet with a blank PivotTable canvas and opens the Fields Pane on the right.
+          </p>
+
+          <h4 style="color: #2ea043; font-size: 1.15rem;">Step 3: Drag &amp; Drop the Fields</h4>
+          <ol style="margin-left: 1.5rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
+            <li>Find <strong><code>Category</code></strong> in the top list &rarr; Click and drag it down into the <strong>Rows</strong> quadrant.</li>
+            <li>Find <strong><code>Amount</code></strong> in the top list &rarr; Click and drag it down into the <strong>Values</strong> quadrant.</li>
+          </ol>
+
+          <h4 style="color: #2ea043; font-size: 1.15rem; margin-bottom: 0.5rem;">Step 4: The Instant Result</h4>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Without writing a single formula, Excel instantly generates this clean summary table:
+          </p>
+
+          <div class="table-wrapper">
+            <table class="excel-grid-table" style="max-width: 500px; margin: 0.5rem 0;">
+              <thead>
+                <tr>
+                  <th>Row Labels (Category)</th>
+                  <th style="text-align: right;">Sum of Amount (₹)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Need</strong></td>
+                  <td style="text-align: right; font-family: var(--font-mono);">₹9,532</td>
+                </tr>
+                <tr>
+                  <td><strong>Want</strong></td>
+                  <td style="text-align: right; font-family: var(--font-mono);">₹10,438</td>
+                </tr>
+                <tr>
+                  <td><strong>Investment</strong></td>
+                  <td style="text-align: right; font-family: var(--font-mono);">₹26,438</td>
+                </tr>
+                <tr style="background: rgba(46, 160, 67, 0.12); font-weight: 700;">
+                  <td><strong>Grand Total</strong></td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: #2ea043;">₹46,408</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REAL EXCEL PIVOT TABLE & 4 QUADRANTS SCREENSHOT -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">🎛️ Live Pivot Table Architecture &amp; The 4 Field Quadrants</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Practical Grid View</span>
+          </div>
+          <img src="assets/excel-pivot-table-ui.png" alt="Excel Pivot Table Interface and 4 Quadrants Fields Pane" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          <div style="padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-primary);">
+            <strong>Visual Note:</strong> Look at the right panel: <code>Category</code> is placed into the <strong>Rows</strong> quadrant and <code>Amount</code> is placed into the <strong>Values</strong> quadrant (&sum; Sum of Amount). On the left, Excel instantly generates the summary report and hierarchical breakdown, alongside clickable Slicer buttons for interactive one-click filtering!
+          </div>
+        </div>
+
+        <h3>Advanced Pivot Table Superpowers</h3>
+
+        <h4>1. Hierarchical Drill-Down (Multi-Level Grouping)</h4>
+        <p>
+          What if you want to see the specific expense items grouped under each category? Simply drag <strong><code>Item Name</code></strong> and place it <em>directly underneath</em> <strong><code>Category</code></strong> in the Rows box:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="excel-grid-table" style="max-width: 600px;">
+            <thead>
+              <tr>
+                <th>Category / Item Breakdown</th>
+                <th style="text-align: right;">Total Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background: rgba(56, 139, 253, 0.08); font-weight: 700;">
+                <td>[-] Need</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹9,532</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Apartment Rent</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹5,000</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Electricity &amp; Utilities</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹1,000</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Monthly Grocery Run</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹1,000</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Mobile Phone Bill</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹500</td>
+              </tr>
+              <tr style="background: rgba(238, 108, 77, 0.08); font-weight: 700;">
+                <td>[-] Want</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹10,438</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Weekend Mall Shopping</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹3,200</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Restaurant Dining Out</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹1,800</td>
+              </tr>
+              <tr>
+                <td style="padding-left: 2rem;">Zomato Online Delivery</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹450</td>
+              </tr>
+              <tr style="background: rgba(63, 185, 80, 0.08); font-weight: 700;">
+                <td>[-] Investment</td>
+                <td style="text-align: right; font-family: var(--font-mono);">₹26,438</td>
+              </tr>
+              <tr style="background: rgba(46, 160, 67, 0.15); font-weight: 800;">
+                <td>Grand Total</td>
+                <td style="text-align: right; font-family: var(--font-mono); color: #2ea043;">₹46,408</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+          You can click the little <code>[-]</code> and <code>[+]</code> symbols next to each category to expand or collapse the details on demand!
+        </p>
+
+        <h4>2. Value Field Settings: Beyond Simple Sums</h4>
+        <p>
+          By default, Excel sums numerical data. But you can change how numbers are computed:
+        </p>
+        <ol style="margin-left: 1.5rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
+          <li>Right-click any number in the Pivot Table &rarr; Select <strong>Value Field Settings...</strong></li>
+          <li>
+            <strong>Summarize value field by:</strong> Switch from <code>Sum</code> to <code>Count</code> (shows how many transactions were made in each bucket) or <code>Average</code> (shows average bill per transaction).
+          </li>
+          <li>
+            <strong>Show Values As &gt; % of Grand Total:</strong> Shows what percentage of your total income or monthly outflow went into each category:
+            <ul style="margin-top: 0.5rem; font-family: var(--font-mono);">
+              <li>Investments: <strong style="color: #7ee787;">56.97%</strong></li>
+              <li>Wants: <strong style="color: #ffa657;">22.49%</strong></li>
+              <li>Needs: <strong style="color: #79c0ff;">20.54%</strong></li>
+            </ul>
+          </li>
+        </ol>
+
+        <h4>3. Interactive Dashboards with Slicers (<kbd>Alt + N + SF</kbd>)</h4>
+        <p>
+          Instead of clunky drop-down menus, Excel allows you to insert <strong>Slicers</strong>—sleek, interactive touch buttons that filter your Pivot Table dynamically:
+        </p>
+        <ol style="margin-left: 1.5rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
+          <li>Click anywhere inside the Pivot Table.</li>
+          <li>Go to the top ribbon tab: <strong>PivotTable Analyze &gt; Insert Slicer</strong>.</li>
+          <li>Check the box for <strong><code>Category</code></strong> and click OK.</li>
+          <li>A floating visual panel appears with three buttons: <kbd style="background: rgba(56, 139, 253, 0.2); border: 1px solid #388bfd; padding: 0.25rem 0.6rem; border-radius: 4px;">Need</kbd> <kbd style="background: rgba(238, 108, 77, 0.2); border: 1px solid #ee6c4d; padding: 0.25rem 0.6rem; border-radius: 4px;">Want</kbd> <kbd style="background: rgba(63, 185, 80, 0.2); border: 1px solid #2ea043; padding: 0.25rem 0.6rem; border-radius: 4px;">Investment</kbd>.</li>
+        </ol>
+        <p style="font-size: 0.92rem; color: var(--text-secondary);">
+          Clicking any button instantly filters the entire table in real time!
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <div class="callout-title">The Pivot Cache &amp; The Mandatory Refresh Invariant</div>
+            <p>
+              Here is the single most important difference between formulas and Pivot Tables: <strong>Pivot Tables DO NOT update automatically when you change raw data cells!</strong><br><br>
+              When a Pivot Table is created, Excel copies the source data into a dedicated in-memory snapshot called the <strong>Pivot Cache</strong>. If you update September rent from ₹5,000 to ₹7,000 in Sheet1, the Pivot Table will continue showing ₹5,000 until you explicitly tell it to update.<br><br>
+              <strong>How to Refresh:</strong> Right-click anywhere inside the Pivot Table and click <strong>Refresh</strong> (or use the universal shortcut <kbd>Alt + F5</kbd>). To refresh all Pivot Tables across your entire workbook, press <kbd>Ctrl + Alt + F5</kbd>.
+            </p>
+          </div>
+        </div>
+
+        <h3>When to Use =SUMIF() vs. When to Use a Pivot Table</h3>
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Analytical Requirement</th>
+                <th>Use =SUMIF() / Formulas</th>
+                <th>Use Pivot Tables</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dynamic Real-Time Recalculation</strong></td>
+                <td><strong style="color: #3fb950;">Instantaneous:</strong> Updates immediately upon cell edit.</td>
+                <td><strong style="color: #ffa657;">Manual / Cached:</strong> Requires pressing <kbd>Alt + F5</kbd> to refresh.</td>
+              </tr>
+              <tr>
+                <td><strong>Custom Financial Statement Layout</strong></td>
+                <td><strong style="color: #3fb950;">Best:</strong> Allows placing numbers in exact bespoke cells for CFO models.</td>
+                <td><strong style="color: var(--text-muted);">Rigid:</strong> Follows standardized matrix grid layouts.</td>
+              </tr>
+              <tr>
+                <td><strong>Multi-Dimensional Slicing &amp; Dicing</strong></td>
+                <td><strong style="color: #f85149;">Difficult:</strong> Requires writing nested <code>=SUMIFS()</code>.</td>
+                <td><strong style="color: #3fb950;">Effortless:</strong> Drag-and-drop any field across Rows or Columns in seconds.</td>
+              </tr>
+              <tr>
+                <td><strong>Interactive Visual Dashboards</strong></td>
+                <td><strong style="color: var(--text-muted);">Complex:</strong> Requires complex form controls and dynamic arrays.</td>
+                <td><strong style="color: #3fb950;">Native:</strong> One-click interactive Slicers and Timelines.</td>
+              </tr>
+              <tr>
+                <td><strong>Dataset Size</strong></td>
+                <td>Can slow down Excel when evaluating 100,000+ formula cells.</td>
+                <td>Extremely fast; optimized for millions of rows via the Pivot Cache.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 12: COMPOUND INTEREST SENSITIVITY MODEL -->
+      <!-- ============================================================ -->
+      <section id="compounding-financial-model" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Hands-on Project 3: Compound Interest Sensitivity Model ($A = P(1+r)^t$)</h2>
+
+        <p>
+          The final project demonstrates how Excel transforms from a simple ledger into a powerful <strong>financial decision engine</strong>.
+        </p>
+
+        <h3>The Scenario</h3>
+        <p>
+          You plan to invest a lump sum of <strong>₹10,000</strong> into an equity index fund expected to deliver an annual return of <strong>12%</strong> over a <strong>10-year horizon</strong>. What will be the final maturity amount?
+        </p>
+
+        <h3>The Mathematical Compound Growth Equation</h3>
+        <p>
+          The mathematical formula for annual compounding is:
+        </p>
+        <div style="text-align: center; font-size: 1.4rem; margin: 1.5rem 0;">
+          $$A = P \times (1 + r)^t$$
+        </div>
+        <p>
+          Where:
+        </p>
+        <ul style="margin-left: 1.5rem; line-height: 1.7; color: var(--text-secondary);">
+          <li>$P$ = Principal amount invested (₹10,000)</li>
+          <li>$r$ = Annual compound rate of return ($12\% = 0.12$)</li>
+          <li>$t$ = Duration in years ($10$)</li>
+          <li>$A$ = Final maturity amount</li>
+        </ul>
+
+        <h3>Setting Up the Parameter Table in Excel</h3>
+        <p>
+          We construct an isolated parameter table in Column B &amp; Column C:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="excel-grid-table">
+            <thead>
+              <tr>
+                <th class="excel-row-num">#</th>
+                <th>Column B (Parameter Description)</th>
+                <th>Column C (Input Value)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="excel-row-num">1</td>
+                <td>Years of Investment ($t$)</td>
+                <td><code>10</code></td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">2</td>
+                <td>Rate of Return ($r$)</td>
+                <td><code>12%</code></td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">3</td>
+                <td>Amount Invested ($P$)</td>
+                <td><code>10000</code></td>
+              </tr>
+              <tr>
+                <td class="excel-row-num">4</td>
+                <td>End Maturity Amount ($A$)</td>
+                <td><span class="excel-formula-badge">= C3 * (1 + C2)^C1</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          In Excel, exponentiation (raising to a power) is performed using the <strong>caret operator (<code>^</code>)</strong>. Thus, the formula in cell <code>C4</code> is:
+        </p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">excel formula</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>= C3 * (1 + C2)^C1</code></pre>
+        </div>
+
+        <p>
+          Result in cell <code>C4</code>: <strong style="color: #7ee787;">₹31,058.48</strong>
+        </p>
+
+        <h3>The Magic of Parameter Sensitivity Analysis</h3>
+        <p>
+          Now, observe why hardcoding is obsolete. If someone asks you:
+        </p>
+        <blockquote style="border-left: 3px solid #79c0ff; padding-left: 1rem; color: var(--text-secondary); margin: 1.25rem 0;">
+          <em>"What if I stay invested for 15 years instead of 10?"</em><br>
+          <em>"What if the fund delivers 15% instead of 12%?"</em>
+        </blockquote>
+
+        <p>
+          In a static calculator, you would have to retype the entire mathematical equation from scratch. In Excel:
+        </p>
+        <ol style="margin-left: 1.5rem; line-height: 1.7; color: var(--text-secondary);">
+          <li>You simply click cell <code>C1</code>, type <code>15</code>, and hit Enter &rarr; <strong>Result instantly recalculates to ₹54,735.66!</strong></li>
+          <li>You click cell <code>C2</code>, type <code>15%</code>, and hit Enter &rarr; <strong>Result instantly recalculates to ₹81,370.62!</strong></li>
+        </ol>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <div class="callout-title">The Foundation of Financial Modeling</div>
+            <p>
+              This is the exact workflow used by Wall Street investment bankers, equity analysts, and corporate CFOs. By building clean parameter cells connected through dynamic formulas, you create living financial models that can stress-test any scenario in real time.
+            </p>
+          </div>
+        </div>
+
+        <!-- REAL EXCEL COMPOUNDING FINANCIAL MODEL SCREENSHOT -->
+        <div class="excel-screenshot-container" style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
+          <div style="background: rgba(16, 124, 65, 0.08); padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.9rem; font-weight: 700; color: #2ea043; text-transform: uppercase; letter-spacing: 0.05em;">📈 Financial Modeling &amp; Sensitivity Testing Live View</span>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Practical Grid View</span>
+          </div>
+          <img src="assets/excel-compounding-model.png" alt="Excel Financial Compound Interest Model and Sensitivity Analysis" style="width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border-color);">
+          <div style="padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-primary);">
+            <strong>Visual Note:</strong> Cell <code>C4</code> contains the dynamic exponential formula <code>=C3*(1+C2)^C1</code>. On the right, see how modifying input cells <code>C1</code> (Tenure) or <code>C2</code> (Rate) instantly models future portfolio growth from ₹31,058 up to ₹81,370 with zero manual re-calculation!
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 13: INTERACTIVE SIMULATOR & PLAYGROUND -->
+      <!-- ============================================================ -->
+      <section id="interactive-excel-playground" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Interactive Financial Simulator &amp; Formula Playground</h2>
+
+        <p>
+          Experiment directly with Excel's dynamic recalculation engine below. Move the sliders to test how varying investment horizons ($t$) and compounding returns ($r$) transform your final maturity amount in real time:
+        </p>
+
+        <div class="interactive-card">
+          <h3 style="margin-top: 0; color: #2ea043; display: flex; align-items: center; gap: 0.5rem;">
+            <span>📈</span> Live Compound Interest Sensitivity Playground
+          </h3>
+          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Formula evaluated dynamically: <code>= Principal * (1 + Rate)^Years</code>
+          </p>
+
+          <div class="sim-slider-group">
+            <div class="sim-slider-label">
+              <span>Principal Investment ($P$ in cell C3):</span>
+              <strong id="pValDisp" style="color: #79c0ff; font-family: var(--font-mono);">₹10,000</strong>
+            </div>
+            <input type="range" id="pSlider" class="sim-slider" min="1000" max="100000" step="1000" value="10000">
+          </div>
+
+          <div class="sim-slider-group">
+            <div class="sim-slider-label">
+              <span>Annual Return Rate ($r$ in cell C2):</span>
+              <strong id="rValDisp" style="color: #ffa657; font-family: var(--font-mono);">12%</strong>
+            </div>
+            <input type="range" id="rSlider" class="sim-slider" min="4" max="25" step="0.5" value="12">
+          </div>
+
+          <div class="sim-slider-group">
+            <div class="sim-slider-label">
+              <span>Tenure in Years ($t$ in cell C1):</span>
+              <strong id="tValDisp" style="color: #7ee787; font-family: var(--font-mono);">10 Years</strong>
+            </div>
+            <input type="range" id="tSlider" class="sim-slider" min="1" max="35" step="1" value="10">
+          </div>
+
+          <div class="sim-result-box">
+            <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">
+              Active Excel Formula: <span id="formulaPreview" style="color: var(--text-primary); font-family: var(--font-mono);">= 10000 * (1 + 0.12)^10</span>
+            </div>
+            <div id="maturityAmountDisp" style="font-size: 2.25rem; font-weight: 800; color: #2ea043; font-family: var(--font-mono); margin: 0.5rem 0;">
+              ₹31,058.48
+            </div>
+            <div id="wealthGainDisp" style="font-size: 0.95rem; color: var(--text-secondary);">
+              Total Wealth Multiplier: <strong style="color: var(--text-primary);">3.11x</strong> (Net Gain: ₹21,058.48)
+            </div>
+          </div>
+        </div>
+
+        <h3>Essential Excel Keyboard Shortcuts Reference</h3>
+        <p>
+          Mastering these 8 shortcuts will immediately double your speed when navigating workbooks:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Shortcut</th>
+                <th>Action</th>
+                <th>Why It Matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>Ctrl</kbd> + <kbd>V</kbd></td>
+                <td>Copy and Paste</td>
+                <td>Preserves relative coordinate shifts automatically.</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td>
+                <td>Undo Last Action</td>
+                <td>Instantly recovers from accidental cell deletions or overwrites.</td>
+              </tr>
+              <tr>
+                <td><kbd>Alt</kbd> + <kbd>=</kbd></td>
+                <td>AutoSum</td>
+                <td>Automatically inserts <code>=SUM(...)</code> above or beside the active range.</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>Arrow Key</kbd></td>
+                <td>Jump to Boundary</td>
+                <td>Jumps directly to the last populated row or column in large datasets.</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Down</kbd></td>
+                <td>Select to Bottom</td>
+                <td>Highlights thousands of continuous rows in 1 keystroke.</td>
+              </tr>
+              <tr>
+                <td><kbd>F4</kbd></td>
+                <td>Toggle Absolute Lock (<code>$</code>)</td>
+                <td>Cycles between relative (<code>A1</code>), absolute (<code>$A$1</code>), and mixed references.</td>
+              </tr>
+              <tr>
+                <td><kbd>Shift</kbd> + <kbd>F11</kbd></td>
+                <td>Insert New Worksheet</td>
+                <td>Instantly adds a new sheet tab to your workbook.</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>`</kbd> (Grave Accent)</td>
+                <td>Toggle Show Formulas</td>
+                <td>Switches between showing formula results and showing the underlying raw code.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Microsoft Excel Masterclass
+      </div>
+      <div>
+        <a href="index.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Back to Home</a>
+        <a href="excel.html" style="color: var(--accent-blue);">All Excel Modules →</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Interactive Compound Interest Calculator
+    function updateCompoundSimulator() {
+      const p = parseFloat(document.getElementById('pSlider').value);
+      const r = parseFloat(document.getElementById('rSlider').value) / 100;
+      const t = parseFloat(document.getElementById('tSlider').value);
+
+      document.getElementById('pValDisp').innerText = '₹' + p.toLocaleString('en-IN');
+      document.getElementById('rValDisp').innerText = (r * 100).toFixed(1) + '%';
+      document.getElementById('tValDisp').innerText = t + (t === 1 ? ' Year' : ' Years');
+
+      const maturity = p * Math.pow(1 + r, t);
+      const gain = maturity - p;
+      const multiplier = (maturity / p).toFixed(2);
+
+      document.getElementById('formulaPreview').innerText = `= ${p} * (1 + ${(r).toFixed(2)})^${t}`;
+      document.getElementById('maturityAmountDisp').innerText = '₹' + maturity.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      document.getElementById('wealthGainDisp').innerHTML = 
+        `Total Wealth Multiplier: <strong style="color: var(--text-primary);">${multiplier}x</strong> (Net Gain: ₹${gain.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
+    }
+
+    document.getElementById('pSlider').addEventListener('input', updateCompoundSimulator);
+    document.getElementById('rSlider').addEventListener('input', updateCompoundSimulator);
+    document.getElementById('tSlider').addEventListener('input', updateCompoundSimulator);
+    updateCompoundSimulator();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Backpropagation, Activation Functions &amp; Loss Surfaces | Tech Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for Mathematical Typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    /* Architectural Diagram Container */
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin: 1.75rem 0;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      overflow-x: auto;
+    }
+    .diagram-caption {
+      margin-top: 1.15rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .svg-diagram {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+      vertical-align: middle;
+      user-select: none;
+      touch-action: none;
+    }
+
+    /* Interactive Graph Controls & HUD */
+    .interactive-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.85rem;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-green 1.6s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .graph-hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      text-align: left;
+    }
+    .hud-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .hud-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .hud-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .interactive-slider-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .interactive-slider {
+      flex: 1;
+      max-width: 360px;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 9999px;
+      outline: none;
+      accent-color: var(--text-primary);
+      cursor: pointer;
+    }
+    .preset-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .preset-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+    .preset-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      border-color: var(--text-primary);
+    }
+
+    /* Math Block Container */
+    .math-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .math-block .katex-display {
+      margin: 0.25rem 0;
+    }
+
+    /* Callouts */
+    .callout {
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border: 1px solid var(--border-color);
+    }
+    .callout-info {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--text-primary);
+    }
+    .callout-warning {
+      background: var(--bg-secondary);
+      border-left: 4px solid #f59e0b;
+    }
+    .callout-danger {
+      background: var(--bg-secondary);
+      border-left: 4px solid #ef4444;
+    }
+    .callout-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    .callout-content {
+      flex: 1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .callout-content strong {
+      color: var(--text-primary);
+    }
+
+    /* Data Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-card);
+    }
+    .notes-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+    .notes-table th {
+      background: var(--bg-secondary);
+      padding: 0.85rem 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .notes-table td {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .notes-table tr:last-child td {
+      border-bottom: none;
+    }
+    .notes-table tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    /* Evaluator Widget */
+    .evaluator-widget {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .evaluator-input {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    /* Syntax Token Colors (VS Code / GitHub Dark Multi-Color Palette) */
+    .kw, .keyword { color: #ff7b72 !important; font-weight: 600; }
+    .func, .function { color: #79c0ff !important; font-weight: 500; }
+    .str, .string { color: #7ee787 !important; }
+    .num, .number { color: #d2a8ff !important; font-weight: 500; }
+    .com, .comment { color: #8b949e !important; font-style: italic; }
+    .cls, .class { color: #ffa657 !important; font-weight: 600; }
+    .builtin { color: #79c0ff !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents (Hide/Show)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          DL Lecture 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#forward-propagation-recap" class="sidebar-link">1. Forward Propagation Recap</a></li>
+        <li><a href="#backpropagation-paradigm" class="sidebar-link">2. The Backpropagation Paradigm</a></li>
+        <li><a href="#geometric-calculus" class="sidebar-link">3. Geometric Calculus of Gradient Descent</a></li>
+        <li><a href="#multivariable-chain-rule" class="sidebar-link">4. Multivariable Chain Rule (Single &amp; Branching)</a></li>
+        <li><a href="#vanishing-gradient-pathology" class="sidebar-link">5. The Vanishing Gradient Pathology</a></li>
+        <li><a href="#activation-functions-taxonomy" class="sidebar-link">6. Activation Functions Taxonomy</a></li>
+        <li><a href="#architectural-selection-framework" class="sidebar-link">7. Architectural Selection Framework</a></li>
+        <li><a href="#regression-loss-surfaces" class="sidebar-link">8. Regression Losses: MSE, MAE &amp; Huber</a></li>
+        <li><a href="#classification-loss-functions" class="sidebar-link">9. Classification Losses: BCE &amp; CCE</a></li>
+        <li><a href="#interactive-visualizers-suite" class="sidebar-link">10. Interactive Visualizers Suite</a></li>
+        <li><a href="#solved-practice-tasks" class="sidebar-link">11. Solved Practice Tasks</a></li>
+        <li><a href="#summary-cheat-sheet" class="sidebar-link">12. Summary &amp; Reference Matrix</a></li>
+        <li><a href="#interactive-loss-calculator" class="sidebar-link">13. Interactive Neural Loss Calculator</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs & Meta -->
+      <div class="breadcrumb" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &nbsp;/&nbsp;
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &nbsp;/&nbsp;
+        <span style="color: var(--text-primary); font-weight: 600;">Lecture 2</span>
+      </div>
+
+      <header class="lecture-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; margin-bottom: 2.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <span style="background: var(--text-primary); color: var(--bg-primary); font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em;">Module 02</span>
+          <span style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">Foundational Masterclass</span>
+        </div>
+        <h1 style="font-size: 2.4rem; font-weight: 800; line-height: 1.25; margin-bottom: 1rem; color: var(--text-primary);">
+          Backpropagation Calculus, Activation Functions &amp; Loss Surfaces
+        </h1>
+        <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; max-width: 860px; margin-bottom: 0;">
+          A rigorous textbook guide to backpropagation mechanics, multivariable chain rule differentiation, vanishing gradient pathology, modern activation taxonomy (Sigmoid, Tanh, ReLU, Leaky ReLU, Softmax), empirical loss surface formulation (MSE, MAE, Huber, BCE, CCE), and numerical optimization.
+        </p>
+      </header>
+
+      <!-- SECTION 1 -->
+      <section id="forward-propagation-recap" class="note-section content-section">
+        <h2>1. Forward Propagation Recap: Multi-Layer Neural Dynamics</h2>
+        <p>
+          In deep neural architectures, <strong>Forward Propagation</strong> represents the deterministic mapping that transforms an $n$-dimensional input feature vector $\mathbf{x} \in \mathbb{R}^n$ through a sequence of parameterized affine transformations followed by non-linear activations to produce an output prediction $\hat{y} \in \mathbb{R}^k$.
+        </p>
+        <p>
+          Consider a canonical feedforward neural network comprising an input layer, an arbitrary hidden layer $l$, and a final output layer $L$. Within any computational unit (neuron) $j$ in layer $l$, execution decomposes into two distinct phases:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Linear Aggregation (Pre-activation Potential):</strong>
+            Computes the inner product between the incoming activation vector $\mathbf{a}^{(l-1)}$ and the synaptic weight vector $\mathbf{w}_j^{(l)}$, augmented by a scalar threshold bias $b_j^{(l)}$:
+            <div class="math-block">
+              $$z_j^{(l)} = \sum_{i=1}^{m} w_{ji}^{(l)} a_i^{(l-1)} + b_j^{(l)} = \left(\mathbf{w}_j^{(l)}\right)^T \mathbf{a}^{(l-1)} + b_j^{(l)}$$
+            </div>
+          </li>
+          <li>
+            <strong>Non-linear Activation Transformation:</strong>
+            Maps the unbounded scalar potential $z_j^{(l)} \in (-\infty, +\infty)$ through a continuous activation function $\sigma(\cdot)$ to generate the neuron's output signal $a_j^{(l)}$:
+            <div class="math-block">
+              $$a_j^{(l)} = \sigma\left(z_j^{(l)}\right)$$
+            </div>
+          </li>
+        </ol>
+
+        <p>
+          At the final layer $L$, the network outputs the prediction $\hat{y} = a^{(L)}$. Once $\hat{y}$ is emitted, it is evaluated against the empirical ground-truth label $y$ via a loss function $\mathcal{L}(y, \hat{y})$. Forward propagation is strictly an inference operation; it establishes the instantaneous error state of the network.
+        </p>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong>Linear Regression vs. Neural Networks:</strong> Without non-linear activation functions ($\sigma(z) = z$), a multi-layer neural network of arbitrary depth collapses mathematically into a single linear regression transformation $\mathbf{W}_{\text{effective}}\mathbf{x} + \mathbf{b}_{\text{effective}}$. The activation function is the sole structural component enabling neural networks to learn non-linear decision boundaries.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="backpropagation-paradigm" class="note-section content-section">
+        <h2>2. The Backpropagation Paradigm &amp; Optimization Objectives</h2>
+        <p>
+          The fundamental objective of supervised deep learning is <strong>Empirical Risk Minimization (ERM)</strong>: searching for a parameter configuration $\boldsymbol{\theta}^* = \{\mathbf{W}^*, \mathbf{b}^*\}$ that minimizes the expected discrepancy between predictions and actual targets across the training dataset.
+        </p>
+
+        <h3>2.1 Loss Function vs. Cost Function: Precise Distinctions</h3>
+        <p>
+          In technical literature, the terms <em>Loss Function</em> and <em>Cost Function</em> are frequently conflated, but they denote mathematically distinct scopes:
+        </p>
+        <ul>
+          <li>
+            <strong>Loss Function $\mathcal{L}(y^{(i)}, \hat{y}^{(i)})$:</strong>
+            Evaluates the prediction error for a <em>single individual training record</em> $\mathbf{x}^{(i)}$. Examples include single-instance squared error $\frac{1}{2}(y^{(i)} - \hat{y}^{(i)})^2$ or single-instance binary cross-entropy $-[y^{(i)}\ln \hat{y}^{(i)} + (1-y^{(i)})\ln(1-\hat{y}^{(i)})]$.
+          </li>
+          <li>
+            <strong>Cost Function $J(\mathbf{W}, \mathbf{b})$:</strong>
+            Evaluates the aggregate empirical error over a <em>mini-batch or the entire dataset</em> of $m$ records:
+            <div class="math-block">
+              $$J(\mathbf{W}, \mathbf{b}) = \frac{1}{m} \sum_{i=1}^{m} \mathcal{L}\left(y^{(i)}, \hat{y}^{(i)}\right)$$
+            </div>
+          </li>
+        </ul>
+
+        <h3>2.2 The Parameter Update Formulation</h3>
+        <p>
+          Backpropagation computes the partial derivative (gradient) of the loss function with respect to every learnable parameter in the network ($\frac{\partial \mathcal{L}}{\partial w}$ and $\frac{\partial \mathcal{L}}{\partial b}$). Once computed, parameters are iteratively updated along the negative gradient:
+        </p>
+
+        <div class="math-block">
+          $$w_{\text{new}} = w_{\text{old}} - \alpha \frac{\partial \mathcal{L}}{\partial w_{\text{old}}}$$
+          $$b_{\text{new}} = b_{\text{old}} - \alpha \frac{\partial \mathcal{L}}{\partial b_{\text{old}}}$$
+        </div>
+
+        <p>
+          where $\alpha > 0$ denotes the <strong>Learning Rate</strong> (hyperparameter controlling optimization step size).
+        </p>
+
+        <h3>2.3 Learning Rate Dynamics: Convergence vs. Divergence</h3>
+        <ul>
+          <li>
+            <strong>Under-parameterized / Excessively Small $\alpha$ ($\alpha < 10^{-4}$):</strong>
+            Weight updates advance by infinitesimal increments. Optimization progresses at a prohibitively slow rate, highly prone to stalling on plateau regions or becoming trapped in suboptimal shallow basins.
+          </li>
+          <li>
+            <strong>Over-parameterized / Excessively Large $\alpha$ ($\alpha > 1.0$):</strong>
+            Steps overshoot the loss valley, violently oscillating across opposing valley walls and ultimately diverging numerically toward NaN/Infinity overflow.
+          </li>
+          <li>
+            <strong>Well-Calibrated $\alpha$ ($\alpha \in [10^{-3}, 10^{-2}]$):</strong>
+            Guarantees smooth, monotonic convergence toward the local/global minimum of the loss manifold.
+          </li>
+        </ul>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="geometric-calculus" class="note-section content-section">
+        <h2>3. Geometric Calculus of Gradient Descent &amp; Tangent Slopes</h2>
+        <p>
+          To understand why the update rule subtracts the gradient ($-\alpha \nabla \mathcal{L}$), consider the geometry of a convex loss surface $\mathcal{L}(w)$ with a global minimum at $w^*$:
+        </p>
+
+        <div class="math-block">
+          $$\text{Slope of Tangent Line} = \frac{\partial \mathcal{L}}{\partial w}$$
+        </div>
+
+        <h3>3.1 Formal Algebraic Proof of Directional Convergence</h3>
+        <ol>
+          <li>
+            <strong>Scenario A: Parameter is to the Left of Minimum ($w < w^*$):</strong>
+            <p>
+              The tangent line tilts downward to the right (negative slope: $\frac{\partial \mathcal{L}}{\partial w} < 0$). Substituting into the update equation:
+            </p>
+            <div class="math-block">
+              $$w_{\text{new}} = w_{\text{old}} - \alpha \left(-\left|\frac{\partial \mathcal{L}}{\partial w}\right|\right) = w_{\text{old}} + \alpha \left|\frac{\partial \mathcal{L}}{\partial w}\right| \implies w_{\text{new}} > w_{\text{old}}$$
+            </div>
+            <p>
+              The weight increases, moving rightward toward $w^*$.
+            </p>
+          </li>
+          <li>
+            <strong>Scenario B: Parameter is to the Right of Minimum ($w > w^*$):</strong>
+            <p>
+              The tangent line tilts upward to the right (positive slope: $\frac{\partial \mathcal{L}}{\partial w} > 0$). Substituting into the update equation:
+            </p>
+            <div class="math-block">
+              $$w_{\text{new}} = w_{\text{old}} - \alpha \left(+\left|\frac{\partial \mathcal{L}}{\partial w}\right|\right) \implies w_{\text{new}} < w_{\text{old}}$$
+            </div>
+            <p>
+              The weight decreases, moving leftward toward $w^*$.
+            </p>
+          </li>
+          <li>
+            <strong>Scenario C: Parameter is at the Global Minimum ($w = w^*$):</strong>
+            <p>
+              The tangent is completely horizontal (zero slope: $\frac{\partial \mathcal{L}}{\partial w} = 0$).
+            </p>
+            <div class="math-block">
+              $$w_{\text{new}} = w_{\text{old}} - \alpha(0) = w_{\text{old}}$$
+            </div>
+            <p>
+              Weight convergence is achieved; gradient updates naturally cease.
+            </p>
+          </li>
+        </ol>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong>Key Insight:</strong> The gradient vector $\nabla_{\mathbf{w}} \mathcal{L}$ inherently points in the direction of steepest <em>ascent</em>. Consequently, stepping in the direction of $-\nabla_{\mathbf{w}} \mathcal{L}$ is mathematically guaranteed to navigate in the direction of steepest <em>descent</em>.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="multivariable-chain-rule" class="note-section content-section">
+        <h2>4. The Multivariable Chain Rule of Differentiation</h2>
+        <p>
+          In complex computational graphs, intermediate activations depend on antecedent layers through nested functions. Backpropagation resolves these dependencies by systematically applying the <strong>Multivariable Chain Rule</strong> of calculus.
+        </p>
+
+        <h3>4.1 Single-Branch Sequential Chain Rule</h3>
+        <p>
+          Consider a sequential chain where loss $\mathcal{L}$ depends on output $o_2$, $o_2$ depends on intermediate node $o_1$, and $o_1$ depends on weight $w_1$:
+        </p>
+
+        <div class="math-block">
+          $$\frac{\partial \mathcal{L}}{\partial w_1} = \frac{\partial \mathcal{L}}{\partial o_2} \times \frac{\partial o_2}{\partial o_1} \times \frac{\partial o_1}{\partial w_1}$$
+        </div>
+
+        <p>
+          Each term represents a local Jacobian matrix or scalar partial derivative. Notice that intermediate differentials cancel algebraically ($\frac{\cancel{\partial o_2}}{\cancel{\partial o_1}}$), leaving the exact sensitivity $\frac{\partial \mathcal{L}}{\partial w_1}$.
+        </p>
+
+        <h3>4.2 Branching Multi-Path Topologies (Total Derivative Theorem)</h3>
+        <p>
+          In realistic deep neural architectures, an early neuron's activation frequently fans out to multiple downstream nodes simultaneously.
+        </p>
+        <p>
+          Consider the architectural graph where input $x_1$ connects via weight $w_1$ to neuron $o_{11}$. Neuron $o_{11}$ subsequently branches into two distinct hidden neurons in the next layer, $o_{21}$ and $o_{22}$. Both $o_{21}$ and $o_{22}$ converge into output neuron $o_{31}$, which produces prediction $\hat{y}$ evaluated under loss $\mathcal{L}$:
+        </p>
+
+        <div class="math-block">
+          $$\text{Path 1 (Upper Branch): } \mathcal{L} \leftarrow o_{31} \leftarrow o_{21} \leftarrow o_{11} \leftarrow w_1$$
+          $$\text{Path 2 (Lower Branch): } \mathcal{L} \leftarrow o_{31} \leftarrow o_{22} \leftarrow o_{11} \leftarrow w_1$$
+        </div>
+
+        <p>
+          According to the <strong>Total Derivative Theorem</strong> of multivariable calculus, when a parameter influences the objective function through multiple computational paths, the total gradient is the <strong>algebraic summation</strong> of the partial derivatives across all distinct paths:
+        </p>
+
+        <div class="math-block">
+          $$\frac{\partial \mathcal{L}}{\partial w_1} = \sum_{\text{all paths } k} \left(\prod_{e \in \text{path } k} \frac{\partial v_{\text{target}}}{\partial v_{\text{source}}}\right)$$
+          $$\frac{\partial \mathcal{L}}{\partial w_1} = \underbrace{\left(\frac{\partial \mathcal{L}}{\partial o_{31}} \cdot \frac{\partial o_{31}}{\partial o_{21}} \cdot \frac{\partial o_{21}}{\partial o_{11}} \cdot \frac{\partial o_{11}}{\partial w_1}\right)}_{\text{Upper Path 1}} + \underbrace{\left(\frac{\partial \mathcal{L}}{\partial o_{31}} \cdot \frac{\partial o_{31}}{\partial o_{22}} \cdot \frac{\partial o_{22}}{\partial o_{11}} \cdot \frac{\partial o_{11}}{\partial w_1}\right)}_{\text{Lower Path 2}}$$
+        </div>
+
+        <p>
+          This summation rule is the foundational principle underlying backward automatic differentiation in modern frameworks such as PyTorch (`autograd`) and TensorFlow.
+        </p>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="vanishing-gradient-pathology" class="note-section content-section">
+        <h2>5. The Vanishing Gradient Pathology (Mathematical Proof)</h2>
+        <p>
+          One of the most consequential historical bottlenecks in training deep neural architectures is the <strong>Vanishing Gradient Problem</strong>. When deep networks were initially trained in the 1980s and 1990s using Sigmoid activation functions, adding additional hidden layers caused network performance to degrade catastrophically rather than improve.
+        </p>
+
+        <h3>5.1 The Mathematical Mechanism of Gradient Decay</h3>
+        <p>
+          Recall the first derivative of the canonical Sigmoid function $\sigma(z) = \frac{1}{1 + e^{-z}}$:
+        </p>
+        <div class="math-block">
+          $$\sigma'(z) = \frac{d\sigma(z)}{dz} = \sigma(z)\bigl(1 - \sigma(z)\bigr)$$
+        </div>
+        <p>
+          To identify the maximum achievable value of this derivative, we differentiate with respect to $\sigma$ and set to zero:
+        </p>
+        <div class="math-block">
+          $$\frac{d}{d\sigma} [\sigma - \sigma^2] = 1 - 2\sigma = 0 \implies \sigma = 0.5 \quad (z = 0)$$
+          $$\max_{z \in \mathbb{R}} \sigma'(z) = 0.5 \times (1 - 0.5) = 0.25$$
+        </div>
+
+        <div class="callout callout-danger">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-content">
+            <strong>Critical Bound:</strong> The derivative of the Sigmoid activation function is strictly upper-bounded: $0 < \sigma'(z) \le 0.25$ for all $z \in \mathbb{R}$.
+          </div>
+        </div>
+
+        <h3>5.2 Cumulative Chain Decay Across $L$ Layers</h3>
+        <p>
+          Now consider an $L$-layer deep neural network. In computing the sensitivity of the loss with respect to the initial weights $w_1$ in Layer 1, the chain rule requires multiplying $L$ consecutive activation derivatives:
+        </p>
+        <div class="math-block">
+          $$\frac{\partial \mathcal{L}}{\partial w_1} \propto \prod_{l=1}^{L} \mathbf{W}^{(l)} \cdot \sigma'\left(z^{(l)}\right)$$
+        </div>
+        <p>
+          If initial weights are randomly initialized around standard distributions ($|w| \le 1.0$), each layer multiplies the upstream gradient by a factor bounded by $0.25$:
+        </p>
+
+        <div class="table-container">
+          <table class="notes-table">
+            <thead>
+              <tr>
+                <th>Network Depth ($L$)</th>
+                <th>Upper Bound Multiplier: $(0.25)^L$</th>
+                <th>Gradient Retention Percentage</th>
+                <th>Empirical Training State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1 Layer</strong></td>
+                <td>$0.25^1 = 0.25$</td>
+                <td>$25.0\%$</td>
+                <td>Healthy gradient flow</td>
+              </tr>
+              <tr>
+                <td><strong>3 Layers</strong></td>
+                <td>$0.25^3 \approx 0.0156$</td>
+                <td>$1.56\%$</td>
+                <td>Significant gradient attenuation</td>
+              </tr>
+              <tr>
+                <td><strong>5 Layers</strong></td>
+                <td>$0.25^5 \approx 0.000976$</td>
+                <td>$0.098\%$</td>
+                <td>Severe vanishing gradient</td>
+              </tr>
+              <tr>
+                <td><strong>8 Layers</strong></td>
+                <td>$0.25^8 \approx 0.000015$</td>
+                <td>$0.0015\%$</td>
+                <td>Synaptic weights completely frozen</td>
+              </tr>
+              <tr>
+                <td><strong>12 Layers</strong></td>
+                <td>$0.25^{12} \approx 5.96 \times 10^{-8}$</td>
+                <td>$\approx 0.000006\%$</td>
+                <td>Numerical underflow; zero learning</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>5.3 The Consequence of Vanishing Gradients</h3>
+        <p>
+          As $\frac{\partial \mathcal{L}}{\partial w_1} \to 0$, the weight update collapses:
+        </p>
+        <div class="math-block">
+          $$w_1^{(\text{new})} = w_1^{(\text{old})} - \alpha \left(\approx 0\right) \approx w_1^{(\text{old})}$$
+        </div>
+        <p>
+          The parameters in early layers cease to update. Because feature representations in deep networks are hierarchical (early layers extract basic edges and textures; later layers compose them into complex semantics), freezing early layers renders the entire deep architecture incapable of learning.
+        </p>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="activation-functions-taxonomy" class="note-section content-section">
+        <h2>6. In-Depth Taxonomy of Activation Functions</h2>
+        <p>
+          To eradicate the vanishing gradient bottleneck and enable stable deep learning, researchers designed diverse families of non-linear activations.
+        </p>
+
+        <h3>6.1 Sigmoid (Logistic) Function</h3>
+        <div class="math-block">
+          $$f(z) = \frac{1}{1 + e^{-z}}, \quad f'(z) = f(z)\bigl(1 - f(z)\bigr)$$
+        </div>
+        <ul>
+          <li><strong>Output Domain &amp; Range:</strong> $z \in (-\infty, +\infty) \implies f(z) \in (0, 1)$.</li>
+          <li><strong>Derivative Range:</strong> $f'(z) \in (0, 0.25]$.</li>
+          <li><strong>Advantages:</strong> Smooth gradient; direct interpretation as posterior probability $P(y=1|\mathbf{x})$.</li>
+          <li>
+            <strong>Disadvantages:</strong>
+            <ol>
+              <li>Severe susceptibility to vanishing gradients across deep layers.</li>
+              <li><strong>Not Zero-Centered:</strong> Output is strictly positive ($f(z) > 0$). This causes gradients on synaptic weights entering a neuron to become all-positive or all-negative during backpropagation, creating inefficient zigzagging parameter trajectories.</li>
+              <li><strong>Computational Cost:</strong> Expensive floating-point transcendental exponential operation ($\exp(-z)$).</li>
+            </ol>
+          </li>
+        </ul>
+
+        <h3>6.2 Hyperbolic Tangent (Tanh) Function</h3>
+        <div class="math-block">
+          $$f(z) = \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}, \quad f'(z) = 1 - \tanh^2(z)$$
+        </div>
+        <ul>
+          <li><strong>Output Domain &amp; Range:</strong> $z \in (-\infty, +\infty) \implies f(z) \in (-1, +1)$.</li>
+          <li><strong>Derivative Range:</strong> $f'(z) \in (0, 1.0]$. Peak derivative is $1.0$ at $z = 0$.</li>
+          <li><strong>Zero-Centered Property:</strong> Yes, symmetric around the origin ($f(0) = 0$). Gradients can take both positive and negative values, resolving the zigzagging artifact.</li>
+          <li><strong>Remaining Flaw:</strong> Saturation at extreme inputs ($|z| > 3 \implies f'(z) \to 0$), so vanishing gradients still occur in deep networks.</li>
+        </ul>
+
+        <h3>6.3 Rectified Linear Unit (ReLU)</h3>
+        <div class="math-block">
+          $$f(z) = \max(0, z) = \begin{cases} z & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}, \quad f'(z) = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z < 0 \end{cases}$$
+        </div>
+        <ul>
+          <li><strong>Output Domain &amp; Range:</strong> $z \in (-\infty, +\infty) \implies f(z) \in [0, +\infty)$.</li>
+          <li><strong>Derivative Range:</strong> Exactly $1.0$ for all $z > 0$, and $0.0$ for $z < 0$ (subgradient at $z=0$).</li>
+          <li>
+            <strong>Revolutionary Advantages:</strong>
+            <ol>
+              <li><strong>Eradicates Vanishing Gradients:</strong> For active neurons ($z > 0$), the derivative is constant $1.0$. Gradients pass through 50+ layers without scaling attenuation.</li>
+              <li><strong>Extreme Computational Efficiency:</strong> No transcendental exponentiation; implemented via a single hardware threshold instruction (`z * (z > 0)`).</li>
+              <li><strong>Sparse Representation:</strong> Inactive neurons output true zero, generating biologically realistic sparse representations.</li>
+            </ol>
+          </li>
+          <li>
+            <strong>The Dying ReLU Pathology:</strong>
+            If a large gradient update knocks a neuron's bias far into negative territory such that $z < 0$ for all training inputs, $f'(z) = 0$ permanently. The neuron never fires and its weights never update again&mdash;it becomes permanently dead.
+          </li>
+        </ul>
+
+        <h3>6.4 Leaky ReLU &amp; Parametric ReLU (PReLU)</h3>
+        <div class="math-block">
+          $$f_{\text{Leaky}}(z) = \max(\alpha z, z) = \begin{cases} z & \text{if } z \ge 0 \\ \alpha z & \text{if } z < 0 \end{cases} \quad (\text{typically } \alpha = 0.01)$$
+        </div>
+        <ul>
+          <li><strong>Derivative:</strong> $f'(z) = 1.0$ for $z > 0$, and $f'(z) = \alpha = 0.01$ for $z < 0$.</li>
+          <li><strong>Solution:</strong> Because the derivative for negative inputs is non-zero ($0.01$), dead neurons receive a non-zero restorative gradient and can recover.</li>
+          <li><strong>Parametric ReLU (PReLU):</strong> Generalizes Leaky ReLU by treating $\alpha$ as a learnable parameter optimized via standard backpropagation: $\alpha \leftarrow \alpha - \eta \frac{\partial \mathcal{L}}{\partial \alpha}$.</li>
+        </ul>
+
+        <h3>6.5 Exponential Linear Unit (ELU)</h3>
+        <div class="math-block">
+          $$f(z) = \begin{cases} z & \text{if } z > 0 \\ \alpha(e^z - 1) & \text{if } z \le 0 \end{cases}, \quad f'(z) = \begin{cases} 1 & \text{if } z > 0 \\ f(z) + \alpha & \text{if } z \le 0 \end{cases}$$
+        </div>
+        <ul>
+          <li>Combines the non-saturating active regime of ReLU with a smooth exponential curve for negative values that approaches $-\alpha$ asymptotically.</li>
+          <li>Brings mean neuron activations closer to zero, speeding up training convergence, at the cost of one exponential operation for $z \le 0$.</li>
+        </ul>
+
+        <h3>6.6 Swish Function (Self-Gated Activation)</h3>
+        <div class="math-block">
+          $$f(z) = z \cdot \sigma(\beta z) = \frac{z}{1 + e^{-\beta z}}$$
+        </div>
+        <ul>
+          <li>Discovered by Google Brain using neural architecture search.</li>
+          <li>Smooth, non-monotonic curve with a small negative dip near $z \approx -1.28$. Consistently matches or outperforms ReLU in vision transformers and deep convolutional backbones.</li>
+        </ul>
+
+        <h3>6.7 Softmax Function (Multi-Class Probability Distribution)</h3>
+        <p>
+          Used exclusively in the output layer for multi-class classification over $K \ge 2$ mutually exclusive classes. Normalizes an arbitrary logit vector $\mathbf{z} = [z_1, z_2, \dots, z_K]^T \in \mathbb{R}^K$ into a valid probability simplex:
+        </p>
+        <div class="math-block">
+          $$\hat{y}_k = \sigma(\mathbf{z})_k = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}, \quad \text{such that } \hat{y}_k \in (0, 1) \text{ and } \sum_{k=1}^{K} \hat{y}_k = 1.0$$
+        </div>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="architectural-selection-framework" class="note-section content-section">
+        <h2>7. Architectural Selection Framework: The Practitioner's Rulebook</h2>
+        <p>
+          Selecting the correct combination of hidden activations, output activations, and objective loss functions is the most critical design decision in deep learning architecture engineering:
+        </p>
+
+        <div class="table-container">
+          <table class="notes-table">
+            <thead>
+              <tr>
+                <th>Machine Learning Task</th>
+                <th>Target Feature Structure ($y$)</th>
+                <th>Hidden Layer Activation</th>
+                <th>Output Layer Activation</th>
+                <th>Prescribed Loss Function</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Binary Classification</strong></td>
+                <td>Scalar $y \in \{0, 1\}$ (e.g., Pass/Fail, Fraud/Legit)</td>
+                <td><strong>ReLU</strong> (or Leaky ReLU)</td>
+                <td><strong>Sigmoid</strong> ($\sigma(z)$)</td>
+                <td><strong>Binary Cross-Entropy (BCE / Log Loss)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Multi-Class Classification</strong></td>
+                <td>One-Hot Vector $\mathbf{y} \in \{0, 1\}^K$, $\sum y_k = 1$</td>
+                <td><strong>ReLU</strong> (or Leaky ReLU / ELU)</td>
+                <td><strong>Softmax</strong> ($\sigma(\mathbf{z})_k$)</td>
+                <td><strong>Categorical Cross-Entropy (CCE)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Multi-Label Classification</strong></td>
+                <td>Multi-Hot Vector $\mathbf{y} \in \{0, 1\}^K$ (non-exclusive)</td>
+                <td><strong>ReLU</strong> (or Leaky ReLU)</td>
+                <td><strong>Sigmoid</strong> (element-wise)</td>
+                <td><strong>Binary Cross-Entropy (averaged over $K$ outputs)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Continuous Regression (Clean Data)</strong></td>
+                <td>Continuous scalar $y \in \mathbb{R}$ (e.g., Housing Price)</td>
+                <td><strong>ReLU</strong> (or PReLU / Swish)</td>
+                <td><strong>Linear</strong> ($f(z) = z$)</td>
+                <td><strong>Mean Squared Error (MSE / L2)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Continuous Regression (Heavy Outliers)</strong></td>
+                <td>Continuous scalar $y \in \mathbb{R}$ with noisy anomalies</td>
+                <td><strong>ReLU</strong> (or Leaky ReLU)</td>
+                <td><strong>Linear</strong> ($f(z) = z$)</td>
+                <td><strong>Mean Absolute Error (MAE / L1) or Huber Loss</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="regression-loss-surfaces" class="note-section content-section">
+        <h2>8. Regression Loss Surfaces: MSE vs. MAE vs. Huber Loss</h2>
+        <p>
+          In continuous target modeling, the geometric curvature of the loss surface dictates convergence speed and robustness to noise.
+        </p>
+
+        <h3>8.1 Mean Squared Error (MSE / L2 Loss)</h3>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{MSE}}(y, \hat{y}) = \frac{1}{2}(y - \hat{y})^2 = \frac{1}{2} e^2$$
+          $$\frac{\partial \mathcal{L}_{\text{MSE}}}{\partial \hat{y}} = -(y - \hat{y}) = -e$$
+        </div>
+        <ul>
+          <li><strong>Geometry:</strong> Smooth, strictly convex parabola with continuous first and second derivatives everywhere.</li>
+          <li><strong>Gradient Property:</strong> Gradient magnitude is directly proportional to the residual error $|e|$. Near the minimum, gradients scale down smoothly, ensuring automatic deceleration without oscillation.</li>
+          <li><strong>Vulnerability:</strong> Penalizes errors <em>quadratically</em>. An outlier with error $e = 10$ exerts a penalty of $100$, producing an extreme gradient that forcefully pulls the best-fit boundary away from nominal data.</li>
+        </ul>
+
+        <h3>8.2 Mean Absolute Error (MAE / L1 Loss)</h3>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{MAE}}(y, \hat{y}) = |y - \hat{y}| = |e|$$
+          $$\frac{\partial \mathcal{L}_{\text{MAE}}}{\partial \hat{y}} = \begin{cases} -1 & \text{if } y - \hat{y} > 0 \\ +1 & \text{if } y - \hat{y} < 0 \\ \text{undefined / subgradient } [-1, 1] & \text{if } y = \hat{y} \end{cases}$$
+        </div>
+        <ul>
+          <li><strong>Geometry:</strong> V-shaped loss manifold with sharp singular vertex at $e = 0$.</li>
+          <li><strong>Advantage:</strong> Exceptional robustness to outliers. Large anomalies produce a constant unit penalty ($\pm 1$) rather than quadratic explosion.</li>
+          <li><strong>Disadvantage:</strong> Gradient does not scale with proximity to the minimum. Even when error is minuscule ($e = 0.001$), gradient remains $\pm 1$, causing perpetual limit-cycle bouncing around the minimum unless learning rates are aggressively scheduled downward.</li>
+        </ul>
+
+        <h3>8.3 Huber Loss (Smooth L1 Loss)</h3>
+        <p>
+          Huber loss is a parameterized hybrid formulation that integrates the smooth convergence of MSE for small errors with the robust outlier resistance of MAE for large errors:
+        </p>
+        <div class="math-block">
+          $$\mathcal{L}_\delta(y, \hat{y}) = \begin{cases} \frac{1}{2}(y - \hat{y})^2 & \text{for } |y - \hat{y}| \le \delta \\ \delta |y - \hat{y}| - \frac{1}{2}\delta^2 & \text{otherwise} \end{cases}$$
+        </div>
+        <p>
+          where $\delta > 0$ is a tunable threshold parameter.
+        </p>
+        <ul>
+          <li><strong>Derivative:</strong> For $|e| \le \delta$, gradient is linear ($e$). For $|e| > \delta$, gradient is clamped to constant $\pm \delta$.</li>
+          <li><strong>Outcome:</strong> Differentiable and smooth at $e = 0$, yet linearly bounded in the presence of extreme outliers.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="classification-loss-functions" class="note-section content-section">
+        <h2>9. Classification Loss Functions: Binary &amp; Categorical Cross-Entropy</h2>
+
+        <h3>9.1 Binary Cross-Entropy (BCE / Log Loss)</h3>
+        <p>
+          For binary classification with target $y \in \{0, 1\}$ and predicted probability $\hat{y} = \sigma(z) \in (0, 1)$, BCE is derived via Maximum Likelihood Estimation over a Bernoulli distribution:
+        </p>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{BCE}}(y, \hat{y}) = -[y \ln(\hat{y}) + (1 - y) \ln(1 - \hat{y})]$$
+        </div>
+        <p>
+          Breaking into piecewise conditions:
+        </p>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{BCE}} = \begin{cases} -\ln(\hat{y}) & \text{if } y = 1 \\ -\ln(1 - \hat{y}) & \text{if } y = 0 \end{cases}$$
+        </div>
+        <p>
+          If $y = 1$ and the model predicts $\hat{y} = 0.99$, $\mathcal{L} = -\ln(0.99) \approx 0.010$ (negligible loss). If the model predicts $\hat{y} = 0.01$, $\mathcal{L} = -\ln(0.01) \approx 4.605$ (severe penalty). As $\hat{y} \to 0$, loss approaches $+\infty$.
+        </p>
+
+        <h3>9.2 Categorical Cross-Entropy (CCE)</h3>
+        <p>
+          For multi-class classification over $K$ categories where each record has a one-hot encoded ground truth $\mathbf{y} \in \{0, 1\}^K$ and a predicted probability distribution $\hat{\mathbf{y}} = \text{Softmax}(\mathbf{z})$:
+        </p>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{CCE}}(\mathbf{y}, \hat{\mathbf{y}}) = -\sum_{k=1}^{K} y_k \ln\left(\hat{y}_k\right)$$
+        </div>
+        <p>
+          Because $\mathbf{y}$ is one-hot, only the true category $t$ has $y_t = 1$, reducing the computation for sample $i$ to:
+        </p>
+        <div class="math-block">
+          $$\mathcal{L}_{\text{CCE}} = -\ln\left(\hat{y}_t\right)$$
+        </div>
+      </section>
+
+      <!-- SECTION 10 -->
+      <section id="interactive-visualizers-suite" class="note-section content-section">
+        <h2>10. Interactive Visualizer Suite (Touch &amp; Drag Responsive)</h2>
+        <p>
+          Manipulate these interactive graphs directly via touch, stylus, or cursor to explore deep learning mathematical dynamics in real time.
+        </p>
+
+        <!-- DIAGRAM 2.1: INTERACTIVE BRANCHING COMPUTATION GRAPH -->
+        <div class="diagram-card">
+          <div class="interactive-badge">
+            <span class="pulse-dot"></span>
+            <span>Interactive Graph &bull; Scrub Layer Depth to Watch Gradient Flow</span>
+          </div>
+
+          <svg id="cg-svg" class="svg-diagram" viewBox="0 0 820 340" width="820" height="340" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+            <rect width="820" height="340" rx="14" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
+
+            <!-- Connecting Edges -->
+            <!-- Input to Hidden 1 -->
+            <line x1="120" y1="170" x2="260" y2="170" stroke="var(--border-color)" stroke-width="2.5" id="edge-in-h1"/>
+            <!-- Branch 1: H1 to H2_1 (Upper) -->
+            <line x1="260" y1="170" x2="440" y2="100" stroke="var(--border-color)" stroke-width="2.5" id="edge-h1-upper"/>
+            <!-- Branch 2: H1 to H2_2 (Lower) -->
+            <line x1="260" y1="170" x2="440" y2="240" stroke="var(--border-color)" stroke-width="2.5" id="edge-h1-lower"/>
+            <!-- H2_1 to Output (Upper) -->
+            <line x1="440" y1="100" x2="620" y2="170" stroke="var(--border-color)" stroke-width="2.5" id="edge-upper-out"/>
+            <!-- H2_2 to Output (Lower) -->
+            <line x1="440" y1="240" x2="620" y2="170" stroke="var(--border-color)" stroke-width="2.5" id="edge-lower-out"/>
+            <!-- Output to Loss -->
+            <line x1="620" y1="170" x2="740" y2="170" stroke="var(--border-color)" stroke-width="2.5" id="edge-out-loss"/>
+
+            <!-- Node Circles -->
+            <!-- Input Node -->
+            <circle cx="120" cy="170" r="26" fill="var(--bg-secondary)" stroke="var(--text-primary)" stroke-width="2.5" id="node-x1"/>
+            <text x="120" y="175" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">x₁</text>
+
+            <!-- Hidden 1 Node o_11 -->
+            <circle cx="260" cy="170" r="26" fill="var(--bg-secondary)" stroke="var(--text-primary)" stroke-width="2.5" id="node-o11"/>
+            <text x="260" y="175" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">o₁₁</text>
+
+            <!-- Hidden 2 Upper Node o_21 -->
+            <circle cx="440" cy="100" r="26" fill="var(--bg-secondary)" stroke="var(--text-primary)" stroke-width="2.5" id="node-o21"/>
+            <text x="440" y="105" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">o₂₁</text>
+
+            <!-- Hidden 2 Lower Node o_22 -->
+            <circle cx="440" cy="240" r="26" fill="var(--bg-secondary)" stroke="var(--text-primary)" stroke-width="2.5" id="node-o22"/>
+            <text x="440" y="245" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">o₂₂</text>
+
+            <!-- Output Node o_31 -->
+            <circle cx="620" cy="170" r="26" fill="var(--bg-secondary)" stroke="var(--text-primary)" stroke-width="2.5" id="node-o31"/>
+            <text x="620" y="175" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">o₃₁</text>
+
+            <!-- Loss Node L -->
+            <rect x="715" y="145" width="50" height="50" rx="10" fill="var(--bg-secondary)" stroke="#ef4444" stroke-width="2.5" id="node-loss"/>
+            <text x="740" y="176" fill="#ef4444" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">L</text>
+
+            <!-- Dynamic Flow Packet -->
+            <circle id="cg-packet" cx="740" cy="170" r="8" fill="#3b82f6" stroke="var(--bg-card)" stroke-width="2" style="filter: drop-shadow(0 0 8px rgba(59,130,246,0.8)); opacity: 0;"/>
+
+            <!-- Edge Labels (Weight / Derivative) -->
+            <text x="185" y="158" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">w₁</text>
+            <text x="340" y="125" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">w₂ (Path 1)</text>
+            <text x="340" y="220" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">w₃ (Path 2)</text>
+            <text x="540" y="125" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">w₄ (Path 1)</text>
+            <text x="540" y="220" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">w₅ (Path 2)</text>
+          </svg>
+
+          <!-- Interactive Controls & Buttons -->
+          <div class="interactive-slider-container">
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="preset-btn active" id="btn-cg-forward" onclick="animateGraph('forward')">Forward Pass (x → L)</button>
+              <button type="button" class="preset-btn" id="btn-cg-path1" onclick="animateGraph('path1')">Backprop Path 1 (Upper)</button>
+              <button type="button" class="preset-btn" id="btn-cg-path2" onclick="animateGraph('path2')">Backprop Path 2 (Lower)</button>
+              <button type="button" class="preset-btn" id="btn-cg-total" onclick="animateGraph('total')">Sum Total ∂L/∂w₁</button>
+            </div>
+          </div>
+
+          <!-- Flow HUD -->
+          <div class="graph-hud">
+            <div class="hud-box">
+              <div class="hud-label">Active Flow Mode</div>
+              <div id="hud-cg-mode" class="hud-value">Forward Pass</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Path 1 Gradient (Upper)</div>
+              <div id="hud-cg-path1" class="hud-value">+0.0480</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Path 2 Gradient (Lower)</div>
+              <div id="hud-cg-path2" class="hud-value">+0.0360</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Total Gradient &part;L/&part;w₁</div>
+              <div id="hud-cg-total" class="hud-value" style="color: #10b981;">+0.0840 (Path 1 + Path 2)</div>
+            </div>
+          </div>
+
+          <div class="diagram-caption">Figure 2.1: Multivariable chain rule on a branching computation graph. When activations bifurcate across nodes $o_{21}$ and $o_{22}$, the total derivative $\frac{\partial \mathcal{L}}{\partial w_1}$ equals the algebraic sum of both branches.</div>
+        </div>
+
+
+        <!-- DIAGRAM 2.2: INTERACTIVE ACTIVATION FUNCTIONS WORKBENCH -->
+        <div class="diagram-card">
+          <div class="interactive-badge">
+            <span class="pulse-dot"></span>
+            <span>Interactive Workbench &bull; Touch &amp; Drag Potential (z) or Toggle Activations</span>
+          </div>
+
+          <svg id="act-svg" class="svg-diagram" viewBox="0 0 820 340" width="820" height="340" xmlns="http://www.w3.org/2000/svg" style="cursor: ew-resize;">
+            <rect width="820" height="340" rx="14" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
+
+            <!-- Axes -->
+            <line x1="80" y1="210" x2="740" y2="210" stroke="var(--border-color)" stroke-width="1.5"/>
+            <line x1="410" y1="300" x2="410" y2="40" stroke="var(--border-color)" stroke-width="1.5"/>
+
+            <text x="730" y="200" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="12">z &rarr;</text>
+            <text x="420" y="55" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="12">f(z)</text>
+            <text x="420" y="225" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11">0</text>
+
+            <!-- Grid references -->
+            <line x1="80" y1="90" x2="740" y2="90" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="660" y="82" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="10.5">y = +1.0</text>
+
+            <line x1="80" y1="310" x2="740" y2="310" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="660" y="302" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="10.5">y = -1.0</text>
+
+            <!-- Dynamic Curves -->
+            <path id="act-curve-func" d="" fill="none" stroke="#10b981" stroke-width="3"/>
+            <path id="act-curve-deriv" d="" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,4"/>
+
+            <!-- Dynamic Cursor & Markers -->
+            <line id="act-cursor-v" x1="410" y1="40" x2="410" y2="310" stroke="var(--border-color)" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <circle id="act-point-func" cx="410" cy="150" r="7" fill="#10b981" stroke="var(--bg-card)" stroke-width="2"/>
+            <circle id="act-point-deriv" cx="410" cy="180" r="6" fill="#f59e0b" stroke="var(--bg-card)" stroke-width="2"/>
+
+            <!-- Floating Label -->
+            <g id="act-float-tag" transform="translate(410, 110)">
+              <rect x="-65" y="-22" width="130" height="22" rx="5" fill="var(--bg-secondary)" stroke="var(--border-color)" stroke-width="1"/>
+              <text id="act-float-text" x="0" y="-7" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">z: 0.00 | f: 0.50</text>
+            </g>
+          </svg>
+
+          <!-- Interactive Controls & Slider -->
+          <div class="interactive-slider-container">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">-5.0</span>
+            <input type="range" id="act-slider" class="interactive-slider" min="-5" max="5" step="0.1" value="0" aria-label="Input potential z">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">+5.0</span>
+            <div style="display: flex; gap: 0.4rem; align-items: center; margin-left: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="preset-btn active" id="btn-act-sig" onclick="switchActivation('sigmoid')">Sigmoid</button>
+              <button type="button" class="preset-btn" id="btn-act-tanh" onclick="switchActivation('tanh')">Tanh</button>
+              <button type="button" class="preset-btn" id="btn-act-relu" onclick="switchActivation('relu')">ReLU</button>
+              <button type="button" class="preset-btn" id="btn-act-leaky" onclick="switchActivation('leaky')">Leaky ReLU</button>
+            </div>
+          </div>
+
+          <!-- Activation HUD -->
+          <div class="graph-hud">
+            <div class="hud-box">
+              <div class="hud-label">Current Activation Type</div>
+              <div id="hud-act-type" class="hud-value">Sigmoid &sigma;(z)</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Output Value f(z)</div>
+              <div id="hud-act-val" class="hud-value" style="color: #10b981;">0.5000</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Instantaneous Derivative f'(z)</div>
+              <div id="hud-act-deriv" class="hud-value" style="color: #f59e0b;">0.2500</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Gradient Health Status</div>
+              <div id="hud-act-health" class="hud-value" style="color: #f59e0b;">Vanishing Bound (&le; 0.25)</div>
+            </div>
+          </div>
+
+          <div class="diagram-caption">Figure 2.2: Live comparison of activation functions (solid green) and their instantaneous derivatives (dashed amber). Touch or drag the slider across the domain $[-5, 5]$ to observe why Sigmoid/Tanh derivatives decay toward zero while ReLU preserves unit gradient.</div>
+        </div>
+
+
+        <!-- DIAGRAM 2.3: INTERACTIVE LOSS SURFACES (MSE VS MAE VS HUBER) -->
+        <div class="diagram-card">
+          <div class="interactive-badge">
+            <span class="pulse-dot"></span>
+            <span>Interactive Loss Surface &bull; Drag Error (e) to Compare Outlier Penalties</span>
+          </div>
+
+          <svg id="loss-svg" class="svg-diagram" viewBox="0 0 820 340" width="820" height="340" xmlns="http://www.w3.org/2000/svg" style="cursor: ew-resize;">
+            <rect width="820" height="340" rx="14" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
+
+            <!-- Axes -->
+            <line x1="80" y1="280" x2="740" y2="280" stroke="var(--border-color)" stroke-width="1.5"/>
+            <line x1="410" y1="300" x2="410" y2="40" stroke="var(--border-color)" stroke-width="1.5"/>
+
+            <text x="710" y="302" fill="var(--text-primary)" font-family="'Inter', sans-serif" font-size="12">Residual Error e = (y - ŷ) &rarr;</text>
+            <text x="30" y="160" fill="var(--text-primary)" font-family="'Inter', sans-serif" font-size="12" transform="rotate(-90 30,160)" text-anchor="middle">Loss Magnitude L(e) &rarr;</text>
+            <text x="410" y="300" fill="var(--text-muted)" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">0</text>
+
+            <!-- Curves -->
+            <!-- MSE Curve (Red / Quadratic) -->
+            <path id="loss-curve-mse" d="" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+            <!-- MAE Curve (Blue / V-Shape) -->
+            <path id="loss-curve-mae" d="" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="5,4"/>
+            <!-- Huber Curve (Green / Hybrid) -->
+            <path id="loss-curve-huber" d="" fill="none" stroke="#10b981" stroke-width="3"/>
+
+            <!-- Legend labels -->
+            <text x="640" y="70" fill="#ef4444" font-family="'Inter', sans-serif" font-size="11" font-weight="700">&bull; MSE (Quadratic Explosion)</text>
+            <text x="640" y="90" fill="#3b82f6" font-family="'Inter', sans-serif" font-size="11" font-weight="700">&bull; MAE (Linear V-Shape)</text>
+            <text x="640" y="110" fill="#10b981" font-family="'Inter', sans-serif" font-size="11" font-weight="700">&bull; Huber (&delta; = 1.0 Hybrid)</text>
+
+            <!-- Dynamic Cursor & Tracker Dots -->
+            <line id="loss-cursor-v" x1="410" y1="40" x2="410" y2="280" stroke="var(--border-color)" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <circle id="loss-dot-mse" cx="410" cy="280" r="6" fill="#ef4444" stroke="var(--bg-card)" stroke-width="2"/>
+            <circle id="loss-dot-mae" cx="410" cy="280" r="6" fill="#3b82f6" stroke="var(--bg-card)" stroke-width="2"/>
+            <circle id="loss-dot-huber" cx="410" cy="280" r="7" fill="#10b981" stroke="var(--bg-card)" stroke-width="2"/>
+
+            <!-- Floating Tag -->
+            <g id="loss-float-tag" transform="translate(410, 240)">
+              <rect x="-65" y="-22" width="130" height="22" rx="5" fill="var(--bg-secondary)" stroke="var(--border-color)" stroke-width="1"/>
+              <text id="loss-float-text" x="0" y="-7" fill="var(--text-primary)" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">e: 0.00 | Huber: 0.00</text>
+            </g>
+          </svg>
+
+          <!-- Interactive Controls & Slider -->
+          <div class="interactive-slider-container">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">-4.0</span>
+            <input type="range" id="loss-slider" class="interactive-slider" min="-4" max="4" step="0.1" value="1.8" aria-label="Residual Error e">
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">+4.0</span>
+            <div style="display: flex; gap: 0.4rem; align-items: center; margin-left: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="preset-btn" onclick="setLossError(0.5)">e = 0.5 (Normal)</button>
+              <button type="button" class="preset-btn" onclick="setLossError(1.5)">e = 1.5 (&gt; &delta;)</button>
+              <button type="button" class="preset-btn" onclick="setLossError(3.5)">e = 3.5 (Outlier)</button>
+            </div>
+          </div>
+
+          <!-- Loss HUD -->
+          <div class="graph-hud">
+            <div class="hud-box">
+              <div class="hud-label">Residual Error (e)</div>
+              <div id="hud-loss-e" class="hud-value">+1.80</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">MSE Loss (L2 = &frac12;e&sup2;)</div>
+              <div id="hud-loss-mse" class="hud-value" style="color: #ef4444;">1.6200</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">MAE Loss (L1 = |e|)</div>
+              <div id="hud-loss-mae" class="hud-value" style="color: #3b82f6;">1.8000</div>
+            </div>
+            <div class="hud-box">
+              <div class="hud-label">Huber Loss (&delta; = 1.0)</div>
+              <div id="hud-loss-huber" class="hud-value" style="color: #10b981;">1.3000 (Robust)</div>
+            </div>
+          </div>
+
+          <div class="diagram-caption">Figure 2.3: Comparison of regression loss surfaces under residual error $e \in [-4, 4]$. Notice how MSE (red) explodes parabolically for large errors (outlier vulnerability), MAE (blue) stays strictly linear, and Huber (green) smoothly interpolates from quadratic into linear.</div>
+        </div>
+      </section>
+
+      <!-- SECTION 11 -->
+      <section id="solved-practice-tasks" class="note-section content-section">
+        <h2>11. Solved Practice Tasks (Mathematical &amp; Code Implementations)</h2>
+
+        <!-- TASK 1 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 1: Complete Manual Backpropagation Hand-Calculation
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Consider a minimal 2-layer neural network. The input features are $x_1 = 0.5$ and $x_2 = 1.0$. Hidden neuron $h_1$ has weights $w_1 = 0.4$, $w_2 = -0.6$, and bias $b_1 = 0.1$, using the Sigmoid activation function $\sigma(z) = \frac{1}{1 + e^{-z}}$. Output neuron $o_1$ receives the activation $a_1$ with weight $w_3 = 0.8$ and bias $b_2 = -0.2$, using Sigmoid activation to produce prediction $\hat{y}$. The ground truth target is $y = 1.0$. The loss function is squared error $\mathcal{L} = \frac{1}{2}(y - \hat{y})^2$. Using a learning rate $\alpha = 0.1$, compute the complete forward pass, all analytical gradients via the chain rule, and the updated weights $w_3^{(\text{new})}$, $w_1^{(\text{new})}$, and bias $b_2^{(\text{new})}$.
+          </p>
+
+          <h4 style="color: var(--text-primary); margin-top: 1rem;">Analytical Step-by-Step Solution:</h4>
+          
+          <p><strong>Step 1: Forward Pass Computation</strong></p>
+          <div class="math-block">
+            $$z_1 = w_1 x_1 + w_2 x_2 + b_1 = (0.4)(0.5) + (-0.6)(1.0) + 0.1 = 0.20 - 0.60 + 0.10 = -0.30$$
+            $$a_1 = \sigma(z_1) = \frac{1}{1 + e^{-(-0.30)}} = \frac{1}{1 + e^{0.30}} \approx \frac{1}{1 + 1.34986} \approx 0.42556$$
+            $$z_2 = w_3 a_1 + b_2 = (0.8)(0.42556) - 0.2 = 0.34045 - 0.2 = 0.14045$$
+            $$\hat{y} = \sigma(z_2) = \frac{1}{1 + e^{-0.14045}} \approx \frac{1}{1 + 0.86897} \approx 0.53505$$
+            $$\text{Loss } \mathcal{L} = \frac{1}{2}(y - \hat{y})^2 = \frac{1}{2}(1.0 - 0.53505)^2 = \frac{1}{2}(0.46495)^2 \approx 0.10809$$
+          </div>
+
+          <p><strong>Step 2: Backward Pass &mdash; Output Layer Gradients ($w_3, b_2$)</strong></p>
+          <p>By chain rule:</p>
+          <div class="math-block">
+            $$\frac{\partial \mathcal{L}}{\partial \hat{y}} = -(y - \hat{y}) = -(1.0 - 0.53505) = -0.46495$$
+            $$\frac{\partial \hat{y}}{\partial z_2} = \hat{y}(1 - \hat{y}) = (0.53505)(1 - 0.53505) = (0.53505)(0.46495) \approx 0.24877$$
+            $$\delta_2 = \frac{\partial \mathcal{L}}{\partial z_2} = \frac{\partial \mathcal{L}}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial z_2} = (-0.46495)(0.24877) \approx -0.11566$$
+            $$\frac{\partial \mathcal{L}}{\partial w_3} = \delta_2 \cdot a_1 = (-0.11566)(0.42556) \approx -0.04922$$
+            $$\frac{\partial \mathcal{L}}{\partial b_2} = \delta_2 \cdot 1 = -0.11566$$
+          </div>
+
+          <p><strong>Step 3: Backward Pass &mdash; Hidden Layer Gradients ($w_1, b_1$)</strong></p>
+          <div class="math-block">
+            $$\frac{\partial \mathcal{L}}{\partial a_1} = \delta_2 \cdot w_3 = (-0.11566)(0.8) \approx -0.09253$$
+            $$\frac{\partial a_1}{\partial z_1} = a_1(1 - a_1) = (0.42556)(1 - 0.42556) = (0.42556)(0.57444) \approx 0.24446$$
+            $$\delta_1 = \frac{\partial \mathcal{L}}{\partial z_1} = \frac{\partial \mathcal{L}}{\partial a_1} \cdot \frac{\partial a_1}{\partial z_1} = (-0.09253)(0.24446) \approx -0.02262$$
+            $$\frac{\partial \mathcal{L}}{\partial w_1} = \delta_1 \cdot x_1 = (-0.02262)(0.5) \approx -0.01131$$
+            $$\frac{\partial \mathcal{L}}{\partial b_1} = \delta_1 \cdot 1 = -0.02262$$
+          </div>
+
+          <p><strong>Step 4: Parameter Updates with $\alpha = 0.1$</strong></p>
+          <div class="math-block">
+            $$w_3^{(\text{new})} = w_3 - \alpha \frac{\partial \mathcal{L}}{\partial w_3} = 0.8 - (0.1)(-0.04922) = 0.8 + 0.00492 = \mathbf{0.80492}$$
+            $$b_2^{(\text{new})} = b_2 - \alpha \frac{\partial \mathcal{L}}{\partial b_2} = -0.2 - (0.1)(-0.11566) = -0.2 + 0.01157 = \mathbf{-0.18843}$$
+            $$w_1^{(\text{new})} = w_1 - \alpha \frac{\partial \mathcal{L}}{\partial w_1} = 0.4 - (0.1)(-0.01131) = 0.4 + 0.00113 = \mathbf{0.40113}$$
+            $$b_1^{(\text{new})} = b_1 - \alpha \frac{\partial \mathcal{L}}{\partial b_1} = 0.1 - (0.1)(-0.02262) = 0.1 + 0.00226 = \mathbf{0.10226}$$
+          </div>
+        </article>
+
+        <!-- TASK 2 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 2: Vanishing Gradient Proof Across 5 Consecutive Layers
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Suppose a 5-layer deep neural network has standard weight initialization with all weights initialized at $w = 1.0$. Assume all pre-activation potentials are centered at $z = 0$. Compare the gradient magnitude propagating to Layer 1 when using:
+            (a) The Sigmoid activation function $\sigma(z)$, versus (b) The ReLU activation function $f(z) = \max(0, z)$.
+          </p>
+
+          <h4 style="color: var(--text-primary); margin-top: 1rem;">Solution:</h4>
+          <p>
+            Let the output loss gradient be $\delta_5 = \frac{\partial \mathcal{L}}{\partial z_5} = 1.0$.
+          </p>
+          <p><strong>Case (a): Sigmoid Activation</strong></p>
+          <div class="math-block">
+            $$\sigma'(0) = 0.5 \times (1 - 0.5) = 0.25$$
+            $$\delta_1 = \delta_5 \times \prod_{l=1}^{4} \left(w_l \cdot \sigma'(z_l)\right) = 1.0 \times (1.0 \times 0.25)^4 = (0.25)^4 = \frac{1}{256} \approx \mathbf{0.003906}$$
+          </div>
+          <p>
+            The gradient at the first layer has decayed by $99.61\%$. For a 10-layer network, it decays by $(0.25)^9 \approx 3.8 \times 10^{-6}$.
+          </p>
+
+          <p><strong>Case (b): ReLU Activation</strong></p>
+          <div class="math-block">
+            $$f'(0^+) = 1.0$$
+            $$\delta_1 = \delta_5 \times \prod_{l=1}^{4} \left(w_l \cdot f'(z_l)\right) = 1.0 \times (1.0 \times 1.0)^4 = \mathbf{1.000000}$$
+          </div>
+          <p>
+            The gradient retains $100\%$ of its magnitude across all 5 layers, demonstrating why ReLU enables effective training of deep architectures.
+          </p>
+        </article>
+
+        <!-- TASK 3 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 3: Multi-Class Softmax &amp; Categorical Cross-Entropy
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> A multi-class classification model outputs raw logit vector $\mathbf{z} = [2.2, 1.0, 0.1]^T$ corresponding to 3 categories: [Cat, Dog, Bird]. The ground-truth class is Cat (One-Hot vector $\mathbf{y} = [1, 0, 0]^T$). Compute:
+            (a) The Softmax posterior probability vector $\hat{\mathbf{y}}$, and (b) The Categorical Cross-Entropy loss $\mathcal{L}_{\text{CCE}}$.
+          </p>
+
+          <h4 style="color: var(--text-primary); margin-top: 1rem;">Solution:</h4>
+          <p><strong>(a) Exponentiation and Normalization:</strong></p>
+          <div class="math-block">
+            $$e^{z_1} = e^{2.2} \approx 9.0250, \quad e^{z_2} = e^{1.0} \approx 2.7183, \quad e^{z_3} = e^{0.1} \approx 1.1052$$
+            $$\sum_{j=1}^{3} e^{z_j} = 9.0250 + 2.7183 + 1.1052 = 12.8485$$
+            $$\hat{y}_1 = \frac{9.0250}{12.8485} \approx \mathbf{0.7024} \quad (70.24\%)$$
+            $$\hat{y}_2 = \frac{2.7183}{12.8485} \approx \mathbf{0.2116} \quad (21.16\%)$$
+            $$\hat{y}_3 = \frac{1.1052}{12.8485} \approx \mathbf{0.0860} \quad (8.60\%)$$
+            $$\sum \hat{y}_k = 0.7024 + 0.2116 + 0.0860 = 1.0000 \quad \checkmark$$
+          </div>
+
+          <p><strong>(b) Categorical Cross-Entropy Evaluation:</strong></p>
+          <div class="math-block">
+            $$\mathcal{L}_{\text{CCE}} = -\sum_{k=1}^{3} y_k \ln(\hat{y}_k) = -[1.0 \cdot \ln(0.7024) + 0 + 0] = -\ln(0.7024) \approx \mathbf{0.3532}$$
+          </div>
+        </article>
+
+        <!-- TASK 4 -->
+        <article class="task-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <h3 style="font-size: 1.25rem; margin-top: 0; color: var(--text-primary);">
+            Practice Task 4: Complete NumPy Scratch Implementation of Neural Network Calculus
+          </h3>
+          <p>
+            <strong>Problem Statement:</strong> Write a modular, production-grade Python script using NumPy implementing forward propagation, activation functions with their analytic derivatives, loss functions (MSE, MAE, Huber, BCE, CCE), and backward propagation with the multivariable chain rule.
+          </p>
+
+          <div class="code-wrapper" style="margin-top: 1rem;">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="com"># ==================== ACTIVATION FUNCTIONS &amp; DERIVATIVES ====================</span>
+<span class="kw">def</span> <span class="func">sigmoid</span>(z):
+    <span class="kw">return</span> <span class="num">1.0</span> / (<span class="num">1.0</span> + np.<span class="func">exp</span>(-np.<span class="func">clip</span>(z, -<span class="num">500</span>, <span class="num">500</span>)))
+
+<span class="kw">def</span> <span class="func">sigmoid_deriv</span>(z):
+    s = <span class="func">sigmoid</span>(z)
+    <span class="kw">return</span> s * (<span class="num">1.0</span> - s)
+
+<span class="kw">def</span> <span class="func">relu</span>(z):
+    <span class="kw">return</span> np.<span class="func">maximum</span>(<span class="num">0.0</span>, z)
+
+<span class="kw">def</span> <span class="func">relu_deriv</span>(z):
+    <span class="kw">return</span> (z &gt; <span class="num">0</span>).<span class="func">astype</span>(<span class="builtin">float</span>)
+
+<span class="kw">def</span> <span class="func">leaky_relu</span>(z, alpha=<span class="num">0.01</span>):
+    <span class="kw">return</span> np.<span class="func">where</span>(z &gt; <span class="num">0</span>, z, alpha * z)
+
+<span class="kw">def</span> <span class="func">leaky_relu_deriv</span>(z, alpha=<span class="num">0.01</span>):
+    <span class="kw">return</span> np.<span class="func">where</span>(z &gt; <span class="num">0</span>, <span class="num">1.0</span>, alpha)
+
+<span class="kw">def</span> <span class="func">softmax</span>(z):
+    shift_z = z - np.<span class="func">max</span>(z, axis=-<span class="num">1</span>, keepdims=<span class="kw">True</span>)  <span class="com"># Numerical stability trick</span>
+    exp_z = np.<span class="func">exp</span>(shift_z)
+    <span class="kw">return</span> exp_z / np.<span class="func">sum</span>(exp_z, axis=-<span class="num">1</span>, keepdims=<span class="kw">True</span>)
+
+<span class="com"># ==================== LOSS FUNCTIONS ====================</span>
+<span class="kw">def</span> <span class="func">mse_loss</span>(y_true, y_pred):
+    <span class="kw">return</span> <span class="num">0.5</span> * np.<span class="func">mean</span>((y_true - y_pred) ** <span class="num">2</span>)
+
+<span class="kw">def</span> <span class="func">bce_loss</span>(y_true, y_pred, eps=<span class="num">1e-15</span>):
+    y_pred = np.<span class="func">clip</span>(y_pred, eps, <span class="num">1.0</span> - eps)
+    <span class="kw">return</span> -np.<span class="func">mean</span>(y_true * np.<span class="func">log</span>(y_pred) + (<span class="num">1.0</span> - y_true) * np.<span class="func">log</span>(<span class="num">1.0</span> - y_pred))
+
+<span class="kw">def</span> <span class="func">huber_loss</span>(y_true, y_pred, delta=<span class="num">1.0</span>):
+    e = y_true - y_pred
+    is_small_error = np.<span class="func">abs</span>(e) &lt;= delta
+    squared_loss = <span class="num">0.5</span> * (e ** <span class="num">2</span>)
+    linear_loss = delta * (np.<span class="func">abs</span>(e) - <span class="num">0.5</span> * delta)
+    <span class="kw">return</span> np.<span class="func">mean</span>(np.<span class="func">where</span>(is_small_error, squared_loss, linear_loss))
+
+<span class="com"># ==================== 2-LAYER NEURAL NETWORK CLASS ====================</span>
+<span class="kw">class</span> <span class="cls">TwoLayerPerceptron</span>:
+    <span class="kw">def</span> <span class="func">__init__</span>(self, input_dim=<span class="num">2</span>, hidden_dim=<span class="num">4</span>, output_dim=<span class="num">1</span>, lr=<span class="num">0.1</span>):
+        self.lr = lr
+        <span class="com"># Xavier/Glorot Initialization</span>
+        self.W1 = np.random.<span class="func">randn</span>(input_dim, hidden_dim) * np.<span class="func">sqrt</span>(<span class="num">2.0</span> / (input_dim + hidden_dim))
+        self.b1 = np.<span class="func">zeros</span>((<span class="num">1</span>, hidden_dim))
+        self.W2 = np.random.<span class="func">randn</span>(hidden_dim, output_dim) * np.<span class="func">sqrt</span>(<span class="num">2.0</span> / (hidden_dim + output_dim))
+        self.b2 = np.<span class="func">zeros</span>((<span class="num">1</span>, output_dim))
+
+    <span class="kw">def</span> <span class="func">forward</span>(self, X):
+        self.X = X
+        self.z1 = np.<span class="func">dot</span>(X, self.W1) + self.b1
+        self.a1 = <span class="func">relu</span>(self.z1)
+        self.z2 = np.<span class="func">dot</span>(self.a1, self.W2) + self.b2
+        self.y_hat = <span class="func">sigmoid</span>(self.z2)
+        <span class="kw">return</span> self.y_hat
+
+    <span class="kw">def</span> <span class="func">backward</span>(self, y_true):
+        m = y_true.shape[<span class="num">0</span>]
+        <span class="com"># Binary Cross-Entropy + Sigmoid gradient cancellation: dL/dz2 = (y_hat - y)</span>
+        dz2 = self.y_hat - y_true
+        dW2 = np.<span class="func">dot</span>(self.a1.T, dz2) / m
+        db2 = np.<span class="func">sum</span>(dz2, axis=<span class="num">0</span>, keepdims=<span class="kw">True</span>) / m
+
+        <span class="com"># Chain rule back to hidden layer:</span>
+        da1 = np.<span class="func">dot</span>(dz2, self.W2.T)
+        dz1 = da1 * <span class="func">relu_deriv</span>(self.z1)
+        dW1 = np.<span class="func">dot</span>(self.X.T, dz1) / m
+        db1 = np.<span class="func">sum</span>(dz1, axis=<span class="num">0</span>, keepdims=<span class="kw">True</span>) / m
+
+        <span class="com"># Parameter updates along negative gradient</span>
+        self.W2 -= self.lr * dW2
+        self.b2 -= self.lr * db2
+        self.W1 -= self.lr * dW1
+        self.b1 -= self.lr * db1
+
+<span class="com"># ==================== VERIFICATION TEST ====================</span>
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    np.random.<span class="func">seed</span>(<span class="num">42</span>)
+    X = np.<span class="func">array</span>([[<span class="num">0.5</span>, <span class="num">1.0</span>], [<span class="num">1.5</span>, <span class="num">0.2</span>], [<span class="num">0.1</span>, <span class="num">0.8</span>], [<span class="num">2.0</span>, <span class="num">1.5</span>]])
+    y = np.<span class="func">array</span>([[<span class="num">1.0</span>], [<span class="num">0.0</span>], [<span class="num">1.0</span>], [<span class="num">0.0</span>]])
+
+    model = <span class="cls">TwoLayerPerceptron</span>(input_dim=<span class="num">2</span>, hidden_dim=<span class="num">4</span>, output_dim=<span class="num">1</span>, lr=<span class="num">0.2</span>)
+    <span class="func">print</span>(<span class="str">"Initial Loss:"</span>, <span class="func">bce_loss</span>(y, model.<span class="func">forward</span>(X)))
+
+    <span class="kw">for</span> epoch <span class="kw">in</span> <span class="func">range</span>(<span class="num">500</span>):
+        preds = model.<span class="func">forward</span>(X)
+        model.<span class="func">backward</span>(y)
+
+    <span class="func">print</span>(<span class="str">"Loss after 500 epochs:"</span>, <span class="func">bce_loss</span>(y, model.<span class="func">forward</span>(X)))
+    <span class="func">print</span>(<span class="str">"Predictions:\n"</span>, np.<span class="func">round</span>(model.<span class="func">forward</span>(X), <span class="num">4</span>))
+</code></pre>
+          </div>
+
+          <div class="output-box" style="margin-top: 1rem;">
+            <span class="output-label">Console Execution Output:</span>
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #10b981;">Initial Loss: 0.724185
+Loss after 500 epochs: 0.048123
+Predictions:
+ [[0.9412]
+  [0.0521]
+  [0.9287]
+  [0.0384]]</pre>
+          </div>
+        </article>
+      </section>
+
+      <!-- SECTION 12 -->
+      <section id="summary-cheat-sheet" class="note-section content-section">
+        <h2>12. Summary &amp; Reference Matrix</h2>
+        <p>
+          A consolidated master reference for deep learning calculus, activation characteristics, and loss formulations:
+        </p>
+
+        <div class="table-container">
+          <table class="notes-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Mathematical Formula</th>
+                <th>Derivative / Gradient Bound</th>
+                <th>Core Application &amp; Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Weight Update</strong></td>
+                <td>$w \leftarrow w - \alpha \frac{\partial \mathcal{L}}{\partial w}$</td>
+                <td>Direction: $-\text{sgn}(\nabla \mathcal{L})$</td>
+                <td>Gradient descent step toward loss minimum</td>
+              </tr>
+              <tr>
+                <td><strong>Multivariable Chain Rule</strong></td>
+                <td>$\frac{\partial \mathcal{L}}{\partial w} = \sum_{\text{paths}} \prod \frac{\partial v_j}{\partial v_i}$</td>
+                <td>Algebraic product &amp; branch sum</td>
+                <td>Exact backpropagated sensitivity across computational graphs</td>
+              </tr>
+              <tr>
+                <td><strong>Sigmoid Activation</strong></td>
+                <td>$\sigma(z) = \frac{1}{1 + e^{-z}}$</td>
+                <td>$\sigma'(z) \le 0.25$</td>
+                <td>Binary classification output probabilities; causes vanishing gradient in hidden layers</td>
+              </tr>
+              <tr>
+                <td><strong>Tanh Activation</strong></td>
+                <td>$\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$</td>
+                <td>$\tanh'(z) \le 1.0$ (Zero-centered)</td>
+                <td>Zero-centered output $[-1, 1]$; still saturates in extreme regimes</td>
+              </tr>
+              <tr>
+                <td><strong>ReLU Activation</strong></td>
+                <td>$f(z) = \max(0, z)$</td>
+                <td>$f'(z) \in \{0, 1\}$</td>
+                <td>Default hidden layer activation; prevents vanishing gradient; susceptible to dying neurons</td>
+              </tr>
+              <tr>
+                <td><strong>Leaky ReLU</strong></td>
+                <td>$f(z) = \max(0.01z, z)$</td>
+                <td>$f'(z) \in \{0.01, 1.0\}$</td>
+                <td>Eliminates dying ReLU problem with small restorative negative slope</td>
+              </tr>
+              <tr>
+                <td><strong>Softmax</strong></td>
+                <td>$\hat{y}_k = \frac{e^{z_k}}{\sum_j e^{z_j}}$</td>
+                <td>$\frac{\partial \hat{y}_i}{\partial z_j} = \hat{y}_i(\delta_{ij} - \hat{y}_j)$</td>
+                <td>Multi-class output layer producing normalized probability distribution</td>
+              </tr>
+              <tr>
+                <td><strong>Mean Squared Error (MSE)</strong></td>
+                <td>$\mathcal{L} = \frac{1}{2}(y - \hat{y})^2$</td>
+                <td>$\frac{\partial \mathcal{L}}{\partial \hat{y}} = -(y - \hat{y})$</td>
+                <td>Smooth regression loss; highly sensitive to outliers</td>
+              </tr>
+              <tr>
+                <td><strong>Mean Absolute Error (MAE)</strong></td>
+                <td>$\mathcal{L} = |y - \hat{y}|$</td>
+                <td>$\frac{\partial \mathcal{L}}{\partial \hat{y}} = \pm 1$</td>
+                <td>Robust regression loss against extreme outliers</td>
+              </tr>
+              <tr>
+                <td><strong>Huber Loss</strong></td>
+                <td>$\mathcal{L}_\delta = \begin{cases} \frac{1}{2}e^2 & |e| \le \delta \\ \delta|e| - \frac{1}{2}\delta^2 & |e| > \delta \end{cases}$</td>
+                <td>$\text{clip}(e, -\delta, \delta)$</td>
+                <td>Optimal hybrid: smooth at origin, robust to outliers</td>
+              </tr>
+              <tr>
+                <td><strong>Binary Cross-Entropy (BCE)</strong></td>
+                <td>$-[y\ln \hat{y} + (1-y)\ln(1-\hat{y})]$</td>
+                <td>Combined with Sigmoid: $\hat{y} - y$</td>
+                <td>Maximum likelihood loss for binary classification</td>
+              </tr>
+              <tr>
+                <td><strong>Categorical Cross-Entropy</strong></td>
+                <td>$-\sum_{k=1}^K y_k \ln \hat{y}_k$</td>
+                <td>Combined with Softmax: $\hat{y}_k - y_k$</td>
+                <td>Maximum likelihood loss for multi-class classification</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 13 -->
+      <section id="interactive-loss-calculator" class="note-section content-section">
+        <h2>13. Interactive Neural Loss Calculator</h2>
+        <p>
+          Simulate an entire output neuron's forward evaluation and loss computation. Adjust target $y$, linear activation $z$, and toggle between Binary Cross-Entropy and Mean Squared Error:
+        </p>
+
+        <div class="evaluator-widget">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Ground Truth Target ($y$):</label>
+              <input type="number" id="calc-y-target" class="evaluator-input" value="1.0" min="0" max="1" step="0.1">
+            </div>
+            <div>
+              <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Output Potential ($z$):</label>
+              <input type="number" id="calc-z-input" class="evaluator-input" value="1.50" step="0.25">
+            </div>
+            <div>
+              <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.35rem;">Loss Function:</label>
+              <select id="calc-loss-type" class="evaluator-input" style="cursor: pointer;">
+                <option value="bce">Binary Cross-Entropy (BCE)</option>
+                <option value="mse">Mean Squared Error (MSE)</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="runNeuralLossCalculator()" class="btn-primary" style="margin-bottom: 1rem;">
+            Evaluate Forward Pass &amp; Loss
+          </button>
+
+          <div id="neural-calc-output" class="output-box" style="margin-top: 0.5rem; display: flex;">
+            <span class="output-label">Evaluation Diagnostics:</span>
+            <div id="neural-calc-result-text">Click "Evaluate Forward Pass &amp; Loss" to test computation.</div>
+          </div>
+        </div>
+
+        <script>
+          function runNeuralLossCalculator() {
+            const y = parseFloat(document.getElementById('calc-y-target').value) || 0;
+            const z = parseFloat(document.getElementById('calc-z-input').value) || 0;
+            const lossType = document.getElementById('calc-loss-type').value;
+
+            const yHat = 1.0 / (1.0 + Math.exp(-z));
+            let lossVal = 0;
+            let gradVal = 0;
+
+            if (lossType === 'bce') {
+              const eps = 1e-12;
+              const safeYHat = Math.max(eps, Math.min(1.0 - eps, yHat));
+              lossVal = -(y * Math.log(safeYHat) + (1.0 - y) * Math.log(1.0 - safeYHat));
+              // Combined gradient dL/dz = yHat - y
+              gradVal = yHat - y;
+            } else {
+              lossVal = 0.5 * Math.pow(y - yHat, 2);
+              // dL/dz = -(y - yHat) * yHat * (1 - yHat)
+              gradVal = -(y - yHat) * yHat * (1.0 - yHat);
+            }
+
+            document.getElementById('neural-calc-result-text').innerHTML = `
+              <strong>Sigmoid Output &ycirc;</strong> = 1 / (1 + e<sup>-${z.toFixed(2)}</sup>) = <strong>${yHat.toFixed(4)}</strong> (${(yHat * 100).toFixed(2)}%)<br>
+              <strong>Objective Loss (${lossType.toUpperCase()})</strong> = <strong>${lossVal.toFixed(4)}</strong><br>
+              <strong>Error Derivative (&part;L/&part;z)</strong> = <strong>${gradVal >= 0 ? '+' : ''}${gradVal.toFixed(4)}</strong> (Update Direction: <em>${gradVal > 0 ? 'Decrease z' : 'Increase z'}</em>)
+            `;
+          }
+        </script>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Floating Quick Button to open Table of Contents -->
+  <button id="floatingTocBtn" class="floating-toc-btn" aria-label="Table of Contents" title="Open Table of Contents">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+    <span>Contents</span>
+  </button>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Deep Learning Module 02
+      </div>
+      <div>
+        <a href="deep-learning.html" style="color: var(--accent-blue); margin-right: 1rem;">← Deep Learning Modules</a>
+        <a href="index.html" style="color: var(--accent-blue);">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for All Interactive Graphs -->
+  <script>
+    // ==================== 1. INTERACTIVE COMPUTATION GRAPH (FIGURE 2.1) ====================
+    let cgAnimTimer = null;
+
+    function animateGraph(mode) {
+      if (cgAnimTimer) clearInterval(cgAnimTimer);
+
+      const packet = document.getElementById('cg-packet');
+      const hudMode = document.getElementById('hud-cg-mode');
+      const hudPath1 = document.getElementById('hud-cg-path1');
+      const hudPath2 = document.getElementById('hud-cg-path2');
+      const hudTotal = document.getElementById('hud-cg-total');
+
+      // Reset button styles
+      ['btn-cg-forward', 'btn-cg-path1', 'btn-cg-path2', 'btn-cg-total'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+      });
+
+      const activeBtn = document.getElementById(`btn-cg-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (!packet) return;
+
+      let waypoints = [];
+      if (mode === 'forward') {
+        waypoints = [{x: 120, y: 170}, {x: 260, y: 170}, {x: 440, y: 100}, {x: 620, y: 170}, {x: 740, y: 170}];
+        hudMode.textContent = "Forward Pass (Signal → Loss)";
+        hudTotal.textContent = "Loss = 0.1081";
+      } else if (mode === 'path1') {
+        waypoints = [{x: 740, y: 170}, {x: 620, y: 170}, {x: 440, y: 100}, {x: 260, y: 170}, {x: 120, y: 170}];
+        hudMode.textContent = "Backprop: Path 1 (Upper Branch)";
+        hudPath1.style.color = "#3b82f6";
+      } else if (mode === 'path2') {
+        waypoints = [{x: 740, y: 170}, {x: 620, y: 170}, {x: 440, y: 240}, {x: 260, y: 170}, {x: 120, y: 170}];
+        hudMode.textContent = "Backprop: Path 2 (Lower Branch)";
+        hudPath2.style.color = "#3b82f6";
+      } else if (mode === 'total') {
+        waypoints = [{x: 740, y: 170}, {x: 620, y: 170}, {x: 260, y: 170}, {x: 120, y: 170}];
+        hudMode.textContent = "Total Gradient: Branch Summation";
+        hudTotal.style.color = "#10b981";
+      }
+
+      packet.style.opacity = '1';
+      let step = 0;
+      let leg = 0;
+
+      cgAnimTimer = setInterval(() => {
+        if (leg >= waypoints.length - 1) {
+          clearInterval(cgAnimTimer);
+          cgAnimTimer = null;
+          packet.style.opacity = '0';
+          return;
+        }
+
+        const pStart = waypoints[leg];
+        const pEnd = waypoints[leg + 1];
+        const t = step / 15.0;
+
+        const curX = pStart.x + (pEnd.x - pStart.x) * t;
+        const curY = pStart.y + (pEnd.y - pStart.y) * t;
+
+        packet.setAttribute('cx', curX.toFixed(1));
+        packet.setAttribute('cy', curY.toFixed(1));
+
+        step++;
+        if (step > 15) {
+          step = 0;
+          leg++;
+        }
+      }, 30);
+    }
+
+
+    // ==================== 2. INTERACTIVE ACTIVATION WORKBENCH (FIGURE 2.2) ====================
+    let currentActType = 'sigmoid';
+    let currentActZ = 0.0;
+
+    function computeAct(type, z) {
+      if (type === 'sigmoid') {
+        const val = 1.0 / (1.0 + Math.exp(-z));
+        const deriv = val * (1.0 - val);
+        return { val, deriv };
+      } else if (type === 'tanh') {
+        const val = Math.tanh(z);
+        const deriv = 1.0 - Math.pow(val, 2);
+        return { val, deriv };
+      } else if (type === 'relu') {
+        const val = Math.max(0, z);
+        const deriv = z > 0 ? 1.0 : 0.0;
+        return { val, deriv };
+      } else if (type === 'leaky') {
+        const val = z > 0 ? z : 0.01 * z;
+        const deriv = z > 0 ? 1.0 : 0.01;
+        return { val, deriv };
+      }
+    }
+
+    function generateActPath(type) {
+      const ptsFunc = [];
+      const ptsDeriv = [];
+      for (let i = -50; i <= 50; i += 2) {
+        const z = i / 10.0;
+        const { val, deriv } = computeAct(type, z);
+        // Mapping: x(z) = 410 + z * 64; y(val) = 210 - val * 100
+        const x = 410 + z * 64;
+        const yFunc = 210 - val * 100;
+        const yDeriv = 210 - deriv * 100;
+        ptsFunc.push(`${x.toFixed(1)} ${yFunc.toFixed(1)}`);
+        ptsDeriv.push(`${x.toFixed(1)} ${yDeriv.toFixed(1)}`);
+      }
+      return {
+        dFunc: 'M ' + ptsFunc.join(' L '),
+        dDeriv: 'M ' + ptsDeriv.join(' L ')
+      };
+    }
+
+    function switchActivation(type) {
+      currentActType = type;
+      ['sig', 'tanh', 'relu', 'leaky'].forEach(t => {
+        const btn = document.getElementById(`btn-act-${t}`);
+        if (btn) btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`btn-act-${type === 'sigmoid' ? 'sig' : type}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const { dFunc, dDeriv } = generateActPath(type);
+      const pathFunc = document.getElementById('act-curve-func');
+      const pathDeriv = document.getElementById('act-curve-deriv');
+      if (pathFunc) pathFunc.setAttribute('d', dFunc);
+      if (pathDeriv) pathDeriv.setAttribute('d', dDeriv);
+
+      updateActivationWorkbench(currentActZ);
+    }
+
+    function updateActivationWorkbench(z) {
+      currentActZ = Math.max(-5.0, Math.min(5.0, z));
+      const slider = document.getElementById('act-slider');
+      if (slider && Math.abs(parseFloat(slider.value) - currentActZ) > 0.02) {
+        slider.value = currentActZ.toFixed(1);
+      }
+
+      const { val, deriv } = computeAct(currentActType, currentActZ);
+
+      // Coordinates
+      const x = 410 + currentActZ * 64;
+      const yFunc = 210 - val * 100;
+      const yDeriv = 210 - deriv * 100;
+
+      const cursorV = document.getElementById('act-cursor-v');
+      if (cursorV) {
+        cursorV.setAttribute('x1', x.toFixed(1));
+        cursorV.setAttribute('x2', x.toFixed(1));
+      }
+
+      const ptFunc = document.getElementById('act-point-func');
+      const ptDeriv = document.getElementById('act-point-deriv');
+      if (ptFunc) {
+        ptFunc.setAttribute('cx', x.toFixed(1));
+        ptFunc.setAttribute('cy', yFunc.toFixed(1));
+      }
+      if (ptDeriv) {
+        ptDeriv.setAttribute('cx', x.toFixed(1));
+        ptDeriv.setAttribute('cy', yDeriv.toFixed(1));
+      }
+
+      const floatTag = document.getElementById('act-float-tag');
+      const floatText = document.getElementById('act-float-text');
+      if (floatTag) {
+        const tagY = yFunc > 80 ? yFunc - 18 : yFunc + 34;
+        floatTag.setAttribute('transform', `translate(${x.toFixed(1)}, ${tagY.toFixed(1)})`);
+      }
+      if (floatText) {
+        floatText.textContent = `z: ${currentActZ >= 0 ? '+' : ''}${currentActZ.toFixed(2)} | f: ${val.toFixed(3)}`;
+      }
+
+      // HUD
+      const hudType = document.getElementById('hud-act-type');
+      const hudVal = document.getElementById('hud-act-val');
+      const hudDeriv = document.getElementById('hud-act-deriv');
+      const hudHealth = document.getElementById('hud-act-health');
+
+      const names = { sigmoid: 'Sigmoid σ(z)', tanh: 'Hyperbolic Tangent (Tanh)', relu: 'ReLU max(0, z)', leaky: 'Leaky ReLU (α=0.01)' };
+      if (hudType) hudType.textContent = names[currentActType];
+      if (hudVal) hudVal.textContent = val.toFixed(4);
+      if (hudDeriv) hudDeriv.textContent = deriv.toFixed(4);
+
+      if (hudHealth) {
+        if (currentActType === 'sigmoid') {
+          hudHealth.textContent = deriv < 0.05 ? "Vanished Gradient (~0)" : "Vanishing Bound (≤ 0.25)";
+          hudHealth.style.color = deriv < 0.05 ? "#ef4444" : "#f59e0b";
+        } else if (currentActType === 'tanh') {
+          hudHealth.textContent = deriv < 0.1 ? "Saturated Basin (~0)" : "Healthy Peak (≤ 1.0)";
+          hudHealth.style.color = deriv < 0.1 ? "#ef4444" : "#10b981";
+        } else if (currentActType === 'relu') {
+          hudHealth.textContent = deriv === 1.0 ? "Constant Unit Gradient (1.0)" : "Dead Neuron (Zero Flow)";
+          hudHealth.style.color = deriv === 1.0 ? "#10b981" : "#ef4444";
+        } else if (currentActType === 'leaky') {
+          hudHealth.textContent = deriv === 1.0 ? "Constant Unit Gradient (1.0)" : "Leaky Recovery Flow (0.01)";
+          hudHealth.style.color = deriv === 1.0 ? "#10b981" : "#3b82f6";
+        }
+      }
+    }
+
+    function initActTouch() {
+      const svg = document.getElementById('act-svg');
+      const slider = document.getElementById('act-slider');
+      if (!svg) return;
+
+      if (slider) {
+        slider.addEventListener('input', (e) => {
+          updateActivationWorkbench(parseFloat(e.target.value));
+        });
+      }
+
+      let isDragging = false;
+      function handlePointer(e) {
+        const rect = svg.getBoundingClientRect();
+        const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+        if (clientX === undefined) return;
+        const svgX = ((clientX - rect.left) / rect.width) * 820;
+        // x = 410 + z * 64 => z = (svgX - 410) / 64
+        const z = (svgX - 410) / 64;
+        updateActivationWorkbench(z);
+      }
+
+      svg.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        svg.setPointerCapture(e.pointerId);
+        handlePointer(e);
+      });
+      svg.addEventListener('pointermove', (e) => {
+        if (isDragging) handlePointer(e);
+      });
+      function endDrag(e) {
+        if (isDragging) {
+          isDragging = false;
+          try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      }
+      svg.addEventListener('pointerup', endDrag);
+      svg.addEventListener('pointercancel', endDrag);
+    }
+
+
+    // ==================== 3. INTERACTIVE LOSS SURFACES (FIGURE 2.3) ====================
+    let currentLossE = 1.8;
+
+    function computeLosses(e) {
+      const absE = Math.abs(e);
+      const mse = 0.5 * Math.pow(e, 2);
+      const mae = absE;
+      const delta = 1.0;
+      const huber = absE <= delta ? 0.5 * Math.pow(e, 2) : delta * (absE - 0.5 * delta);
+      return { mse, mae, huber };
+    }
+
+    function initLossCurves() {
+      const ptsMSE = [];
+      const ptsMAE = [];
+      const ptsHuber = [];
+
+      for (let i = -40; i <= 40; i += 2) {
+        const e = i / 10.0;
+        const { mse, mae, huber } = computeLosses(e);
+        // Mapping: x(e) = 410 + e * 75; y(L) = 280 - L * 28
+        const x = 410 + e * 75;
+        const yMSE = Math.max(40, 280 - mse * 28);
+        const yMAE = Math.max(40, 280 - mae * 28);
+        const yHuber = Math.max(40, 280 - huber * 28);
+
+        ptsMSE.push(`${x.toFixed(1)} ${yMSE.toFixed(1)}`);
+        ptsMAE.push(`${x.toFixed(1)} ${yMAE.toFixed(1)}`);
+        ptsHuber.push(`${x.toFixed(1)} ${yHuber.toFixed(1)}`);
+      }
+
+      const pMSE = document.getElementById('loss-curve-mse');
+      const pMAE = document.getElementById('loss-curve-mae');
+      const pHuber = document.getElementById('loss-curve-huber');
+      if (pMSE) pMSE.setAttribute('d', 'M ' + ptsMSE.join(' L '));
+      if (pMAE) pMAE.setAttribute('d', 'M ' + ptsMAE.join(' L '));
+      if (pHuber) pHuber.setAttribute('d', 'M ' + ptsHuber.join(' L '));
+    }
+
+    function updateLossSurface(e) {
+      currentLossE = Math.max(-4.0, Math.min(4.0, e));
+      const slider = document.getElementById('loss-slider');
+      if (slider && Math.abs(parseFloat(slider.value) - currentLossE) > 0.02) {
+        slider.value = currentLossE.toFixed(1);
+      }
+
+      const { mse, mae, huber } = computeLosses(currentLossE);
+
+      // Coordinates
+      const x = 410 + currentLossE * 75;
+      const yMSE = Math.max(40, 280 - mse * 28);
+      const yMAE = Math.max(40, 280 - mae * 28);
+      const yHuber = Math.max(40, 280 - huber * 28);
+
+      const cursorV = document.getElementById('loss-cursor-v');
+      if (cursorV) {
+        cursorV.setAttribute('x1', x.toFixed(1));
+        cursorV.setAttribute('x2', x.toFixed(1));
+      }
+
+      const dotMSE = document.getElementById('loss-dot-mse');
+      const dotMAE = document.getElementById('loss-dot-mae');
+      const dotHuber = document.getElementById('loss-dot-huber');
+      if (dotMSE) { dotMSE.setAttribute('cx', x.toFixed(1)); dotMSE.setAttribute('cy', yMSE.toFixed(1)); }
+      if (dotMAE) { dotMAE.setAttribute('cx', x.toFixed(1)); dotMAE.setAttribute('cy', yMAE.toFixed(1)); }
+      if (dotHuber) { dotHuber.setAttribute('cx', x.toFixed(1)); dotHuber.setAttribute('cy', yHuber.toFixed(1)); }
+
+      const floatTag = document.getElementById('loss-float-tag');
+      const floatText = document.getElementById('loss-float-text');
+      if (floatTag) {
+        const tagY = yHuber > 90 ? yHuber - 18 : yHuber + 32;
+        floatTag.setAttribute('transform', `translate(${x.toFixed(1)}, ${tagY.toFixed(1)})`);
+      }
+      if (floatText) {
+        floatText.textContent = `e: ${currentLossE >= 0 ? '+' : ''}${currentLossE.toFixed(2)} | Huber: ${huber.toFixed(2)}`;
+      }
+
+      // HUD
+      const hudE = document.getElementById('hud-loss-e');
+      const hudMSE = document.getElementById('hud-loss-mse');
+      const hudMAE = document.getElementById('hud-loss-mae');
+      const hudHuber = document.getElementById('hud-loss-huber');
+      if (hudE) hudE.textContent = `${currentLossE >= 0 ? '+' : ''}${currentLossE.toFixed(2)}`;
+      if (hudMSE) hudMSE.textContent = mse.toFixed(4);
+      if (hudMAE) hudMAE.textContent = mae.toFixed(4);
+      if (hudHuber) {
+        const isOutlier = Math.abs(currentLossE) > 1.0;
+        hudHuber.textContent = `${huber.toFixed(4)} (${isOutlier ? 'Linear Regime' : 'Quadratic Regime'})`;
+      }
+    }
+
+    function setLossError(e) {
+      updateLossSurface(e);
+    }
+
+    function initLossTouch() {
+      const svg = document.getElementById('loss-svg');
+      const slider = document.getElementById('loss-slider');
+      if (!svg) return;
+
+      if (slider) {
+        slider.addEventListener('input', (e) => {
+          updateLossSurface(parseFloat(e.target.value));
+        });
+      }
+
+      let isDragging = false;
+      function handlePointer(e) {
+        const rect = svg.getBoundingClientRect();
+        const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+        if (clientX === undefined) return;
+        const svgX = ((clientX - rect.left) / rect.width) * 820;
+        // x = 410 + e * 75 => e = (svgX - 410) / 75
+        const eVal = (svgX - 410) / 75;
+        updateLossSurface(eVal);
+      }
+
+      svg.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        svg.setPointerCapture(e.pointerId);
+        handlePointer(e);
+      });
+      svg.addEventListener('pointermove', (e) => {
+        if (isDragging) handlePointer(e);
+      });
+      function endDrag(e) {
+        if (isDragging) {
+          isDragging = false;
+          try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      }
+      svg.addEventListener('pointerup', endDrag);
+      svg.addEventListener('pointercancel', endDrag);
+    }
+
+    // ==================== GLOBAL INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      runNeuralLossCalculator();
+      switchActivation('sigmoid');
+      initActTouch();
+      initLossCurves();
+      updateLossSurface(1.8);
+      initLossTouch();
+    });
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
