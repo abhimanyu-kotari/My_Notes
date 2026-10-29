@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI & Data Science 12-Month Roadmap (with GenAI) | Tech Notes</title>
+  <meta name="description" content="Civil Engineer to Data Scientist (with GenAI) - 12-Month In-Depth Roadmap (2026 Edition). Interactive PDF viewer, weekly syllabus, verified YouTube playlists, and capstone projects.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .curriculum-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .curriculum-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    .curriculum-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-color-hover);
+    }
+    .curriculum-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      background: var(--bg-badge);
+      color: var(--text-badge);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      width: fit-content;
+    }
+    .curriculum-card h3 {
+      font-size: 1.22rem;
+      margin: 0 0 0.5rem;
+      color: var(--text-primary);
+    }
+    .curriculum-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin: 0 0 1rem;
+    }
+    .curriculum-weeks {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.85rem;
+    }
+    .curriculum-weeks li {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+    .curriculum-weeks li strong {
+      color: var(--accent-color, #3b82f6);
+      font-size: 0.82rem;
+    }
+    .milestone-badge {
+      margin-top: auto;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      background: var(--bg-code);
+      border: 1px dashed var(--border-color);
+      font-size: 0.82rem;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="index.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Home</a>
+        <a href="assets/ai-roadmap.pdf" download="Data_Scientist_with_GenAI_12Month_Roadmap_2026.pdf" class="btn-primary" style="padding: 0.45rem 0.95rem; font-size: 0.84rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download PDF
+        </a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header / Hero -->
+  <header class="hero" style="padding: 3.25rem 1.5rem 2.5rem;">
+    <div class="hero-badge">
+      <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; AI &amp; GenAI Career Roadmap (2026 Edition)
+    </div>
+    <h1 class="hero-title" style="font-size: 2.75rem; margin-bottom: 0.75rem;">
+      Civil Engineer to Data Scientist (with GenAI)
+    </h1>
+    <p class="hero-subtitle" style="max-width: 900px; margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.6;">
+      A comprehensive, battle-tested 12-month blueprint tailored for career switchers, engineers, and analysts transitioning into Data Science and modern Generative AI. Covers mathematics, Python, Pandas, EDA, SQL, Machine Learning, Deep Learning, Cloud APIs, FastAPI, LangChain, RAG Systems, Agentic AI (LangGraph), Model Context Protocol (MCP), and Claude Code.
+    </p>
+
+    <!-- Quick Stats Strip -->
+    <div class="roadmap-stats-strip" style="justify-content: flex-start; max-width: 980px;">
+      <div class="roadmap-stat-item">
+        <span>📅</span>
+        <span><strong>12 Months</strong> Structured Journey</span>
+      </div>
+      <div class="roadmap-stat-item">
+        <span>📄</span>
+        <span><strong>15 Pages</strong> In-Depth Document</span>
+      </div>
+      <div class="roadmap-stat-item">
+        <span>🔗</span>
+        <span><strong>100% Free</strong> Verified Video Playlists</span>
+      </div>
+      <div class="roadmap-stat-item">
+        <span>🛠️</span>
+        <span><strong>8 Flagship</strong> Portfolio Projects</span>
+      </div>
+      <div class="roadmap-stat-item">
+        <span>🚀</span>
+        <span><strong>GenAI &amp; Agents</strong> 2026 Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Action Toolbar & Quick Jump -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+      <div>
+        <h2 style="font-size: 1.5rem; margin: 0; border: none;">Interactive Document Viewer</h2>
+        <span style="font-size: 0.88rem; color: var(--text-muted);">Rendered at full HD quality directly from the official PDF</span>
+      </div>
+      <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+        <a href="#curriculum-breakdown" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; font-size: 0.85rem; text-decoration: none !important;">
+          📚 View Full Curriculum
+        </a>
+        <a href="#resources-table" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; font-size: 0.85rem; text-decoration: none !important;">
+          🔗 Resource Index
+        </a>
+        <a href="assets/ai-roadmap.pdf" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem; text-decoration: none !important;">
+          ⛶ Open PDF in New Tab
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Month Navigation Pills -->
+    <div style="margin-bottom: 0.65rem; display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Jump to Month / Section:</span>
+      <span style="font-size: 0.82rem; color: var(--text-muted);">Use ← / → arrow keys to flip</span>
+    </div>
+    <div class="roadmap-month-pills" id="roadmapPillsBar">
+      <button class="roadmap-month-pill active" data-page="1" onclick="setRoadmapPage(1)">1. Overview</button>
+      <button class="roadmap-month-pill" data-page="2" onclick="setRoadmapPage(2)">M1: Math, Stats &amp; Python</button>
+      <button class="roadmap-month-pill" data-page="3" onclick="setRoadmapPage(3)">M2: Pandas, NumPy &amp; Git</button>
+      <button class="roadmap-month-pill" data-page="4" onclick="setRoadmapPage(4)">M3: EDA &amp; Visualization</button>
+      <button class="roadmap-month-pill" data-page="5" onclick="setRoadmapPage(5)">M4: SQL &amp; BI Tools</button>
+      <button class="roadmap-month-pill" data-page="6" onclick="setRoadmapPage(6)">M5: ML Foundations</button>
+      <button class="roadmap-month-pill" data-page="7" onclick="setRoadmapPage(7)">M6: Advanced ML &amp; XGBoost</button>
+      <button class="roadmap-month-pill" data-page="8" onclick="setRoadmapPage(8)">M7: Deep Learning &amp; CNNs</button>
+      <button class="roadmap-month-pill" data-page="9" onclick="setRoadmapPage(9)">M8: Cloud &amp; FastAPI</button>
+      <button class="roadmap-month-pill" data-page="10" onclick="setRoadmapPage(10)">M9: GenAI &amp; LangChain</button>
+      <button class="roadmap-month-pill" data-page="11" onclick="setRoadmapPage(11)">M10: RAG Chatbots</button>
+      <button class="roadmap-month-pill" data-page="12" onclick="setRoadmapPage(12)">M11: Agentic AI, MCP &amp; Claude Code</button>
+      <button class="roadmap-month-pill" data-page="13" onclick="setRoadmapPage(13)">M12: Capstone &amp; Portfolio</button>
+      <button class="roadmap-month-pill" data-page="14" onclick="setRoadmapPage(14)">14. Resource Index</button>
+      <button class="roadmap-month-pill" data-page="15" onclick="setRoadmapPage(15)">15. Summary &amp; Advice</button>
+    </div>
+
+    <!-- Interactive PDF Viewer Container -->
+    <div class="pdf-viewer-container" id="ai-roadmap-section" style="margin-bottom: 2.5rem;">
+      
+      <!-- Viewer Toolbar -->
+      <div class="pdf-viewer-toolbar">
+        
+        <!-- Page Nav Group -->
+        <div class="pdf-toolbar-group">
+          <button class="pdf-btn" id="pdfPrevBtn" onclick="changeRoadmapPage(-1)" title="Previous Page">
+            ◀ Prev
+          </button>
+          
+          <div style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.88rem; font-weight: 600;">
+            <span>Page</span>
+            <select id="pdfPageSelect" class="pdf-page-select" onchange="setRoadmapPage(this.value)">
+              <option value="1">1 (Overview &amp; Plan)</option>
+              <option value="2">2 (Month 1: Math &amp; Python)</option>
+              <option value="3">3 (Month 2: Pandas &amp; Git)</option>
+              <option value="4">4 (Month 3: EDA &amp; Viz)</option>
+              <option value="5">5 (Month 4: SQL &amp; BI)</option>
+              <option value="6">6 (Month 5: ML Foundations)</option>
+              <option value="7">7 (Month 6: Advanced ML)</option>
+              <option value="8">8 (Month 7: Deep Learning)</option>
+              <option value="9">9 (Month 8: Cloud &amp; FastAPI)</option>
+              <option value="10">10 (Month 9: GenAI &amp; LangChain)</option>
+              <option value="11">11 (Month 10: RAG Chatbots)</option>
+              <option value="12">12 (Month 11: Agentic AI &amp; MCP)</option>
+              <option value="13">13 (Month 12: Capstone &amp; Career)</option>
+              <option value="14">14 (Resource Reference Index)</option>
+              <option value="15">15 (Final Summary &amp; Advice)</option>
+            </select>
+            <span>of 15</span>
+          </div>
+
+          <button class="pdf-btn" id="pdfNextBtn" onclick="changeRoadmapPage(1)" title="Next Page">
+            Next ▶
+          </button>
+        </div>
+
+        <!-- View Mode Toggles -->
+        <div class="pdf-toolbar-group">
+          <button class="pdf-btn view-mode-btn active" data-mode="single" onclick="setRoadmapViewMode('single')" title="Single Page Slide View">
+            📄 Single Page
+          </button>
+          <button class="pdf-btn view-mode-btn" data-mode="continuous" onclick="setRoadmapViewMode('continuous')" title="Continuous Scroll All Pages">
+            📜 All Pages
+          </button>
+          <button class="pdf-btn view-mode-btn" data-mode="embed" onclick="setRoadmapViewMode('embed')" title="Native PDF Embed">
+            🖥️ Native PDF
+          </button>
+        </div>
+
+        <!-- Zoom & Tools Group -->
+        <div class="pdf-toolbar-group">
+          <button class="pdf-btn" onclick="setRoadmapZoom(-0.15)" title="Zoom Out">−</button>
+          <span id="pdfZoomDisp" style="font-size: 0.85rem; font-family: var(--font-mono); min-width: 44px; text-align: center;">100%</span>
+          <button class="pdf-btn" onclick="setRoadmapZoom(0.15)" title="Zoom In">+</button>
+          <button class="pdf-btn" onclick="setRoadmapZoom(0)" title="Reset Zoom">Reset</button>
+          <a href="assets/ai-roadmap.pdf" target="_blank" class="pdf-btn" title="Open PDF in New Browser Tab">
+            ⛶ Fullscreen
+          </a>
+        </div>
+
+      </div>
+
+      <!-- 1. Single Page Viewport -->
+      <div class="pdf-canvas-viewport" id="pdfSingleView">
+        <div class="pdf-page-wrapper" id="pdfPageWrapper">
+          <img id="pdfPageImage" src="assets/roadmap-pages/page-1.png" alt="Roadmap Page" class="pdf-page-img" loading="eager">
+        </div>
+      </div>
+
+      <!-- 2. Continuous Scroll Viewport (Hidden initially) -->
+      <div class="pdf-canvas-viewport" id="pdfContinuousView" style="display: none;">
+        <div class="pdf-continuous-scroll">
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 1 / 15: Overview</span><img src="assets/roadmap-pages/page-1.png" alt="Page 1" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 2 / 15: Month 1 (Math, Stats &amp; Python)</span><img src="assets/roadmap-pages/page-2.png" alt="Page 2" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 3 / 15: Month 2 (Pandas &amp; Git)</span><img src="assets/roadmap-pages/page-3.png" alt="Page 3" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 4 / 15: Month 3 (EDA &amp; Visualization)</span><img src="assets/roadmap-pages/page-4.png" alt="Page 4" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 5 / 15: Month 4 (SQL &amp; BI Tools)</span><img src="assets/roadmap-pages/page-5.png" alt="Page 5" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 6 / 15: Month 5 (ML Foundations)</span><img src="assets/roadmap-pages/page-6.png" alt="Page 6" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 7 / 15: Month 6 (Advanced ML &amp; XGBoost)</span><img src="assets/roadmap-pages/page-7.png" alt="Page 7" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 8 / 15: Month 7 (Deep Learning &amp; CNNs)</span><img src="assets/roadmap-pages/page-8.png" alt="Page 8" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 9 / 15: Month 8 (Cloud &amp; FastAPI)</span><img src="assets/roadmap-pages/page-9.png" alt="Page 9" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 10 / 15: Month 9 (GenAI &amp; LangChain)</span><img src="assets/roadmap-pages/page-10.png" alt="Page 10" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 11 / 15: Month 10 (RAG Chatbots)</span><img src="assets/roadmap-pages/page-11.png" alt="Page 11" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 12 / 15: Month 11 (Agentic AI &amp; Claude Code)</span><img src="assets/roadmap-pages/page-12.png" alt="Page 12" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 13 / 15: Month 12 (Capstone &amp; Portfolio)</span><img src="assets/roadmap-pages/page-13.png" alt="Page 13" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 14 / 15: Resource Reference Index</span><img src="assets/roadmap-pages/page-14.png" alt="Page 14" class="pdf-page-img" loading="lazy"></div>
+          <div class="pdf-continuous-item"><span class="pdf-page-badge">Page 15 / 15: Final Summary &amp; Advice</span><img src="assets/roadmap-pages/page-15.png" alt="Page 15" class="pdf-page-img" loading="lazy"></div>
+        </div>
+      </div>
+
+      <!-- 3. Native PDF Embed Viewport (Hidden initially) -->
+      <div id="pdfEmbedView" style="display: none; height: 850px; background: #000000;">
+        <iframe src="assets/ai-roadmap.pdf#toolbar=1" width="100%" height="100%" style="border: none;"></iframe>
+      </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- DETAILED 12-MONTH CURRICULUM BREAKDOWN -->
+    <!-- ============================================================ -->
+    <section id="curriculum-breakdown" style="margin-top: 3.5rem;">
+      <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+        <span class="card-badge badge-active" style="font-size: 0.75rem;">12-Month Structural Syllabus</span>
+        <h2 style="font-size: 1.85rem; margin: 0.4rem 0 0.2rem; color: var(--text-primary); border: none;">
+          Complete Month-by-Month Transformation Plan
+        </h2>
+        <p style="font-size: 0.95rem; color: var(--text-secondary); margin: 0;">
+          Step-by-step weekly goals designed to systematically eliminate guesswork and build an undeniable proof-of-work portfolio.
+        </p>
+      </div>
+
+      <div class="curriculum-grid">
+
+        <!-- MONTH 1 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 01 &bull; Foundations</span>
+          <h3>Math, Statistics &amp; Python Foundations</h3>
+          <p>Build the quantitative and software engineering base that all subsequent machine learning algorithms depend on.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Python syntax, primitives, control loops, conditionals, list comps</li>
+            <li><strong>Week 2:</strong> Functions, modular OOP (classes/objects), error handling, file I/O</li>
+            <li><strong>Week 3:</strong> Descriptive stats, probability, central tendency, dispersion, variance</li>
+            <li><strong>Week 4:</strong> Linear algebra: vectors, matrices, dot products, eigenvalues</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Build a CLI Statistical Calculator &amp; Vector Math Engine from scratch in pure Python.
+          </div>
+        </article>
+
+        <!-- MONTH 2 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 02 &bull; Data Manipulation</span>
+          <h3>Pandas, NumPy &amp; Git/GitHub</h3>
+          <p>Move beyond raw Python into professional, high-performance tabular data manipulation and version control.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> NumPy n-dim arrays, vectorization, slicing, broadcasting, speed benchmarks</li>
+            <li><strong>Week 2:</strong> Pandas Series &amp; DataFrames, indexing, querying, filtering, sorting</li>
+            <li><strong>Week 3:</strong> Data cleaning: handling NaNs, duplicates, string wrangling, date formatting</li>
+            <li><strong>Week 4:</strong> Git branching, commits, merges, conflicts, GitHub repository publishing</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Clean and transform messy real-world CSV/Excel datasets and publish documented repo to GitHub.
+          </div>
+        </article>
+
+        <!-- MONTH 3 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 03 &bull; Visual Analytics</span>
+          <h3>Exploratory Data Analysis (EDA) &amp; Viz</h3>
+          <p>Learn to interrogate and understand complex data before rushing into modeling—the single biggest differentiator for top analysts.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Matplotlib &amp; Seaborn fundamentals, chart types, aesthetics &amp; layouts</li>
+            <li><strong>Week 2:</strong> The end-to-end EDA framework: Univariate, Bivariate, and Multivariate analysis</li>
+            <li><strong>Week 3:</strong> Outlier detection (IQR, Z-score), skewness, correlation matrices, heatmap analysis</li>
+            <li><strong>Week 4:</strong> Interactive storytelling dashboards with Plotly &amp; Streamlit web apps</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Complete an end-to-end Kaggle EDA notebook with visual business hypotheses &amp; insights.
+          </div>
+        </article>
+
+        <!-- MONTH 4 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 04 &bull; Enterprise Data</span>
+          <h3>SQL &amp; BI Tools (Power BI / Tableau)</h3>
+          <p>Query relational databases directly and communicate high-stakes business KPIs through interactive enterprise dashboards.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> SQL basics: SELECT, WHERE, GROUP BY, HAVING, and relational JOINS</li>
+            <li><strong>Week 2:</strong> Advanced SQL: Subqueries, Window Functions (OVER, PARTITION BY, RANK), CTEs</li>
+            <li><strong>Week 3:</strong> Power BI / Tableau: Data modeling, Star Schema, Relationships, DAX calculations</li>
+            <li><strong>Week 4:</strong> Building interactive, executive-ready KPI dashboards and business reporting</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Full-scale Sales &amp; Operations BI Dashboard connected to a multi-table SQL database.
+          </div>
+        </article>
+
+        <!-- MONTH 5 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 05 &bull; Machine Learning</span>
+          <h3>Machine Learning Foundations</h3>
+          <p>Master the mathematical intuition and practical Scikit-Learn workflows behind classic supervised and unsupervised algorithms.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Supervised vs Unsupervised, Train/Test splitting, cross-validation, data leaks</li>
+            <li><strong>Week 2:</strong> Regression: Linear Regression, Cost functions, Gradient Descent, Ridge/Lasso</li>
+            <li><strong>Week 3:</strong> Classification: Logistic Regression, Decision Trees, KNN, Naive Bayes</li>
+            <li><strong>Week 4:</strong> Model evaluation: Confusion Matrix, Precision, Recall, F1-Score, ROC-AUC</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Customer Churn or House Price Predictor with benchmarked Scikit-Learn pipelines.
+          </div>
+        </article>
+
+        <!-- MONTH 6 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 06 &bull; Advanced ML</span>
+          <h3>Advanced ML, Feature Eng &amp; Ensembles</h3>
+          <p>Level up to industry gold-standard algorithms: Random Forests, Gradient Boosted Trees, and automated pipelines.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Ensemble methods: Bagging vs. Boosting, Random Forests, Out-of-Bag errors</li>
+            <li><strong>Week 2:</strong> XGBoost, LightGBM, and CatBoost deep dive and performance comparisons</li>
+            <li><strong>Week 3:</strong> Advanced Feature Engineering: Target Encoding, Polynomial Features, PCA</li>
+            <li><strong>Week 4:</strong> Hyperparameter tuning (Optuna, GridSearchCV) and building Sklearn Pipelines</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Competitive Kaggle tabular benchmark model exceeding baseline F1/RMSE by 15%+.
+          </div>
+        </article>
+
+        <!-- MONTH 7 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 07 &bull; Deep Learning</span>
+          <h3>Deep Learning &amp; Neural Networks</h3>
+          <p>Demystify artificial neural networks, backpropagation, and state-of-the-art vision and sequence architectures.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Perceptron, Multilayer Perceptron (MLP), Activation Functions, Backpropagation</li>
+            <li><strong>Week 2:</strong> PyTorch / TensorFlow fundamentals: Tensors, autograd, loss functions, optimizers</li>
+            <li><strong>Week 3:</strong> Convolutional Neural Networks (CNNs), pooling, transfer learning (ResNet, VGG)</li>
+            <li><strong>Week 4:</strong> Regularization in Deep Learning: Dropout, Batch Normalization, Learning Rate schedulers</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Image Classification and Medical / Structural Defect Detector using Transfer Learning.
+          </div>
+        </article>
+
+        <!-- MONTH 8 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 08 &bull; Production Engineering</span>
+          <h3>Cloud (AWS/GCP), Docker &amp; FastAPI</h3>
+          <p>Bridge the gap between experimental Jupyter Notebooks and production-grade, highly scalable REST APIs.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> FastAPI: Creating REST endpoints, Pydantic schemas, dependency injection</li>
+            <li><strong>Week 2:</strong> Model serialization (joblib/ONNX), async inference endpoints, input validation</li>
+            <li><strong>Week 3:</strong> Docker: Dockerfile authoring, multi-stage builds, container networking</li>
+            <li><strong>Week 4:</strong> Cloud deployment: Deploying Docker containers to AWS EC2 / GCP Cloud Run / HuggingFace</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Fully containerized, live cloud-deployed Machine Learning REST API with interactive Swagger docs.
+          </div>
+        </article>
+
+        <!-- MONTH 9 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 09 &bull; Generative AI</span>
+          <h3>Generative AI, LLMs &amp; LangChain</h3>
+          <p>Harness the power of Large Language Models (LLMs), prompt engineering, tokenomics, and LangChain orchestration.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Transformer architecture intuition: Attention mechanism, self-attention, tokens</li>
+            <li><strong>Week 2:</strong> OpenAI / Claude / Gemini APIs: System prompts, temperature, structured JSON output</li>
+            <li><strong>Week 3:</strong> LangChain fundamentals: Chains, PromptTemplates, OutputParsers, Memory</li>
+            <li><strong>Week 4:</strong> Open-source LLM inference: Ollama, HuggingFace Transformers, Quantization (GGUF)</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Custom AI Summarizer &amp; Document Intelligence Assistant powered by LangChain.
+          </div>
+        </article>
+
+        <!-- MONTH 10 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 10 &bull; Retrieval Augmented Gen</span>
+          <h3>RAG Chatbots &amp; Vector Databases</h3>
+          <p>Build enterprise RAG pipelines that connect LLMs to proprietary PDFs, knowledge bases, and private data stores.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Text embeddings, semantic search, cosine similarity, chunking strategies</li>
+            <li><strong>Week 2:</strong> Vector databases: ChromaDB, FAISS, and Pinecone setup, index creation, querying</li>
+            <li><strong>Week 3:</strong> End-to-end RAG architecture: Retrieval, reranking, prompt synthesis, source citations</li>
+            <li><strong>Week 4:</strong> Advanced RAG: Hybrid search (BM25 + Dense), Parent Document retrieval, RAG evaluation</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> "Chat with Your Data" Enterprise RAG Application with persistent vector database and citations.
+          </div>
+        </article>
+
+        <!-- MONTH 11 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 11 &bull; 2026 Vanguard Tech</span>
+          <h3>Agentic AI (LangGraph), MCP &amp; Claude Code</h3>
+          <p>Transition from passive chatbots to autonomous AI agents that reason, plan, use tools, and execute workflows.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> AI Agent architectures: ReAct framework, tool calling, multi-step reasoning loops</li>
+            <li><strong>Week 2:</strong> LangGraph: State machines, graphs, nodes, conditional edges, human-in-the-loop</li>
+            <li><strong>Week 3:</strong> Model Context Protocol (MCP): Building MCP servers, exposing tools and resources</li>
+            <li><strong>Week 4:</strong> Agentic coding with Claude Code &amp; Cursor: AI-assisted rapid software engineering</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Autonomous Research &amp; Data Analysis Agent with MCP tool execution and state persistence.
+          </div>
+        </article>
+
+        <!-- MONTH 12 -->
+        <article class="curriculum-card">
+          <span class="curriculum-badge">Month 12 &bull; Portfolio &amp; Career</span>
+          <h3>Capstone Projects, Portfolio &amp; Interviews</h3>
+          <p>Package your transformation into an undeniable personal brand, polished portfolio, and interview-winning demonstrations.</p>
+          <ul class="curriculum-weeks">
+            <li><strong>Week 1:</strong> Flagship Capstone: End-to-end GenAI + ML project integrating all prior skills</li>
+            <li><strong>Week 2:</strong> Documentation: Professional READMEs, architecture diagrams, live demo URLs</li>
+            <li><strong>Week 3:</strong> Resume optimization for career switchers: Framing engineering domain expertise</li>
+            <li><strong>Week 4:</strong> Technical interview prep: System design, coding rounds, behavioral storytelling</li>
+          </ul>
+          <div class="milestone-badge">
+            🎯 <strong>Milestone:</strong> Complete live portfolio website + 3 production-grade pinned GitHub repositories.
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- VERIFIED YOUTUBE REFERENCE INDEX -->
+    <!-- ============================================================ -->
+    <section id="resources-table" style="margin-top: 3.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm);">
+      <div style="margin-bottom: 1.25rem;">
+        <span class="card-badge badge-active" style="font-size: 0.75rem;">Verified Resource Directory</span>
+        <h2 style="font-size: 1.75rem; margin: 0.4rem 0 0.3rem; color: var(--text-primary); border: none;">
+          Official Curated Learning Resources (From Page 14)
+        </h2>
+        <p style="font-size: 0.94rem; color: var(--text-secondary); margin: 0;">
+          Direct, working links to every curated YouTube playlist and course referenced in the roadmap document:
+        </p>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Resource &amp; Creator</th>
+              <th>Key Skills Covered</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Python &amp; Core Coding</strong></td>
+              <td>CampusX — 100 Days of Python</td>
+              <td>Syntax, OOP, Functions, Generators, Decorators, Problem Solving</td>
+              <td><a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvb1RYR-BMb833yJdhA2484T" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Math &amp; Statistics</strong></td>
+              <td>StatQuest with Josh Starmer</td>
+              <td>Distributions, p-values, Central Limit Theorem, Hypothesis Testing</td>
+              <td><a href="https://www.youtube.com/@statquest" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Channel ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Pandas &amp; Data Analysis</strong></td>
+              <td>Corey Schafer — Pandas Tutorials</td>
+              <td>DataFrames, GroupBy, Filtering, Slicing, Time Series, Missing Values</td>
+              <td><a href="https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>EDA &amp; Visualization</strong></td>
+              <td>Krish Naik — Feature Engineering &amp; EDA</td>
+              <td>Handling Outliers, Skewness, Encoding, Heatmaps, Feature Selection</td>
+              <td><a href="https://www.youtube.com/playlist?list=PLZoTAELRMXVPgjwJ8VyRoqmfNs2CJwhVC" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>SQL &amp; Databases</strong></td>
+              <td>Alex The Analyst — SQL Playlist</td>
+              <td>SELECT, Aggregate Functions, JOINS, Subqueries, CTEs, Window Functions</td>
+              <td><a href="https://www.youtube.com/playlist?list=PLUaB-1hjhk8GZOu29vXE219m0V1w5s4yC" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Machine Learning</strong></td>
+              <td>CampusX — Complete Machine Learning Playlist</td>
+              <td>Linear/Logistic Regression, Trees, Random Forests, XGBoost, Pipelines</td>
+              <td><a href="https://www.youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Deep Learning</strong></td>
+              <td>freeCodeCamp — PyTorch for Beginners</td>
+              <td>Tensors, Autograd, Neural Networks, CNNs, Loss Functions, Optimizers</td>
+              <td><a href="https://www.youtube.com/watch?v=V_xro1bcAuA" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Watch Course ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Generative AI &amp; LLMs</strong></td>
+              <td>Krish Naik — Complete Generative AI Playlist</td>
+              <td>LangChain, OpenAI API, Prompt Engineering, Vector Stores, RAG Pipelines</td>
+              <td><a href="https://www.youtube.com/playlist?list=PLZoTAELRMXVM_xP_v_qY5FzI4y5y64f9_" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Open Playlist ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>FastAPI &amp; Production</strong></td>
+              <td>freeCodeCamp — FastAPI Course</td>
+              <td>RESTful APIs, Pydantic Models, Async Handlers, Dockerizing ML Models</td>
+              <td><a href="https://www.youtube.com/watch?v=0sOvCWFmrtA" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Watch Course ↗</a></td>
+            </tr>
+            <tr>
+              <td><strong>Agentic AI &amp; LangGraph</strong></td>
+              <td>LangChain Official — LangGraph Tutorials</td>
+              <td>State Graphs, Multi-Agent Systems, Conditional Branching, Human-in-the-Loop</td>
+              <td><a href="https://www.youtube.com/@LangChain" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.82rem; text-decoration: none !important;">Official Channel ↗</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- CAREER SWITCHER STRATEGY (PAGE 15) -->
+    <!-- ============================================================ -->
+    <section style="margin-top: 3.5rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); margin-bottom: 3.5rem;">
+      <span class="card-badge badge-active" style="font-size: 0.75rem;">Transition Strategy</span>
+      <h2 style="font-size: 1.75rem; margin: 0.4rem 0 0.5rem; color: var(--text-primary); border: none;">
+        Career Transition Blueprint &amp; Hiring Mindset (From Page 15)
+      </h2>
+      <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+        Transitioning from non-CS engineering (Civil, Mechanical, Electrical, Core) into modern Data Science is a superpower, not a handicap. Engineering disciplines teach quantitative modeling, tolerance estimation, and systems thinking.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div style="padding: 1.25rem; border-radius: 12px; background: var(--bg-code); border: 1px solid var(--border-color);">
+          <h4 style="margin: 0 0 0.5rem; color: var(--text-primary); font-size: 1.05rem;">1. Leverage Domain Knowledge</h4>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+            Build projects connected to your past industry (e.g. predictive maintenance, structural stress regression, energy usage forecasting). You speak the business language other fresh CS grads cannot.
+          </p>
+        </div>
+        <div style="padding: 1.25rem; border-radius: 12px; background: var(--bg-code); border: 1px solid var(--border-color);">
+          <h4 style="margin: 0 0 0.5rem; color: var(--text-primary); font-size: 1.05rem;">2. Proof of Work Beats Certificates</h4>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+            Recruiters don't hire generic certificates; they hire verifiable GitHub repos, clean documentation, interactive live demos (HuggingFace / Streamlit), and architectural diagrams.
+          </p>
+        </div>
+        <div style="padding: 1.25rem; border-radius: 12px; background: var(--bg-code); border: 1px solid var(--border-color);">
+          <h4 style="margin: 0 0 0.5rem; color: var(--text-primary); font-size: 1.05rem;">3. Master the 2026 AI Stack</h4>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+            Don't stop at Scikit-Learn. Companies today are aggressively looking for professionals who understand LLM inference, RAG architectures, Agentic loops (LangGraph), and Model Context Protocol (MCP).
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Python, Data Science, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Technologies</h4>
+            <ul class="footer-links">
+              <li><a href="python.html">Python Core</a></li>
+              <li><a href="statistics.html">Statistics</a></li>
+              <li><a href="probability.html">Probability</a></li>
+              <li><a href="excel.html">Microsoft Excel</a></li>
+              <li><a href="deep-learning.html">Deep Learning</a></li>
+              <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Roadmap Assets</h4>
+            <ul class="footer-links">
+              <li><a href="assets/ai-roadmap.pdf" download>Download Original PDF</a></li>
+              <li><a href="#ai-roadmap-section">Interactive Document Viewer</a></li>
+              <li><a href="#curriculum-breakdown">Full 12-Month Syllabus</a></li>
+              <li><a href="#resources-table">Curated Video Directory</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Data Scientists and AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

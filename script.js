@@ -379,4 +379,147 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Init AI Roadmap viewer if present
+  if (document.getElementById('ai-roadmap-section')) {
+    updateRoadmapViewerUI();
+  }
 });
+
+/* ============================================================
+   AI ROADMAP INTERACTIVE PDF VIEWER LOGIC
+   ============================================================ */
+
+let currentRoadmapPage = 1;
+const totalRoadmapPages = 15;
+let currentRoadmapZoom = 1.0;
+let currentRoadmapMode = 'single';
+
+function updateRoadmapViewerUI() {
+  // Update select dropdown
+  const pageSelect = document.getElementById('pdfPageSelect');
+  if (pageSelect) {
+    pageSelect.value = currentRoadmapPage;
+  }
+
+  // Update image source for single view
+  const pageImg = document.getElementById('pdfPageImage');
+  if (pageImg) {
+    pageImg.src = `assets/roadmap-pages/page-${currentRoadmapPage}.png`;
+    pageImg.alt = `Roadmap Page ${currentRoadmapPage} of ${totalRoadmapPages}`;
+  }
+
+  // Update navigation buttons
+  const prevBtn = document.getElementById('pdfPrevBtn');
+  const nextBtn = document.getElementById('pdfNextBtn');
+  if (prevBtn) {
+    prevBtn.disabled = currentRoadmapPage <= 1;
+    prevBtn.style.opacity = currentRoadmapPage <= 1 ? '0.5' : '1';
+    prevBtn.style.cursor = currentRoadmapPage <= 1 ? 'not-allowed' : 'pointer';
+  }
+  if (nextBtn) {
+    nextBtn.disabled = currentRoadmapPage >= totalRoadmapPages;
+    nextBtn.style.opacity = currentRoadmapPage >= totalRoadmapPages ? '0.5' : '1';
+    nextBtn.style.cursor = currentRoadmapPage >= totalRoadmapPages ? 'not-allowed' : 'pointer';
+  }
+
+  // Update Month Pills active state
+  const pills = document.querySelectorAll('.roadmap-month-pill');
+  pills.forEach((pill) => {
+    const pageNum = parseInt(pill.getAttribute('data-page'), 10);
+    if (pageNum === currentRoadmapPage) {
+      pill.classList.add('active');
+      pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // If in continuous view mode, scroll the target page item into view
+  if (currentRoadmapMode === 'continuous') {
+    const continuousItems = document.querySelectorAll('.pdf-continuous-item');
+    if (continuousItems[currentRoadmapPage - 1]) {
+      continuousItems[currentRoadmapPage - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+}
+
+function setRoadmapPage(page) {
+  const target = parseInt(page, 10);
+  if (isNaN(target)) return;
+  currentRoadmapPage = Math.max(1, Math.min(totalRoadmapPages, target));
+  updateRoadmapViewerUI();
+}
+
+function changeRoadmapPage(delta) {
+  setRoadmapPage(currentRoadmapPage + delta);
+}
+
+function setRoadmapZoom(change) {
+  const zoomDisp = document.getElementById('pdfZoomDisp');
+  const pageWrapper = document.getElementById('pdfPageWrapper');
+
+  if (change === 0) {
+    currentRoadmapZoom = 1.0;
+  } else {
+    currentRoadmapZoom = Math.min(2.0, Math.max(0.6, Math.round((currentRoadmapZoom + change) * 100) / 100));
+  }
+
+  if (zoomDisp) {
+    zoomDisp.textContent = `${Math.round(currentRoadmapZoom * 100)}%`;
+  }
+
+  if (pageWrapper) {
+    pageWrapper.style.transform = `scale(${currentRoadmapZoom})`;
+    pageWrapper.style.transformOrigin = 'top center';
+  }
+}
+
+function setRoadmapViewMode(mode) {
+  currentRoadmapMode = mode;
+  const singleView = document.getElementById('pdfSingleView');
+  const continuousView = document.getElementById('pdfContinuousView');
+  const embedView = document.getElementById('pdfEmbedView');
+  const modeBtns = document.querySelectorAll('.view-mode-btn');
+
+  modeBtns.forEach((btn) => {
+    if (btn.getAttribute('data-mode') === mode) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  if (singleView) singleView.style.display = mode === 'single' ? 'flex' : 'none';
+  if (continuousView) continuousView.style.display = mode === 'continuous' ? 'block' : 'none';
+  if (embedView) embedView.style.display = mode === 'embed' ? 'block' : 'none';
+
+  if (mode === 'continuous') {
+    const continuousItems = document.querySelectorAll('.pdf-continuous-item');
+    if (continuousItems[currentRoadmapPage - 1]) {
+      continuousItems[currentRoadmapPage - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+}
+
+// Global keyboard arrow navigation for roadmap viewer
+document.addEventListener('keydown', (e) => {
+  const roadmapSection = document.getElementById('ai-roadmap-section');
+  if (!roadmapSection) return;
+
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea') return;
+
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+    const rect = roadmapSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      changeRoadmapPage(1);
+    }
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    const rect = roadmapSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      changeRoadmapPage(-1);
+    }
+  }
+});
+
