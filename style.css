@@ -1184,7 +1184,70 @@ pre {
   font-family: var(--font-mono);
   font-size: 0.9rem;
   line-height: 1.6;
+  background: var(--code-bg);
   color: var(--code-text);
+  border-radius: 8px;
+}
+
+pre code {
+  color: var(--code-text) !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Terminal Card Styling for Shell Snippets */
+.terminal-card {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  margin: 1.25rem 0;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.terminal-header {
+  background: #161b22;
+  padding: 0.55rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid #30363d;
+}
+
+.terminal-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27c93f; }
+
+.terminal-title {
+  margin-left: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+.terminal-body {
+  background: #0d1117 !important;
+  color: #e6edf3 !important;
+  padding: 1.25rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.terminal-body code {
+  color: #e6edf3 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 code {
@@ -1672,4 +1735,74 @@ footer {
   font-weight: 600;
   pointer-events: none;
 }
+
+/* Click-Path Badge (Light & Dark theme aware) */
+.click-path-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(66, 133, 244, 0.12);
+  border: 1px solid rgba(66, 133, 244, 0.35);
+  color: #1a73e8;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+[data-theme="dark"] .click-path-badge {
+  background: rgba(66, 133, 244, 0.18);
+  border-color: rgba(66, 133, 244, 0.45);
+  color: #93c5fd;
+}
+
+/* Callout Boxes (Light & Dark theme aware) */
+.callout-warning {
+  background: rgba(234, 179, 8, 0.1);
+  border-left: 4px solid #eab308;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  color: var(--text-primary);
+}
+
+.callout-danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  color: var(--text-primary);
+}
+
+.callout-tip {
+  background: rgba(34, 197, 94, 0.1);
+  border-left: 4px solid #22c55e;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  color: var(--text-primary);
+}
+
+/* Hierarchy & Architecture Blueprint Trees */
+.hierarchy-tree {
+  background: #0d1117;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.hierarchy-tree div {
+  color: #e6edf3;
+}
+
 

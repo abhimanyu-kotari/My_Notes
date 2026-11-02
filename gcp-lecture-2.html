@@ -14,44 +14,59 @@
       align-items: center;
       gap: 0.4rem;
       background: rgba(66, 133, 244, 0.12);
-      border: 1px solid rgba(66, 133, 244, 0.3);
-      color: #93c5fd;
+      border: 1px solid rgba(66, 133, 244, 0.35);
+      color: #1a73e8;
       padding: 0.35rem 0.75rem;
       border-radius: 8px;
       font-family: var(--font-mono);
       font-size: 0.84rem;
+      font-weight: 600;
       margin: 0.5rem 0;
     }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(66, 133, 244, 0.18);
+      border-color: rgba(66, 133, 244, 0.45);
+      color: #93c5fd;
+    }
     .callout-warning {
-      background: rgba(234, 179, 8, 0.1);
+      background: rgba(234, 179, 8, 0.12);
       border-left: 4px solid #eab308;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .callout-danger {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(239, 68, 68, 0.12);
       border-left: 4px solid #ef4444;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .callout-tip {
-      background: rgba(34, 197, 94, 0.1);
+      background: rgba(34, 197, 94, 0.12);
       border-left: 4px solid #22c55e;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .hierarchy-tree {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
       border-radius: 10px;
       padding: 1.5rem;
       margin: 1.5rem 0;
       font-family: var(--font-mono);
       font-size: 0.88rem;
       line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+    .hierarchy-tree div {
+      color: #e6edf3;
     }
   </style>
 </head>
@@ -227,7 +242,12 @@
         </ol>
 
         <h3>2. Creating a Project via `gcloud` CLI</h3>
-        <pre><code class="language-bash"># 1. Create a project with an explicit unique ID and a human-friendly display name
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># 1. Create a project with an explicit unique ID and a human-friendly display name
 gcloud projects create gcloud-basics-2026 --name="GCloud Basics 2026"
 
 # 2. List all projects accessible by your authenticated account
@@ -235,26 +255,44 @@ gcloud projects list
 
 # 3. View detailed metadata (create time, state, project number)
 gcloud projects describe gcloud-basics-2026</code></pre>
+        </div>
 
         <h3>3. Setting the Active Working Project</h3>
         <p>
           Just like navigating into a folder with <code>cd</code>, you must tell <code>gcloud</code> which project your commands should target:
         </p>
-        <pre><code class="language-bash"># Tell gcloud to target your new project for all subsequent commands
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Tell gcloud to target your new project for all subsequent commands
 gcloud config set project gcloud-basics-2026
 
 # Verify that your active project was updated
 gcloud config list project</code></pre>
+        </div>
 
         <h3>4. Configuring Application Default Credentials (ADC)</h3>
         <p>
           If you write Python code using the <code>google-cloud-storage</code> or <code>google-cloud-bigquery</code> SDKs, your code needs local credentials to run:
         </p>
-        <pre><code class="language-bash"># Authenticates your local environment for Python/Node.js client libraries
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Authenticates your local environment for Python/Node.js client libraries
 gcloud auth application-default login</code></pre>
+        </div>
 
         <h3>5. Linking Your Project to a Billing Account</h3>
-        <pre><code class="language-bash"># Get your Billing Account ID
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Get your Billing Account ID
 gcloud billing accounts list
 
 # Link your active project to the billing account
@@ -263,6 +301,7 @@ gcloud billing projects link gcloud-basics-2026 \
 
 # Verify billing linkage
 gcloud billing projects describe gcloud-basics-2026</code></pre>
+        </div>
       </section>
 
       <!-- ============================================================ -->
@@ -353,26 +392,44 @@ gcloud billing projects describe gcloud-basics-2026</code></pre>
         </p>
 
         <h3>1. Inspecting Active IAM Policies</h3>
-        <pre><code class="language-bash"># View all users, service accounts, and roles bound to your project
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># View all users, service accounts, and roles bound to your project
 gcloud projects get-iam-policy gcloud-basics-2026</code></pre>
+        </div>
 
         <h3>2. Granting Access to a Teammate (Adding Policy Binding)</h3>
         <p>
           Let's grant read-only access to our Cloud Storage objects to a data analyst colleague:
         </p>
-        <pre><code class="language-bash"># Grant the 'Storage Object Viewer' role to a specific user email
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Grant the 'Storage Object Viewer' role to a specific user email
 gcloud projects add-iam-policy-binding gcloud-basics-2026 \
   --member="user:analyst.colleague@gmail.com" \
   --role="roles/storage.objectViewer"</code></pre>
+        </div>
 
         <h3>3. Revoking Access (Removing Policy Binding)</h3>
         <p>
           When an analyst finishes their project or leaves the team, clean up and remove the permission immediately:
         </p>
-        <pre><code class="language-bash"># Revoke the role immediately
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Revoke the role immediately
 gcloud projects remove-iam-policy-binding gcloud-basics-2026 \
   --member="user:analyst.colleague@gmail.com" \
   --role="roles/storage.objectViewer"</code></pre>
+        </div>
 
         <h3>4. Web Console Navigation for IAM</h3>
         <div class="click-path-badge">
@@ -398,7 +455,13 @@ gcloud projects remove-iam-policy-binding gcloud-basics-2026 \
         <p>
           It does not have a human password, cannot log in through a web browser with 2-factor SMS codes, and has an email address ending in:
         </p>
-        <pre><code class="language-text">[service-account-name]@[project-id].iam.gserviceaccount.com</code></pre>
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">Terminal Output</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">[service-account-name]@[project-id].iam.gserviceaccount.com</code></pre>
+        </div>
 
         <h3>2. Why AI Agents Must Use Service Accounts</h3>
         <ul>
@@ -408,18 +471,30 @@ gcloud projects remove-iam-policy-binding gcloud-basics-2026 \
         </ul>
 
         <h3>3. Creating a Service Account via `gcloud` CLI</h3>
-        <pre><code class="language-bash"># 1. Create a service account for your AI agent
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># 1. Create a service account for your AI agent
 gcloud iam service-accounts create ai-storage-reader \
   --display-name="AI Agent Storage Reader"
 
 # 2. List all service accounts in the project to verify creation
 gcloud iam service-accounts list</code></pre>
+        </div>
 
         <h3>4. Granting Least-Privilege Roles to the Service Account</h3>
-        <pre><code class="language-bash"># Bind the Storage Object Viewer role to the newly created service account
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Bind the Storage Object Viewer role to the newly created service account
 gcloud projects add-iam-policy-binding gcloud-basics-2026 \
   --member="serviceAccount:ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com" \
   --role="roles/storage.objectViewer"</code></pre>
+        </div>
       </section>
 
       <!-- ============================================================ -->
@@ -433,21 +508,38 @@ gcloud projects add-iam-policy-binding gcloud-basics-2026 \
           A <strong>Service Account Key</strong> is a downloadable JSON credential file containing a private RSA key. Your external Python code or local Docker container reads this file to prove its identity to Google Cloud:
         </p>
 
-        <pre><code class="language-bash"># Generate and download a private key for your service account
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Generate and download a private key for your service account
 gcloud iam service-accounts keys create key.json \
   --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"</code></pre>
+        </div>
 
         <p>Inside <code>key.json</code>, you will find structure similar to:</p>
-        <pre><code class="language-json">{
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">json</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-json">{
   "type": "service_account",
   "project_id": "gcloud-basics-2026",
   "private_key_id": "893b1029c9284091823901",
   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgw...",
   "client_email": "ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"
 }</code></pre>
+        </div>
 
         <h3>2. Using the Key in Python Code</h3>
-        <pre><code class="language-python">from google.cloud import storage
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from google.cloud import storage
 
 # Point Google client libraries to your downloaded key file
 import os
@@ -456,6 +548,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
 client = storage.Client()
 buckets = list(client.list_buckets())
 print("Connected successfully via Service Account!")</code></pre>
+        </div>
 
         <h3>3. The #1 Security Catastrophe: Committing `key.json` to GitHub</h3>
         <div class="callout-danger">
@@ -471,13 +564,19 @@ print("Connected successfully via Service Account!")</code></pre>
 
         <h3>4. Revoking and Deleting Leaked Keys</h3>
         <p>If a key is ever compromised or no longer needed, delete it immediately:</p>
-        <pre><code class="language-bash"># 1. List active keys for the service account
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># 1. List active keys for the service account
 gcloud iam service-accounts keys list \
   --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"
 
 # 2. Delete the key by its Key ID
 gcloud iam service-accounts keys delete "893b1029c9284091823901" \
   --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"</code></pre>
+        </div>
       </section>
 
       <!-- ============================================================ -->
@@ -556,7 +655,7 @@ gcloud iam service-accounts keys delete "893b1029c9284091823901" \
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
-          <a href="gcp-lecture-1.html" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none !important;">
+          <a href="gcp-lecture-1.html" class="btn-secondary" style="text-decoration: none !important;">
             ← Previous: Lecture 1 (Architecture &amp; Console)
           </a>
           <a href="gcp-lecture-3.html" class="btn-primary" style="text-decoration: none !important;">

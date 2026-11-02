@@ -14,44 +14,59 @@
       align-items: center;
       gap: 0.4rem;
       background: rgba(66, 133, 244, 0.12);
-      border: 1px solid rgba(66, 133, 244, 0.3);
-      color: #93c5fd;
+      border: 1px solid rgba(66, 133, 244, 0.35);
+      color: #1a73e8;
       padding: 0.35rem 0.75rem;
       border-radius: 8px;
       font-family: var(--font-mono);
       font-size: 0.84rem;
+      font-weight: 600;
       margin: 0.5rem 0;
     }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(66, 133, 244, 0.18);
+      border-color: rgba(66, 133, 244, 0.45);
+      color: #93c5fd;
+    }
     .callout-warning {
-      background: rgba(234, 179, 8, 0.1);
+      background: rgba(234, 179, 8, 0.12);
       border-left: 4px solid #eab308;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .callout-danger {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(239, 68, 68, 0.12);
       border-left: 4px solid #ef4444;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .callout-tip {
-      background: rgba(34, 197, 94, 0.1);
+      background: rgba(34, 197, 94, 0.12);
       border-left: 4px solid #22c55e;
       border-radius: 6px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
+      color: var(--text-primary);
     }
     .hierarchy-tree {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
       border-radius: 10px;
       padding: 1.5rem;
       margin: 1.5rem 0;
       font-family: var(--font-mono);
       font-size: 0.88rem;
       line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+    .hierarchy-tree div {
+      color: #e6edf3;
     }
   </style>
 </head>
@@ -170,12 +185,13 @@
           Google Cloud uses a standardized naming scheme for all locations worldwide.
         </p>
 
-        <div class="terminal-card">
+        <div class="code-wrapper terminal-card">
           <div class="terminal-header">
             <span class="terminal-dot red"></span>
             <span class="terminal-dot yellow"></span>
             <span class="terminal-dot green"></span>
             <span class="terminal-title">gcp-region-and-zone-naming-pattern</span>
+            <button class="btn-copy" style="margin-left:auto;" onclick="copyCode(this)">Copy</button>
           </div>
           <pre class="terminal-body"><code># Region Format: [geographic-area]-[compass-direction][index]
 # Example Regions:
@@ -209,12 +225,13 @@ asia-south1-c</code></pre>
           Every time you create a Virtual Machine, a Cloud Run service, or a database, GCP will prompt you for a region and zone. If you don't want to type <code>--region</code> and <code>--zone</code> in every single command, you can set defaults in your <code>gcloud</code> configuration.
         </p>
 
-        <div class="terminal-card">
+        <div class="code-wrapper terminal-card">
           <div class="terminal-header">
             <span class="terminal-dot red"></span>
             <span class="terminal-dot yellow"></span>
             <span class="terminal-dot green"></span>
             <span class="terminal-title">bash &mdash; gcloud config compute defaults</span>
+            <button class="btn-copy" style="margin-left:auto;" onclick="copyCode(this)">Copy</button>
           </div>
           <pre class="terminal-body"><code># 1. List all available regions in Google Cloud
 gcloud compute regions list
@@ -285,12 +302,13 @@ gcloud config get-value compute/zone</code></pre>
           As an engineer or DevOps specialist, you will automate API enablement using <code>gcloud services</code>:
         </p>
 
-        <div class="terminal-card">
+        <div class="code-wrapper terminal-card">
           <div class="terminal-header">
             <span class="terminal-dot red"></span>
             <span class="terminal-dot yellow"></span>
             <span class="terminal-dot green"></span>
             <span class="terminal-title">bash &mdash; gcloud services commands</span>
+            <button class="btn-copy" style="margin-left:auto;" onclick="copyCode(this)">Copy</button>
           </div>
           <pre class="terminal-body"><code># 1. Enable Compute Engine API (VMs, Disks, Networks)
 gcloud services enable compute.googleapis.com
@@ -344,12 +362,13 @@ gcloud services disable compute.googleapis.com</code></pre>
           Let's run a quick interactive test to verify our Cloud Shell environment and test Python execution against GCP:
         </p>
 
-        <div class="terminal-card">
+        <div class="code-wrapper terminal-card">
           <div class="terminal-header">
             <span class="terminal-dot red"></span>
             <span class="terminal-dot yellow"></span>
             <span class="terminal-dot green"></span>
             <span class="terminal-title">cloud-shell &mdash; bash terminal session</span>
+            <button class="btn-copy" style="margin-left:auto;" onclick="copyCode(this)">Copy</button>
           </div>
           <pre class="terminal-body"><code># Step 1: Check who you are logged in as
 gcloud auth list
@@ -402,12 +421,13 @@ python3 test_gcp.py</code></pre>
           Deleting the project nukes <strong>everything</strong> inside it simultaneously. It stops all billing immediately.
         </p>
 
-        <div class="terminal-card">
+        <div class="code-wrapper terminal-card">
           <div class="terminal-header">
             <span class="terminal-dot red"></span>
             <span class="terminal-dot yellow"></span>
             <span class="terminal-dot green"></span>
             <span class="terminal-title">bash &mdash; project teardown commands</span>
+            <button class="btn-copy" style="margin-left:auto;" onclick="copyCode(this)">Copy</button>
           </div>
           <pre class="terminal-body"><code># 1. Delete a sandbox project completely
 gcloud projects delete [PROJECT_ID]
@@ -518,7 +538,7 @@ gcloud projects delete ak-sandbox-lab-01
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
-          <a href="gcp-lecture-2.html" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none !important;">
+          <a href="gcp-lecture-2.html" class="btn-secondary" style="text-decoration: none !important;">
             ← Previous: Lecture 2 (Projects &amp; IAM Security)
           </a>
           <a href="gcp.html" class="btn-primary" style="text-decoration: none !important;">
