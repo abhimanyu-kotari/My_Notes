@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Cloud Architecture, Billing & Console Navigation | GCP Masterclass Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .console-ui-mockup {
+      background: #1e1e24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #2b2b36;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #18181f;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(66, 133, 244, 0.15);
+      color: #60a5fa;
+      border-left: 3px solid #3b82f6;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #121217;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(66, 133, 244, 0.12);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      color: #93c5fd;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      margin: 0.5rem 0;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.1);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="gcp.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to GCP Hub</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 1 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#what-is-cloud" class="sidebar-link">1. The Mental Model: What is Cloud?</a></li>
+        <li><a href="#three-models" class="sidebar-link">2. IaaS vs. PaaS vs. SaaS Models</a></li>
+        <li><a href="#cloud-vs-workspace" class="sidebar-link">3. GCP vs. Google Workspace</a></li>
+        <li><a href="#free-trial" class="sidebar-link">4. $300 Free Trial Setup &amp; Safety</a></li>
+        <li><a href="#console-tour" class="sidebar-link">5. Google Cloud Console Layout Map</a></li>
+        <li><a href="#billing-budgets" class="sidebar-link">6. Billing Accounts &amp; Budget Alerts</a></li>
+        <li><a href="#cli-setup" class="sidebar-link">7. Google Cloud CLI (`gcloud`) Setup</a></li>
+        <li><a href="#lecture-1-cheatsheet" class="sidebar-link">8. Lecture 1 Cheat Sheet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 01 Notes</span>
+          <span class="tag">GCP Fundamentals</span>
+          <span class="tag">Cloud Architecture</span>
+          <span class="tag">IaaS PaaS SaaS</span>
+          <span class="tag">Free Trial ($300)</span>
+          <span class="tag">Console UI Map</span>
+          <span class="tag">gcloud CLI</span>
+        </div>
+        <h1 class="lecture-main-title">Cloud Architecture, Billing &amp; Console Navigation</h1>
+        <p class="lecture-lead">
+          <strong>What is this lecture about?</strong> This module establishes the ground-floor foundations of Google Cloud Platform (GCP). We demystify what the cloud actually is using the simple Uber rental mental model, break down the three core service tiers (IaaS, PaaS, SaaS), clarify why Google Workspace is completely different from Google Cloud, guide you step-by-step through setting up your $300 free trial account safely, tour the real Google Cloud Console UI, configure proactive budget alerts to eliminate bill shock, and install, authenticate, and configure the Google Cloud CLI (<code>gcloud</code>).<br>
+          <strong>Why is this critical for engineers?</strong> In modern software engineering and Agentic AI, your local computer does not have the high-memory GPU clusters, terabyte vector stores, or auto-scaling infrastructure required to run production workloads. Cloud lets you rent enterprise-grade supercomputing infrastructure on demand, paying only for the exact seconds your application executes.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: WHAT IS CLOUD -->
+      <!-- ============================================================ -->
+      <section id="what-is-cloud" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Mental Model: What is Cloud Computing?</h2>
+
+        <h3>1. The "Uber Car Rental" Analogy</h3>
+        <p>
+          Think about how you travel to a hill station or office. If you own a private car, you must pay upfront for the vehicle purchase, ongoing maintenance, insurance, tire changes, fuel, and parking space. But what if you don't own a car or don't want the liability?
+        </p>
+        <p>
+          You simply open your phone and book an <strong>Uber</strong>. You rent the car for the exact distance of your trip, reach your destination, pay only for what you consumed, and walk away. You don't care about oil changes or garage repairs.
+        </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #60a5fa;">The Core Definition of Cloud:</h4>
+          <p style="margin: 0; font-size: 1.05rem; line-height: 1.6; color: var(--text-primary);">
+            <strong>Cloud computing is simply renting someone else's high-power computers, massive storage, and software over the internet on a pay-as-you-go model.</strong>
+          </p>
+        </div>
+
+        <h3>2. Why Cloud is Non-Negotiable for AI Engineers &amp; Developers</h3>
+        <ul>
+          <li><strong>High-End GPUs on Demand:</strong> Running modern Large Language Models (LLMs) or fine-tuning diffusion models requires enterprise GPUs (NVIDIA H100, A100, L4) that cost tens of thousands of dollars to buy physically. On GCP, you can spin one up for an hour, run your experiment, and shut it off.</li>
+          <li><strong>Infinite Elastic Storage:</strong> AI agents and enterprise systems generate gigabytes to petabytes of unstructured documents, embeddings, and transaction tables daily. Cloud storage scales automatically without buying physical hard drives.</li>
+          <li><strong>Instant Scalability:</strong> If your web app has 10 users at 3 AM and spikes to 1,000,000 users at noon, the cloud automatically spins up new server instances to handle the traffic, and shrinks back down when traffic subsides.</li>
+          <li><strong>Pay-Only-For-What-You-Use:</strong> If a virtual machine runs for 17 minutes, you are billed for exactly 17 minutes—not a penny more.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: THREE SERVICE MODELS -->
+      <!-- ============================================================ -->
+      <section id="three-models" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The 3 Cloud Service Models (IaaS, PaaS, SaaS)</h2>
+
+        <p>
+          Everything Google Cloud provides over the internet falls into one of three architectural tiers. Think of it like building a modern city:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Service Model</th>
+                <th>City Analogy</th>
+                <th>What Google Provides</th>
+                <th>What You Manage</th>
+                <th>GCP Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>IaaS</strong><br><small style="color: var(--text-muted);">Infrastructure as a Service</small></td>
+                <td>Raw roads, bridges, and power lines</td>
+                <td>Physical data centers, server hardware, networking cables, hypervisors</td>
+                <td>Operating System (Linux/Windows), runtime, code, data, security patches</td>
+                <td><strong>Compute Engine (VMs)</strong>, Persistent Disk, Virtual Private Cloud (VPC)</td>
+              </tr>
+              <tr>
+                <td><strong>PaaS</strong><br><small style="color: var(--text-muted);">Platform as a Service</small></td>
+                <td>City bus or subway system (pre-built transit)</td>
+                <td>Hardware, OS, networking, auto-scaling, load balancers, container runtime</td>
+                <td>Just your application code and configuration! (Zero server management)</td>
+                <td><strong>Cloud Run</strong>, App Engine, Cloud Functions</td>
+              </tr>
+              <tr>
+                <td><strong>SaaS</strong><br><small style="color: var(--text-muted);">Software as a Service</small></td>
+                <td>A fully furnished, staffed hotel room</td>
+                <td>Complete, working software product ready to use immediately</td>
+                <td>Your data, user settings, and application integrations</td>
+                <td><strong>Gmail</strong>, Google Docs, Google Sheets, Google Maps Platform</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout-tip">
+          <strong>💡 Developer Tip:</strong> As an AI engineer, <strong>Cloud Run (PaaS)</strong> is your secret weapon. You write your FastAPI or LangChain code in VS Code, push your container image, and Cloud Run instantly gives you an HTTPS URL that scales from 0 to 1,000 instances automatically.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: GCP VS WORKSPACE -->
+      <!-- ============================================================ -->
+      <section id="cloud-vs-workspace" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Critical Distinction: Google Cloud vs. Google Workspace</h2>
+
+        <p>
+          One of the most widespread pitfalls among beginners is confusing Google Cloud with Google Workspace. Let's make this crystal clear:
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+            <h4 style="margin-top: 0; color: #f87171;">🏢 Google Workspace (For End Users)</h4>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+              A suite of pre-built productivity SaaS applications designed for ordinary office workers and students:
+            </p>
+            <ul style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0;">
+              <li>Gmail, Google Docs, Google Sheets, Google Drive, Google Calendar</li>
+              <li>You don't configure servers or manage virtual machines here</li>
+              <li>You use the software as-is to write documents or send emails</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--bg-card); border: 2px solid #3b82f6; border-radius: 10px; padding: 1.5rem;">
+            <h4 style="margin-top: 0; color: #60a5fa;">☁️ Google Cloud Platform (For Developers &amp; Engineers)</h4>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+              A massive developer cloud infrastructure ecosystem used to build, deploy, scale, and monitor your own custom software:
+            </p>
+            <ul style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0;">
+              <li>Compute Engine, Cloud Storage, Vertex AI, BigQuery, Cloud Run</li>
+              <li>Targeted at developers, data scientists, and cloud architects</li>
+              <li><strong>Fun Fact:</strong> Google uses GCP internally to power Google Drive, YouTube, and Gmail!</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: FREE TRIAL -->
+      <!-- ============================================================ -->
+      <section id="free-trial" class="note-section content-section">
+        <h2><span class="section-number">04.</span> $300 Free Trial Setup &amp; Financial Safety</h2>
+
+        <h3>1. What the Free Trial Gives You</h3>
+        <ul>
+          <li><strong>$300 USD (Approx. ₹28,000+ INR) Free Credits:</strong> Valid for a full <strong>90 days</strong>.</li>
+          <li><strong>Access to All Flagship GCP Services:</strong> You can spin up Compute Engine VMs, create Cloud Storage buckets, query BigQuery, and test Vertex AI models without paying out of pocket.</li>
+          <li><strong>Always Free Tier:</strong> Even after the trial ends, GCP provides specific monthly allowances that remain 100% free indefinitely (e.g., 1 e2-micro VM in US regions, 5 GB Cloud Storage, 1 TB BigQuery queries/month).</li>
+        </ul>
+
+        <h3>2. The Verification Step (Why You Are Charged ₹1,000 / $1)</h3>
+        <p>
+          During sign-up, Google will ask for your credit card or UPI/QR code and initiate a temporary verification transaction (usually ₹1,000 INR or $1 USD):
+        </p>
+        <div class="callout-tip">
+          <strong>✅ Don't Panic:</strong> This is <strong>not a payment for usage</strong>. It is an automated banking verification check to confirm that you are a genuine human user rather than an automated bot abusing free trial servers. In most cases, this authorization amount is refunded back to your account.
+        </div>
+
+        <h3>3. The Golden Rule of Free Trial Safety</h3>
+        <div class="callout-warning">
+          <strong>⚠️ Will Google Auto-Bill My Bank Account When 90 Days End?</strong><br>
+          <strong>NO.</strong> Google Cloud explicitly guarantees that your bank account will <strong>NEVER</strong> be automatically billed once your 90-day trial expires or your $300 credit is exhausted. Your services will simply pause. Google will only charge your payment method if you <em>manually click the button to upgrade to a full paid account</em>.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: CONSOLE TOUR -->
+      <!-- ============================================================ -->
+      <section id="console-tour" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Google Cloud Console Layout Map</h2>
+
+        <p>
+          The <strong>Google Cloud Console</strong> (<a href="https://console.cloud.google.com" target="_blank" rel="noopener">console.cloud.google.com</a>) is the official web UI dashboard. Let's inspect its structural layout:
+        </p>
+
+        <!-- UI Layout Mockup -->
+        <div class="console-ui-mockup">
+          <div class="console-ui-topbar">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-weight: 700; color: #fff;">☰ Google Cloud</span>
+              <span style="background: #3c3c4f; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;">Project: my-ai-project-101 ▾</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <span style="background: #18181f; padding: 0.25rem 0.75rem; border-radius: 6px; color: #94a3b8;">🔍 Search products, resources, docs (/)...</span>
+              <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 0.2rem 0.5rem; border-radius: 4px;">Free Trial: $300 credit</span>
+              <span style="font-weight: 700; color: #60a5fa;">[ >_ Cloud Shell ]</span>
+              <span>🔔</span>
+              <span>👤</span>
+            </div>
+          </div>
+          <div class="console-ui-body">
+            <div class="console-ui-sidebar">
+              <div class="console-ui-menu-item active">📊 Dashboard</div>
+              <div class="console-ui-menu-item">💳 Billing</div>
+              <div class="console-ui-menu-item">🔑 IAM &amp; Admin</div>
+              <div class="console-ui-menu-item">🔌 APIs &amp; Services</div>
+              <div class="console-ui-menu-item">💻 Compute Engine</div>
+              <div class="console-ui-menu-item">🪣 Cloud Storage</div>
+              <div class="console-ui-menu-item">🚀 Cloud Run</div>
+              <div class="console-ui-menu-item">🗄️ Cloud SQL</div>
+              <div class="console-ui-menu-item">🤖 Vertex AI</div>
+            </div>
+            <div class="console-ui-canvas">
+              <h3 style="margin-top: 0; color: #f8fafc;">Project Dashboard Overview</h3>
+              <p style="color: #94a3b8; font-size: 0.85rem;">Project ID: <code>my-ai-project-101</code> &bull; Project Number: <code>482910481029</code></p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <div style="background: #1c1c24; padding: 0.75rem; border-radius: 8px; border: 1px solid #333;">
+                  <strong style="color: #60a5fa;">Compute Usage</strong><br>
+                  <span style="font-size: 0.78rem; color: #94a3b8;">0 running instances (0% quota)</span>
+                </div>
+                <div style="background: #1c1c24; padding: 0.75rem; border-radius: 8px; border: 1px solid #333;">
+                  <strong style="color: #4ade80;">Billing &amp; Estimated Charges</strong><br>
+                  <span style="font-size: 0.78rem; color: #94a3b8;">₹0.00 accrued &bull; 100% credits remaining</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Key Navigation Click Paths</h3>
+        <p>Memorize these three foundational UI click paths:</p>
+        
+        <div style="margin-bottom: 0.75rem;">
+          <strong>1. Turning on Developer Dark Mode:</strong><br>
+          <span class="click-path-badge">Top Right Profile 👤 ➔ Preferences ➔ Appearance ➔ Dark Theme</span>
+        </div>
+
+        <div style="margin-bottom: 0.75rem;">
+          <strong>2. Checking Your Remaining Free Credits:</strong><br>
+          <span class="click-path-badge">Navigation Menu ☰ ➔ Billing ➔ Overview ➔ Free Trial Credit Widget</span>
+        </div>
+
+        <div>
+          <strong>3. Activating In-Browser Cloud Shell:</strong><br>
+          <span class="click-path-badge">Top Right Navigation Bar ➔ Click [ >_ ] Activate Cloud Shell</span>
+        </div>
+
+        <div class="callout-tip">
+          <strong>🧘 The Golden Mindset:</strong> Never be afraid of clicking through the UI! <strong>Exploring is 100% free.</strong> Clicking on Compute Engine, Cloud Storage, or Vertex AI to see what they look like will never cost you a cent. Only clicking <em>"Create Instance"</em> or provisioning paid resources starts the meter.
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: BILLING & BUDGETS -->
+      <!-- ============================================================ -->
+      <section id="billing-budgets" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Billing Accounts &amp; Budget Alerts (Preventing Bill Shock)</h2>
+
+        <h3>1. The Infamous Cloud Billing Meme</h3>
+        <p>
+          If you browse programmer communities on Reddit or Twitter, you've probably seen the classic meme: <em>"How did you end up in poverty? Gambling? Drugs? — No, I left an EC2 / GPU VM instance running overnight."</em>
+        </p>
+        <p>
+          Why does this happen? Because on the cloud, <strong>nothing turns off by itself</strong>. If you spin up an expensive GPU machine to test a model and go on vacation without shutting it down, it will happily keep running 24/7 and generate a massive invoice.
+        </p>
+
+        <h3>2. What is a Billing Account?</h3>
+        <ul>
+          <li>A <strong>Billing Account</strong> is how Google Cloud collects money. It tracks all resource charges across projects.</li>
+          <li><strong>Key Rule:</strong> Every GCP project <em>must</em> be linked to a Billing Account before you can enable APIs or deploy servers. If a project has no linked billing account, it remains completely dormant.</li>
+        </ul>
+
+        <h3>3. Setting Up a Budget Alert Step-by-Step</h3>
+        <p>
+          To protect yourself, set a strict monthly budget (e.g., $10 or ₹1,000) with threshold alert triggers:
+        </p>
+
+        <div class="click-path-badge" style="display: block; margin: 1rem 0;">
+          Navigation Menu ☰ ➔ Billing ➔ Budgets &amp; alerts ➔ Create Budget
+        </div>
+
+        <ol>
+          <li><strong>Scope:</strong> Select your target project (e.g., <code>gcloud-basics</code>) and choose <em>"All Services"</em>.</li>
+          <li><strong>Amount:</strong> Set your target monthly budget (e.g., <strong>$10 USD</strong> or <strong>₹1,000 INR</strong>).</li>
+          <li><strong>Actions / Thresholds:</strong> Configure email notifications when actual spend reaches <strong>50%</strong> ($5), <strong>90%</strong> ($9), and <strong>100%</strong> ($10).</li>
+        </ol>
+
+        <div class="callout-danger">
+          <strong>🚨 CRITICAL REALITY CHECK:</strong><br>
+          Budget alerts <strong>NOTIFY</strong> you via email; they <strong>DO NOT AUTOMATICALLY KILL OR SHUT DOWN</strong> your servers! Google will not pull the plug on your live production app during a traffic spike just because it crossed a budget threshold. When you receive an alert, you must log in and manually stop idle virtual machines yourself!
+        </div>
+
+        <h3>4. Creating a Budget via `gcloud` CLI</h3>
+        <pre><code class="language-bash"># 1. List your available billing accounts to grab your Billing Account ID
+gcloud billing accounts list
+
+# 2. Create a budget alert for $10 with threshold alerts at 50%, 90%, and 100%
+gcloud billing budgets create \
+  --billing-account="012345-6789AB-CDEF01" \
+  --display-name="course-monthly-budget" \
+  --budget-amount=10USD \
+  --threshold-rule=percent=0.5 \
+  --threshold-rule=percent=0.9 \
+  --threshold-rule=percent=1.0
+
+# 3. Verify that your budget alert is active
+gcloud billing budgets list --billing-account="012345-6789AB-CDEF01"</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: CLI SETUP -->
+      <!-- ============================================================ -->
+      <section id="cli-setup" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Google Cloud CLI (`gcloud`) Setup &amp; First Commands</h2>
+
+        <p>
+          While the web console is excellent for visual exploration, professional cloud engineers interact with GCP via the command line interface (CLI). The CLI allows rapid scripting, Infrastructure as Code, CI/CD pipeline automation, and managing 10+ projects in seconds.
+        </p>
+
+        <h3>1. Installation</h3>
+        <ul>
+          <li><strong>Windows:</strong> Download and run the official <code>GoogleCloudSDKInstaller.exe</code>. It bundles Python and adds <code>gcloud</code> to your system PATH.</li>
+          <li><strong>macOS (Homebrew):</strong> <code>brew install --cask google-cloud-sdk</code></li>
+          <li><strong>Linux (Debian/Ubuntu):</strong> <code>sudo apt-get install google-cloud-cli</code></li>
+        </ul>
+
+        <h3>2. Verifying Installation</h3>
+        <p>Open Command Prompt (Windows) or Terminal (Mac/Linux) and test:</p>
+        <pre><code class="language-bash">gcloud version</code></pre>
+        <p>You should see output similar to:</p>
+        <pre><code class="language-text">Google Cloud SDK 480.0.0
+bq 2.1.8
+core 2026.05.10
+gsutil 5.30</code></pre>
+
+        <h3>3. Initial Authentication (`gcloud auth login`)</h3>
+        <p>Connect your local terminal to your Google Cloud account:</p>
+        <pre><code class="language-bash"># Initiates browser-based OAuth2 login
+gcloud auth login</code></pre>
+        <ol>
+          <li>Your default browser opens with Google's authentication page.</li>
+          <li>Select the Google account you used to register the GCP Free Trial.</li>
+          <li>Click <strong>Allow</strong> to grant Google Cloud SDK management permissions.</li>
+          <li>Return to your terminal: You will see <code>You are now logged in as [your-email@gmail.com].</code></li>
+        </ol>
+
+        <h3>4. Setting Account &amp; Checking Active Config</h3>
+        <pre><code class="language-bash"># Set your active account explicitly
+gcloud config set account your-email@gmail.com
+
+# List all authenticated credentials stored on your machine
+gcloud auth list
+
+# Inspect your currently active configuration (account, project, zone)
+gcloud config list</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: CHEAT SHEET -->
+      <!-- ============================================================ -->
+      <section id="lecture-1-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Lecture 1 Rapid Reference &amp; Cheat Sheet</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept / Command</th>
+                <th>Type</th>
+                <th>Purpose &amp; What It Does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>IaaS</code></td>
+                <td>Architecture</td>
+                <td>Infrastructure as a Service: Rent raw computers (Compute Engine VMs), storage, and networking.</td>
+              </tr>
+              <tr>
+                <td><code>PaaS</code></td>
+                <td>Architecture</td>
+                <td>Platform as a Service: Push code/containers directly without server administration (Cloud Run).</td>
+              </tr>
+              <tr>
+                <td><code>SaaS</code></td>
+                <td>Architecture</td>
+                <td>Software as a Service: Finished web apps ready to use (Gmail, Google Sheets).</td>
+              </tr>
+              <tr>
+                <td><code>GCP vs. Workspace</code></td>
+                <td>Distinction</td>
+                <td>Workspace = office tools for end users; GCP = cloud infrastructure for software developers.</td>
+              </tr>
+              <tr>
+                <td><code>$300 Credits</code></td>
+                <td>Billing</td>
+                <td>Free trial allowance valid for 90 days. Never auto-charged to your bank without manual upgrade.</td>
+              </tr>
+              <tr>
+                <td><code>Budget Alert</code></td>
+                <td>Cost Control</td>
+                <td>Threshold email warning (e.g., $10). Does NOT kill servers; requires manual cleanup.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud version</code></td>
+                <td>CLI Command</td>
+                <td>Prints current version of Google Cloud SDK components.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud auth login</code></td>
+                <td>CLI Command</td>
+                <td>Authenticates local CLI with your Google account via browser OAuth.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud auth list</code></td>
+                <td>CLI Command</td>
+                <td>Lists all authenticated email accounts on your local machine.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud config list</code></td>
+                <td>CLI Command</td>
+                <td>Displays your active project, account, region, and CLI properties.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud billing accounts list</code></td>
+                <td>CLI Command</td>
+                <td>Lists available billing accounts and their unique IDs.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+          <a href="gcp.html" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none !important;">
+            ← Back to GCP Hub
+          </a>
+          <a href="gcp-lecture-2.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Lecture 2 (Projects &amp; IAM Security) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">GCP Masterclass</h4>
+            <ul class="footer-links">
+              <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
+              <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>
+              <li><a href="gcp-lecture-3.html">Lecture 3: Regions, APIs &amp; Shell</a></li>
+              <li><a href="gcp.html">GCP Course Overview</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Technologies</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="month-1.html">Month 1 Foundations</a></li>
+              <li><a href="deep-learning.html">Deep Learning</a></li>
+              <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

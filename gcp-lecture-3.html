@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 3: Regions, Cloud APIs, Cloud Shell & Teardown Protocol | GCP Masterclass Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(66, 133, 244, 0.12);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      color: #93c5fd;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      margin: 0.5rem 0;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.1);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .hierarchy-tree {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="logo-box">AK</span>
+        <span class="logo-text">Tech Notes</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="gcp.html" class="nav-link active">GCP Masterclass</a>
+        <a href="month-1.html" class="nav-link">Month 1</a>
+        <a href="deep-learning.html" class="nav-link">Deep Learning</a>
+        <a href="ai-roadmap.html" class="nav-link">AI Roadmap</a>
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Lecture Header / Breadcrumb -->
+  <header class="lecture-hero">
+    <div class="lecture-hero-container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> &rsaquo;
+        <a href="gcp.html">Month 8: GCP</a> &rsaquo;
+        <span>Lecture 3</span>
+      </div>
+      <div class="lecture-meta">
+        <span class="badge" style="background: rgba(66, 133, 244, 0.15); color: #4285F4; border: 1px solid rgba(66, 133, 244, 0.3);">
+          Month 8 &bull; Core Infrastructure
+        </span>
+        <span class="reading-time">&bull; 24 min read</span>
+      </div>
+      <h1 class="lecture-title">Lecture 3: Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown Protocol</h1>
+      <p class="lecture-subtitle">
+        Understand Google's global data center physical architecture, master the API enablement cycle, operate the zero-install in-browser Cloud Shell terminal, and enforce the ironclad Teardown Protocol to keep your bill at $0.00.
+      </p>
+    </div>
+  </header>
+
+  <!-- Content Layout -->
+  <div class="lecture-layout">
+    <!-- Table of Contents Sidebar -->
+    <aside class="toc-sidebar">
+      <div class="toc-card">
+        <h3 class="toc-title">In This Lecture</h3>
+        <ul class="toc-list">
+          <li><a href="#regions-zones">1. Regions vs. Zones Explained</a></li>
+          <li><a href="#naming-conventions">2. Geographic Naming Conventions</a></li>
+          <li><a href="#setting-defaults">3. Setting Default Region &amp; Zone</a></li>
+          <li><a href="#gcp-apis">4. The GCP API-Driven Ecosystem</a></li>
+          <li><a href="#managing-apis">5. Enabling APIs (Console &amp; CLI)</a></li>
+          <li><a href="#cloud-shell">6. Cloud Shell: Instant In-Browser Linux</a></li>
+          <li><a href="#hands-on-shell">7. Hands-On Cloud Shell Walkthrough</a></li>
+          <li><a href="#teardown-protocol">8. Cost-Protection Teardown Protocol</a></li>
+          <li><a href="#master-cheatsheet">9. Master GCP Command Cheat Sheet</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Lecture Content -->
+    <main class="lecture-content">
+
+      <!-- Section 1 -->
+      <section id="regions-zones" class="content-section">
+        <h2>1. Regions vs. Zones Explained (The Bakery Mental Model)</h2>
+        <p>
+          Google Cloud does not exist in some ethereal, magical sky. It runs inside physical, high-security, climate-controlled warehouse buildings called <strong>Data Centers</strong> scattered across the continents.
+        </p>
+        <p>
+          To design reliable, lightning-fast applications, you must understand the two fundamental geographical building blocks: <strong>Regions</strong> and <strong>Zones</strong>.
+        </p>
+
+        <div class="hierarchy-tree">
+          <div style="color: #4285F4; font-weight: bold; margin-bottom: 0.5rem;">🌍 Google Global Infrastructure Hierarchy:</div>
+          <div>&nbsp;&nbsp;└── Multi-Region (e.g., US, Europe, Asia)</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Region</strong> (Specific geographic city/metro area, e.g., Mumbai, Iowa, Frankfurt)</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Zone A</strong> (Independent data center building, isolated power &amp; cooling)</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Zone B</strong> (Independent data center building, separated by km)</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Zone C</strong> (Independent data center building, high-speed fiber link)</div>
+        </div>
+
+        <h3>The Bakery Analogy</h3>
+        <p>
+          Imagine you run a premium bakery chain:
+        </p>
+        <ul>
+          <li><strong>The Region (The City):</strong> Mumbai. If your customer lives in Mumbai, baking the cake in a Mumbai kitchen means it arrives fresh and warm in 15 minutes. Baking it in New York would take 24 hours of flight transit (Latency).</li>
+          <li><strong>The Zones (The Kitchens):</strong> Inside Mumbai, you have three distinct kitchens: Bandra (Zone A), Andheri (Zone B), and Colaba (Zone C). They are 15 kilometers apart. If the power transformer blows up in Bandra, your Andheri and Colaba kitchens keep fulfilling cake deliveries seamlessly (High Availability / Fault Tolerance).</li>
+        </ul>
+
+        <div class="callout-tip">
+          <strong>Key Rule:</strong> A <strong>Region</strong> is a distinct geographic location with at least <strong>3 independent Zones</strong>. Zones within a region are connected via Google's private ultra-low latency fiber network (&lt;1 millisecond round-trip).
+        </div>
+
+        <h3>Why Geography Matters to You:</h3>
+        <ol>
+          <li><strong>Latency (Speed):</strong> Deploy your servers and databases as close to your end-users as possible. A user in India accessing an app in Mumbai experiences ~15ms latency; accessing a server in Iowa takes ~220ms.</li>
+          <li><strong>Disaster Recovery (Fault Tolerance):</strong> If you run a web app on 2 Virtual Machines placed in <em>different zones</em> of the same region, an outage in one physical building will never knock your app offline.</li>
+          <li><strong>Regulatory Compliance &amp; Data Sovereignty:</strong> Many countries (e.g., India's RBI regulations, EU's GDPR, US HIPAA) legally mandate that citizen financial and medical data must never leave national borders.</li>
+          <li><strong>Cost Differences:</strong> Compute and storage prices vary by region due to local electricity, real estate, and tax costs. For example, <code>us-central1</code> (Iowa) is typically cheaper than <code>asia-south1</code> (Mumbai).</li>
+        </ol>
+      </section>
+
+      <!-- Section 2 -->
+      <section id="naming-conventions" class="content-section">
+        <h2>2. Geographic Naming Conventions</h2>
+        <p>
+          Google Cloud uses a standardized naming scheme for all locations worldwide.
+        </p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">gcp-region-and-zone-naming-pattern</span>
+          </div>
+          <pre class="terminal-body"><code># Region Format: [geographic-area]-[compass-direction][index]
+# Example Regions:
+us-central1       # Council Bluffs, Iowa, USA (Often the cheapest region)
+us-east1          # Moncks Corner, South Carolina, USA
+asia-south1       # Mumbai, India
+asia-south2       # Delhi, India
+europe-west3      # Frankfurt, Germany
+
+# Zone Format: [region]-[letter]
+# Example Zones:
+us-central1-a
+us-central1-b
+us-central1-c
+us-central1-f
+
+asia-south1-a
+asia-south1-b
+asia-south1-c</code></pre>
+        </div>
+
+        <div class="callout-warning">
+          <strong>Important Insight:</strong> Zone names are randomized per Google Cloud organization for load balancing! What is <code>us-central1-a</code> for you might correspond to a different physical building than <code>us-central1-a</code> for another company. This prevents all users from dogpiling on "Zone A".
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section id="setting-defaults" class="content-section">
+        <h2>3. Setting Default Region &amp; Zone via CLI</h2>
+        <p>
+          Every time you create a Virtual Machine, a Cloud Run service, or a database, GCP will prompt you for a region and zone. If you don't want to type <code>--region</code> and <code>--zone</code> in every single command, you can set defaults in your <code>gcloud</code> configuration.
+        </p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">bash &mdash; gcloud config compute defaults</span>
+          </div>
+          <pre class="terminal-body"><code># 1. List all available regions in Google Cloud
+gcloud compute regions list
+
+# 2. List all available zones in a specific region
+gcloud compute zones list --filter="region:(us-central1)"
+
+# 3. Set your default region (e.g., us-central1 for lowest cost)
+gcloud config set compute/region us-central1
+
+# 4. Set your default zone (e.g., us-central1-a)
+gcloud config set compute/zone us-central1-a
+
+# 5. Verify your active compute configuration
+gcloud config get-value compute/region
+gcloud config get-value compute/zone</code></pre>
+        </div>
+
+        <p>
+          Once set, running <code>gcloud compute instances create my-vm</code> will automatically spin up the VM in <code>us-central1-a</code> without requiring extra flags!
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section id="gcp-apis" class="content-section">
+        <h2>4. The GCP API-Driven Ecosystem</h2>
+        <p>
+          Here is a foundational truth of Google Cloud: <strong>Everything in GCP is an API.</strong>
+        </p>
+        <p>
+          When you click "Create VM" in the Web Console, the browser sends an HTTP <code>POST</code> request to the Compute Engine REST API. When you run <code>gcloud compute instances create</code>, the CLI does the exact same thing.
+        </p>
+
+        <div class="hierarchy-tree">
+          <div style="color: #4285F4; font-weight: bold; margin-bottom: 0.5rem;">⚙️ How Google Cloud Communicates:</div>
+          <div>Web Console Button Click ──────┐</div>
+          <div>gcloud Terminal Command ───────┼───► Google Cloud REST APIs ───► GCP Infrastructure</div>
+          <div>Python / Terraform SDK ────────┘    (e.g., compute.googleapis.com)</div>
+        </div>
+
+        <h3>Why Are APIs Disabled by Default?</h3>
+        <p>
+          When you create a brand-new GCP Project, almost all service APIs (Compute Engine, BigQuery, Vertex AI, Kubernetes) are <strong>disabled</strong>. Why?
+        </p>
+        <ul>
+          <li><strong>Cost Security:</strong> Prevents unauthorized or accidental billing charges if someone gains access to your project.</li>
+          <li><strong>Principle of Least Privilege:</strong> Only services intentionally turned on by the admin can be used.</li>
+          <li><strong>Faster Quota Allocation:</strong> Google provisions backend quota pools only when an API is explicitly activated.</li>
+        </ul>
+      </section>
+
+      <!-- Section 5 -->
+      <section id="managing-apis" class="content-section">
+        <h2>5. Enabling APIs (Console &amp; CLI)</h2>
+
+        <h3>Method A: Via Web Console</h3>
+        <p>
+          <span class="click-path-badge">Navigation Menu ☰ ➔ APIs &amp; Services ➔ Library</span>
+        </p>
+        <ol>
+          <li>In the API Library search box, type the service name (e.g., <code>Compute Engine API</code> or <code>Cloud Run API</code>).</li>
+          <li>Click on the card in the results.</li>
+          <li>Click the blue <strong>"ENABLE"</strong> button. Enabling takes about 30&ndash;60 seconds as Google allocates backend infrastructure for your project.</li>
+        </ol>
+
+        <h3>Method B: Via CLI (The Professional Way)</h3>
+        <p>
+          As an engineer or DevOps specialist, you will automate API enablement using <code>gcloud services</code>:
+        </p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">bash &mdash; gcloud services commands</span>
+          </div>
+          <pre class="terminal-body"><code># 1. Enable Compute Engine API (VMs, Disks, Networks)
+gcloud services enable compute.googleapis.com
+
+# 2. Enable Cloud Run API (Containerized web services)
+gcloud services enable run.googleapis.com
+
+# 3. Enable Cloud Storage API
+gcloud services enable storage.googleapis.com
+
+# 4. List all currently enabled APIs in your active project
+gcloud services list --enabled
+
+# 5. Disable an API (Caution: shuts down associated services)
+gcloud services disable compute.googleapis.com</code></pre>
+        </div>
+      </section>
+
+      <!-- Section 6 -->
+      <section id="cloud-shell" class="content-section">
+        <h2>6. Cloud Shell: Instant In-Browser Linux</h2>
+        <p>
+          One of the greatest developer features of Google Cloud is <strong>Cloud Shell</strong>.
+        </p>
+        <p>
+          What if you are using a friend's laptop, a locked-down office computer where you cannot install software, or a Chromebook? You do not need to install Python, Git, Docker, or the <code>gcloud</code> CLI locally.
+        </p>
+
+        <div class="callout-tip">
+          <strong>What is Cloud Shell?</strong> Cloud Shell is a <strong>free, instant Debian Linux virtual machine</strong> hosted right inside your web browser. It comes with <strong>5 GB of free persistent storage</strong> in your <code>$HOME</code> directory and zero subscription costs.
+        </div>
+
+        <h3>Cloud Shell Superpowers:</h3>
+        <ul>
+          <li><strong>Zero Installation:</strong> <code>gcloud</code>, <code>gsutil</code>, <code>bq</code>, <code>docker</code>, <code>kubectl</code>, <code>terraform</code>, <code>python3</code>, <code>node.js</code>, and <code>git</code> come pre-installed and updated.</li>
+          <li><strong>Pre-Authenticated:</strong> You are already logged in as your active Google account with project credentials automatically wired up.</li>
+          <li><strong>Built-In Code Editor:</strong> Click the pencil icon to open a full web-based VS Code environment right in your browser.</li>
+          <li><strong>Web Preview:</strong> Run a web server or Flask app on port <code>8080</code> inside Cloud Shell, click "Web Preview", and test it live over HTTPS!</li>
+        </ul>
+
+        <h3>How to Open Cloud Shell</h3>
+        <p>
+          Look at the top-right toolbar of the Google Cloud Console. Click the terminal icon: <code>[&gt; _]</code> (Activate Cloud Shell). A terminal window slides up from the bottom of your screen within 10 seconds.
+        </p>
+      </section>
+
+      <!-- Section 7 -->
+      <section id="hands-on-shell" class="content-section">
+        <h2>7. Hands-On Cloud Shell Walkthrough</h2>
+        <p>
+          Let's run a quick interactive test to verify our Cloud Shell environment and test Python execution against GCP:
+        </p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">cloud-shell &mdash; bash terminal session</span>
+          </div>
+          <pre class="terminal-body"><code># Step 1: Check who you are logged in as
+gcloud auth list
+# Output: * user@gmail.com (active)
+
+# Step 2: Check your active project ID
+gcloud config get-value project
+# Output: ak-cloud-learning-2026
+
+# Step 3: Check installed Python version
+python3 --version
+# Output: Python 3.11.x
+
+# Step 4: Create a quick test script
+cat << 'EOF' > test_gcp.py
+import sys
+print("🚀 Hello from Google Cloud Shell!")
+print(f"Python interpreter: {sys.version}")
+EOF
+
+# Step 5: Execute the script
+python3 test_gcp.py</code></pre>
+        </div>
+
+        <div class="callout-tip">
+          <strong>Persistence Rule:</strong> Files saved in your home directory (<code>/home/your_username</code>) persist even after you close the browser tab. Files saved in system root (<code>/tmp</code> or <code>/etc</code>) are reset when the temporary container recycles after 20 minutes of inactivity.
+        </div>
+      </section>
+
+      <!-- Section 8 -->
+      <section id="teardown-protocol" class="content-section">
+        <h2>8. Cost-Protection Teardown Protocol (The Golden Rule)</h2>
+        <p>
+          The most common fear beginners have when learning cloud is: <em>"What if I leave a database or GPU running by mistake and wake up to a $500 bill?"</em>
+        </p>
+        <p>
+          To ensure you never pay a single unnecessary rupee or dollar, adopt the professional <strong>Teardown Protocol</strong>:
+        </p>
+
+        <div class="callout-danger">
+          <strong>The Golden Rule of Cloud Labs:</strong><br>
+          Whenever you finish a learning lab or practice session, do <strong>NOT</strong> just close your browser tab. Either stop/delete the specific resources you spun up, or delete the entire sandbox project.
+        </div>
+
+        <h3>Why Deleting the Project is the Safest Move:</h3>
+        <p>
+          If you create a project named <code>sandbox-lab-01</code>, spin up VMs, IP addresses, disks, and buckets, you might forget where each resource is hidden.
+        </p>
+        <p>
+          Deleting the project nukes <strong>everything</strong> inside it simultaneously. It stops all billing immediately.
+        </p>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">bash &mdash; project teardown commands</span>
+          </div>
+          <pre class="terminal-body"><code># 1. Delete a sandbox project completely
+gcloud projects delete [PROJECT_ID]
+
+# Example:
+gcloud projects delete ak-sandbox-lab-01
+
+# The CLI will prompt:
+# Your project will be shut down and marked for deletion.
+# Do you want to continue (Y/n)? Y</code></pre>
+        </div>
+
+        <h3>The 30-Day Recovery Safety Net:</h3>
+        <p>
+          When you delete a GCP project, Google does not vaporize it instantly. It enters a <strong>"Pending Deletion" state for 30 days</strong>.
+        </p>
+        <ul>
+          <li>All billing and resources stop immediately on Day 1.</li>
+          <li>If you accidentally deleted the wrong project, you have 30 days to run <code>gcloud projects undelete [PROJECT_ID]</code> to restore it.</li>
+          <li>After 30 days, the project and all data are permanently scrubbed.</li>
+        </ul>
+      </section>
+
+      <!-- Section 9 -->
+      <section id="master-cheatsheet" class="content-section">
+        <h2>9. Master GCP Command Cheat Sheet</h2>
+        <p>
+          Bookmark this table for quick recall of all essential Google Cloud CLI operations learned across Lectures 1, 2, and 3:
+        </p>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>CLI Command</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Authentication</strong></td>
+                <td><code>gcloud auth login</code></td>
+                <td>Authenticates your Google account with local CLI.</td>
+              </tr>
+              <tr>
+                <td><strong>Authentication</strong></td>
+                <td><code>gcloud auth list</code></td>
+                <td>Displays all logged-in accounts and identifies the active one.</td>
+              </tr>
+              <tr>
+                <td><strong>Projects</strong></td>
+                <td><code>gcloud projects list</code></td>
+                <td>Lists all projects you have permissions to view.</td>
+              </tr>
+              <tr>
+                <td><strong>Projects</strong></td>
+                <td><code>gcloud projects create [ID] --name="[NAME]"</code></td>
+                <td>Creates a brand new GCP project.</td>
+              </tr>
+              <tr>
+                <td><strong>Projects</strong></td>
+                <td><code>gcloud config set project [ID]</code></td>
+                <td>Sets the active working project for all future commands.</td>
+              </tr>
+              <tr>
+                <td><strong>Projects</strong></td>
+                <td><code>gcloud projects delete [ID]</code></td>
+                <td>Deletes a project and halts all associated billing.</td>
+              </tr>
+              <tr>
+                <td><strong>Compute Defaults</strong></td>
+                <td><code>gcloud config set compute/region [REGION]</code></td>
+                <td>Sets default geographic region (e.g. <code>us-central1</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>Compute Defaults</strong></td>
+                <td><code>gcloud config set compute/zone [ZONE]</code></td>
+                <td>Sets default data center zone (e.g. <code>us-central1-a</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>APIs</strong></td>
+                <td><code>gcloud services enable [API_NAME]</code></td>
+                <td>Enables a GCP service API (e.g. <code>compute.googleapis.com</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>APIs</strong></td>
+                <td><code>gcloud services list --enabled</code></td>
+                <td>Lists all active APIs in your project.</td>
+              </tr>
+              <tr>
+                <td><strong>IAM</strong></td>
+                <td><code>gcloud projects add-iam-policy-binding ...</code></td>
+                <td>Grants an IAM role to a user or service account.</td>
+              </tr>
+              <tr>
+                <td><strong>Service Accounts</strong></td>
+                <td><code>gcloud iam service-accounts create [NAME]</code></td>
+                <td>Creates a dedicated robot identity for applications/agents.</td>
+              </tr>
+              <tr>
+                <td><strong>Service Accounts</strong></td>
+                <td><code>gcloud iam service-accounts keys create key.json ...</code></td>
+                <td>Generates a private credentials key. (Never push to GitHub!).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+          <a href="gcp-lecture-2.html" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none !important;">
+            ← Previous: Lecture 2 (Projects &amp; IAM Security)
+          </a>
+          <a href="gcp.html" class="btn-primary" style="text-decoration: none !important;">
+            Back to GCP Course Overview ➔
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">GCP Masterclass</h4>
+            <ul class="footer-links">
+              <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
+              <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>
+              <li><a href="gcp-lecture-3.html">Lecture 3: Regions, APIs &amp; Shell</a></li>
+              <li><a href="gcp.html">GCP Course Overview</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Technologies</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="month-1.html">Month 1 Foundations</a></li>
+              <li><a href="deep-learning.html">Deep Learning</a></li>
+              <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

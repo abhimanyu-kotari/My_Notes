@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Projects, IAM Permissions & Service Accounts | GCP Masterclass Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(66, 133, 244, 0.12);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      color: #93c5fd;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      margin: 0.5rem 0;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.1);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .hierarchy-tree {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="gcp.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to GCP Hub</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#resource-hierarchy" class="sidebar-link">1. The GCP Resource Hierarchy</a></li>
+        <li><a href="#project-identifiers" class="sidebar-link">2. Project ID vs. Name vs. Number</a></li>
+        <li><a href="#project-management" class="sidebar-link">3. Managing Projects (Console &amp; CLI)</a></li>
+        <li><a href="#iam-architecture" class="sidebar-link">4. IAM Core Architecture &amp; Mental Model</a></li>
+        <li><a href="#iam-cli-ops" class="sidebar-link">5. Managing IAM Policies with `gcloud`</a></li>
+        <li><a href="#service-accounts" class="sidebar-link">6. Service Accounts: Robot IDs for AI</a></li>
+        <li><a href="#service-account-keys" class="sidebar-link">7. `key.json` Management &amp; Security</a></li>
+        <li><a href="#lecture-2-cheatsheet" class="sidebar-link">8. Lecture 2 Cheat Sheet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 02 Notes</span>
+          <span class="tag">GCP Projects</span>
+          <span class="tag">Resource Isolation</span>
+          <span class="tag">IAM Security</span>
+          <span class="tag">Least Privilege</span>
+          <span class="tag">Service Accounts</span>
+          <span class="tag">AI Agent Keys</span>
+        </div>
+        <h1 class="lecture-main-title">Projects, IAM Permissions &amp; Service Accounts for AI Agents</h1>
+        <p class="lecture-lead">
+          <strong>What is this lecture about?</strong> This module dives into the architectural backbone of Google Cloud: Projects and IAM (Identity and Access Management). We explore how projects act as isolated security and billing boundaries, dissect the crucial differences between Project ID, Project Name, and Project Number, master the IAM formula (Principal + Role + Resource), and uncover how to create and govern Service Accounts—the "robot identities" used by your AI agents and Python code to securely access cloud databases, storage, and models without risking human credentials.<br>
+          <strong>Why is this critical for engineers?</strong> In real-world enterprise development, AI agents operate autonomously. If you assign broad "Owner" privileges to an agent or leak your private JSON credentials on GitHub, rogue automated scripts or hacked code can wipe out production databases or rack up thousands of dollars in unauthorized compute.
+        </p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1: RESOURCE HIERARCHY -->
+      <!-- ============================================================ -->
+      <section id="resource-hierarchy" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Google Cloud Resource Hierarchy</h2>
+
+        <p>
+          Everything you do in Google Cloud lives inside a strictly organized hierarchy, just like a multinational company:
+        </p>
+
+        <div class="hierarchy-tree">
+          🏢 <strong>Organization</strong> (e.g., yourcompany.com)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;└── 📁 <strong>Folders</strong> (e.g., Engineering, Data Science, Security)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📦 <strong>Projects</strong> (e.g., <code>ai-rag-prod</code>, <code>gcloud-basics</code>)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ⚙️ <strong>Resources</strong> (Compute VMs, Cloud Storage Buckets, BigQuery Tables, Cloud Run Services)
+        </div>
+
+        <h3>The Project Sandbox Concept</h3>
+        <p>
+          Think of a <strong>Project</strong> as a <em>labeled box</em> or an isolated sandbox. It holds everything you build for a specific application:
+        </p>
+        <ul>
+          <li><strong>Complete Isolation:</strong> Resources in Project A cannot communicate with or interfere with resources in Project B unless you explicitly configure VPC peering or authorized APIs.</li>
+          <li><strong>Blast Radius Containment:</strong> If an intern accidentally runs a destructive script in <code>test-project</code>, your live production project is 100% untouched.</li>
+          <li><strong>Granular Cost Accounting:</strong> Every invoice line item is tied to a specific project. You know exactly what your RAG chatbot cost versus your customer analytics pipeline.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2: PROJECT IDENTIFIERS -->
+      <!-- ============================================================ -->
+      <section id="project-identifiers" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Project ID vs. Project Name vs. Project Number</h2>
+
+        <p>
+          Every GCP project possesses three distinct identifiers. Confusing them is one of the most common beginner errors:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Identifier</th>
+                <th>Who Sets It?</th>
+                <th>Can It Be Changed?</th>
+                <th>Global Uniqueness</th>
+                <th>Usage &amp; Examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Project ID</strong></td>
+                <td>You (or auto-suffixed by Google)</td>
+                <td><strong style="color: #ef4444;">PERMANENT (NEVER!)</strong></td>
+                <td>Globally unique across the entire world</td>
+                <td><code>gcloud-basics-504709</code><br>Used in 99% of CLI commands, APIs, and client libraries.</td>
+              </tr>
+              <tr>
+                <td><strong>Project Name</strong></td>
+                <td>You</td>
+                <td><strong style="color: #22c55e;">Editable Anytime</strong></td>
+                <td>Does NOT need to be unique</td>
+                <td><code>"GCloud Terminal Basics"</code><br>Friendly human display label on the web console.</td>
+              </tr>
+              <tr>
+                <td><strong>Project Number</strong></td>
+                <td>Google Cloud internally</td>
+                <td><strong style="color: #ef4444;">Immutable</strong></td>
+                <td>Globally unique integer</td>
+                <td><code>482910481029</code><br>Used behind the scenes by Google service agents and IAM grants.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout-danger">
+          <strong>⚠️ Golden Rule:</strong> <strong>Project IDs are permanent.</strong> Once chosen and created, a Project ID can never be renamed. Choose clean, lowercase, hyphenated names (e.g., <code>company-rag-prod-01</code>).
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3: PROJECT MANAGEMENT -->
+      <!-- ============================================================ -->
+      <section id="project-management" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Managing Projects via Console &amp; CLI</h2>
+
+        <h3>1. Creating a Project via Web Console</h3>
+        <div class="click-path-badge">
+          Top Header Bar ➔ Project Dropdown ▾ ➔ Click "New Project"
+        </div>
+        <ol>
+          <li>Enter your desired <strong>Project Name</strong> (e.g., <code>AI Agent Studio</code>).</li>
+          <li>Review the auto-generated <strong>Project ID</strong> (or click <em>Edit</em> to pick your own unique ID).</li>
+          <li>Select your Organization / Parent Folder (or leave as <em>No organization</em> for personal accounts).</li>
+          <li>Click <strong>Create</strong>.</li>
+        </ol>
+
+        <h3>2. Creating a Project via `gcloud` CLI</h3>
+        <pre><code class="language-bash"># 1. Create a project with an explicit unique ID and a human-friendly display name
+gcloud projects create gcloud-basics-2026 --name="GCloud Basics 2026"
+
+# 2. List all projects accessible by your authenticated account
+gcloud projects list
+
+# 3. View detailed metadata (create time, state, project number)
+gcloud projects describe gcloud-basics-2026</code></pre>
+
+        <h3>3. Setting the Active Working Project</h3>
+        <p>
+          Just like navigating into a folder with <code>cd</code>, you must tell <code>gcloud</code> which project your commands should target:
+        </p>
+        <pre><code class="language-bash"># Tell gcloud to target your new project for all subsequent commands
+gcloud config set project gcloud-basics-2026
+
+# Verify that your active project was updated
+gcloud config list project</code></pre>
+
+        <h3>4. Configuring Application Default Credentials (ADC)</h3>
+        <p>
+          If you write Python code using the <code>google-cloud-storage</code> or <code>google-cloud-bigquery</code> SDKs, your code needs local credentials to run:
+        </p>
+        <pre><code class="language-bash"># Authenticates your local environment for Python/Node.js client libraries
+gcloud auth application-default login</code></pre>
+
+        <h3>5. Linking Your Project to a Billing Account</h3>
+        <pre><code class="language-bash"># Get your Billing Account ID
+gcloud billing accounts list
+
+# Link your active project to the billing account
+gcloud billing projects link gcloud-basics-2026 \
+  --billing-account="012345-6789AB-CDEF01"
+
+# Verify billing linkage
+gcloud billing projects describe gcloud-basics-2026</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4: IAM ARCHITECTURE -->
+      <!-- ============================================================ -->
+      <section id="iam-architecture" class="note-section content-section">
+        <h2><span class="section-number">04.</span> IAM Core Architecture &amp; The Mental Model</h2>
+
+        <h3>1. The Core IAM Formula</h3>
+        <div style="background: var(--bg-card); border: 2px solid #3b82f6; border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #60a5fa; font-size: 1.2rem;">The Universal Security Formula:</h4>
+          <p style="font-size: 1.05rem; font-family: var(--font-mono); color: #f8fafc; margin: 0.5rem 0;">
+            <strong>WHO (Principal)</strong> + <strong>CAN DO WHAT (Role / Permissions)</strong> + <strong>ON WHICH (Resource)</strong>
+          </p>
+        </div>
+
+        <h3>2. The Hotel Keycard Analogy</h3>
+        <p>
+          Think of staying at a luxury hotel:
+        </p>
+        <ul>
+          <li><strong>Guest Keycard:</strong> Opens only your assigned room door (e.g., Room 402) and grants elevator access to the gym. It does <em>not</em> open Room 403 or the manager's office.</li>
+          <li><strong>Master Keycard:</strong> Held only by the hotel general manager for emergencies.</li>
+          <li><strong>Housekeeping Staff Badge:</strong> Allows entry during morning hours to clean towels, but cannot access financial records at the front desk.</li>
+        </ul>
+
+        <h3>3. The Three Building Blocks of IAM</h3>
+        <ol>
+          <li>
+            <strong>Principal (The WHO):</strong>
+            <ul>
+              <li><strong>Google Account (User):</strong> A real human email address (e.g., <code>alice@gmail.com</code>).</li>
+              <li><strong>Google Group:</strong> A mailing list collection of users (e.g., <code>data-scientists@company.com</code>).</li>
+              <li><strong>Service Account:</strong> A non-human "robot identity" for code and AI agents (e.g., <code>ai-rag-agent@project.iam.gserviceaccount.com</code>).</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Permission (The ATOMIC ACTION):</strong>
+            <p>Represented in <code>service.resource.verb</code> notation: <code>storage.buckets.create</code>, <code>storage.objects.get</code>, <code>compute.instances.start</code>.</p>
+          </li>
+          <li>
+            <strong>Role (The BUNDLE OF PERMISSIONS):</strong>
+            <p>You never assign raw permissions individually. You assign a <strong>Role</strong>, which is a curated package of dozens or hundreds of permissions.</p>
+          </li>
+        </ol>
+
+        <h3>4. Primitive Roles vs. Predefined Roles</h3>
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Role Type</th>
+                <th>Roles</th>
+                <th>Scope &amp; Risk Level</th>
+                <th>Production Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Primitive / Basic</strong></td>
+                <td><code>Owner</code>, <code>Editor</code>, <code>Viewer</code></td>
+                <td><span style="color: #ef4444; font-weight: 700;">Extremely Broad / Dangerous</span><br>Grants blanket access across almost every single GCP service in the project.</td>
+                <td>❌ <strong>AVOID IN PRODUCTION</strong>. Only project creators should have Owner. Never assign to teammates or scripts.</td>
+              </tr>
+              <tr>
+                <td><strong>Predefined (Job-Based)</strong></td>
+                <td><code>roles/storage.objectViewer</code><br><code>roles/bigquery.dataEditor</code><br><code>roles/run.invoker</code></td>
+                <td><span style="color: #22c55e; font-weight: 700;">Granular &amp; Targeted</span><br>Crafted specifically for job duties (e.g., read files from Cloud Storage without permission to delete buckets).</td>
+                <td>✅ <strong>INDUSTRY STANDARD</strong>. Adheres strictly to the Principle of Least Privilege.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout-tip">
+          <strong>🔒 Principle of Least Privilege (PoLP):</strong> Always grant the <strong>absolute minimum</strong> permissions an engineer or agent needs to perform their task. If an AI agent only needs to read PDFs from a bucket, give it <code>roles/storage.objectViewer</code>. Never give it <code>Owner</code> or <code>Editor</code> out of laziness!
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5: IAM CLI OPERATIONS -->
+      <!-- ============================================================ -->
+      <section id="iam-cli-ops" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Managing IAM Policy Bindings with `gcloud`</h2>
+
+        <p>
+          An <strong>IAM Policy Binding</strong> attaches a Principal to a Role on a specific project or resource.
+        </p>
+
+        <h3>1. Inspecting Active IAM Policies</h3>
+        <pre><code class="language-bash"># View all users, service accounts, and roles bound to your project
+gcloud projects get-iam-policy gcloud-basics-2026</code></pre>
+
+        <h3>2. Granting Access to a Teammate (Adding Policy Binding)</h3>
+        <p>
+          Let's grant read-only access to our Cloud Storage objects to a data analyst colleague:
+        </p>
+        <pre><code class="language-bash"># Grant the 'Storage Object Viewer' role to a specific user email
+gcloud projects add-iam-policy-binding gcloud-basics-2026 \
+  --member="user:analyst.colleague@gmail.com" \
+  --role="roles/storage.objectViewer"</code></pre>
+
+        <h3>3. Revoking Access (Removing Policy Binding)</h3>
+        <p>
+          When an analyst finishes their project or leaves the team, clean up and remove the permission immediately:
+        </p>
+        <pre><code class="language-bash"># Revoke the role immediately
+gcloud projects remove-iam-policy-binding gcloud-basics-2026 \
+  --member="user:analyst.colleague@gmail.com" \
+  --role="roles/storage.objectViewer"</code></pre>
+
+        <h3>4. Web Console Navigation for IAM</h3>
+        <div class="click-path-badge">
+          Navigation Menu ☰ ➔ IAM &amp; Admin ➔ IAM ➔ Click "Grant Access"
+        </div>
+        <ol>
+          <li>In the <strong>New principals</strong> field, type the colleague's email address.</li>
+          <li>In the <strong>Select a role</strong> dropdown, search for the specific role (e.g., <em>Cloud Storage ➔ Storage Object Viewer</em>).</li>
+          <li>Click <strong>Save</strong>. GCP immediately updates the policy.</li>
+        </ol>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 6: SERVICE ACCOUNTS -->
+      <!-- ============================================================ -->
+      <section id="service-accounts" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Service Accounts: Robot Identities for AI Agents</h2>
+
+        <h3>1. What is a Service Account?</h3>
+        <p>
+          A <strong>Service Account</strong> is a special Google Cloud identity that represents an <em>application, script, or AI agent</em> rather than an individual human user.
+        </p>
+        <p>
+          It does not have a human password, cannot log in through a web browser with 2-factor SMS codes, and has an email address ending in:
+        </p>
+        <pre><code class="language-text">[service-account-name]@[project-id].iam.gserviceaccount.com</code></pre>
+
+        <h3>2. Why AI Agents Must Use Service Accounts</h3>
+        <ul>
+          <li><strong>Autonomous 24/7 Execution:</strong> AI agents running in production (e.g., automated customer support bots, document summarizers) must interact with BigQuery or Vertex AI without human intervention.</li>
+          <li><strong>Poisoning &amp; Prompt Injection Defense:</strong> If a rogue user injects a malicious prompt trying to make your LLM delete database records, the action will fail immediately with <code>403 Forbidden</code> if the agent's service account was only granted read-only permissions!</li>
+          <li><strong>Auditing &amp; Traceability:</strong> Cloud Audit Logs clearly identify whether an API call was made by human <code>alice@company.com</code> or robot <code>rag-extractor-sa</code>.</li>
+        </ul>
+
+        <h3>3. Creating a Service Account via `gcloud` CLI</h3>
+        <pre><code class="language-bash"># 1. Create a service account for your AI agent
+gcloud iam service-accounts create ai-storage-reader \
+  --display-name="AI Agent Storage Reader"
+
+# 2. List all service accounts in the project to verify creation
+gcloud iam service-accounts list</code></pre>
+
+        <h3>4. Granting Least-Privilege Roles to the Service Account</h3>
+        <pre><code class="language-bash"># Bind the Storage Object Viewer role to the newly created service account
+gcloud projects add-iam-policy-binding gcloud-basics-2026 \
+  --member="serviceAccount:ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com" \
+  --role="roles/storage.objectViewer"</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 7: SERVICE ACCOUNT KEYS -->
+      <!-- ============================================================ -->
+      <section id="service-account-keys" class="note-section content-section">
+        <h2><span class="section-number">07.</span> `key.json` Management &amp; Security Protocol</h2>
+
+        <h3>1. What is `key.json`?</h3>
+        <p>
+          A <strong>Service Account Key</strong> is a downloadable JSON credential file containing a private RSA key. Your external Python code or local Docker container reads this file to prove its identity to Google Cloud:
+        </p>
+
+        <pre><code class="language-bash"># Generate and download a private key for your service account
+gcloud iam service-accounts keys create key.json \
+  --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"</code></pre>
+
+        <p>Inside <code>key.json</code>, you will find structure similar to:</p>
+        <pre><code class="language-json">{
+  "type": "service_account",
+  "project_id": "gcloud-basics-2026",
+  "private_key_id": "893b1029c9284091823901",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgw...",
+  "client_email": "ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"
+}</code></pre>
+
+        <h3>2. Using the Key in Python Code</h3>
+        <pre><code class="language-python">from google.cloud import storage
+
+# Point Google client libraries to your downloaded key file
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
+
+client = storage.Client()
+buckets = list(client.list_buckets())
+print("Connected successfully via Service Account!")</code></pre>
+
+        <h3>3. The #1 Security Catastrophe: Committing `key.json` to GitHub</h3>
+        <div class="callout-danger">
+          <strong>🚨 NEVER, EVER COMMIT `key.json` TO GIT!</strong><br>
+          Automated bot scanners scrape public GitHub repositories 24/7 within <strong>seconds</strong> of any commit. If you accidentally push a <code>key.json</code> file to GitHub:
+          <ol style="margin-top: 0.5rem; margin-bottom: 0;">
+            <li>Hackers extract your private key within 60 seconds.</li>
+            <li>They spin up hundreds of massive GPU/CPU clusters in regions like US-Central and Asia to mine cryptocurrency.</li>
+            <li>You can wake up to a $10,000+ cloud bill!</li>
+            <li><strong>Protection:</strong> Always add <code>*.json</code> and <code>key.json</code> to your <code>.gitignore</code> file before generating any key.</li>
+          </ol>
+        </div>
+
+        <h3>4. Revoking and Deleting Leaked Keys</h3>
+        <p>If a key is ever compromised or no longer needed, delete it immediately:</p>
+        <pre><code class="language-bash"># 1. List active keys for the service account
+gcloud iam service-accounts keys list \
+  --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"
+
+# 2. Delete the key by its Key ID
+gcloud iam service-accounts keys delete "893b1029c9284091823901" \
+  --iam-account="ai-storage-reader@gcloud-basics-2026.iam.gserviceaccount.com"</code></pre>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 8: CHEAT SHEET -->
+      <!-- ============================================================ -->
+      <section id="lecture-2-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Lecture 2 Rapid Reference &amp; Cheat Sheet</h2>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept / Command</th>
+                <th>Category</th>
+                <th>Syntax / What It Does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Project ID</code></td>
+                <td>Identifier</td>
+                <td>Globally unique, permanent identifier used in code and CLI. Never editable.</td>
+              </tr>
+              <tr>
+                <td><code>Project Name</code></td>
+                <td>Identifier</td>
+                <td>Human-friendly display name on the web console. Editable anytime.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud projects create</code></td>
+                <td>CLI Command</td>
+                <td><code>gcloud projects create &lt;ID&gt; --name="&lt;Name&gt;"</code></td>
+              </tr>
+              <tr>
+                <td><code>gcloud config set project</code></td>
+                <td>CLI Command</td>
+                <td>Sets active target project for local terminal commands.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud auth application-default login</code></td>
+                <td>Authentication</td>
+                <td>Generates local ADC credentials for Python/Node.js client libraries.</td>
+              </tr>
+              <tr>
+                <td><code>IAM Formula</code></td>
+                <td>Security</td>
+                <td><strong>WHO</strong> (Principal) + <strong>CAN DO WHAT</strong> (Role) + <strong>ON WHICH</strong> (Resource).</td>
+              </tr>
+              <tr>
+                <td><code>Principle of Least Privilege</code></td>
+                <td>Best Practice</td>
+                <td>Grant only minimum necessary roles. Avoid blanket Owner/Editor primitive roles.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud projects add-iam-policy-binding</code></td>
+                <td>CLI Command</td>
+                <td>Binds a user email or service account to a predefined role.</td>
+              </tr>
+              <tr>
+                <td><code>Service Account</code></td>
+                <td>Identity</td>
+                <td>Robot identity for code, background scripts, and AI agents. Ends in <code>.gserviceaccount.com</code>.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud iam service-accounts create</code></td>
+                <td>CLI Command</td>
+                <td>Creates a new service account entity in the project.</td>
+              </tr>
+              <tr>
+                <td><code>gcloud iam service-accounts keys create</code></td>
+                <td>CLI Command</td>
+                <td>Generates a downloadable private <code>key.json</code>. NEVER commit to Git!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+          <a href="gcp-lecture-1.html" class="btn-primary" style="background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none !important;">
+            ← Previous: Lecture 1 (Architecture &amp; Console)
+          </a>
+          <a href="gcp-lecture-3.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Lecture 3 (Regions, APIs &amp; Teardown) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">GCP Masterclass</h4>
+            <ul class="footer-links">
+              <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
+              <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>
+              <li><a href="gcp-lecture-3.html">Lecture 3: Regions, APIs &amp; Shell</a></li>
+              <li><a href="gcp.html">GCP Course Overview</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Technologies</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="month-1.html">Month 1 Foundations</a></li>
+              <li><a href="deep-learning.html">Deep Learning</a></li>
+              <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
