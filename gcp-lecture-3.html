@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecture 3: Regions, Cloud APIs, Cloud Shell & Teardown Protocol | GCP Masterclass Notes</title>
+  <title>Lecture 3: Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown Protocol | Month 8 Notes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -76,70 +76,77 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-brand">
-        <span class="logo-box">AK</span>
-        <span class="logo-text">Tech Notes</span>
+        <div class="nav-brand-logo">AK</div>
+        <span>Tech Notes</span>
       </a>
-      <div class="nav-links">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="gcp.html" class="nav-link active">GCP Masterclass</a>
-        <a href="month-1.html" class="nav-link">Month 1</a>
-        <a href="deep-learning.html" class="nav-link">Deep Learning</a>
-        <a href="ai-roadmap.html" class="nav-link">AI Roadmap</a>
-        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+
+      <div class="nav-actions">
+        <a href="month-8.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Month 8</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- Lecture Header / Breadcrumb -->
-  <header class="lecture-hero">
-    <div class="lecture-hero-container">
-      <div class="breadcrumb">
-        <a href="index.html">Home</a> &rsaquo;
-        <a href="gcp.html">Month 8: GCP</a> &rsaquo;
-        <span>Lecture 3</span>
-      </div>
-      <div class="lecture-meta">
-        <span class="badge" style="background: rgba(66, 133, 244, 0.15); color: #4285F4; border: 1px solid rgba(66, 133, 244, 0.3);">
-          Month 8 &bull; Core Infrastructure
-        </span>
-        <span class="reading-time">&bull; 24 min read</span>
-      </div>
-      <h1 class="lecture-title">Lecture 3: Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown Protocol</h1>
-      <p class="lecture-subtitle">
-        Understand Google's global data center physical architecture, master the API enablement cycle, operate the zero-install in-browser Cloud Shell terminal, and enforce the ironclad Teardown Protocol to keep your bill at $0.00.
-      </p>
-    </div>
-  </header>
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
 
-  <!-- Content Layout -->
-  <div class="lecture-layout">
-    <!-- Table of Contents Sidebar -->
-    <aside class="toc-sidebar">
-      <div class="toc-card">
-        <h3 class="toc-title">In This Lecture</h3>
-        <ul class="toc-list">
-          <li><a href="#regions-zones">1. Regions vs. Zones Explained</a></li>
-          <li><a href="#naming-conventions">2. Geographic Naming Conventions</a></li>
-          <li><a href="#setting-defaults">3. Setting Default Region &amp; Zone</a></li>
-          <li><a href="#gcp-apis">4. The GCP API-Driven Ecosystem</a></li>
-          <li><a href="#managing-apis">5. Enabling APIs (Console &amp; CLI)</a></li>
-          <li><a href="#cloud-shell">6. Cloud Shell: Instant In-Browser Linux</a></li>
-          <li><a href="#hands-on-shell">7. Hands-On Cloud Shell Walkthrough</a></li>
-          <li><a href="#teardown-protocol">8. Cost-Protection Teardown Protocol</a></li>
-          <li><a href="#master-cheatsheet">9. Master GCP Command Cheat Sheet</a></li>
-        </ul>
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture 3 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
+      <ul class="sidebar-nav">
+        <li><a href="#regions-zones" class="sidebar-link">1. Regions vs. Zones Explained</a></li>
+        <li><a href="#naming-conventions" class="sidebar-link">2. Geographic Naming Conventions</a></li>
+        <li><a href="#setting-defaults" class="sidebar-link">3. Setting Default Region &amp; Zone</a></li>
+        <li><a href="#gcp-apis" class="sidebar-link">4. The GCP API Ecosystem</a></li>
+        <li><a href="#managing-apis" class="sidebar-link">5. Enabling APIs (Console &amp; CLI)</a></li>
+        <li><a href="#cloud-shell" class="sidebar-link">6. Cloud Shell: In-Browser Linux</a></li>
+        <li><a href="#hands-on-shell" class="sidebar-link">7. Hands-On Cloud Shell Walkthrough</a></li>
+        <li><a href="#teardown-protocol" class="sidebar-link">8. Cost-Protection Teardown Protocol</a></li>
+        <li><a href="#master-cheatsheet" class="sidebar-link">9. Master GCP Command Cheat Sheet</a></li>
+      </ul>
     </aside>
 
-    <!-- Main Lecture Content -->
-    <main class="lecture-content">
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Lecture 03 Notes</span>
+          <span class="tag">Regions &amp; Zones</span>
+          <span class="tag">High Availability</span>
+          <span class="tag">GCP APIs</span>
+          <span class="tag">Cloud Shell</span>
+          <span class="tag">Zero-Cost Teardown</span>
+        </div>
+        <h1 class="lecture-main-title">Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown Protocol</h1>
+        <p class="lecture-lead">
+          <strong>What is this lecture about?</strong> This module explores Google's physical worldwide infrastructure, explains the critical differences between multi-regions, regions, and zones using the bakery delivery mental model, demystifies Google Cloud's API-driven architecture, guides you through using the in-browser Linux Cloud Shell terminal, and establishes the strict cost-protection Teardown Protocol to guarantee your practice labs never accumulate unwanted billing charges.<br>
+          <strong>Why is this critical for engineers?</strong> High availability, fault tolerance, and low user latency all depend on placing computing instances and storage in the right regions and zones. Furthermore, automating project teardown protects your cloud credit and ensures secure, reproducible infrastructure.
+        </p>
+      </div>
 
-      <!-- Section 1 -->
-      <section id="regions-zones" class="content-section">
-        <h2>1. Regions vs. Zones Explained (The Bakery Mental Model)</h2>
+      <!-- Sections -->
+      <section id="regions-zones" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Regions vs. Zones Explained (The Bakery Mental Model)</h2>
         <p>
           Google Cloud does not exist in some ethereal, magical sky. It runs inside physical, high-security, climate-controlled warehouse buildings called <strong>Data Centers</strong> scattered across the continents.
         </p>
@@ -179,8 +186,8 @@
       </section>
 
       <!-- Section 2 -->
-      <section id="naming-conventions" class="content-section">
-        <h2>2. Geographic Naming Conventions</h2>
+      <section id="naming-conventions" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Geographic Naming Conventions</h2>
         <p>
           Google Cloud uses a standardized naming scheme for all locations worldwide.
         </p>
@@ -219,8 +226,8 @@ asia-south1-c</code></pre>
       </section>
 
       <!-- Section 3 -->
-      <section id="setting-defaults" class="content-section">
-        <h2>3. Setting Default Region &amp; Zone via CLI</h2>
+      <section id="setting-defaults" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Setting Default Region &amp; Zone via CLI</h2>
         <p>
           Every time you create a Virtual Machine, a Cloud Run service, or a database, GCP will prompt you for a region and zone. If you don't want to type <code>--region</code> and <code>--zone</code> in every single command, you can set defaults in your <code>gcloud</code> configuration.
         </p>
@@ -256,8 +263,8 @@ gcloud config get-value compute/zone</code></pre>
       </section>
 
       <!-- Section 4 -->
-      <section id="gcp-apis" class="content-section">
-        <h2>4. The GCP API-Driven Ecosystem</h2>
+      <section id="gcp-apis" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The GCP API-Driven Ecosystem</h2>
         <p>
           Here is a foundational truth of Google Cloud: <strong>Everything in GCP is an API.</strong>
         </p>
@@ -284,8 +291,8 @@ gcloud config get-value compute/zone</code></pre>
       </section>
 
       <!-- Section 5 -->
-      <section id="managing-apis" class="content-section">
-        <h2>5. Enabling APIs (Console &amp; CLI)</h2>
+      <section id="managing-apis" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Enabling APIs (Console &amp; CLI)</h2>
 
         <h3>Method A: Via Web Console</h3>
         <p>
@@ -328,8 +335,8 @@ gcloud services disable compute.googleapis.com</code></pre>
       </section>
 
       <!-- Section 6 -->
-      <section id="cloud-shell" class="content-section">
-        <h2>6. Cloud Shell: Instant In-Browser Linux</h2>
+      <section id="cloud-shell" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Cloud Shell: Instant In-Browser Linux</h2>
         <p>
           One of the greatest developer features of Google Cloud is <strong>Cloud Shell</strong>.
         </p>
@@ -356,8 +363,8 @@ gcloud services disable compute.googleapis.com</code></pre>
       </section>
 
       <!-- Section 7 -->
-      <section id="hands-on-shell" class="content-section">
-        <h2>7. Hands-On Cloud Shell Walkthrough</h2>
+      <section id="hands-on-shell" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Hands-On Cloud Shell Walkthrough</h2>
         <p>
           Let's run a quick interactive test to verify our Cloud Shell environment and test Python execution against GCP:
         </p>
@@ -399,8 +406,8 @@ python3 test_gcp.py</code></pre>
       </section>
 
       <!-- Section 8 -->
-      <section id="teardown-protocol" class="content-section">
-        <h2>8. Cost-Protection Teardown Protocol (The Golden Rule)</h2>
+      <section id="teardown-protocol" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Cost-Protection Teardown Protocol (The Golden Rule)</h2>
         <p>
           The most common fear beginners have when learning cloud is: <em>"What if I leave a database or GPU running by mistake and wake up to a $500 bill?"</em>
         </p>
@@ -452,8 +459,8 @@ gcloud projects delete ak-sandbox-lab-01
       </section>
 
       <!-- Section 9 -->
-      <section id="master-cheatsheet" class="content-section">
-        <h2>9. Master GCP Command Cheat Sheet</h2>
+      <section id="master-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Master GCP Command Cheat Sheet</h2>
         <p>
           Bookmark this table for quick recall of all essential Google Cloud CLI operations learned across Lectures 1, 2, and 3:
         </p>
@@ -541,8 +548,8 @@ gcloud projects delete ak-sandbox-lab-01
           <a href="gcp-lecture-2.html" class="btn-secondary" style="text-decoration: none !important;">
             ← Previous: Lecture 2 (Projects &amp; IAM Security)
           </a>
-          <a href="gcp.html" class="btn-primary" style="text-decoration: none !important;">
-            Back to GCP Course Overview ➔
+          <a href="month-8.html" class="btn-primary" style="text-decoration: none !important;">
+            Back to Month 8 Overview ➔
           </a>
         </div>
       </section>
@@ -565,12 +572,12 @@ gcloud projects delete ak-sandbox-lab-01
         </div>
         <div class="footer-nav">
           <div class="footer-col">
-            <h4 class="footer-heading">GCP Masterclass</h4>
+            <h4 class="footer-heading">Month 8: Cloud Engineering</h4>
             <ul class="footer-links">
               <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
               <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>
               <li><a href="gcp-lecture-3.html">Lecture 3: Regions, APIs &amp; Shell</a></li>
-              <li><a href="gcp.html">GCP Course Overview</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
             </ul>
           </div>
           <div class="footer-col">
@@ -578,6 +585,7 @@ gcloud projects delete ak-sandbox-lab-01
             <ul class="footer-links">
               <li><a href="index.html">Main Dashboard</a></li>
               <li><a href="month-1.html">Month 1 Foundations</a></li>
+              <li><a href="month-8.html">Month 8 Cloud Engineering</a></li>
               <li><a href="deep-learning.html">Deep Learning</a></li>
               <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
             </ul>
