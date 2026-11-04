@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Month 8: Cloud Engineering | Tech Notes</title>
-  <meta name="description" content="Month 8 curriculum: Google Cloud Platform (GCP) Architecture, IAM Security, Resource Hierarchy, Regions & Zones, Cloud APIs, Cloud Shell, and Teardown Protocol.">
+  <meta name="description" content="Month 8 curriculum: Enterprise Cloud Engineering, Google Cloud Platform (GCP), IAM Security, Resource Hierarchy, and Production Deployment.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -105,14 +105,14 @@
     <div class="hero-badge">
       <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; Month 8: Cloud Engineering
     </div>
-    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Month 8: Cloud Engineering (GCP)</h1>
+    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Month 8: Cloud Engineering</h1>
     <p class="hero-subtitle" style="margin-bottom: 0;">
-      Exhaustive, practical, and beginner-friendly reference guides for Google Cloud Platform: Console navigation, IAM &amp; Permissions, Compute Engine, Cloud Storage, BigQuery, Cloud Run, Artifact Registry, and zero-cost teardown practices.
+      Enterprise cloud computing, scalable architecture, and production infrastructure. Select a cloud technology below to explore complete lecture modules, real console UI navigation, and copyable CLI command libraries.
     </p>
 
     <div class="stats-strip">
       <span class="stat-badge">
-        <span>☁️</span> 3 Core Lectures
+        <span>☁️</span> Google Cloud Platform (GCP)
       </span>
       <span class="stat-badge">
         <span>🛡️</span> Zero-Risk Teardown Protocol
@@ -126,65 +126,35 @@
   <!-- Main Modules Grid -->
   <main class="main-container">
     
-    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-      <h2 style="margin: 0; border: none; font-size: 1.4rem;">Month 8 Lecture Modules</h2>
-      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">3 Lectures Available</span>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+      <div>
+        <h2 style="margin: 0; border: none; font-size: 1.45rem;">Month 8 Subjects</h2>
+        <p style="margin: 0.25rem 0 0; font-size: 0.92rem; color: var(--text-secondary);">Select a subject below to explore detailed lecture notes, console guides, and CLI references.</p>
+      </div>
+      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">Month 8 &bull; Cloud Engineering</span>
     </div>
 
+    <!-- Month 8 Technologies Grid -->
     <div class="tech-select-grid">
 
-      <!-- LECTURE 1: ARCHITECTURE & CONSOLE -->
-      <a href="gcp-lecture-1.html" class="tech-select-card" id="m8-lecture-1-card" title="Open Lecture 1 Notes">
+      <!-- THE GOOGLE CLOUD PLATFORM CARD -->
+      <a href="gcp.html" class="tech-select-card" id="gcp-card" title="Click to view Google Cloud Platform Modules">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L1</div>
-          <span class="tech-badge-active">Lecture 01</span>
+          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #4285F4; border-color: #1a73e8;">GCP</div>
+          <span class="tech-badge-active">Available</span>
         </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Cloud Architecture, Billing &amp; Console Navigation</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Foundations of Cloud Computing: What is the Cloud (Uber mental model), IaaS vs PaaS vs SaaS, GCP vs Google Workspace, unlocking the $300 Free Trial safely, full Web Console layout map, Billing account setup, budget alerts, and gcloud CLI installation &amp; authentication.
-        </p>
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 28 min read</span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            Open Notes
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-        </div>
-      </a>
 
-      <!-- LECTURE 2: RESOURCE HIERARCHY & IAM SECURITY -->
-      <a href="gcp-lecture-2.html" class="tech-select-card" id="m8-lecture-2-card" title="Open Lecture 2 Notes">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L2</div>
-          <span class="tech-badge-active">Lecture 02</span>
-        </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Resource Hierarchy, Projects, IAM &amp; Service Accounts</h3>
+        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">Google Cloud Platform (GCP)</h3>
         <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Mastering Google Cloud Security Architecture: 4-tier Resource Hierarchy (Org, Folders, Projects, Resources), Project ID vs Name vs Number, Hotel Keycard IAM model (Principals, Roles, Policies), Least Privilege, Service Accounts for AI agents, and key.json Git security rules.
+          Master Google Cloud core services: Cloud Console navigation, IAM &amp; Permissions security model, Resource Hierarchy, Projects, Compute Engine (VMs), Cloud Storage (GCS), APIs, in-browser Cloud Shell, and production teardown protocol.
         </p>
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 30 min read</span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            Open Notes
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-        </div>
-      </a>
 
-      <!-- LECTURE 3: REGIONS, APIS & TEARDOWN -->
-      <a href="gcp-lecture-3.html" class="tech-select-card" id="m8-lecture-3-card" title="Open Lecture 3 Notes">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L3</div>
-          <span class="tech-badge-active">Lecture 03</span>
-        </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Physical infrastructure &amp; developer workflow: Regions vs Zones (The Bakery mental model), naming conventions, setting compute defaults, GCP API-driven architecture, in-browser Cloud Shell terminal walkthrough, and the ironclad project teardown protocol to guarantee a $0 bill.
-        </p>
         <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 24 min read</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+            3 Comprehensive Modules
+          </span>
           <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            Open Notes
+            View GCP Modules
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </span>
         </div>
@@ -209,12 +179,12 @@
         </div>
         <div class="footer-nav">
           <div class="footer-col">
-            <h4 class="footer-heading">Month 8 Lectures</h4>
+            <h4 class="footer-heading">Month 8 Subjects</h4>
             <ul class="footer-links">
+              <li><a href="gcp.html">Google Cloud Platform (GCP)</a></li>
               <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
               <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>
               <li><a href="gcp-lecture-3.html">Lecture 3: Regions, APIs &amp; Shell</a></li>
-              <li><a href="month-8.html">Month 8 Overview</a></li>
             </ul>
           </div>
           <div class="footer-col">

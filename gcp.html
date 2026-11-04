@@ -3,49 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Month 8: Cloud Engineering | Tech Notes</title>
-  <meta name="description" content="Month 8 curriculum: Google Cloud Platform (GCP) Architecture, IAM Security, Resource Hierarchy, Regions & Zones, Cloud APIs, Cloud Shell, and Teardown Protocol.">
+  <title>Google Cloud Platform (GCP) Modules | Tech Notes</title>
+  <meta name="description" content="Master Google Cloud Platform: Console navigation, IAM & Permissions, Projects, Compute, Cloud Storage, APIs, Cloud Shell, and production deployment.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    .tech-select-grid {
+    .modules-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 2rem;
+      gap: 1.75rem;
       margin-top: 2rem;
     }
 
-    .tech-select-card {
+    .module-box {
       background: var(--bg-card);
-      border: 2px solid var(--border-color);
-      border-radius: 18px;
-      padding: 2.25rem;
-      text-decoration: none !important;
-      color: inherit !important;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.85rem;
       display: flex;
       flex-direction: column;
       box-shadow: var(--shadow-sm);
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
 
-    .tech-select-card:hover {
-      transform: translateY(-5px);
+    .module-box:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
       border-color: var(--border-color-hover);
-      box-shadow: var(--shadow-xl);
     }
 
-    .tech-badge-active {
-      background: var(--text-primary);
-      color: var(--bg-primary);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
+    .module-box.active-module {
+      border: 2px solid var(--text-primary);
+      box-shadow: var(--shadow-md);
     }
 
     .stats-strip {
@@ -86,8 +78,7 @@
       </a>
 
       <div class="nav-actions">
-        <a href="index.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Home</a>
-        <a href="month-1.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">Month 1</a>
+        <a href="month-8.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Month 8</a>
         <a href="ai-roadmap.html" class="btn-primary" style="padding: 0.45rem 0.95rem; font-size: 0.84rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px;">
           <span>🗺️</span> AI Roadmap
         </a>
@@ -100,19 +91,19 @@
     </div>
   </nav>
 
-  <!-- Page Header / Hero -->
-  <header class="hero" style="padding: 3rem 1.5rem 2.25rem;">
+  <!-- Page Header -->
+  <header class="hero" style="padding: 3rem 1.5rem 2.5rem;">
     <div class="hero-badge">
-      <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; Month 8: Cloud Engineering
+      <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &nbsp;/&nbsp; Google Cloud Platform
     </div>
-    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Month 8: Cloud Engineering (GCP)</h1>
+    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Google Cloud Platform (GCP)</h1>
     <p class="hero-subtitle" style="margin-bottom: 0;">
-      Exhaustive, practical, and beginner-friendly reference guides for Google Cloud Platform: Console navigation, IAM &amp; Permissions, Compute Engine, Cloud Storage, BigQuery, Cloud Run, Artifact Registry, and zero-cost teardown practices.
+      Exhaustive, practical, and beginner-friendly reference guides for Google Cloud: Cloud Console navigation, IAM &amp; Permissions, Compute Engine, Cloud Storage, BigQuery, Cloud Run, Artifact Registry, and zero-cost teardown practices.
     </p>
 
     <div class="stats-strip">
       <span class="stat-badge">
-        <span>☁️</span> 3 Core Lectures
+        <span>☁️</span> 3 Core Foundation Modules
       </span>
       <span class="stat-badge">
         <span>🛡️</span> Zero-Risk Teardown Protocol
@@ -127,68 +118,100 @@
   <main class="main-container">
     
     <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-      <h2 style="margin: 0; border: none; font-size: 1.4rem;">Month 8 Lecture Modules</h2>
+      <h2 style="margin: 0; border: none; font-size: 1.4rem;">GCP Lecture Modules</h2>
       <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">3 Lectures Available</span>
     </div>
 
-    <div class="tech-select-grid">
+    <div class="modules-container">
 
-      <!-- LECTURE 1: ARCHITECTURE & CONSOLE -->
-      <a href="gcp-lecture-1.html" class="tech-select-card" id="m8-lecture-1-card" title="Open Lecture 1 Notes">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L1</div>
-          <span class="tech-badge-active">Lecture 01</span>
+      <!-- MODULE 1: ARCHITECTURE & CONSOLE -->
+      <article class="module-box active-module">
+        <div class="card-header" style="margin-bottom: 0.75rem;">
+          <span class="card-lecture-no">MODULE 01</span>
+          <span class="card-badge badge-active">Active Notes</span>
         </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Cloud Architecture, Billing &amp; Console Navigation</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Architecture, Cloud Console Navigation, Free Trial &amp; Billing Lecture-1</h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
           Foundations of Cloud Computing: What is the Cloud (Uber mental model), IaaS vs PaaS vs SaaS, GCP vs Google Workspace, unlocking the $300 Free Trial safely, full Web Console layout map, Billing account setup, budget alerts, and gcloud CLI installation &amp; authentication.
         </p>
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 28 min read</span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Cloud Mental Model</span>
+          <span class="tag">IaaS vs PaaS vs SaaS</span>
+          <span class="tag">$300 Free Trial</span>
+          <span class="tag">Console UI Map</span>
+          <span class="tag">Billing &amp; Budgets</span>
+          <span class="tag">gcloud CLI Setup</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 28 min read</span>
+          </div>
+          <a href="gcp-lecture-1.html" class="btn-primary">
             Open Notes
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+          </a>
         </div>
-      </a>
+      </article>
 
-      <!-- LECTURE 2: RESOURCE HIERARCHY & IAM SECURITY -->
-      <a href="gcp-lecture-2.html" class="tech-select-card" id="m8-lecture-2-card" title="Open Lecture 2 Notes">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L2</div>
-          <span class="tech-badge-active">Lecture 02</span>
+      <!-- MODULE 2: RESOURCE HIERARCHY & IAM SECURITY -->
+      <article class="module-box active-module">
+        <div class="card-header" style="margin-bottom: 0.75rem;">
+          <span class="card-lecture-no">MODULE 02</span>
+          <span class="card-badge badge-active">Active Notes</span>
         </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Resource Hierarchy, Projects, IAM &amp; Service Accounts</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Mastering Google Cloud Security Architecture: 4-tier Resource Hierarchy (Org, Folders, Projects, Resources), Project ID vs Name vs Number, Hotel Keycard IAM model (Principals, Roles, Policies), Least Privilege, Service Accounts for AI agents, and key.json Git security rules.
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Resource Hierarchy, Projects, IAM Permissions &amp; Service Accounts Lecture-2</h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
+          Mastering Google Cloud Security Architecture: 4-tier Resource Hierarchy (Org, Folders, Projects, Resources), Project ID vs Name vs Number, Hotel Keycard IAM model (Principals, Roles, Policies), Least Privilege, Service Accounts for AI agents/automation, and the critical key.json Git security rule.
         </p>
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 30 min read</span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Resource Hierarchy</span>
+          <span class="tag">Project IDs</span>
+          <span class="tag">IAM Security</span>
+          <span class="tag">Hotel Keycard Model</span>
+          <span class="tag">Service Accounts</span>
+          <span class="tag">Robot Identities</span>
+          <span class="tag">key.json Safety</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 30 min read</span>
+          </div>
+          <a href="gcp-lecture-2.html" class="btn-primary">
             Open Notes
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+          </a>
         </div>
-      </a>
+      </article>
 
-      <!-- LECTURE 3: REGIONS, APIS & TEARDOWN -->
-      <a href="gcp-lecture-3.html" class="tech-select-card" id="m8-lecture-3-card" title="Open Lecture 3 Notes">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0284c7; border-color: #0369a1;">L3</div>
-          <span class="tech-badge-active">Lecture 03</span>
+      <!-- MODULE 3: REGIONS, APIS & TEARDOWN -->
+      <article class="module-box active-module">
+        <div class="card-header" style="margin-bottom: 0.75rem;">
+          <span class="card-lecture-no">MODULE 03</span>
+          <span class="card-badge badge-active">Active Notes</span>
         </div>
-        <h3 style="font-size: 1.5rem; margin-bottom: 0.65rem; color: var(--text-primary);">Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Physical infrastructure &amp; developer workflow: Regions vs Zones (The Bakery mental model), naming conventions, setting compute defaults, GCP API-driven architecture, in-browser Cloud Shell terminal walkthrough, and the ironclad project teardown protocol to guarantee a $0 bill.
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Regions &amp; Zones, Cloud APIs, Cloud Shell &amp; Teardown Protocol Lecture-3</h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
+          Physical infrastructure &amp; developer workflow: Regions vs Zones (The Bakery mental model), naming conventions, setting compute defaults, GCP API-driven architecture, enabling APIs via console and CLI, in-browser Cloud Shell terminal, Python execution, and the ironclad project teardown protocol to ensure a $0 bill.
         </p>
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">⏱️ 24 min read</span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Regions &amp; Zones</span>
+          <span class="tag">Bakery Model</span>
+          <span class="tag">High Availability</span>
+          <span class="tag">gcloud services</span>
+          <span class="tag">Cloud Shell Linux</span>
+          <span class="tag">Teardown Protocol</span>
+          <span class="tag">Master Cheat Sheet</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 24 min read</span>
+          </div>
+          <a href="gcp-lecture-3.html" class="btn-primary">
             Open Notes
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+          </a>
         </div>
-      </a>
+      </article>
 
     </div>
 
@@ -209,7 +232,7 @@
         </div>
         <div class="footer-nav">
           <div class="footer-col">
-            <h4 class="footer-heading">Month 8 Lectures</h4>
+            <h4 class="footer-heading">Month 8: GCP</h4>
             <ul class="footer-links">
               <li><a href="gcp-lecture-1.html">Lecture 1: Architecture &amp; Console</a></li>
               <li><a href="gcp-lecture-2.html">Lecture 2: Projects &amp; IAM Security</a></li>

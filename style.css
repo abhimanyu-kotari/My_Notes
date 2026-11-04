@@ -1806,3 +1806,215 @@ footer {
 }
 
 
+
+
+/* ============================================================ */
+/* REAL GOOGLE CLOUD PLATFORM CONSOLE UI MOCKUPS                */
+/* ============================================================ */
+
+.gcp-browser-frame {
+  background: #18191c;
+  border: 1px solid #2d3035;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.75rem 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-sans);
+}
+
+.gcp-browser-header {
+  background: #202124;
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid #303134;
+}
+
+.gcp-browser-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.gcp-browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gcp-browser-dot.r { background: #ea4335; }
+.gcp-browser-dot.y { background: #fbbc04; }
+.gcp-browser-dot.g { background: #34a853; }
+
+.gcp-browser-url {
+  background: #2d2e31;
+  color: #9aa0a6;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  flex: 1;
+  max-width: 380px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gcp-console-nav {
+  background: #1a73e8;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gcp-console-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 600;
+}
+
+.gcp-project-select {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 0.25rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: default;
+}
+
+.gcp-search-bar {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e8eaed;
+  border-radius: 8px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gcp-console-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gcp-tool-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.gcp-console-body {
+  display: flex;
+  min-height: 240px;
+  background: #202124;
+  color: #e8eaed;
+}
+
+.gcp-console-sidebar {
+  width: 220px;
+  background: #1e1f22;
+  border-right: 1px solid #303134;
+  padding: 0.75rem 0;
+  font-size: 0.82rem;
+}
+
+.gcp-sidebar-heading {
+  padding: 0.35rem 1rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #9aa0a6;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.gcp-sidebar-item {
+  padding: 0.45rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #bdc1c6;
+  cursor: default;
+}
+
+.gcp-sidebar-item.active {
+  background: rgba(66, 133, 244, 0.2);
+  color: #8ab4f8;
+  border-left: 3px solid #8ab4f8;
+}
+
+.gcp-console-content {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  background: #202124;
+}
+
+.gcp-ui-card {
+  background: #292a2d;
+  border: 1px solid #3c4043;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.gcp-badge-blue {
+  background: rgba(66, 133, 244, 0.2);
+  color: #8ab4f8;
+  border: 1px solid rgba(66, 133, 244, 0.4);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.gcp-badge-green {
+  background: rgba(52, 168, 83, 0.2);
+  color: #81c995;
+  border: 1px solid rgba(52, 168, 83, 0.4);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.gcp-badge-amber {
+  background: rgba(251, 188, 4, 0.2);
+  color: #fdd663;
+  border: 1px solid rgba(251, 188, 4, 0.4);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.gcp-btn-blue {
+  background: #1a73e8;
+  color: #ffffff;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

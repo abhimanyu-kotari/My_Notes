@@ -81,7 +81,7 @@
       </a>
 
       <div class="nav-actions">
-        <a href="month-8.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Month 8</a>
+        <a href="gcp.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to GCP Modules</a>
         <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
           <span class="sidebar-btn-text">Hide Contents</span>
@@ -129,6 +129,7 @@
     <main class="docs-content">
       
       <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;"><a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; <a href="gcp.html" style="color: inherit; text-decoration: none;">GCP</a> &rsaquo; <span style="color: var(--text-primary);">Lecture 3</span></div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Lecture 03 Notes</span>
           <span class="tag">Regions &amp; Zones</span>
@@ -161,6 +162,74 @@
           <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Zone A</strong> (Independent data center building, isolated power &amp; cooling)</div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Zone B</strong> (Independent data center building, separated by km)</div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Zone C</strong> (Independent data center building, high-speed fiber link)</div>
+        </div>
+
+        
+        <!-- REAL GLOBAL INFRASTRUCTURE DATA CENTER MATRIX -->
+        <div class="gcp-browser-frame">
+          <div class="gcp-browser-header">
+            <div class="gcp-browser-dots">
+              <span class="gcp-browser-dot r"></span>
+              <span class="gcp-browser-dot y"></span>
+              <span class="gcp-browser-dot g"></span>
+            </div>
+            <div class="gcp-browser-url">
+              https://cloud.google.com/about/locations
+            </div>
+          </div>
+          <div style="background: #202124; padding: 1.5rem; color: #e8eaed;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3c4043; padding-bottom: 0.75rem; margin-bottom: 1.25rem;">
+              <div>
+                <h3 style="margin: 0; color: #ffffff; font-size: 1.2rem;">Google Cloud Worldwide Infrastructure Matrix</h3>
+                <span style="font-size: 0.82rem; color: #9aa0a6;">Selecting the ideal region for latency, cost, and compliance</span>
+              </div>
+              <span class="gcp-badge-blue">40+ Regions Worldwide</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+              <!-- Mumbai Region -->
+              <div class="gcp-ui-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.1rem;">🇮🇳 <strong>asia-south1</strong></span>
+                  <span class="gcp-badge-green">~15ms India Latency</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #ffffff; margin-top: 0.35rem; font-weight: 600;">Mumbai, Maharashtra, India</div>
+                <div style="font-size: 0.78rem; color: #9aa0a6; margin-top: 0.5rem; line-height: 1.6;">
+                  &bull; <strong>3 Isolated Zones:</strong> <code>-a</code>, <code>-b</code>, <code>-c</code><br>
+                  &bull; <strong>Best For:</strong> Indian users, RBI &amp; local financial compliance.<br>
+                  &bull; <strong>Latency:</strong> Ultra-fast within India.
+                </div>
+              </div>
+
+              <!-- Iowa Region -->
+              <div class="gcp-ui-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.1rem;">🇺🇸 <strong>us-central1</strong></span>
+                  <span class="gcp-badge-amber">Lowest Cost Tier</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #ffffff; margin-top: 0.35rem; font-weight: 600;">Council Bluffs, Iowa, USA</div>
+                <div style="font-size: 0.78rem; color: #9aa0a6; margin-top: 0.5rem; line-height: 1.6;">
+                  &bull; <strong>4 Isolated Zones:</strong> <code>-a</code>, <code>-b</code>, <code>-c</code>, <code>-f</code><br>
+                  &bull; <strong>Best For:</strong> Lowest pricing for learning &amp; testing.<br>
+                  &bull; <strong>Features:</strong> First to get new Google AI and GPU models.
+                </div>
+              </div>
+
+              <!-- Frankfurt Region -->
+              <div class="gcp-ui-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.1rem;">🇩🇪 <strong>europe-west3</strong></span>
+                  <span class="gcp-badge-blue">GDPR Compliance</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #ffffff; margin-top: 0.35rem; font-weight: 600;">Frankfurt, Germany</div>
+                <div style="font-size: 0.78rem; color: #9aa0a6; margin-top: 0.5rem; line-height: 1.6;">
+                  &bull; <strong>3 Isolated Zones:</strong> <code>-a</code>, <code>-b</code>, <code>-c</code><br>
+                  &bull; <strong>Best For:</strong> European customers &amp; strict GDPR rules.<br>
+                  &bull; <strong>Security:</strong> Ultra-secure enterprise banking hub.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <h3>The Bakery Analogy</h3>
@@ -346,6 +415,49 @@ gcloud services disable compute.googleapis.com</code></pre>
 
         <div class="callout-tip">
           <strong>What is Cloud Shell?</strong> Cloud Shell is a <strong>free, instant Debian Linux virtual machine</strong> hosted right inside your web browser. It comes with <strong>5 GB of free persistent storage</strong> in your <code>$HOME</code> directory and zero subscription costs.
+        </div>
+
+        
+        <!-- REAL IN-BROWSER CLOUD SHELL TERMINAL SIMULATION -->
+        <div class="gcp-browser-frame">
+          <div class="gcp-browser-header">
+            <div class="gcp-browser-dots">
+              <span class="gcp-browser-dot r"></span>
+              <span class="gcp-browser-dot y"></span>
+              <span class="gcp-browser-dot g"></span>
+            </div>
+            <div class="gcp-browser-url">
+              https://shell.cloud.google.com/?project=ak-sandbox-409124
+            </div>
+          </div>
+
+          <!-- Cloud Shell Window Header -->
+          <div style="background: #1e1f22; padding: 0.45rem 1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #303134; font-size: 0.82rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; color: #ffffff; font-weight: 600;">
+              <span style="color: #81c995;">●</span> Cloud Shell Terminal &bull; <span style="font-family: var(--font-mono); color: #8ab4f8;">ak-sandbox-409124</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <span class="gcp-tool-btn">✏️ Open Editor</span>
+              <span class="gcp-tool-btn">🌐 Web Preview (Port 8080)</span>
+            </div>
+          </div>
+
+          <!-- Shell Terminal Black Canvas -->
+          <div style="background: #0d1117; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.7; color: #e6edf3;">
+            <div style="color: #8b949e;">Welcome to Cloud Shell! For a quick intro, type: gcloud help</div>
+            <div style="color: #8b949e;">Your Cloud Platform project in this session is set to <span style="color: #8ab4f8;">ak-sandbox-409124</span>.</div>
+            <div style="margin-top: 0.75rem;">
+              <span style="color: #81c995;">abhimanyu@cloudshell</span>:<span style="color: #60a5fa;">~</span> (<span style="color: #fdd663;">ak-sandbox-409124</span>)$ gcloud compute instances list
+            </div>
+            <div style="color: #8b949e;">Listed 0 items. (Zero virtual machines running)</div>
+            <div style="margin-top: 0.5rem;">
+              <span style="color: #81c995;">abhimanyu@cloudshell</span>:<span style="color: #60a5fa;">~</span> (<span style="color: #fdd663;">ak-sandbox-409124</span>)$ python3 -c "print('🚀 In-Browser Linux is fully functional!')"
+            </div>
+            <div style="color: #81c995; font-weight: 600;">🚀 In-Browser Linux is fully functional!</div>
+            <div style="margin-top: 0.5rem;">
+              <span style="color: #81c995;">abhimanyu@cloudshell</span>:<span style="color: #60a5fa;">~</span> (<span style="color: #fdd663;">ak-sandbox-409124</span>)$ <span style="display: inline-block; width: 8px; height: 14px; background: #ffffff; vertical-align: middle;"></span>
+            </div>
+          </div>
         </div>
 
         <h3>Cloud Shell Superpowers:</h3>
@@ -548,8 +660,8 @@ gcloud projects delete ak-sandbox-lab-01
           <a href="gcp-lecture-2.html" class="btn-secondary" style="text-decoration: none !important;">
             ← Previous: Lecture 2 (Projects &amp; IAM Security)
           </a>
-          <a href="month-8.html" class="btn-primary" style="text-decoration: none !important;">
-            Back to Month 8 Overview ➔
+          <a href="gcp.html" class="btn-primary" style="text-decoration: none !important;">
+            Back to GCP Modules ➔
           </a>
         </div>
       </section>

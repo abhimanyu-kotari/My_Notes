@@ -128,7 +128,7 @@
       </a>
 
       <div class="nav-actions">
-        <a href="month-8.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Month 8</a>
+        <a href="gcp.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to GCP Modules</a>
         <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
           <span class="sidebar-btn-text">Hide Contents</span>
@@ -175,6 +175,7 @@
     <main class="docs-content">
       
       <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;"><a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; <a href="gcp.html" style="color: inherit; text-decoration: none;">GCP</a> &rsaquo; <span style="color: var(--text-primary);">Lecture 1</span></div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Lecture 01 Notes</span>
           <span class="tag">GCP Fundamentals</span>
@@ -349,46 +350,117 @@
         </p>
 
         <!-- UI Layout Mockup -->
-        <div class="console-ui-mockup">
-          <div class="console-ui-topbar">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <span style="font-weight: 700; color: #fff;">☰ Google Cloud</span>
-              <span style="background: #3c3c4f; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;">Project: my-ai-project-101 ▾</span>
+        
+        <!-- REAL GCP CONSOLE BROWSER SIMULATION -->
+        <div class="gcp-browser-frame">
+          <div class="gcp-browser-header">
+            <div class="gcp-browser-dots">
+              <span class="gcp-browser-dot r"></span>
+              <span class="gcp-browser-dot y"></span>
+              <span class="gcp-browser-dot g"></span>
             </div>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <span style="background: #18181f; padding: 0.25rem 0.75rem; border-radius: 6px; color: #94a3b8;">🔍 Search products, resources, docs (/)...</span>
-              <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 0.2rem 0.5rem; border-radius: 4px;">Free Trial: $300 credit</span>
-              <span style="font-weight: 700; color: #60a5fa;">[ >_ Cloud Shell ]</span>
-              <span>🔔</span>
-              <span>👤</span>
+            <div class="gcp-browser-url">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              https://console.cloud.google.com/welcome?project=ak-sandbox-409124
             </div>
           </div>
-          <div class="console-ui-body">
-            <div class="console-ui-sidebar">
-              <div class="console-ui-menu-item active">📊 Dashboard</div>
-              <div class="console-ui-menu-item">💳 Billing</div>
-              <div class="console-ui-menu-item">🔑 IAM &amp; Admin</div>
-              <div class="console-ui-menu-item">🔌 APIs &amp; Services</div>
-              <div class="console-ui-menu-item">💻 Compute Engine</div>
-              <div class="console-ui-menu-item">🪣 Cloud Storage</div>
-              <div class="console-ui-menu-item">🚀 Cloud Run</div>
-              <div class="console-ui-menu-item">🗄️ Cloud SQL</div>
-              <div class="console-ui-menu-item">🤖 Vertex AI</div>
+
+          <!-- GCP TOP NAVIGATION BAR -->
+          <div class="gcp-console-nav">
+            <div class="gcp-console-brand">
+              <span style="font-size: 1.1rem; cursor: pointer;" title="Navigation menu (hamburger)">☰</span>
+              <span style="display: flex; align-items: center; gap: 0.35rem;">
+                <span style="font-size: 1.2rem;">☁️</span> Google Cloud Platform
+              </span>
             </div>
-            <div class="console-ui-canvas">
-              <h3 style="margin-top: 0; color: #f8fafc;">Project Dashboard Overview</h3>
-              <p style="color: #94a3b8; font-size: 0.85rem;">Project ID: <code>my-ai-project-101</code> &bull; Project Number: <code>482910481029</code></p>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                <div style="background: #1c1c24; padding: 0.75rem; border-radius: 8px; border: 1px solid #333;">
-                  <strong style="color: #60a5fa;">Compute Usage</strong><br>
-                  <span style="font-size: 0.78rem; color: #94a3b8;">0 running instances (0% quota)</span>
-                </div>
-                <div style="background: #1c1c24; padding: 0.75rem; border-radius: 8px; border: 1px solid #333;">
-                  <strong style="color: #4ade80;">Billing &amp; Estimated Charges</strong><br>
-                  <span style="font-size: 0.78rem; color: #94a3b8;">₹0.00 accrued &bull; 100% credits remaining</span>
-                </div>
+
+            <!-- Project Selector Dropdown -->
+            <div class="gcp-project-select" title="Click to switch projects">
+              <span>📁 ak-sandbox-409124</span>
+              <span style="font-size: 0.7rem;">▼</span>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="gcp-search-bar">
+              <span>🔍</span>
+              <span style="color: #9aa0a6;">Search resources, docs, products (/)</span>
+            </div>
+
+            <!-- Right Tools -->
+            <div class="gcp-console-tools">
+              <span class="gcp-tool-btn" title="Activate Cloud Shell Terminal">&gt;_ Cloud Shell</span>
+              <span class="gcp-tool-btn" title="Notifications">🔔 1</span>
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: #ea4335; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">A</span>
+            </div>
+          </div>
+
+          <!-- GCP CONSOLE BODY: SIDEBAR + MAIN DASHBOARD -->
+          <div class="gcp-console-body">
+            <!-- Pinned Navigation Drawer -->
+            <div class="gcp-console-sidebar">
+              <div class="gcp-sidebar-heading">Pinned Services</div>
+              <div class="gcp-sidebar-item active">
+                <span>📊</span> <span>Dashboard</span>
+              </div>
+              <div class="gcp-sidebar-item">
+                <span>💳</span> <span>Billing ($300 Active)</span>
+              </div>
+              <div class="gcp-sidebar-item">
+                <span>🔐</span> <span>IAM &amp; Admin</span>
+              </div>
+              <div class="gcp-sidebar-item">
+                <span>💻</span> <span>Compute Engine</span>
+              </div>
+              <div class="gcp-sidebar-item">
+                <span>📦</span> <span>Cloud Storage</span>
+              </div>
+              <div class="gcp-sidebar-item">
+                <span>⚡</span> <span>Cloud Run</span>
+              </div>
+              <div class="gcp-sidebar-heading" style="margin-top: 0.5rem;">APIs &amp; Services</div>
+              <div class="gcp-sidebar-item">
+                <span>📚</span> <span>API Library</span>
               </div>
             </div>
+
+            <!-- Console Dashboard Canvas -->
+            <div class="gcp-console-content">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1.15rem; color: #ffffff;">Project Info</h3>
+                <span class="gcp-badge-green">● Billing Active</span>
+              </div>
+
+              <!-- Project Info Cards Grid -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="gcp-ui-card">
+                  <div style="font-size: 0.72rem; color: #9aa0a6; text-transform: uppercase;">Project Name</div>
+                  <div style="font-size: 1rem; font-weight: 600; color: #ffffff; margin-top: 0.2rem;">AK Sandbox</div>
+                  <div style="font-size: 0.75rem; color: #8ab4f8; margin-top: 0.4rem; cursor: pointer;">Edit project settings &rarr;</div>
+                </div>
+
+                <div class="gcp-ui-card">
+                  <div style="font-size: 0.72rem; color: #9aa0a6; text-transform: uppercase;">Project ID (Permanent)</div>
+                  <div style="font-size: 0.92rem; font-family: var(--font-mono); color: #81c995; margin-top: 0.2rem;">ak-sandbox-409124</div>
+                  <div style="font-size: 0.72rem; color: #9aa0a6; margin-top: 0.4rem;">Used in all CLI commands</div>
+                </div>
+
+                <div class="gcp-ui-card">
+                  <div style="font-size: 0.72rem; color: #9aa0a6; text-transform: uppercase;">Free Trial Credit</div>
+                  <div style="font-size: 1.1rem; font-weight: 700; color: #fdd663; margin-top: 0.2rem;">$300.00 / ₹25,000</div>
+                  <div style="font-size: 0.72rem; color: #81c995; margin-top: 0.4rem;">90 Days Remaining &bull; $0.00 spent</div>
+                </div>
+              </div>
+
+              <!-- Quick Access Actions -->
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button class="gcp-btn-blue">+ Create VM Instance</button>
+                <button class="gcp-btn-blue" style="background: #3c4043; color: #e8eaed;">+ Create Storage Bucket</button>
+                <button class="gcp-btn-blue" style="background: #3c4043; color: #e8eaed;">Set Budget Alert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
           </div>
         </div>
 
@@ -626,8 +698,8 @@ gcloud config list</code></pre>
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
-          <a href="month-8.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Back to Month 8
+          <a href="gcp.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Back to GCP Modules
           </a>
           <a href="gcp-lecture-2.html" class="btn-primary" style="text-decoration: none !important;">
             Next: Lecture 2 (Projects &amp; IAM Security) →
