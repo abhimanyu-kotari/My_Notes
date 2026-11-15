@@ -3,20 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deep Learning Modules | Tech Notes</title>
+  <title>Deep Learning (D2L) | Tech Notes</title>
+  <meta name="description" content="Dive into Deep Learning (D2L.ai): An interactive deep learning textbook with math, code, and implementations across PyTorch, NumPy, JAX, and TensorFlow.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    .modules-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1.75rem;
-      margin-top: 2rem;
+    .d2l-hero-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .module-box {
+    .d2l-hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+    }
+
+    .d2l-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .d2l-stat-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.15rem;
+    }
+
+    .d2l-stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 0.25rem;
+    }
+
+    .d2l-stat-label {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .chapter-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
@@ -28,21 +82,32 @@
       position: relative;
     }
 
-    .module-box:hover {
+    .chapter-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
       border-color: var(--border-color-hover);
     }
 
-    .module-box.active-module {
-      border: 2px solid var(--text-primary);
-      box-shadow: var(--shadow-md);
+    .chapter-card.highlight {
+      border: 2px solid var(--border-color);
     }
 
-    .badge-upcoming {
-      background: var(--bg-secondary);
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
+    .chapter-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #6366f1;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    [data-theme="dark"] .chapter-num {
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.18);
     }
   </style>
 </head>
@@ -71,164 +136,260 @@
     <div class="hero-badge">
       <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; Deep Learning
     </div>
-    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Deep Learning Modules</h1>
-    <p class="hero-subtitle" style="margin-bottom: 0;">
-      Comprehensive study notes, mathematical proofs, neural network architectures, and implementation code for modern deep learning.
+    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Deep Learning Notes</h1>
+    <p class="hero-subtitle" style="margin-bottom: 1.5rem;">
+      Curated interactive deep learning textbook: mathematical rigor, executable code, and deep network architectures across PyTorch, NumPy, JAX, and TensorFlow.
     </p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="https://d2l.ai/chapter_preface/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.75rem 1.4rem; font-size: 0.95rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: var(--shadow-md);">
+        Open D2L Interactive Textbook ↗
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </a>
+      <a href="index.html" class="btn-secondary" style="padding: 0.75rem 1.25rem; font-size: 0.95rem; text-decoration: none !important;">
+        ← Back to Dashboard
+      </a>
+    </div>
   </header>
 
-  <!-- Main Modules Grid -->
+  <!-- Main Container -->
   <main class="main-container">
-    
-    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
-      <h2 style="margin: 0; border: none; font-size: 1.4rem;">Course Modules</h2>
-      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">5 Modules</span>
+
+    <!-- Featured D2L Overview Card -->
+    <section class="d2l-hero-card">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.5rem; background: #6366f1; border-color: #4f46e5;">DL</div>
+          <div>
+            <h2 style="margin: 0; font-size: 1.6rem; border: none;">Dive into Deep Learning (D2L.ai)</h2>
+            <p style="margin: 0.2rem 0 0; font-size: 0.92rem; color: var(--text-secondary);">An interactive deep learning textbook with code, math, and discussions</p>
+          </div>
+        </div>
+        <span class="tech-badge-active">Primary Notes Link</span>
+      </div>
+
+      <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.65; margin: 0;">
+        Dive into Deep Learning represents the international gold standard for studying neural networks and modern AI. Adopted by over 500 leading universities worldwide (including UC Berkeley, Stanford, CMU, Harvard, and MIT), D2L integrates mathematical formulations with hands-on executable PyTorch code so you learn theory and implementation simultaneously.
+      </p>
+
+      <div class="d2l-stats-grid">
+        <div class="d2l-stat-item">
+          <div class="d2l-stat-value">500+</div>
+          <div class="d2l-stat-label">Universities Worldwide</div>
+        </div>
+        <div class="d2l-stat-item">
+          <div class="d2l-stat-value">Multi-FW</div>
+          <div class="d2l-stat-label">PyTorch, JAX, TensorFlow &amp; NumPy</div>
+        </div>
+        <div class="d2l-stat-item">
+          <div class="d2l-stat-value">100%</div>
+          <div class="d2l-stat-label">Open-Access &amp; Interactive</div>
+        </div>
+        <div class="d2l-stat-item">
+          <div class="d2l-stat-value">Transformers</div>
+          <div class="d2l-stat-label">Modern Attention &amp; LLM Foundations</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; padding-top: 0.5rem; border-top: 1px solid var(--border-color);">
+        <a href="https://d2l.ai/chapter_preface/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.65rem 1.25rem; font-size: 0.92rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.45rem;">
+          Go Directly to D2L Notes (d2l.ai) ↗
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+        <a href="https://github.com/d2l-ai/d2l-en" target="_blank" rel="noopener" class="btn-secondary" style="padding: 0.65rem 1.15rem; font-size: 0.92rem; text-decoration: none !important;">
+          D2L GitHub Repository ↗
+        </a>
+      </div>
+    </section>
+
+    <!-- Syllabus Breakdown -->
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-top: 1rem;">
+      <h2 style="margin: 0; border: none; font-size: 1.4rem;">Textbook Curriculum Overview</h2>
+      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">8 Core Deep Learning Pillars</span>
     </div>
 
-    <div class="modules-container">
+    <div class="chapters-grid">
 
-      <!-- MODULE 1: FOUNDATIONS & THE PERCEPTRON (ACTIVE) -->
-      <article class="module-box active-module">
-        <div class="card-header" style="margin-bottom: 0.75rem;">
-          <span class="card-lecture-no">MODULE 01</span>
-          <span class="card-badge badge-active">Active Notes</span>
+      <!-- CHAPTER 1: PRELIMINARIES -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 01</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Foundations</span>
         </div>
-        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Foundations of Deep Learning &amp; The Perceptron Lecture-1</h3>
-        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
-          Core foundations of neural networks: AI vs ML vs DL vs Data Science hierarchy, why deep learning exploded (Big Data &amp; GPU acceleration), biological vs artificial neurons, mathematical formulation of the perceptron (linear combination <code>wᵀx + b</code>), role of bias, sigmoid activation dynamics, forward pass, loss computation, backpropagation mechanics, gradient descent optimizers, and 4 solved practice implementations.
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Mathematical Preliminaries</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Data manipulation with tensors, data preprocessing pipelines, linear algebra foundations (vectors, matrices, norms), multivariable differential calculus, automatic differentiation (autograd), and probability distributions.
         </p>
-        <div class="card-tags" style="margin-bottom: 1.5rem;">
-          <span class="tag">AI vs ML vs DL</span>
-          <span class="tag">Perceptron</span>
-          <span class="tag">Weights &amp; Bias</span>
-          <span class="tag">Sigmoid Activation</span>
-          <span class="tag">Forward &amp; Backprop</span>
-          <span class="tag">Gradient Descent</span>
-          <span class="tag">4 Solved Tasks</span>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Tensors</span>
+          <span class="tag">Linear Algebra</span>
+          <span class="tag">Calculus</span>
+          <span class="tag">Autograd</span>
+          <span class="tag">Probability</span>
         </div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span>⏱️ 35 min read</span>
-          </div>
-          <a href="dl-lecture-1.html" class="btn-primary">
-            Open Notes
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
-        </div>
+        <a href="https://d2l.ai/chapter_preliminaries/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read Preliminaries ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
       </article>
 
-      <!-- MODULE 2: ACTIVATION FUNCTIONS, BACKPROPAGATION & LOSS SURFACES (ACTIVE) -->
-      <article class="module-box active-module">
-        <div class="card-header" style="margin-bottom: 0.75rem;">
-          <span class="card-lecture-no">MODULE 02</span>
-          <span class="card-badge badge-active">Active Notes</span>
+      <!-- CHAPTER 2: LINEAR NEURAL NETWORKS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 02</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Linear Models</span>
         </div>
-        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Backpropagation, Activation Functions &amp; Loss Surfaces Lecture-2</h3>
-        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
-          The rigorous multivariable calculus of deep learning: multivariate chain rule across branching computation graphs, weight update rule, geometric gradient descent slope analysis, mathematical proof of the vanishing gradient pathology, complete activation taxonomy (Sigmoid, Tanh, ReLU, Leaky ReLU, PReLU, ELU, Swish, Softmax), regression loss surfaces (MSE, MAE, Huber), classification losses (BCE, CCE), interactive touch-draggable visualizers, and fully solved practice tasks.
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Linear Neural Networks</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Linear regression formulation from scratch, vectorization benefits, loss functions, minibatch stochastic gradient descent, softmax regression for classification, cross-entropy loss, and concise PyTorch implementations.
         </p>
-        <div class="card-tags" style="margin-bottom: 1.5rem;">
-          <span class="tag">Chain Rule</span>
-          <span class="tag">Backpropagation</span>
-          <span class="tag">Vanishing Gradient</span>
-          <span class="tag">ReLU vs Tanh</span>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Linear Regression</span>
           <span class="tag">Softmax</span>
-          <span class="tag">MSE vs MAE vs Huber</span>
           <span class="tag">Cross-Entropy</span>
+          <span class="tag">SGD</span>
+          <span class="tag">PyTorch Loops</span>
         </div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span>⏱️ 40 min read</span>
-          </div>
-          <a href="dl-lecture-2.html" class="btn-primary">
-            Open Notes
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
-        </div>
+        <a href="https://d2l.ai/chapter_linear-networks/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read Linear Networks ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
       </article>
 
-      <!-- MODULE 3: OPTIMIZERS IN DEEP LEARNING (ACTIVE) -->
-      <article class="module-box active-module">
-        <div class="card-header" style="margin-bottom: 0.75rem;">
-          <span class="card-lecture-no">MODULE 03</span>
-          <span class="card-badge badge-active">Active Notes</span>
+      <!-- CHAPTER 3: MULTILAYER PERCEPTRONS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 03</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Deep MLP</span>
         </div>
-        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Optimizers in Deep Learning: GD, SGD, Momentum, RMSprop &amp; Adam Lecture-3</h3>
-        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
-          The evolutionary journey of neural network optimization: Batch Gradient Descent resource bottlenecks, Stochastic GD noise dynamics, Mini-Batch vectorization, Polyak Momentum via exponentially weighted moving averages (EWMA), AdaGrad per-parameter scaling and dying learning rate pathology, RMSprop decaying second moment normalization, AdaDelta, and the Adam optimizer (first &amp; second moment estimation with bias corrections), interactive 2D loss trajectory simulations, and production NumPy implementations.
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Multilayer Perceptrons (MLPs)</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Hidden layers, universal approximation theorem, activation functions (ReLU, Sigmoid, Tanh, pReLU), model selection, underfitting vs overfitting, L2 weight decay regularization, and Dropout mechanics.
         </p>
-        <div class="card-tags" style="margin-bottom: 1.5rem;">
-          <span class="tag">Batch vs Mini-Batch</span>
-          <span class="tag">SGD Noise</span>
-          <span class="tag">EWMA Momentum</span>
-          <span class="tag">AdaGrad</span>
-          <span class="tag">RMSprop</span>
-          <span class="tag">Adam Optimizer</span>
-          <span class="tag">Bias Correction</span>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span>⏱️ 45 min read</span>
-          </div>
-          <a href="dl-lecture-3.html" class="btn-primary">
-            Open Notes
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
-        </div>
-      </article>
-
-      <!-- MODULE 4: MULTI-LAYER PERCEPTRONS & REGULARIZATION (UPCOMING) -->
-      <article class="module-box">
-        <div class="card-header" style="margin-bottom: 0.75rem;">
-          <span class="card-lecture-no">MODULE 04</span>
-          <span class="card-badge badge-upcoming">Upcoming Module</span>
-        </div>
-        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Artificial Neural Networks (ANN) &amp; Deep Architectures Lecture-4</h3>
-        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
-          Deep Multi-Layer Perceptron (MLP) architecture, tensor transformations, weight initialization strategies (Xavier/Glorot, He/Kaiming), overcoming overfitting via regularization (Dropout, L1/L2 Weight Decay, Batch Normalization), and end-to-end model training pipelines in PyTorch.
-        </p>
-        <div class="card-tags" style="margin-bottom: 1.5rem;">
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
           <span class="tag">Deep MLP</span>
-          <span class="tag">Weight Init</span>
-          <span class="tag">Batch Normalization</span>
+          <span class="tag">ReLU &amp; Sigmoid</span>
+          <span class="tag">Weight Decay</span>
           <span class="tag">Dropout</span>
-          <span class="tag">PyTorch Training</span>
+          <span class="tag">Numerical Stability</span>
         </div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span>📅 Day 4 Masterclass</span>
-          </div>
-          <span class="btn-primary" style="opacity: 0.45; cursor: not-allowed; pointer-events: none;">
-            Notes In Progress
-          </span>
-        </div>
+        <a href="https://d2l.ai/chapter_multilayer-perceptrons/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read MLPs &amp; Dropout ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
       </article>
 
-      <!-- MODULE 5: CONVOLUTIONAL NEURAL NETWORKS & VISION (UPCOMING) -->
-      <article class="module-box">
-        <div class="card-header" style="margin-bottom: 0.75rem;">
-          <span class="card-lecture-no">MODULE 05</span>
-          <span class="card-badge badge-upcoming">Upcoming Module</span>
+      <!-- CHAPTER 4: COMPUTATION & HARDWARE -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 04</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Computation</span>
         </div>
-        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">Convolutional Neural Networks (CNN) &amp; Computer Vision Lecture-5</h3>
-        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 1.25rem;">
-          Spatial representation learning: 2D convolution operations, receptive fields, stride, zero-padding, pooling mechanisms, feature map hierarchy, canonical deep vision backbones (VGG, ResNet skip connections), and introductory object detection paradigms.
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Deep Learning Computation</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Custom layer development, parameter access and shared parameters, deferred initialization, file I/O for model checkpoints, and harnessing GPUs for matrix operations.
         </p>
-        <div class="card-tags" style="margin-bottom: 1.5rem;">
-          <span class="tag">Computer Vision</span>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Custom Layers</span>
+          <span class="tag">Parameter Init</span>
+          <span class="tag">GPU Computing</span>
+          <span class="tag">Model Checkpoints</span>
+        </div>
+        <a href="https://d2l.ai/chapter_deep-learning-computation/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read Computation &amp; GPUs ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </article>
+
+      <!-- CHAPTER 5: CONVOLUTIONAL NETWORKS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 05</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Vision</span>
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Convolutional Neural Networks</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Spatial representation: 2D cross-correlations, padding, stride, multiple input/output channels, pooling layers, and canonical deep architectures: LeNet, AlexNet, VGG, Network in Network (NiN), GoogLeNet, ResNet (residual skip connections), and DenseNet.
+        </p>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
           <span class="tag">2D Convolutions</span>
-          <span class="tag">Feature Maps</span>
+          <span class="tag">AlexNet</span>
+          <span class="tag">VGG</span>
           <span class="tag">ResNet</span>
-          <span class="tag">Object Detection</span>
+          <span class="tag">DenseNet</span>
         </div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span>📅 Day 5 Masterclass</span>
-          </div>
-          <span class="btn-primary" style="opacity: 0.45; cursor: not-allowed; pointer-events: none;">
-            Notes In Progress
-          </span>
+        <a href="https://d2l.ai/chapter_convolutional-neural-networks/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read CNNs &amp; ResNet ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </article>
+
+      <!-- CHAPTER 6: RECURRENT NETWORKS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 06</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Sequences</span>
         </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Recurrent Neural Networks (RNNs)</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Sequential data modeling: character language models, hidden state recurrence, backpropagation through time (BPTT), gradient clipping, Gated Recurrent Units (GRU), Long Short-Term Memory (LSTM), and bidirectional recurrent networks.
+        </p>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Sequence Models</span>
+          <span class="tag">BPTT</span>
+          <span class="tag">GRU</span>
+          <span class="tag">LSTM</span>
+          <span class="tag">Bi-RNN</span>
+        </div>
+        <a href="https://d2l.ai/chapter_recurrent-neural-networks/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read RNNs &amp; LSTMs ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </article>
+
+      <!-- CHAPTER 7: ATTENTION & TRANSFORMERS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 07</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Transformers</span>
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Attention &amp; Transformers</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Attention cues and scoring functions, Nadaraya-Watson kernel regression, Scaled Dot-Product Attention, Multi-Head Attention, positional encodings, self-attention mechanisms, and the complete Transformer architecture powering modern LLMs.
+        </p>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Query Key Value</span>
+          <span class="tag">Dot-Product Attention</span>
+          <span class="tag">Multi-Head</span>
+          <span class="tag">Transformers</span>
+          <span class="tag">BERT</span>
+        </div>
+        <a href="https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read Transformers ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </article>
+
+      <!-- CHAPTER 8: OPTIMIZATION ALGORITHMS -->
+      <article class="chapter-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span class="chapter-num">PART 08</span>
+          <span class="card-badge" style="background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">Optimizers</span>
+        </div>
+        <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary);">Optimization Algorithms</h3>
+        <p style="font-size: 0.92rem; line-height: 1.55; color: var(--text-secondary); margin-bottom: 1.25rem; flex: 1;">
+          Convexity vs non-convexity, saddle points and local minima, Gradient Descent, Stochastic Gradient Descent (SGD), Mini-Batch SGD, Momentum, AdaGrad, RMSProp, AdaDelta, and the Adam optimizer with bias correction.
+        </p>
+        <div class="card-tags" style="margin-bottom: 1.25rem;">
+          <span class="tag">Gradient Descent</span>
+          <span class="tag">SGD</span>
+          <span class="tag">Momentum</span>
+          <span class="tag">AdaGrad</span>
+          <span class="tag">Adam Optimizer</span>
+        </div>
+        <a href="https://d2l.ai/chapter_optimization/index.html" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 0.95rem; font-size: 0.86rem; text-decoration: none !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+          Read Optimizers ↗
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
       </article>
 
     </div>
@@ -237,13 +398,15 @@
 
   <!-- Footer -->
   <footer>
-    <div class="footer-content">
+    <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <strong>Tech Notes</strong> &mdash; Deep Learning Modules
+        <strong>Tech Notes</strong> &mdash; Dive into Deep Learning (D2L.ai) &bull; &copy; 2026
       </div>
-      <div>
-        <a href="index.html" style="color: var(--accent-blue); margin-right: 1rem;">← Back to All Technologies</a>
-        <a href="dl-lecture-1.html" style="color: var(--accent-blue);">Lecture 1 Notes →</a>
+      <div style="display: flex; gap: 1rem; font-size: 0.88rem; flex-wrap: wrap;">
+        <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Main Dashboard</a>
+        <a href="month-1.html" style="color: var(--text-secondary); text-decoration: none;">Month 1 (Foundations)</a>
+        <a href="month-8.html" style="color: var(--text-secondary); text-decoration: none;">Month 8 (Cloud)</a>
+        <a href="ai-roadmap.html" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">AI Roadmap</a>
       </div>
     </div>
   </footer>
