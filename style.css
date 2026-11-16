@@ -282,17 +282,17 @@ li {
   width: 100%;
   margin: 0;
   padding: 0;
-  background: #000000;
+  background: #0a0d25;
   border-bottom: 1px solid var(--border-color);
   overflow: hidden;
 }
 
 .hero-banner-card {
   width: 100%;
-  height: clamp(280px, 32vw, 480px);
+  height: clamp(300px, 36vw, 540px);
   position: relative;
   overflow: hidden;
-  background: #000000;
+  background: #0a0d25;
   display: block;
 }
 
@@ -302,12 +302,11 @@ li {
   object-fit: cover;
   object-position: center;
   display: block;
-  filter: contrast(1.05);
 }
 
 @media (max-width: 768px) {
   .hero-banner-card {
-    height: 240px;
+    height: 260px;
   }
 }
 
