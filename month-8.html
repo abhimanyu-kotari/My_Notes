@@ -17,7 +17,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-brand">
         <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
-        <span>Tech Notes</span>
+        <span class="nav-brand-text">Notes</span>
       </a>
 
       <div class="nav-actions">
@@ -29,6 +29,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
           </span>
         </button>
+        <div class="nav-avatar" title="Abhimanyu Kotari">AK</div>
       </div>
     </div>
   </nav>
@@ -67,67 +68,86 @@
       <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">Month 8 &bull; 2 Cloud Platforms Available</span>
     </div>
 
-    <!-- Month 8 Technologies Grid -->
+    <!-- Month 8 Technologies Grid (DevCollab-Style Modern Cards) -->
     <div class="tech-select-grid">
 
       <!-- THE GOOGLE CLOUD PLATFORM CARD -->
       <a href="gcp.html" class="tech-select-card" id="gcp-card" title="Click to view Google Cloud Platform Modules">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(52, 168, 83, 0.2)); border: 1.5px solid rgba(66, 133, 244, 0.4); box-shadow: 0 0 20px rgba(66, 133, 244, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"></path>
-              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4c-1.5 0-2.9.46-4.06 1.25l3.22 3.22c.28-.06.56-.1.84-.1 2.21 0 4 1.79 4 4 0 .28-.04.56-.1.84l3.45 3.45c.61-.83 1-1.84 1-2.95 0-2.64-2.05-4.78-4.65-4.96z" fill="#EA4335"></path>
-              <path d="M6 20h13c.78 0 1.5-.18 2.15-.5L17.7 16.05c-.23.1-.48.17-.74.22-.32.06-.64.1-.96.1H9a4.99 4.99 0 0 1-4.9-4c-.07.3-.1.6-.1.91 0 3.31 2.69 6 6 6z" fill="#34A853"></path>
-              <path d="M5.35 8.04C2.34 8.36 0 10.91 0 14c0 .31.03.61.1.91A4.99 4.99 0 0 1 5 10.91c0-.28.03-.56.09-.84l.26-2.03z" fill="#FBBC05"></path>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Available</span>
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-gcp.jpg" alt="Google Cloud Platform Architecture" class="card-banner-img">
+          <span class="card-banner-badge-left">Google Cloud</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Available
+          </span>
         </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">Google Cloud Platform (GCP)</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Master Google Cloud core services: Cloud Console navigation, IAM &amp; Permissions security model, Resource Hierarchy, Projects, Compute Engine (VMs), Cloud Storage (GCS), APIs, in-browser Cloud Shell, and production teardown protocol.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
-            3 Comprehensive Modules
-          </span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            View GCP Modules
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+        <div class="card-body-content">
+          <h3 class="card-heading">Google Cloud Platform (GCP)</h3>
+          <p class="card-summary">
+            Master Google Cloud core services: Cloud Console navigation, IAM &amp; Permissions security model, Resource Hierarchy, Projects, Compute Engine (VMs), Cloud Storage (GCS), APIs, in-browser Cloud Shell, and production teardown protocol.
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">3 Comprehensive Modules</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Console</span>
+            <span class="card-tag-pill">IAM &amp; Security</span>
+            <span class="card-tag-pill">Compute Engine</span>
+            <span class="card-tag-pill">Cloud Shell</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <span class="card-action-btn">
+              View GCP Modules &rarr;
+            </span>
+          </div>
         </div>
       </a>
 
       <!-- THE MICROSOFT AZURE CARD -->
       <div class="tech-select-card" id="azure-card" title="Microsoft Azure Zero to Hero">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(0, 120, 212, 0.2), rgba(0, 183, 241, 0.2)); border: 1.5px solid rgba(0, 183, 241, 0.4); box-shadow: 0 0 20px rgba(0, 120, 212, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-              <path d="M5.5 19h13l-4.5-8-4-7-4.5 15z" fill="#0078D4"></path>
-              <path d="M14 11l-4.5 8H19l-5-8z" fill="#005A9E"></path>
-              <path d="M9.5 4l-4 7.5 3 7.5L14 11 9.5 4z" fill="#50E6FF"></path>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Curated Course</span>
-        </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">
-          <a href="https://github.com/abhimanyu-kotari/Azure-zero-to-hero/tree/main" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Microsoft Azure (Zero to Hero)</a>
-        </h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Master Microsoft Azure from scratch: Azure architecture, Resource Groups, Azure Virtual Machines, Storage Accounts (Blob/File), Virtual Networks (VNet), Entra ID (Azure AD), AKS (Kubernetes), and CI/CD cloud pipelines by Abhishek Veeramalla.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.65rem;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
-            GitHub Masterclass
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-azure.jpg" alt="Microsoft Azure Cloud Engineering" class="card-banner-img">
+          <span class="card-banner-badge-left">Microsoft Azure</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Curated Course
           </span>
-          <a href="https://github.com/abhimanyu-kotari/Azure-zero-to-hero/tree/main" target="_blank" rel="noopener" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.45rem;">
-            Azure Notes (GitHub) ↗
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-          </a>
+        </div>
+        <div class="card-body-content">
+          <h3 class="card-heading">
+            <a href="https://github.com/abhimanyu-kotari/Azure-zero-to-hero/tree/main" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Microsoft Azure (Zero to Hero)</a>
+          </h3>
+          <p class="card-summary">
+            Master Microsoft Azure from scratch: Azure architecture, Resource Groups, Azure Virtual Machines, Storage Accounts (Blob/File), Virtual Networks (VNet), Entra ID (Azure AD), AKS (Kubernetes), and CI/CD cloud pipelines.
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">GitHub Masterclass by Abhishek Veeramalla</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Azure VMs</span>
+            <span class="card-tag-pill">Entra ID</span>
+            <span class="card-tag-pill">Blob Storage</span>
+            <span class="card-tag-pill">AKS Kubernetes</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <a href="https://github.com/abhimanyu-kotari/Azure-zero-to-hero/tree/main" target="_blank" rel="noopener" class="card-action-btn">
+              Azure Notes (GitHub) &nearr;
+            </a>
+          </div>
         </div>
       </div>
 

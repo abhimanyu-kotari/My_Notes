@@ -762,6 +762,11 @@ li {
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.tech-select-card:not(:has(.card-banner-wrapper)) {
+  padding: 1.6rem 1.6rem 1.4rem;
 }
 
 .tech-select-card:hover {

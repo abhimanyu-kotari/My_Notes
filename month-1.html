@@ -18,7 +18,7 @@
     <div class="nav-container">
       <a href="index.html" class="nav-brand">
         <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
-        <span>Tech Notes</span>
+        <span class="nav-brand-text">Notes</span>
       </a>
 
       <div class="nav-actions">
@@ -29,6 +29,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
           </span>
         </button>
+        <div class="nav-avatar" title="Abhimanyu Kotari">AK</div>
       </div>
     </div>
   </nav>
@@ -77,128 +78,169 @@
       <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">Month 1 &bull; 4 Subjects Available</span>
     </div>
 
-    <!-- Foundation Technologies Grid -->
+    <!-- Foundation Technologies Grid (DevCollab-Style Modern Cards) -->
     <div class="tech-select-grid">
 
       <!-- THE PYTHON CARD -->
       <div class="tech-select-card" id="python-card" title="Click to view Python Modules">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(250, 204, 21, 0.2)); border: 1.5px solid rgba(56, 189, 248, 0.4); box-shadow: 0 0 20px rgba(56, 189, 248, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
-              <path d="M11.9 2C6.8 2 7.1 4.2 7.1 4.2l.01 2.3h4.9v.7H5.2S2 6.8 2 12c0 5.1 2.8 5 2.8 5h1.7v-2.4s-.1-2.8 2.8-2.8h4.8s2.7.1 2.7-2.7V4.7S17 2 11.9 2zm-1.4 1.5c.5 0 .9.4.9.9 0 .5-.4.9-.9.9-.5 0-.9-.4-.9-.9 0-.5.4-.9.9-.9z" fill="#38bdf8"></path>
-              <path d="M12.1 22c5.1 0 4.8-2.2 4.8-2.2l-.01-2.3H12v-.7h6.8s3.2.4 3.2-4.8c0-5.1-2.8-5-2.8-5h-1.7v2.4s.1 2.8-2.8 2.8H9.9s-2.7-.1-2.7 2.7v4.4s-.2 2.7 4.9 2.7zm1.4-1.5c-.5 0-.9-.4-.9-.9 0-.5.4-.9.9-.9.5 0 .9.4.9.9 0 .5-.4.9-.9.9z" fill="#facc15"></path>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Available</span>
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-python.jpg" alt="Python Programming" class="card-banner-img">
+          <span class="card-banner-badge-left">Programming</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Available
+          </span>
         </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">
-          <a href="python.html" style="color: inherit; text-decoration: none;">Python</a>
-        </h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Complete notes on Python programming: variables, memory models, data types, operators, control flow, strings, lists, tuples, dictionaries, sets, and solved practice tasks.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.65rem;">
-          <a href="https://drive.google.com/file/d/1G_8EKTg8ixMaJbHk98rJt_Eu7yh6E_bX/view?usp=sharing" target="_blank" rel="noopener" class="btn-secondary" style="padding: 0.5rem 0.85rem; font-size: 0.84rem; text-decoration: none !important;">
-            Notebook (.ipynb) ↗
-          </a>
-          <a href="python.html" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem; text-decoration: none !important;">
-            View Modules
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
+        <div class="card-body-content">
+          <h3 class="card-heading">
+            <a href="python.html" style="color: inherit; text-decoration: none;">Python Programming</a>
+          </h3>
+          <p class="card-summary">
+            Complete core Python programming: variables, memory references, immutable vs mutable types, loops, lists, dictionaries, functions, and hands-on coding exercises.
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">9 Core Lecture Modules</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Python 3.11</span>
+            <span class="card-tag-pill">Memory Model</span>
+            <span class="card-tag-pill">OOP</span>
+            <span class="card-tag-pill">Data Structures</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="https://drive.google.com/file/d/1G_8EKTg8ixMaJbHk98rJt_Eu7yh6E_bX/view?usp=sharing" target="_blank" rel="noopener" class="card-action-btn-secondary">
+                Colab &nearr;
+              </a>
+              <a href="python.html" class="card-action-btn">
+                View Modules &rarr;
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- THE STATISTICS CARD -->
       <a href="statistics.html" class="tech-select-card" id="stats-card" title="Click to view Statistics Modules">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2)); border: 1.5px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 20px rgba(168, 85, 247, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 20h18" stroke="#a855f7"></path>
-              <path d="M3 17c3 0 4-13 9-13s6 13 9 13" stroke="#818cf8" stroke-width="2.2" fill="rgba(99, 102, 241, 0.15)"></path>
-              <line x1="12" y1="4" x2="12" y2="20" stroke="#c084fc" stroke-dasharray="2 2"></line>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Available</span>
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-stats.jpg" alt="Statistics for Data Science" class="card-banner-img">
+          <span class="card-banner-badge-left">Mathematics</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Available
+          </span>
         </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">Statistics</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Master statistics for data science and analytics: descriptive vs. inferential, probability distributions, central tendency, variance, Z-scores, hypothesis testing (Z-test, t-test, ANOVA, Chi-Square), and Python implementations.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
-            4 Modules Available
-          </span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            View Modules
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+        <div class="card-body-content">
+          <h3 class="card-heading">Descriptive &amp; Inferential Statistics</h3>
+          <p class="card-summary">
+            Statistical analysis for data science: central tendency, dispersion, variance, Z-scores, normal distributions, confidence intervals, and hypothesis testing (t-test, ANOVA).
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">4 Comprehensive Modules</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Normal Dist</span>
+            <span class="card-tag-pill">Z-Scores</span>
+            <span class="card-tag-pill">Hypothesis Test</span>
+            <span class="card-tag-pill">ANOVA</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <span class="card-action-btn">
+              View Modules &rarr;
+            </span>
+          </div>
         </div>
       </a>
 
       <!-- THE PROBABILITY CARD -->
       <a href="probability.html" class="tech-select-card" id="prob-card" title="Click to view Probability Modules">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2)); border: 1.5px solid rgba(251, 191, 36, 0.4); box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="4" fill="rgba(245, 158, 11, 0.15)"></rect>
-              <circle cx="8" cy="8" r="1.5" fill="#f59e0b"></circle>
-              <circle cx="12" cy="12" r="1.5" fill="#f59e0b"></circle>
-              <circle cx="16" cy="16" r="1.5" fill="#f59e0b"></circle>
-              <circle cx="16" cy="8" r="1.5" fill="#f59e0b"></circle>
-              <circle cx="8" cy="16" r="1.5" fill="#f59e0b"></circle>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Available</span>
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-prob.jpg" alt="Probability Theory for ML" class="card-banner-img">
+          <span class="card-banner-badge-left">ML Mathematics</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Available
+          </span>
         </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">Probability</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Master probability theory for machine learning: random variables ($S \to \mathbb{R}$), distribution tables, expected values, variance derivations, joint, marginal, and conditional probabilities, sample space reduction, and Bayes' Theorem.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
-            2 Modules Available
-          </span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            View Modules
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+        <div class="card-body-content">
+          <h3 class="card-heading">Probability Theory for ML</h3>
+          <p class="card-summary">
+            Probability foundations for machine learning: sample spaces, random variables, probability mass/density functions, joint and conditional probability, and Bayes' Theorem.
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">2 Core Lecture Modules</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Bayes Theorem</span>
+            <span class="card-tag-pill">Random Variables</span>
+            <span class="card-tag-pill">Conditional Prob</span>
+            <span class="card-tag-pill">ML Priors</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <span class="card-action-btn">
+              View Modules &rarr;
+            </span>
+          </div>
         </div>
       </a>
 
       <!-- THE EXCEL CARD -->
       <a href="excel.html" class="tech-select-card" id="excel-card" title="Click to view Microsoft Excel Modules">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2)); border: 1.5px solid rgba(52, 211, 153, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="rgba(16, 185, 129, 0.15)"></path>
-              <line x1="4" y1="9" x2="21" y2="9"></line>
-              <line x1="4" y1="15" x2="21" y2="15"></line>
-              <line x1="10" y1="3" x2="10" y2="21"></line>
-              <path d="M14 6l4 4m0-4l-4 4" stroke="#6ee7b7" stroke-width="2"></path>
-            </svg>
-          </div>
-          <span class="tech-badge-active">Available</span>
+        <div class="card-banner-wrapper">
+          <img src="assets/card-banner-excel.jpg" alt="Microsoft Excel Financial Modeling" class="card-banner-img">
+          <span class="card-banner-badge-left">Analytics</span>
+          <span class="card-banner-badge-right">
+            <span class="badge-dot-green"></span> Available
+          </span>
         </div>
-
-        <h3 style="font-size: 1.6rem; margin-bottom: 0.65rem; color: var(--text-primary);">Microsoft Excel</h3>
-        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.55; flex: 1;">
-          Master spreadsheet engineering and financial modeling: workbooks &amp; worksheets, coordinate addressing ($A1, G9$), dynamic formulas vs. static hardcoding, the fill handle, `=SUM()`, relative coordinate shifts, multi-sheet `=SUMIF()`, formula-free Pivot Tables &amp; Slicers, and compound interest sensitivity models.
-        </p>
-
-        <div class="card-footer" style="padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
-            1 Master Module Available
-          </span>
-          <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            View Module
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+        <div class="card-body-content">
+          <h3 class="card-heading">Microsoft Excel Modeling</h3>
+          <p class="card-summary">
+            Spreadsheet engineering and financial modeling: dynamic formulas, relative vs absolute addressing ($A$1), XLOOKUP, Pivot Tables, interactive slicers, and sensitivity analysis.
+          </p>
+          <div class="card-focus-bar">
+            <span class="card-focus-label">Curriculum</span>
+            <span class="card-focus-val">1 Master Financial Module</span>
+          </div>
+          <div class="card-tags-row">
+            <span class="card-tag-pill">Workbooks</span>
+            <span class="card-tag-pill">XLOOKUP</span>
+            <span class="card-tag-pill">Pivot Tables</span>
+            <span class="card-tag-pill">Sensitivity</span>
+          </div>
+          <div class="card-bottom-row">
+            <div class="card-lead-badge">
+              <div class="card-lead-avatar">A</div>
+              <div class="card-lead-text">
+                <span class="card-lead-label">Lead</span>
+                <span class="card-lead-name">Abhimanyu Kotari</span>
+              </div>
+            </div>
+            <span class="card-action-btn">
+              View Module &rarr;
+            </span>
+          </div>
         </div>
       </a>
 
