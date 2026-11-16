@@ -43,17 +43,17 @@
 }
 
 [data-theme="dark"] {
-  /* Rich Cosmic Galaxy & Space Theme (Inspired by XUPE) */
-  --bg-primary: #0a0d24;
-  --bg-secondary: #101538;
-  --bg-tertiary: #181d4a;
-  --bg-card: rgba(16, 21, 56, 0.75);
-  --bg-card-hover: rgba(24, 31, 80, 0.9);
-  --border-color: rgba(99, 102, 241, 0.22);
-  --border-color-hover: rgba(168, 85, 247, 0.6);
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  /* Clean Dark Theme */
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1c1c1c;
+  --bg-card: rgba(22, 22, 22, 0.9);
+  --bg-card-hover: rgba(30, 30, 30, 0.95);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-hover: rgba(168, 85, 247, 0.5);
+  --text-primary: #f4f4f4;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
   
   --accent-blue: #6366f1;
   --accent-blue-hover: #818cf8;
@@ -97,56 +97,12 @@ html {
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
-  background-image: 
-    radial-gradient(circle at 10% 12%, rgba(99, 102, 241, 0.28) 0%, transparent 40%),
-    radial-gradient(circle at 90% 18%, rgba(168, 85, 247, 0.22) 0%, transparent 40%),
-    radial-gradient(circle at 25% 65%, rgba(245, 158, 11, 0.12) 0%, transparent 35%),
-    radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.18) 0%, transparent 40%);
-  background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.65;
   transition: background-color 0.25s ease, color 0.25s ease;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(1px 1px at 25px 35px, #ffffff, rgba(0, 0, 0, 0)),
-    radial-gradient(1.5px 1.5px at 150px 85px, #ffd700, rgba(0, 0, 0, 0)),
-    radial-gradient(1px 1px at 290px 165px, #c084fc, rgba(0, 0, 0, 0)),
-    radial-gradient(2px 2px at 430px 55px, #38bdf8, rgba(0, 0, 0, 0)),
-    radial-gradient(1px 1px at 570px 225px, #ffffff, rgba(0, 0, 0, 0)),
-    radial-gradient(1.5px 1.5px at 710px 125px, #fbbf24, rgba(0, 0, 0, 0)),
-    radial-gradient(1px 1px at 850px 275px, #a855f7, rgba(0, 0, 0, 0)),
-    radial-gradient(2px 2px at 990px 85px, #38bdf8, rgba(0, 0, 0, 0)),
-    radial-gradient(1px 1px at 1130px 185px, #ffffff, rgba(0, 0, 0, 0));
-  background-repeat: repeat;
-  background-size: 600px 350px;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-}
-
-[data-theme="light"] body {
-  background-color: #f0f6ff;
-  background-image: 
-    radial-gradient(circle at 10% 15%, rgba(186, 230, 253, 0.75) 0%, transparent 45%),
-    radial-gradient(circle at 90% 20%, rgba(224, 231, 255, 0.8) 0%, transparent 45%),
-    radial-gradient(circle at 50% 60%, rgba(254, 240, 138, 0.35) 0%, transparent 45%),
-    radial-gradient(circle at 80% 85%, rgba(199, 210, 254, 0.7) 0%, transparent 45%);
-}
-
-[data-theme="light"] body::before {
-  opacity: 0.15;
 }
 
 /* Typography */
@@ -200,8 +156,8 @@ li {
 }
 
 [data-theme="dark"] .navbar {
-  background-color: rgba(11, 15, 42, 0.85);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  background-color: rgba(10, 10, 10, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-container {
@@ -515,14 +471,14 @@ li {
 /* ============================================================ */
 .xupe-hero-section {
   position: relative;
-  background: linear-gradient(180deg, rgba(11, 15, 42, 0.98) 0%, rgba(18, 24, 62, 0.9) 65%, var(--bg-primary) 100%);
-  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(170deg, #0d0b2a 0%, #1a1050 40%, #110d1f 100%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
   padding: 3.5rem 1.5rem 0;
   overflow: hidden;
 }
 
 [data-theme="light"] .xupe-hero-section {
-  background: linear-gradient(180deg, #eef2ff 0%, #e0e7ff 65%, var(--bg-primary) 100%);
+  background: linear-gradient(170deg, #1a1050 0%, #2d1a6e 40%, #0d0b2a 100%);
 }
 
 .xupe-hero-container {
@@ -667,9 +623,9 @@ li {
   max-width: 520px;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 50px -10px rgba(11, 15, 42, 0.9), 0 0 35px rgba(99, 102, 241, 0.35);
-  border: 2px solid rgba(99, 102, 241, 0.35);
-  background: #0a0d24;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(80, 50, 180, 0.3);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  background: #0d0b2a;
   transition: all 0.3s ease;
 }
 
@@ -2531,4 +2487,182 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+
+/* ============================================================
+   NOTES PAGES — STRICT BLACK & WHITE (data-page="notes")
+   Applied to all lecture pages (Python, GCP, Stats, Prob, Excel)
+   ============================================================ */
+
+[data-page="notes"] {
+  --accent-blue: #555555;
+  --accent-blue-hover: #333333;
+  --accent-blue-subtle: rgba(80, 80, 80, 0.12);
+  --accent-purple: #666666;
+  --accent-purple-subtle: rgba(100, 100, 100, 0.1);
+  --accent-cyan: #555555;
+  --accent-emerald: #555555;
+  --accent-emerald-subtle: rgba(80, 80, 80, 0.1);
+  --accent-amber: #666666;
+  --accent-amber-subtle: rgba(100, 100, 100, 0.1);
+  --gradient-cosmic: linear-gradient(135deg, #333 0%, #666 100%);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --card-glow: none;
+}
+
+[data-page="notes"][data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #ebebeb;
+  --bg-card: rgba(255, 255, 255, 0.98);
+  --bg-card-hover: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-color-hover: rgba(0, 0, 0, 0.3);
+  --text-primary: #0a0a0a;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --accent-blue: #333333;
+  --accent-blue-hover: #000000;
+  --accent-purple: #444444;
+  --accent-cyan: #444444;
+  --accent-emerald: #444444;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+[data-page="notes"][data-theme="dark"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-tertiary: #1a1a1a;
+  --bg-card: rgba(18, 18, 18, 0.95);
+  --bg-card-hover: rgba(26, 26, 26, 0.98);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-hover: rgba(255, 255, 255, 0.25);
+  --text-primary: #f0f0f0;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+  --accent-blue: #aaaaaa;
+  --accent-blue-hover: #cccccc;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.7);
+}
+
+/* Notes page: B&W navbar */
+[data-page="notes"] .navbar {
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+[data-page="notes"] .nav-brand-logo {
+  background: #333333;
+  box-shadow: none;
+}
+
+[data-page="notes"][data-theme="dark"] .nav-brand-logo {
+  background: #333333;
+  box-shadow: none;
+}
+
+[data-page="notes"][data-theme="light"] .nav-brand-logo {
+  background: #111111;
+  box-shadow: none;
+}
+
+/* Notes page: B&W primary button */
+[data-page="notes"] .btn-primary {
+  background: #222222 !important;
+  color: #ffffff !important;
+  box-shadow: none;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+[data-page="notes"][data-theme="light"] .btn-primary {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+[data-page="notes"] .btn-primary:hover {
+  background: #000000 !important;
+  box-shadow: none;
+}
+
+/* Notes page: B&W tags */
+[data-page="notes"] .tag {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+/* Notes page: B&W card lecture number badge */
+[data-page="notes"] .card-lecture-no {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* Notes page: B&W card-badge */
+[data-page="notes"] .card-badge {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+[data-page="notes"] .card-badge.badge-active {
+  background: #1a1a1a;
+  color: #cccccc;
+  border-color: rgba(255,255,255,0.15);
+}
+
+/* Notes page: links remain readable */
+[data-page="notes"] a {
+  color: var(--accent-blue);
+}
+
+[data-page="notes"][data-theme="dark"] a {
+  color: #aaaaaa;
+}
+
+[data-page="notes"][data-theme="light"] a {
+  color: #333333;
+}
+
+/* Notes page: breadcrumb */
+[data-page="notes"] .breadcrumb a {
+  color: var(--text-muted);
+}
+
+/* Notes page: GCP-specific colored spans → monochrome */
+[data-page="notes"] .gcp-label { color: var(--text-muted) !important; }
+[data-page="notes"] .gcp-tag { background: var(--bg-secondary) !important; color: var(--text-secondary) !important; border-color: var(--border-color) !important; }
+[data-page="notes"] .gcp-btn-blue { background: #333333 !important; }
+
+/* Notes page: module-box monochrome */
+[data-page="notes"] .module-box {
+  border-color: var(--border-color);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-page="notes"] .module-box:hover {
+  border-color: var(--border-color-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   LIGHT MODE — Clean white body (no colored blobs)
+   ============================================================ */
+[data-theme="light"] body {
+  background-color: #f8f8f8;
+}
+
+/* ============================================================
+   HERO SECTION — Cleaner dark background (no blobs)
+   ============================================================ */
+[data-theme="dark"] .hero {
+  background: linear-gradient(180deg, #111111 0%, #0d0d0d 100%);
 }
