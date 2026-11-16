@@ -992,6 +992,25 @@ li {
   background: #e2e8f0;
 }
 
+/* PDF Viewer Card */
+.pdf-viewer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .pdf-viewer-card {
+    padding: 0.75rem;
+  }
+  .pdf-viewer-card iframe {
+    height: 650px !important;
+  }
+}
+
 /* Homepage Full-Width Edge-to-Edge Hero Banner */
 .hero-banner-section {
   width: 100%;
