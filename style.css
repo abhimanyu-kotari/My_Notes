@@ -2666,3 +2666,54 @@ footer {
 [data-theme="dark"] .hero {
   background: linear-gradient(180deg, #111111 0%, #0d0d0d 100%);
 }
+
+
+/* ============================================================
+   DESK PHOTO HERO SECTION (index.html)
+   ============================================================ */
+.desk-hero-section {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  background-image: url('assets/desk-hero.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.desk-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.desk-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.desk-hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #ffffff !important;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  border: none !important;
+}
+
+@media (max-width: 600px) {
+  .desk-hero-section {
+    height: 280px;
+  }
+  .desk-hero-title {
+    font-size: 1.75rem;
+  }
+}
