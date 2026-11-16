@@ -284,22 +284,6 @@ li {
   color: #000000 !important;
 }
 
-/* Nav Circular User Avatar (DevCollab style) */
-.nav-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.78rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  user-select: none;
-}
-
 /* Theme Toggle Button */
 .btn-icon {
   background: rgba(255, 255, 255, 0.06);
@@ -945,50 +929,12 @@ li {
   border-top-color: #e2e8f0;
 }
 
-.card-lead-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.card-lead-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #27272a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #f1f5f9;
-  font-size: 0.72rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-[data-theme="light"] .card-lead-avatar {
-  background: #e2e8f0;
-  color: #0f172a;
-  border-color: #cbd5e1;
-}
-
-.card-lead-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.card-lead-label {
-  font-size: 0.65rem;
+.card-meta-text {
+  font-size: 0.84rem;
   color: var(--text-muted);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.card-lead-name {
-  font-size: 0.82rem;
-  color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
 }
 
 .card-action-btn {
