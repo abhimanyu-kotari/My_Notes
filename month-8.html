@@ -9,71 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .tech-select-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .tech-select-card {
-      background: var(--bg-card);
-      border: 2px solid var(--border-color);
-      border-radius: 18px;
-      padding: 2.25rem;
-      text-decoration: none !important;
-      color: inherit !important;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-    }
-
-    .tech-select-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--border-color-hover);
-      box-shadow: var(--shadow-xl);
-    }
-
-    .tech-badge-active {
-      background: var(--text-primary);
-      color: var(--bg-primary);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
-    }
-
-    .stats-strip {
-      display: flex;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-      margin-top: 1.5rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .stat-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(66, 133, 244, 0.1);
-      border: 1px solid rgba(66, 133, 244, 0.25);
-      color: #1a73e8;
-      padding: 0.4rem 0.85rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    [data-theme="dark"] .stat-badge {
-      color: #93c5fd;
-    }
-  </style>
 </head>
 <body>
 
@@ -140,7 +75,14 @@
       <!-- THE GOOGLE CLOUD PLATFORM CARD -->
       <a href="gcp.html" class="tech-select-card" id="gcp-card" title="Click to view Google Cloud Platform Modules">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #4285F4; border-color: #1a73e8;">GCP</div>
+          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(52, 168, 83, 0.2)); border: 1.5px solid rgba(66, 133, 244, 0.4); box-shadow: 0 0 20px rgba(66, 133, 244, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"></path>
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4c-1.5 0-2.9.46-4.06 1.25l3.22 3.22c.28-.06.56-.1.84-.1 2.21 0 4 1.79 4 4 0 .28-.04.56-.1.84l3.45 3.45c.61-.83 1-1.84 1-2.95 0-2.64-2.05-4.78-4.65-4.96z" fill="#EA4335"></path>
+              <path d="M6 20h13c.78 0 1.5-.18 2.15-.5L17.7 16.05c-.23.1-.48.17-.74.22-.32.06-.64.1-.96.1H9a4.99 4.99 0 0 1-4.9-4c-.07.3-.1.6-.1.91 0 3.31 2.69 6 6 6z" fill="#34A853"></path>
+              <path d="M5.35 8.04C2.34 8.36 0 10.91 0 14c0 .31.03.61.1.91A4.99 4.99 0 0 1 5 10.91c0-.28.03-.56.09-.84l.26-2.03z" fill="#FBBC05"></path>
+            </svg>
+          </div>
           <span class="tech-badge-active">Available</span>
         </div>
 
@@ -163,7 +105,13 @@
       <!-- THE MICROSOFT AZURE CARD -->
       <div class="tech-select-card" id="azure-card" title="Microsoft Azure Zero to Hero">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <div class="tech-icon-large" style="width: 58px; height: 58px; font-size: 1.4rem; background: #0078D4; border-color: #005A9E;">AZ</div>
+          <div class="tech-icon-container" style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(0, 120, 212, 0.2), rgba(0, 183, 241, 0.2)); border: 1.5px solid rgba(0, 183, 241, 0.4); box-shadow: 0 0 20px rgba(0, 120, 212, 0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+              <path d="M5.5 19h13l-4.5-8-4-7-4.5 15z" fill="#0078D4"></path>
+              <path d="M14 11l-4.5 8H19l-5-8z" fill="#005A9E"></path>
+              <path d="M9.5 4l-4 7.5 3 7.5L14 11 9.5 4z" fill="#50E6FF"></path>
+            </svg>
+          </div>
           <span class="tech-badge-active">Curated Course</span>
         </div>
 
