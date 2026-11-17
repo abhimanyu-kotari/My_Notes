@@ -387,13 +387,14 @@
           <div class="step-card-header">1. Basics Tab Configuration</div>
           <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
             <li><strong>Subscription:</strong> Select your Free Trial or active subscription.</li>
-            <li><strong>Resource Group:</strong> Select <code>rg-azure-demo</code> (or click *Create new*).</li>
-            <li><strong>Virtual Machine Name:</strong> <code>vm-portal-demo</code></li>
-            <li><strong>Region:</strong> <code>East US</code> &bull; <strong>Availability zone:</strong> <code>Zone 1</code></li>
+            <li><strong>Resource Group:</strong> Select <code>azure-vm-rg</code> (or click *Create new*).</li>
+            <li><strong>Virtual Machine Name:</strong> <code>my-web-server</code></li>
+            <li><strong>Region:</strong> <code>Central India</code> (or closest to target audience) &bull; <strong>Availability zone:</strong> <code>Zone 1</code> (99.99% SLA).</li>
             <li><strong>Image:</strong> <code>Ubuntu Server 22.04 LTS - x64 Gen2</code></li>
             <li><strong>Size:</strong> Select <code>Standard_B1s</code> (1 vCPU, 1 GiB memory) &mdash; Eligible for free tier.</li>
             <li><strong>Authentication Type:</strong> Select <strong>SSH public key</strong> &rarr; Username: <code>azureuser</code>.</li>
-            <li><strong>Inbound Port Rules:</strong> Select ports <code>SSH (22)</code> and <code>HTTP (80)</code>.</li>
+            <li><strong>SSH Key Source:</strong> Select <strong>Generate new key pair</strong> &rarr; Key pair name: <code>my-web-server_key</code>.</li>
+            <li><strong>Inbound Port Rules:</strong> Select <code>Allow selected ports</code> &rarr; check only <code>SSH (22)</code>. (Leave HTTP closed to observe real-world firewall behavior).</li>
           </ul>
         </div>
 
@@ -401,12 +402,32 @@
           <div class="step-card-header">2. Disks &amp; Networking Tabs</div>
           <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
             <li><strong>OS Disk Type:</strong> Select <code>Standard SSD (locally-redundant storage)</code>.</li>
+            <li><strong>Virtual Network &amp; Subnet:</strong> Azure automatically creates a new VNet (<code>azure-vm-rg-vnet</code>) and default subnet (<code>10.0.0.0/24</code>).</li>
+            <li><strong>Public IP &amp; NIC:</strong> Azure allocates a new Public IP and Network Interface Card.</li>
             <li><strong>Delete with VM:</strong> Ensure the checkbox is <strong>Checked</strong> for both OS disk and NIC/Public IP.</li>
           </ul>
         </div>
 
+        <div class="step-card" style="border-left: 3px solid #0078d4;">
+          <div class="step-card-header">3. Advanced Tab: Automated Bootstrap via Custom Data (Cloud-Init)</div>
+          <p style="margin: 0 0 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+            Instead of manually installing software after connecting, provide a bash script executed as <code>root</code> during the VM's very first boot:
+          </p>
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <span class="terminal-title">Advanced Tab &gt; Custom data and cloud-init</span>
+            </div>
+            <div class="terminal-body"><span class="term-comment">#!/bin/bash</span>
+<span class="term-cmd">apt-get update -y</span>
+<span class="term-cmd">apt-get install -y apache2</span>
+<span class="term-cmd">systemctl start apache2</span>
+<span class="term-cmd">systemctl enable apache2</span>
+<span class="term-cmd">echo "&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;" &gt; /var/www/html/index.html</span></div>
+          </div>
+        </div>
+
         <div class="step-card" style="border-left: 3px solid #10b981;">
-          <div class="step-card-header">3. Management Tab: The Auto-Shutdown Safeguard</div>
+          <div class="step-card-header">4. Management Tab: The Auto-Shutdown Safeguard</div>
           <p style="margin: 0 0 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
             Never leave a VM running overnight by accident!
           </p>
@@ -418,27 +439,42 @@
         </div>
 
         <div class="step-card">
-          <div class="step-card-header">4. Review + Create &amp; Download Key</div>
+          <div class="step-card-header">5. Review + Create &amp; Download Key</div>
           <p style="margin: 0; font-size: 0.88rem;">
-            Click <strong>Review + create</strong>. When validation passes, click <strong>Create</strong>. In the popup, click <strong>Download private key and create resource</strong> to save <code>vm-portal-demo.pem</code> on your machine!
+            Click <strong>Review + create</strong>. When validation passes, click <strong>Create</strong>. In the popup, click <strong>Download private key and create resource</strong> to save <code>my-web-server_key.pem</code> on your computer!
           </p>
         </div>
       </section>
 
       <!-- SECTION 7 -->
       <section id="connecting-ssh" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Connecting via SSH &amp; Fixing Key Permissions</h2>
+        <h2><span class="section-number">07.</span> Connecting to Your VM: Two Real-World Methods</h2>
+
+        <h3>Method A: In-Portal Browser Terminal (SSH using Azure CLI)</h3>
+        <p style="font-size: 0.92rem; color: var(--text-secondary);">
+          Directly connect to your Ubuntu VM from inside the Azure Portal without installing any local SSH software or configuring key permissions:
+        </p>
+        <ol style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          <li>In Azure Portal, open your virtual machine (<code>my-web-server</code>).</li>
+          <li>In the top action bar, click <strong>Connect</strong> &rarr; choose <strong>More ways to connect</strong> &rarr; click <strong>SSH using Azure CLI</strong>.</li>
+          <li>Click the blue button <strong>Configure + Check Access</strong>. Azure validates VM running state, SSH port 22, network connectivity, and launches Cloud Shell proxy.</li>
+          <li>When all 4 checkmarks turn green, click <strong>Connect</strong>.</li>
+          <li>A terminal drawer slides up at the bottom of the portal. Type <code>yes</code> when prompted to trust the host key fingerprint.</li>
+          <li>Your live bash terminal is ready: <code>azureuser@my-web-server:~$</code>!</li>
+        </ol>
+
+        <h3>Method B: Connecting from Local Computer Terminal via Native SSH</h3>
         
-        <h3>1. On macOS / Linux:</h3>
+        <h4>1. On macOS / Linux / WSL:</h4>
         <div class="terminal-window">
           <div class="terminal-body"><span class="term-comment"># Set strict read-only permissions on private key</span>
-<span class="term-prompt">$</span> <span class="term-cmd">chmod 400 ~/.ssh/vm-portal-demo.pem</span>
+<span class="term-prompt">$</span> <span class="term-cmd">chmod 400 ~/Downloads/my-web-server_key.pem</span>
 
-<span class="term-comment"># Connect via SSH</span>
-<span class="term-prompt">$</span> <span class="term-cmd">ssh -i ~/.ssh/vm-portal-demo.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
+<span class="term-comment"># Connect via SSH using Public IP</span>
+<span class="term-prompt">$</span> <span class="term-cmd">ssh -i ~/Downloads/my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
         </div>
 
-        <h3>2. On Windows (Fixing "UNPROTECTED PRIVATE KEY FILE" Error):</h3>
+        <h4>2. On Windows (Fixing "UNPROTECTED PRIVATE KEY FILE" Error):</h4>
         <div class="callout-warning">
           <strong>⚠️ Windows PowerShell Key Permissions:</strong>
           Windows file permissions often grant read rights to "Users" or "Everyone", which SSH rejects with <code>Permissions for 'key.pem' are too open</code>. Run these two commands in PowerShell to fix it immediately:
@@ -454,20 +490,20 @@
             <span class="terminal-title">Windows PowerShell (Administrator / User)</span>
           </div>
           <div class="terminal-body"><span class="term-comment"># Step 1: Remove inherited permissions</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\vm-portal-demo.pem /inheritance:r</span>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\my-web-server_key.pem /inheritance:r</span>
 
 <span class="term-comment"># Step 2: Grant read permission strictly to your current Windows username</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\vm-portal-demo.pem /grant:r "$($env:USERNAME):(R)"</span>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\my-web-server_key.pem /grant:r "$($env:USERNAME):(R)"</span>
 
 <span class="term-comment"># Step 3: Connect cleanly!</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">ssh -i .\vm-portal-demo.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">ssh -i .\my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
         </div>
       </section>
 
       <!-- SECTION 8 -->
       <section id="inspection-commands" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Inside the VM: Comprehensive System Inspection Commands</h2>
-        <p>Once you are connected to your virtual machine terminal, run these commands to inspect hardware, storage, and cloud metadata:</p>
+        <h2><span class="section-number">08.</span> Inside the VM: Comprehensive System &amp; Service Verification</h2>
+        <p>Once you are connected to your virtual machine terminal, run these commands to inspect the automated Apache installation, system resources, and hardware:</p>
 
         <div class="terminal-window">
           <div class="terminal-header">
@@ -476,73 +512,68 @@
               <span class="term-dot dot-yellow"></span>
               <span class="term-dot dot-green"></span>
             </div>
-            <span class="terminal-title">azureuser@vm-portal-demo:~</span>
+            <span class="terminal-title">azureuser@my-web-server:~</span>
           </div>
-          <div class="terminal-body"><span class="term-comment"># 1. Kernel and architecture details</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">uname -a</span>
+          <div class="terminal-body"><span class="term-comment"># 1. Verify Apache 2 web server daemon status (must be active &amp; running!)</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">systemctl status apache2</span>
 
-<span class="term-comment"># 2. Detailed CPU core count, hypervisor brand, and architecture</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">lscpu</span>
+<span class="term-comment"># 2. Inspect the custom index.html generated by Cloud-Init</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">cat /var/www/html/index.html</span>
+<span class="term-output">&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;</span>
 
-<span class="term-comment"># 3. Check RAM memory allocation in human-readable MB / GB</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">free -m -h</span>
+<span class="term-comment"># 3. Test HTTP web server response locally inside the VM</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">curl http://localhost</span>
+<span class="term-output">&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;</span>
 
-<span class="term-comment"># 4. Check mounted storage filesystems and free disk space</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">df -h</span>
+<span class="term-comment"># 4. Check RAM memory allocation in human-readable MB / GB</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">free -m -h</span>
 
-<span class="term-comment"># 5. List block devices (Notice sda = OS disk, sdb = temporary disk)</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">lsblk</span>
+<span class="term-comment"># 5. Check mounted storage filesystems and free disk space</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">df -h</span>
 
-<span class="term-comment"># 6. Read the actual Microsoft warning text on the ephemeral temp disk!</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">cat /mnt/DATALOSS_WARNING_README.txt</span>
+<span class="term-comment"># 6. List block devices (Notice sda = OS disk, sdb = temporary disk)</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">lsblk</span>
 
-<span class="term-comment"># 7. Check internal private network IP (eth0)</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">ip a</span>
+<span class="term-comment"># 7. Read the actual Microsoft warning text on the ephemeral temp disk!</span>
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">cat /mnt/DATALOSS_WARNING_README.txt</span>
 
 <span class="term-comment"># 8. Query the Azure Instance Metadata Service (IMDS) from inside the VM!</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">curl -s -H Metadata:true --noproxy "*" \
+<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">curl -s -H Metadata:true --noproxy "*" \
   "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | python3 -m json.tool</span></div>
         </div>
       </section>
 
       <!-- SECTION 9 -->
       <section id="web-server-demo" class="note-section content-section">
-        <h2><span class="section-number">09.</span> Installing Nginx &amp; Troubleshooting NSG Port 80 Firewall Blocks</h2>
+        <h2><span class="section-number">09.</span> The NSG Port 80 Trap: Browser Timeout &amp; Firewall Resolution</h2>
 
-        <h3>Step 1: Install Nginx Web Server</h3>
-        <div class="terminal-window">
-          <div class="terminal-body"><span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo apt update</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo apt install nginx -y</span>
-<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo systemctl status nginx</span></div>
+        <h3>Step 1: Test External Browser Access (The Timeout Trap)</h3>
+        <p>Copy the <strong>Public IP address</strong> from your Azure Portal VM overview (e.g., <code>20.198.x.x</code>) and paste <code>http://&lt;VM_PUBLIC_IP&gt;</code> into a browser tab.</p>
+        <div class="callout-warning">
+          <strong>⚠️ The Browser Hangs Indefinitely:</strong>
+          The browser keeps spinning and eventually throws <code>ERR_CONNECTION_TIMED_OUT</code>. Why? Even though Apache is running inside the VM and responding to <code>curl http://localhost</code>, the Azure <strong>Network Security Group (NSG)</strong> only has Port 22 (SSH) open. The default rule <code>DenyAllInbound</code> drops all external HTTP traffic!
         </div>
 
-        <h3>Step 2: Test Locally</h3>
-        <div class="terminal-window">
-          <div class="terminal-body"><span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">curl -I http://localhost</span>
-<span class="term-output">HTTP/1.1 200 OK
-Server: nginx/1.18.0 (Ubuntu)</span></div>
-        </div>
+        <h3>Step 2: Resolving via Azure Portal GUI (Add Inbound Rule)</h3>
+        <ol style="font-size: 0.9rem; line-height: 1.6; margin: 0.75rem 0 1.25rem;">
+          <li>In Azure Portal, navigate to your VM (<code>my-web-server</code>).</li>
+          <li>In the left menu under <strong>Networking</strong>, click <strong>Network settings</strong> (or <strong>Networking</strong>).</li>
+          <li>Under <strong>Inbound port rules</strong>, click the <strong>Add inbound port rule</strong> button.</li>
+          <li>Set <strong>Service:</strong> <code>HTTP</code> (or Destination port ranges: <code>80</code>), <strong>Protocol:</strong> <code>TCP</code>, <strong>Action:</strong> <code>Allow</code>, <strong>Priority:</strong> <code>300</code>, <strong>Name:</strong> <code>Port_80</code>.</li>
+          <li>Click <strong>Add</strong>. Wait 15 seconds for rule deployment.</li>
+          <li>Reload your browser tab &rarr; <strong>"Welcome to Apache Web Server on Azure"</strong> renders immediately!</li>
+        </ol>
 
-        <h3>Step 3: Test from External Browser &amp; Troubleshoot NSG</h3>
-        <p>Open your browser and navigate to <code>http://&lt;VM_PUBLIC_IP&gt;</code>. If the page loads the default welcome page, everything succeeded! If the browser hangs indefinitely, port 80 is blocked by your Network Security Group (NSG).</p>
-
+        <h3>Step 3: Resolving via Azure CLI / Cloud Shell</h3>
         <div class="terminal-window">
           <div class="terminal-header">
-            <span class="terminal-title">Cloud Shell / Local Terminal &bull; Fix NSG Rule</span>
+            <span class="terminal-title">Cloud Shell / Local Terminal &bull; Open Port 80</span>
           </div>
-          <div class="terminal-body"><span class="term-comment"># 1. List existing NSG rules</span>
-<span class="term-prompt">$</span> <span class="term-cmd">az network nsg rule list -g rg-azure-demo --nsg-name vm-cloudshell-demoNSG -o table</span>
+          <div class="terminal-body"><span class="term-comment"># Open Port 80 directly on the VM's Network Security Group</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az vm open-port --resource-group azure-vm-rg --name my-web-server --port 80 --priority 300</span>
 
-<span class="term-comment"># 2. Add Inbound Allow Rule for Port 80 (HTTP)</span>
-<span class="term-prompt">$</span> <span class="term-cmd">az network nsg rule create \
-  --resource-group rg-azure-demo \
-  --nsg-name vm-cloudshell-demoNSG \
-  --name Allow-HTTP-80 \
-  --priority 110 \
-  --direction Inbound \
-  --access Allow \
-  --protocol Tcp \
-  --destination-port-ranges 80</span></div>
+<span class="term-comment"># Query the live Public IP to verify</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az vm show -d -g azure-vm-rg -n my-web-server --query publicIps -o tsv</span></div>
         </div>
       </section>
 

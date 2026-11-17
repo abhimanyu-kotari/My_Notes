@@ -9,26 +9,15 @@ In traditional computing:
 - If you wanted to run a Docker container, you first had to create an Azure Virtual Machine, wait 3 minutes for it to boot, install Docker via SSH, pull your image, and configure firewall ports.
 - With **ACI**, you skip the virtual machine entirely! You simply point Azure to a Docker image (from Docker Hub or Azure Container Registry), specify how much CPU and RAM you need, and Azure spins up your container in seconds.
 
-```
-+-------------------------------------------------------------+
-|               AZURE CONTAINER INSTANCES (ACI)               |
-|                                                             |
-|   You specify:                                              |
-|   • Image: mcr.microsoft.com/azuredocs/aci-helloworld       |
-|   • Resources: 1 vCPU, 1.5 GB RAM                           |
-|   • Port: 80                                                |
-|   • DNS: my-cloud-app.eastus.azurecontainer.io              |
-|                                                             |
-|                          │                                  |
-|                          ▼                                  |
-|             [ AZURE SERVERLESS FABRIC ]                     |
-|      (No VMs to patch • No Kubernetes to manage)            |
-|                                                             |
-|                          │                                  |
-|                          ▼                                  |
-|          RUNNING CONTAINER LIVE IN < 10 SECONDS!            |
-+-------------------------------------------------------------+
-```
+### How ACI Works (Serverless Container Execution)
+
+| Configuration Parameter | Value Example | How ACI Handles It |
+| :--- | :--- | :--- |
+| **Container Image** | `mcr.microsoft.com/azuredocs/aci-helloworld` | Pulls directly from Docker Hub, Microsoft Container Registry (MCR), or private ACR. |
+| **Compute Sizing** | `1 vCPU, 1.5 GiB RAM` | Billed strictly per-second of execution time based on allocated CPU/memory. |
+| **Networking & DNS** | `my-cloud-app.eastus.azurecontainer.io` | Directly provisions a public IP address and custom FQDN subdomain. |
+| **Port Exposure** | `Port 80 (TCP)` | Automatically opens inbound traffic without configuring complex NSGs or load balancers. |
+| **Infrastructure Overhead**| *Zero Virtual Machines or Nodes* | Azure executes your container directly on the hypervisor fabric in under 10 seconds. |
 
 ---
 
@@ -57,20 +46,11 @@ The top-level resource in ACI is a **Container Group**.
 ## 4. Restart Policies: Matching Container Behavior to Your Task
 When creating a container in ACI, you specify a **Restart Policy**:
 
-```
-+---------------+-------------------------------------------------------------+
-| POLICY        | BEHAVIOR & TYPICAL USE CASE                                 |
-+---------------+-------------------------------------------------------------+
-| Always        | If the container crashes or exits, ACI restarts it.         |
-| (Default)     | Ideal for long-running web servers, APIs, and microservices.|
-+---------------+-------------------------------------------------------------+
-| OnFailure     | Only restarts if the container process fails (exit code !=0)|
-|               | Ideal for batch data processing jobs that should retry.    |
-+---------------+-------------------------------------------------------------+
-| Never         | Runs the process exactly once and never restarts.           |
-|               | Ideal for one-time initialization tasks or build runners.   |
-+---------------+-------------------------------------------------------------+
-```
+| Restart Policy | Behavior & Trigger Condition | Ideal Production Use Case |
+| :--- | :--- | :--- |
+| **Always** *(Default)* | If the container crashes or finishes execution, ACI restarts it automatically. | Long-running web applications, HTTP APIs, and background queue listeners. |
+| **OnFailure** | Restarts only if the container process fails (process exits with a non-zero exit code). | Scheduled data transformation jobs, ETL batch scripts, and database backup routines. |
+| **Never** | Runs the process container exactly once to completion and never restarts it. | One-time migration scripts, database seeding tasks, and CI/CD build agents. |
 
 ---
 

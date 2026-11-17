@@ -18,25 +18,18 @@ Imagine a gigantic logistics warehouse:
 - **Container:** An organized storage aisle or bin inside the warehouse (e.g., `user-avatars`, `invoice-pdfs`, `system-logs`).
 - **Blob:** The individual packaged parcels and boxes sitting on the shelves (e.g., `user-1049.png`, `bill-may-2026.pdf`).
 
-```
-+--------------------------------------------------------------------------+
-|                     AZURE BLOB STORAGE HIERARCHY                         |
-|                                                                          |
-|  [ Azure Storage Account ]  --> https://mystorageaccount.blob.core.windows.net
-|         |                                                                |
-|         +---> [ Container 1: 'images' ]                                  |
-|         |           |---> profile.jpg                                    |
-|         |           |---> banner.png                                     |
-|         |                                                                |
-|         +---> [ Container 2: 'documents' ]                               |
-|         |           |---> resume.pdf                                     |
-|         |           |---> quarterly-report.xlsx                          |
-|         |                                                                |
-|         +---> [ Container 3: '$web' ]  (Static Website Root)             |
-|                     |---> index.html                                     |
-|                     |---> error.html                                     |
-+--------------------------------------------------------------------------+
-```
+### Azure Blob Storage Hierarchy
+
+- **Storage Account:** Top-level namespace with global endpoint `https://<accountname>.blob.core.windows.net`
+  - 📁 **Container 1: `images`** (Logical folder / directory bucket)
+    - 📄 `profile.jpg`
+    - 📄 `banner.png`
+  - 📁 **Container 2: `documents`**
+    - 📄 `resume.pdf`
+    - 📄 `quarterly-report.xlsx`
+  - 📁 **Container 3: `$web`** (Special root container for static website hosting)
+    - 📄 `index.html`
+    - 📄 `error.html`
 
 ### Storage Account Naming Rules (Exam & Interview Classic):
 1. Name must be between **3 and 24 characters** in length.
@@ -59,18 +52,12 @@ Imagine a gigantic logistics warehouse:
 ## 4. Blob Storage Access Tiers (Cost Optimization)
 Data changes in value over time. An invoice uploaded today is viewed ten times this week, but rarely touched after three years. Azure offers four access tiers to balance storage costs against access fees:
 
-```
-+-------------------------------------------------------------------------+
-|                  AZURE BLOB STORAGE ACCESS TIERS                        |
-+-------------------------------------------------------------------------+
-| Tier      | Best For               | Storage Cost | Access/Retrieval Cost|
-+-----------+------------------------+--------------+---------------------+
-| Hot       | Active daily usage     | Highest      | Lowest              |
-| Cool      | Infrequent (30+ days)  | Lower        | Higher              |
-| Cold      | Rare access (90+ days) | Very Low     | Much Higher         |
-| Archive   | Long-term (180+ days)  | Rock Bottom  | Highest (Hours wait)|
-+-------------------------------------------------------------------------+
-```
+| Access Tier | Ideal Retention & Usage | Storage Unit Cost | Data Retrieval Fee | Availability SLA |
+| :--- | :--- | :--- | :--- | :---: |
+| **Hot** | Active daily production files, streaming assets, live websites | Highest | Lowest / Zero | 99.9% |
+| **Cool** | Infrequently accessed data (stored for at least 30 days) | Lower | Moderate | 99.0% |
+| **Cold** | Rarely accessed data (stored for at least 90 days) | Very Low | High | 99.0% |
+| **Archive** | Offline compliance archives, legal records (minimum 180 days) | Rock Bottom | Highest (Requires hours to rehydrate) | N/A (Offline) |
 
 ### The Archive Tier & "Rehydration":
 - Blobs in the **Archive Tier** are stored offline. You cannot immediately download or open an archived blob.
@@ -84,28 +71,12 @@ Data changes in value over time. An invoice uploaded today is viewed ten times t
 ## 5. Redundancy & High Availability Options
 To protect your data against hardware failure, power outages, and natural disasters, Azure automatically keeps multiple copies of every blob:
 
-```
-                                      PRIMARY REGION
-+-----------------------------------------------------------------------------------------+
-|  Locally Redundant (LRS)                |  Zone-Redundant (ZRS)                         |
-|  3 copies in 1 Datacenter               |  3 copies across 3 Availability Zones         |
-|                                         |                                               |
-|  +--------+  +--------+  +--------+     |  +----------+  +----------+  +----------+     |
-|  | Copy 1 |  | Copy 2 |  | Copy 3 |     |  | Zone 1   |  | Zone 2   |  | Zone 3   |     |
-|  +--------+  +--------+  +--------+     |  |  Copy 1  |  |  Copy 2  |  |  Copy 3  |     |
-|  (Protection against disk/rack crash)   |  +----------+  +----------+  +----------+     |
-|  Durability: 99.999999999% (11 9s)      |  Durability: 99.9999999999% (12 9s)           |
-+-----------------------------------------+-----------------------------------------------+
-
-                                      SECONDARY REGION
-+-----------------------------------------------------------------------------------------+
-|  Geo-Redundant (GRS)                    |  Geo-Zone-Redundant (GZRS)                    |
-|  Primary: LRS (3 copies)                |  Primary: ZRS (3 copies across 3 zones)       |
-|    + Asynchronous replication to        |    + Asynchronous replication to              |
-|  Secondary Paired Region: LRS (3 copies)|  Secondary Paired Region: LRS (3 copies)      |
-|  Durability: 99.99999999999999% (16 9s) |  Durability: 99.99999999999999% (16 9s)       |
-+-----------------------------------------------------------------------------------------+
-```
+| Replication Strategy | Geographic Scope | Copies & Distribution | Durability (Annual) | Protection Level |
+| :--- | :--- | :--- | :---: | :--- |
+| **Locally Redundant (LRS)** | Single Datacenter (Primary) | 3 synchronous copies within one physical datacenter. | 99.999999999% (11 9s) | Protects against individual disk, rack, or server failures. |
+| **Zone-Redundant (ZRS)** | Single Region (Primary) | 3 synchronous copies distributed across 3 distinct Availability Zones. | 99.9999999999% (12 9s) | Survives an entire datacenter outage (power grid or fire). |
+| **Geo-Redundant (GRS)** | Secondary Paired Region | 3 copies in Primary (LRS) + asynchronous replication of 3 copies to paired region. | 99.99999999999999% (16 9s) | Protects against major regional catastrophe or natural disaster. |
+| **Geo-Zone-Redundant (GZRS)** | Secondary Paired Region | 3 copies across 3 zones in Primary (ZRS) + 3 copies replicated to secondary region. | 99.99999999999999% (16 9s) | Maximum enterprise resilience combining zone + region fault tolerance. |
 
 - **Read-Access Geo-Redundancy (RA-GRS / RA-GZRS):** Grants direct read-only access to the secondary region endpoint, allowing your application to remain readable even if an entire primary Azure region experiences an outage!
 
@@ -113,24 +84,11 @@ To protect your data against hardware failure, power outages, and natural disast
 
 ## 6. Storage Security: Keys vs. SAS Tokens vs. Entra ID
 
-```
-+---------------------------------------------------------------------------+
-|                          STORAGE SECURITY SPECTRUM                        |
-+---------------------------------------------------------------------------+
-| 1. Account Access Keys (Key 1 / Key 2):                                   |
-|    - Root administrator passwords giving 100% full access to everything.  |
-|    - NEVER commit keys to GitHub or embed them inside mobile/web apps!     |
-|                                                                           |
-| 2. Shared Access Signatures (SAS Tokens):                                 |
-|    - Time-limited, scoped temporary digital tickets.                      |
-|    - Example: Allow customer X to upload ONE photo to container Y,        |
-|      valid only for the next 15 minutes, from their specific IP address.  |
-|                                                                           |
-| 3. Microsoft Entra ID (Azure RBAC):                                       |
-|    - Enterprise identity-based access control.                            |
-|    - Assign fine-grained roles (e.g., 'Storage Blob Data Reader').         |
-+---------------------------------------------------------------------------+
-```
+| Authentication Mechanism | Security Level | Access Scope | Best Practice Recommendation |
+| :--- | :---: | :--- | :--- |
+| **Account Access Keys (Key 1 & Key 2)** | 🚨 High Risk (Root Password) | 100% full administrative control over all containers, blobs, queues, and tables. | **NEVER** embed in code, git repositories, or mobile applications. Store exclusively in Azure Key Vault. |
+| **Shared Access Signatures (SAS Tokens)** | 🛡️ Controlled & Scoped | Grants temporary, fine-grained access (e.g. read-only access to one specific photo for 15 minutes). | Ideal for client-side uploads, temporary download links, and third-party integrations. |
+| **Microsoft Entra ID (Azure RBAC)** | 🔒 Enterprise Best Practice | Identity-based role assignments (e.g. `Storage Blob Data Reader`, `Storage Blob Data Contributor`). | Industry standard for production applications, Azure Virtual Machines, and managed identities. |
 
 ---
 

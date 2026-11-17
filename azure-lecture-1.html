@@ -259,12 +259,71 @@
           <strong>Cloud computing</strong> is the on-demand delivery of computing services—including servers, storage, databases, networking, software, and analytics—over the internet ("the cloud") with pay-as-you-go pricing.
         </p>
 
-        <h3>The Real-World Analogy: Electricity Grid &amp; Uber</h3>
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The Electricity Analogy:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            When you plug your phone charger into the wall socket, you do not build your own coal power station or manage electrical generators. A utility company manages the power plants, and you simply turn on the switch and pay for the exact kilowatt-hours consumed. Cloud computing works identically: Microsoft builds the multi-billion dollar datacenters; you simply consume computing power by the minute.
-          </p>
+        <h3>The Real-World Analogies: Electricity &amp; The City Bus</h3>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin: 1.25rem 0; display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <h4 style="margin: 0 0 0.35rem 0; color: #0078d4; font-size: 1.05rem;">⚡ The Electricity Grid Analogy:</h4>
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+              When you plug your phone charger into the wall socket, you do not build your own coal power station or manage electrical generators. A utility company manages the power plants, and you simply turn on the switch and pay for the exact kilowatt-hours consumed. Cloud computing works identically: Microsoft builds the multi-billion dollar datacenters; you simply consume computing power by the minute.
+            </p>
+          </div>
+          <div style="border-top: 1px solid var(--border-color); padding-top: 0.85rem;">
+            <h4 style="margin: 0 0 0.35rem 0; color: #0078d4; font-size: 1.05rem;">🚌 The City Bus vs. Private Car (Cloud Deployment Models):</h4>
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+              <strong>Public Cloud (City Bus):</strong> Anyone can purchase a ticket and ride. Highly affordable and accessible because the route and vehicle are shared among passengers traveling together.<br>
+              <strong>Private Cloud (Self-Drive Rental / Owned Car):</strong> Reserved exclusively for your organization. Maximum privacy and bespoke control, but you bear 100% of the cost for insurance, fuel, and garage parking even when it sits idle.<br>
+              <strong>Hybrid Cloud (City Bus for Commutes + Car for Weekends):</strong> Taking public transit for everyday high-volume travel (public cloud for web frontends) while keeping a private vehicle for sensitive family trips (on-premises private datacenter for confidential banking/health records).
+            </p>
+          </div>
+        </div>
+
+        <h3>Real-World Case Study: Building a Food Delivery App (Zomato / Tomato)</h3>
+        <p>
+          To understand how individual Azure cloud services cooperate to run an enterprise application, consider designing a food delivery startup like Zomato from the ground up:
+        </p>
+
+        <div style="overflow-x: auto; margin: 1.25rem 0;">
+          <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
+            <thead>
+              <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
+                <th style="padding: 0.75rem 1rem; text-align: left;">Application Function</th>
+                <th style="padding: 0.75rem 1rem; text-align: left;">Azure Cloud Service</th>
+                <th style="padding: 0.75rem 1rem; text-align: left;">Operational Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Backend REST APIs</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Azure Virtual Machines / ACA</td>
+                <td style="padding: 0.75rem 1rem;">Executes order routing, restaurant search algorithms, and coordinates third-party payment gateways.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Menu &amp; Dish Photos</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Azure Blob Storage</td>
+                <td style="padding: 0.75rem 1rem;">Stores millions of high-resolution food images, restaurant PDF menus, and delivery driver verification documents in an infinitely scalable object store.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Orders &amp; Customer DB</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Azure SQL / PostgreSQL</td>
+                <td style="padding: 0.75rem 1rem;">Persists user profiles, historical order transaction logs, live cart items, and restaurant listings with ACID guarantees.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Push Notifications</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Azure Notification Hubs</td>
+                <td style="padding: 0.75rem 1rem;">Broadcasts real-time alerts (&quot;Your order is out for delivery!&quot;) simultaneously to iOS, Android, and driver mobile apps.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Dinner Rush Autoscaling</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">VM Scale Sets / KEDA</td>
+                <td style="padding: 0.75rem 1rem;">Automatically spins up 15 additional compute nodes during peak dinner hours (7:30 PM &ndash; 10:30 PM) and scales back down at midnight to save money.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">24/7 Automated Support</td>
+                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Azure AI Bot Service</td>
+                <td style="padding: 0.75rem 1rem;">Provides an automated customer assistance chatbot that answers delivery status queries and issues automated refunds without human agent delay.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <h3>The 5 Core Characteristics of Cloud (NIST Definition):</h3>
@@ -283,6 +342,19 @@
         <p>
           Cloud computing is divided into three primary service models. With each step up the pyramid, Microsoft manages more of the underlying complexity, allowing developers to focus purely on business logic.
         </p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin: 1.25rem 0;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #0078d4; font-size: 1.05rem;">🍨 The Ice Cream Parlor Mental Model:</h4>
+          <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+            <strong>IaaS (Empty Shop in a Mall):</strong> You rent bare commercial space. You must purchase freezers, install counters, hire workers, and formulate recipes. Full customization, but heavy administrative overhead.
+          </p>
+          <p style="margin: 0 0 0.5rem 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+            <strong>PaaS (Equipped Franchise Parlor):</strong> Freezers, soft-serve dispensers, utility electricity, and POS registers are pre-installed and serviced by the landlord. You only bring your unique syrup recipes and serve customers.
+          </p>
+          <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; color: var(--text-primary);">
+            <strong>SaaS (Automated Vending Machine):</strong> You tap your debit card and take your ice cream. You manage zero hardware, zero ingredients, and zero machinery.
+          </p>
+        </div>
 
         <div class="diagram-container">
           <div class="diagram-header">
@@ -511,11 +583,20 @@
 
         <div class="callout-tip">
           <strong>🎁 What You Receive in the Azure Free Tier:</strong>
-          <ul style="margin: 0.5rem 0 0 0;">
-            <li><strong>$200 USD Credit</strong> (approx. ₹15,800 INR) to use freely within your first 30 days.</li>
+          <ul style="margin: 0.5rem 0 0.75rem 0;">
+            <li><strong>$200 USD Credit</strong> (approx. ₹19,130 INR) to use freely within your first 30 days.</li>
             <li><strong>12 Months of Popular Free Services</strong>, including 750 hours of Linux B1s VM, 750 hours of Windows B1s VM, and 5 GB of LRS Blob Storage.</li>
             <li><strong>55+ Always-Free Services</strong>, including Azure App Service (F1 free tier), Azure Functions (1,000,000 free executions/month), and Microsoft Entra ID.</li>
           </ul>
+        </div>
+
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 1.25rem; margin-top: 1rem;">
+          <h4 style="margin: 0 0 0.4rem 0; color: #10b981; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+            <span>🛡️</span> Built-in Spending Protection (Zero Surprise Bills)
+          </h4>
+          <p style="margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--text-primary);">
+            Azure accounts created on the free trial automatically have a <strong>Spending Limit of ₹0 / $0 above free credits enabled by default</strong>. When your $200 trial credit expires or runs out after 30 days, Azure <strong>automatically stops and deallocates your active VMs and pauses running services</strong> instead of silently charging your credit card! You will only ever be charged if you explicitly log into Cost Management and manually choose to remove the spending limit.
+          </p>
         </div>
       </section>
 

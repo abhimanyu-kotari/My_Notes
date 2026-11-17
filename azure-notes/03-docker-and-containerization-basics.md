@@ -16,23 +16,13 @@ Every software developer has experienced this frustrating scenario:
 
 ## 2. Virtual Machines vs. Docker Containers
 
-```
-+------------------------------------+   +------------------------------------+
-|          VIRTUAL MACHINES          |   |          DOCKER CONTAINERS         |
-|                                    |   |                                    |
-|  +--------------+  +-------------+ |   |  +--------------+  +-------------+ |
-|  | App 1 + Libs |  | App 2 + Libs| |   |  | App 1 + Libs |  | App 2 + Libs| |
-|  +--------------+  +-------------+ |   |  +--------------+  +-------------+ |
-|  |   Guest OS   |  |   Guest OS  | |   |  |  Container   |  |  Container  | |
-|  | (Ubuntu ~2GB)|  | (Win ~20GB) | |   |  +--------------+  +-------------+ |
-|  +--------------+  +-------------+ |   |                                    |
-|          HYPERVISOR                |   |          DOCKER ENGINE             |
-|  +-------------------------------+ |   |  +-------------------------------+ |
-|  |      HOST OPERATING SYSTEM    | |   |  |      HOST OPERATING SYSTEM    | |
-|  +-------------------------------+ |   |  +-------------------------------+ |
-|  |      PHYSICAL HARDWARE        | |   |  |      PHYSICAL HARDWARE        | |
-+--+-------------------------------+-+   +--+-------------------------------+-+
-```
+| Architectural Layer | Virtual Machines (VMs) | Docker Containers |
+| :--- | :--- | :--- |
+| **Virtualization Boundary** | Hypervisor virtualizes physical hardware (vCPU, RAM, BIOS, Disks). | Container engine virtualizes the host operating system kernel. |
+| **Operating System** | Each VM includes a complete, heavy guest operating system (~2 GB to 20 GB). | Containers share the host OS kernel and only package app code + binaries (~20 MB to 300 MB). |
+| **Startup Latency** | Minutes (must boot full virtual hardware and OS kernel). | Milliseconds (executes immediately as an isolated process). |
+| **Density & Scalability** | Low density; a server can host 10 to 20 VMs before memory exhaustion. | Extremely high density; a single host can run hundreds of containers concurrently. |
+| **Portability Guarantee** | Dependent on hypervisor format (VHD, VMDK) and guest OS configurations. | 100% write once, run anywhere on any cloud or laptop running Docker. |
 
 ### The Real-World Analogy: Single-Family Houses vs. Shipping Containers
 - **Virtual Machines (Single-Family Houses):** 
@@ -42,16 +32,6 @@ Every software developer has experienced this frustrating scenario:
   - Standardized steel shipping containers. It doesn't matter what you put inside—bananas, cars, furniture, or clothes. 
   - The shipping crane at the port and the container ship do not care what is inside; they can stack 5,000 containers on one ship and move them anywhere in the world seamlessly because the exterior dimensions and hooks are completely standardized.
 
-### Comparison Table:
-
-| Metric | Virtual Machines (VMs) | Docker Containers |
-| :--- | :--- | :--- |
-| **Virtualization Layer** | Virtualizes physical hardware (CPU, BIOS, RAM). | Virtualizes the operating system kernel. |
-| **Operating System** | Each VM includes a complete, heavy Guest OS. | Shares the host machine's Linux/Windows kernel. |
-| **Image Size** | Massive (typically 2 GB to 20+ GB). | Lightweight (typically 20 MB to 500 MB). |
-| **Startup Speed** | Minutes (boots a complete virtual BIOS and OS). | Milliseconds (starts just like a regular OS process). |
-| **Density & Resource Usage** | High CPU and RAM overhead per machine. | Extremely high density; can run hundreds per server. |
-
 ---
 
 ## 3. Core Docker Building Blocks
@@ -59,16 +39,13 @@ Every software developer has experienced this frustrating scenario:
 Docker operates using four central primitives:
 
 ```
-  +--------------+       docker build       +--------------+
-  |  Dockerfile  | ───────────────────────> | Docker Image |
-  +--------------+                          +--------------+
-                                                   │
-                                      docker push  │  docker run
-                                                   ▼
-                     +---------------+      +--------------+
-                     |  Docker Hub   |      |   Running    |
-                     |  (Registry)   |      |  Container   |
-                     +---------------+      +--------------+
+[ Dockerfile ] ──── docker build ───► [ Docker Image ] ──── docker run ───► [ Running Container ]
+(Source Blueprint)                    (Packaged Snapshot)                    (Living Isolated Process)
+                                             │
+                                        docker push
+                                             ▼
+                                  [ Container Registry ]
+                                  (Docker Hub / Azure ACR)
 ```
 
 1. **Dockerfile:** A simple text file containing step-by-step instructions (commands) that specify how to assemble your application environment.

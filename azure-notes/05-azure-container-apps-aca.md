@@ -9,17 +9,11 @@ While **Azure Container Instances (ACI)** is fantastic for running a single isol
 
 **Azure Container Apps (ACA)** is the "sweet spot" (the Goldilocks container service in Azure). It is a **fully managed serverless container platform** built directly on top of enterprise-grade Kubernetes, Envoy proxy, KEDA (Kubernetes Event-driven Autoscaling), and Dapr (Distributed Application Runtime)—**without exposing any Kubernetes complexity to you**.
 
-```
-+-----------------------------------------------------------------------+
-|                 AZURE CONTAINER SERVICES COMPARISON                   |
-+-------------------+-----------------------------------+---------------+
-| Service           | Best For                          | Complexity    |
-+-------------------+-----------------------------------+---------------+
-| ACI               | Quick jobs, ETL batch, 1 container| Low (Simple)  |
-| ACA               | Microservices, web APIs, autoscale| Medium (Ideal)|
-| AKS               | Enterprise, full K8s orchestration| High (Deep)   |
-+-------------------+-----------------------------------+---------------+
-```
+| Azure Service | Primary Architectural Focus | Best Used For | Management Complexity |
+| :--- | :--- | :--- | :---: |
+| **ACI (Container Instances)** | Single isolated container jobs | Quick scripts, batch ETL processing, single container runners | Low (Fastest start) |
+| **ACA (Container Apps)** | Serverless microservices platform | Multi-service web APIs, event-driven workers, zero-to-N scaling | Medium (Recommended for microservices) |
+| **AKS (Kubernetes Service)** | Full enterprise container orchestration | Complex multi-tier architectures requiring raw Kubernetes APIs and custom CRDs | High (Requires dedicated DevOps management) |
 
 ---
 
@@ -33,31 +27,18 @@ While **Azure Container Instances (ACI)** is fantastic for running a single isol
 ## 3. Core Architecture of Azure Container Apps
 
 ```
-+--------------------------------------------------------------------------+
-|                  CONTAINER APPS ENVIRONMENT (VNet Boundary)              |
-|                                                                          |
-|       [ Public HTTPS Traffic from Internet ]                             |
-|                          |                                               |
-|               +----------------------+                                   |
-|               | Built-in Envoy Ingress| (SSL Termination & Routing)      |
-|               +----------+-----------+                                   |
-|                          |                                               |
-|         +----------------+----------------+                              |
-|         | (80% Traffic)                   | (20% Traffic)                |
-|         v                                 v                              |
-|  +--------------------+             +--------------------+               |
-|  | Revision 1 (v1.0)  |             | Revision 2 (v2.0)  |               |
-|  | [Pod 1]  [Pod 2]   |             |      [Pod 1]       |               |
-|  +--------------------+             +--------------------+               |
-|    Frontend Microservice              Canary Test Microservice           |
-|                                                                          |
-|         | (Internal Service-to-Service Calls)                            |
-|         v                                                                |
-|  +--------------------+             +--------------------+               |
-|  | Backend Order API  |             |  Event Processor   |               |
-|  | (Internal Ingress) |             |  (KEDA Scaler)     |               |
-|  +--------------------+             +--------------------+               |
-+--------------------------------------------------------------------------+
+[ Public HTTPS Internet Traffic ]
+                │
+                ▼
+  [ Built-in Envoy Ingress Proxy ]  ──> Auto SSL Termination & Traffic Splitting
+         │                    │
+         │ (80% Traffic)      │ (20% Canary Traffic)
+         ▼                    ▼
+  [ Revision 1 (v1.0) ]  [ Revision 2 (v2.0) ]
+     (Stable Web Pods)      (New Release Test)
+         │
+         ▼  (Internal Service-to-Service Ingress)
+  [ Backend Order API ]  <───  [ KEDA Queue Event Scaler ]
 ```
 
 ### Key Building Blocks:

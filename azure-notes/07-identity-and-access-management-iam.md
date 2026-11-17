@@ -24,19 +24,14 @@ Think of going on an international flight:
 ## 3. Microsoft Entra ID (Formerly Azure Active Directory)
 **Microsoft Entra ID** is Microsoft’s cloud-based identity and access management service. It manages four types of **Security Principals**:
 
-```
-+--------------------------------------------------------------------------+
-|                    MICROSOFT ENTRA ID SECURITY PRINCIPALS                |
-+--------------------------------------------------------------------------+
-| 1. Users:              Individual human beings (e.g., alice@company.com)  |
-| 2. Groups:             Collections of users (e.g., 'DevOps-Engineers')    |
-| 3. Service Principals: Automated apps, GitHub Actions CI/CD workflows,   |
-|                        or scripts that interact with cloud resources.    |
-| 4. Managed Identities: Special identities automatically created for      |
-|                        Azure resources (e.g., allowing an Azure VM to    |
-|                        access Blob Storage without storing passwords).   |
-+--------------------------------------------------------------------------+
-```
+### Microsoft Entra ID Security Principals
+
+| Security Principal Type | Definition | Real-World Cloud Example |
+| :--- | :--- | :--- |
+| **Users** | Individual human beings with authenticated identity credentials. | `alice@company.com`, developers, database administrators. |
+| **Groups** | Collections of multiple user accounts managed together. | `DevOps-Engineers`, `Frontend-Team`, `Cloud-Admins`. |
+| **Service Principals** | Machine identities used by software applications and CI/CD pipelines. | GitHub Actions deployment runners, Terraform automation bots. |
+| **Managed Identities** | Azure-managed identities linked directly to cloud resources. | An Azure Virtual Machine accessing Blob Storage without hardcoding passwords. |
 
 ### Managed Identities: System-Assigned vs. User-Assigned
 One of the most dangerous developer mistakes is writing database passwords or Azure Storage keys directly into application source code. **Managed Identities** completely eliminate this risk:
@@ -50,19 +45,13 @@ Azure RBAC is the authorization system used to manage access to Azure resources.
 
 $$\text{Role Assignment} = \text{Security Principal} + \text{Role Definition} + \text{Scope}$$
 
-```
-+--------------------------------------------------------------------------+
-|                        THE AZURE RBAC FORMULA                            |
-|                                                                          |
-|   [ Security Principal ]       [ Role Definition ]          [ Scope ]     |
-|   (Who gets access?)           (What can they do?)          (Where?)      |
-|                                                                          |
-|     Alice (Developer)    +     Contributor          +    RG: 'dev-backend'|
-|                                                                          |
-|   ====================================================================   |
-|   Result: Alice can create & manage resources ONLY inside 'dev-backend'  |
-+--------------------------------------------------------------------------+
-```
+| Component | Core Question | Real-World Example |
+| :--- | :--- | :--- |
+| **1. Security Principal** | *Who gets access?* | Alice (`alice@company.com`) or `DevOps-Engineers` |
+| **2. Role Definition** | *What actions can they perform?* | `Contributor` (Can create & manage, but cannot grant access to others) |
+| **3. Scope** | *Where does the permission apply?* | Resource Group: `rg-backend-production` |
+
+> **Final Result:** Alice can deploy and modify resources *only* inside `rg-backend-production`. She has zero permissions to touch other resource groups or subscriptions.
 
 ---
 
@@ -70,21 +59,13 @@ $$\text{Role Assignment} = \text{Security Principal} + \text{Role Definition} + 
 Azure organizes resources in a strict four-level hierarchy. **Permissions are inherited downwards** from higher scopes to lower scopes:
 
 ```
-               +------------------------------------+
-               |       Management Groups            |  <-- Governs multiple subscriptions
-               +-----------------+------------------+
-                                 |
-               +-----------------v------------------+
-               |          Subscriptions             |  <-- Billing & organizational container
-               +-----------------+------------------+
-                                 |
-               +-----------------v------------------+
-               |         Resource Groups            |  <-- Lifecycle & grouping container
-               +-----------------+------------------+
-                                 |
-               +-----------------v------------------+
-               |            Resources               |  <-- Individual VM, Blob, VNet, SQL
-               +------------------------------------+
+[1. Management Groups]  --> Enforce organizational governance across subscriptions
+         │
+[2. Subscriptions]      --> Billing and access management boundary
+         │
+[3. Resource Groups]    --> Project lifecycle and logical resource grouping
+         │
+[4. Cloud Resources]    --> Individual VM, Storage Account, VNet, SQL Database
 ```
 
 ### Golden Rules of Inheritance:
