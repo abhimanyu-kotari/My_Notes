@@ -210,13 +210,56 @@
 
       <!-- SECTION 1 -->
       <section id="virtualization" class="note-section content-section">
-        <h2><span class="section-number">01.</span> What is Virtualization?</h2>
+        <h2><span class="section-number">01.</span> What is Virtualization? (The Core Mental Model)</h2>
+        
+        <h3>The Software Engineer's Real-World Problem:</h3>
         <p>
-          Before cloud computing existed, companies had to buy physical server computers. If you wanted to run a website, a database, and an internal email system, you typically purchased three massive physical servers. Most of the time, these computers operated at only 5% to 10% of their actual computing power—meaning 90% of your expensive hardware was sitting idle, wasting electricity, floor space, cooling, and money.
+          Imagine you have a personal laptop running <strong>Windows</strong> (or <strong>macOS</strong>). You write software that must run and be tested on both <strong>Linux and Windows</strong>. Or perhaps you simply want to learn Linux commands and practice shell scripting.
         </p>
         <p>
-          <strong>Virtualization</strong> is the foundational technology that solved this dilemma. It enables a single physical computer (the host) to run multiple independent, isolated virtual computers (Guest Virtual Machines) simultaneously.
+          What are your practical options?
         </p>
+        <ul style="font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          <li><strong>Buy a separate physical laptop just for Linux?</strong> Unnecessary, costly, and inconvenient.</li>
+          <li><strong>Dual-boot your laptop?</strong> Requires restarting every time you switch systems, partitions hard drives permanently, and risks breaking your Windows bootloader.</li>
+          <li><strong>The Engineering Solution: Virtualization!</strong> Run Linux right inside your Windows or Mac environment as an isolated, lightweight software computer.</li>
+        </ul>
+
+        <h3>How Virtualization Works: Carving "Mini Computers"</h3>
+        <p>
+          Your physical host laptop has real hardware: for example, <strong>8 GB of RAM and 100 GB of Storage</strong>. Through virtualization, you install a specialized piece of software called a <strong>Hypervisor</strong> (such as <strong>Oracle VirtualBox</strong> on Windows, or <strong>Parallels Desktop</strong> on macOS).
+        </p>
+        <p>
+          The Hypervisor divides your physical hardware into independent, isolated <strong>"mini computers"</strong>:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; margin: 1rem 0 1.25rem;">
+          <div class="step-card" style="margin: 0; border-left: 3px solid #38bdf8;">
+            <div class="step-card-header" style="color: #38bdf8;">🖥️ Mini Computer 1 (Linux VM)</div>
+            <p style="font-size: 0.85rem; margin: 0; line-height: 1.5; color: var(--text-secondary);">
+              Allocated <strong>2 GB RAM &bull; 20 GB Disk</strong> from host.<br>
+              Runs Ubuntu Linux in a completely sandboxed environment.
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0; border-left: 3px solid #a855f7;">
+            <div class="step-card-header" style="color: #a855f7;">💻 Mini Computer 2 (Test VM)</div>
+            <p style="font-size: 0.85rem; margin: 0; line-height: 1.5; color: var(--text-secondary);">
+              Allocated <strong>2 GB RAM &bull; 10 GB Disk</strong> from host.<br>
+              Runs another test operating system or sandbox.
+            </p>
+          </div>
+        </div>
+        <p>
+          Because these mini computers are generated purely by software rather than separate hardware boxes, we call them <strong>Virtual Machines (VMs)</strong>.
+        </p>
+
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0 1.5rem;">
+          <strong style="color: #10b981; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.35rem;">
+            <span>🛡️</span> The Zero-Risk Isolation Guarantee:
+          </strong>
+          <span style="font-size: 0.92rem; line-height: 1.6; color: var(--text-primary);">
+            If your Linux virtual machine crashes, runs out of memory, or gets infected with malware, it has <strong>zero impact on your host operating system</strong>. Your primary Windows/Mac machine remains 100% safe, untouched, and operational.
+          </span>
+        </div>
 
         <div class="diagram-container">
           <div class="diagram-header">
@@ -237,20 +280,42 @@
             </div>
           </div>
           <div style="background: rgba(0, 120, 212, 0.15); border: 1px solid rgba(0, 120, 212, 0.4); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; font-weight: 700; color: #50e6ff; margin-bottom: 0.85rem;">
-            HYPERVISOR (Type 1 Bare-Metal: Microsoft Hyper-V)
+            HYPERVISOR (Type 1 Bare-Metal: Microsoft Hyper-V / Type 2 Hosted: VirtualBox)
           </div>
           <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">
             PHYSICAL HARDWARE POOL (Intel/AMD CPUs &bull; DDR5 RAM &bull; NVMe Disks &bull; 100GbE NICs)
           </div>
         </div>
 
-        <h3>The Magic Behind it: The Hypervisor</h3>
-        <p>A <strong>Hypervisor</strong> (Virtual Machine Monitor) is the specialized software layer that sits between the physical hardware and the virtual machines. It partitions physical CPU, RAM, and disk storage, and distributes them safely among virtual machines without them interfering with one another.</p>
-        <ul>
-          <li><strong>Type 1 (Bare-Metal) Hypervisor:</strong> Runs directly on the physical computer hardware without any underlying operating system (e.g., Microsoft Hyper-V, VMware ESXi, KVM). <em>This is what Azure datacenters run!</em></li>
-          <li><strong>Type 2 (Hosted) Hypervisor:</strong> Runs as an application inside a regular desktop operating system (e.g., Oracle VirtualBox, VMware Workstation). Slower, but great for student desktop labs.</li>
-        </ul>
-      </section>
+        <h3>Types of Hypervisors: Type 1 (Bare-Metal) vs. Type 2 (Hosted)</h3>
+        <p>A <strong>Hypervisor</strong> (Virtual Machine Monitor) is the specialized software layer that coordinates virtual machines by sharing physical hardware:</p>
+        
+        <div style="overflow-x: auto; margin: 1rem 0 1.5rem;">
+          <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
+            <thead>
+              <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
+                <th style="padding: 0.75rem 1rem; text-align: left;">Hypervisor Category</th>
+                <th style="padding: 0.75rem 1rem; text-align: left;">Where It Installs</th>
+                <th style="padding: 0.75rem 1rem; text-align: left;">Real-World Examples</th>
+                <th style="padding: 0.75rem 1rem; text-align: left;">Primary Industry Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Type 2 (Hosted)</td>
+                <td style="padding: 0.75rem 1rem;">On top of a primary desktop OS (Windows/Mac).</td>
+                <td style="padding: 0.75rem 1rem;">Oracle VirtualBox, Parallels Desktop, VMware Workstation.</td>
+                <td style="padding: 0.75rem 1rem;">Student practice, local testing, cross-platform software development.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; font-weight: 600;">Type 1 (Bare-Metal)</td>
+                <td style="padding: 0.75rem 1rem;">Directly on physical server hardware without any host OS (acts like a mini-OS kernel).</td>
+                <td style="padding: 0.75rem 1rem;">Microsoft Hyper-V, VMware ESXi, Citrix XenServer.</td>
+                <td style="padding: 0.75rem 1rem;">Cloud Hyperscalers (Azure, AWS) slicing enterprise servers into rentable cloud VMs.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
       <!-- SECTION 2 -->
       <section id="what-is-cloud" class="note-section content-section">

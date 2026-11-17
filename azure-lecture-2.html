@@ -171,7 +171,32 @@
 
       <!-- SECTION 1 -->
       <section id="vm-anatomy" class="note-section content-section">
-        <h2><span class="section-number">01.</span> The Anatomy of an Azure Virtual Machine</h2>
+        <h2><span class="section-number">01.</span> Personal Computer vs. Server &amp; Azure VM Anatomy</h2>
+        
+        <h3>Personal Computer vs. Production Server:</h3>
+        <p>
+          What is the fundamental difference between your personal laptop and a production cloud server?
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0 1.25rem;">
+          <div class="step-card" style="margin: 0; border-left: 3px solid #38bdf8;">
+            <div class="step-card-header" style="color: #38bdf8;">💻 Personal Computer (Laptop)</div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              Used for individual daily tasks (browsing, writing code, gaming). It is shut down when you go to sleep, connected to a domestic internet connection with a dynamic private IP, and sits behind a home Wi-Fi router.
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0; border-left: 3px solid #10b981;">
+            <div class="step-card-header" style="color: #10b981;">🌐 Production Server</div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              Its primary job is to actively <strong>serve</strong> something &mdash; such as hosting an Apache website and serving web pages to customers 24/7/365 without stopping. It lives in a secure datacenter with redundant power and a public static IP.
+            </p>
+          </div>
+        </div>
+
+        <h3>Why Do We Call It a "Virtual" Machine?</h3>
+        <p>
+          We call it a <strong>Virtual Machine</strong> because there is no physical tower or box sitting in front of you. The actual physical hardware resides inside Microsoft's enterprise datacenters. You simply choose your desired hardware specifications (vCPU, RAM, OS, Storage) and manage it entirely over the internet.
+        </p>
+
         <p>When you create an Azure VM, Azure provisions a coordinated set of interconnected cloud infrastructure resources:</p>
 
         <!-- Structured Visual Diagram Container -->
