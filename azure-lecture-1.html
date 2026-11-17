@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 1: Cloud Computing & Azure Basics | Microsoft Azure Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent { color: #0078d4; }
+    [data-theme="dark"] .azure-accent { color: #50e6ff; }
+    .console-ui-mockup {
+      background: #181c24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #10141c;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #131720;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(0, 120, 212, 0.18);
+      color: #50e6ff;
+      border-left: 3px solid #0078d4;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #0f1218;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(0, 120, 212, 0.2);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .hierarchy-tree {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="azure.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Azure Modules</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 1 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
+        <li><a href="#virtualization" class="sidebar-link">1. Virtualization &amp; Hypervisors</a></li>
+        <li><a href="#what-is-cloud" class="sidebar-link">2. What is Cloud Computing?</a></li>
+        <li><a href="#service-models" class="sidebar-link">3. IaaS vs PaaS vs SaaS Pyramid</a></li>
+        <li><a href="#capex-vs-opex" class="sidebar-link">4. CapEx vs OpEx Economics</a></li>
+        <li><a href="#global-infrastructure" class="sidebar-link">5. Azure Global Physical Infrastructure</a></li>
+        <li><a href="#hierarchy" class="sidebar-link">6. The 4-Level Azure Hierarchy</a></li>
+        <li><a href="#free-tier" class="sidebar-link">7. Azure Free Tier Account Setup</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">8. Summary Checklist</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 1</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 01</span>
+          <span class="tag">Azure Basics</span>
+          <span class="tag">Virtualization</span>
+          <span class="tag">IaaS PaaS SaaS</span>
+          <span class="tag">Regions &amp; Zones</span>
+          <span class="tag">Resource Hierarchy</span>
+        </div>
+        <h1 class="lecture-main-title">Cloud Computing &amp; Microsoft Azure Basics</h1>
+        <p class="lecture-lead">
+          <strong>What is this module about?</strong> The foundational principles of modern cloud computing and Microsoft Azure: how virtualization transformed physical servers, why companies switched from upfront capital spending (CapEx) to operational spending (OpEx), how Microsoft's global fiber network powers 60+ regions, and how to structure resources using Azure's strict 4-level management hierarchy.<br>
+          <strong>Why is this critical for engineers?</strong> Every enterprise application, cloud native architecture, and modern AI solution relies on understanding shared responsibility, latency-aware region selection, and fault-tolerant multi-zone deployments.
+        </p>
+      </div>
+
+      <!-- TIMEFRAME BADGE -->
+      <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">00:04:32 to 00:51:42</span>
+          </div>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=272" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="virtualization" class="note-section content-section">
+        <h2><span class="section-number">01.</span> What is Virtualization?</h2>
+        <p>
+          Before cloud computing existed, companies had to buy physical server computers. If you wanted to run a website, a database, and an internal email system, you typically purchased three massive physical servers. Most of the time, these computers operated at only 5% to 10% of their actual computing power—meaning 90% of your expensive hardware was sitting idle, wasting electricity, floor space, cooling, and money.
+        </p>
+        <p>
+          <strong>Virtualization</strong> is the foundational technology that solved this dilemma. It enables a single physical computer (the host) to run multiple independent, isolated virtual computers (Guest Virtual Machines) simultaneously.
+        </p>
+
+        <div class="hierarchy-tree">
++-------------------------------------------------------------+
+|                     VIRTUALIZATION ENGINE                   |
+|                                                             |
+|  +--------------------+  +--------------------+  +--------+ |
+|  |   VM 1 (Ubuntu)    |  |   VM 2 (Windows)   |  | VM 3...| |
+|  |  Web Server App    |  |   SQL Database     |  | Email  | |
+|  +--------------------+  +--------------------+  +--------+ |
+|  | Guest OS (Linux)   |  | Guest OS (Windows) |  | GuestOS| |
+|  +--------------------+  +--------------------+  +--------+ |
+|                                                             |
+|             HYPERVISOR (ESXi, Hyper-V, KVM)                 |
+|  +--------------------------------------------------------+ |
+|  |          PHYSICAL HARDWARE (CPU, RAM, DISK, NIC)       | |
++--+--------------------------------------------------------+-+
+        </div>
+
+        <h3>The Magic Behind it: The Hypervisor</h3>
+        <p>A <strong>Hypervisor</strong> (Virtual Machine Monitor) is the specialized software layer that sits between the physical hardware and the virtual machines. It partitions physical CPU, RAM, and disk storage, and distributes them safely among virtual machines without them interfering with one another.</p>
+        <ul>
+          <li><strong>Type 1 (Bare-Metal) Hypervisor:</strong> Runs directly on the physical computer hardware without any underlying operating system (e.g., Microsoft Hyper-V, VMware ESXi, KVM). <em>This is what Azure datacenters run!</em></li>
+          <li><strong>Type 2 (Hosted) Hypervisor:</strong> Runs as an application inside a regular desktop operating system (e.g., Oracle VirtualBox, VMware Workstation). Slower, but great for student desktop labs.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="what-is-cloud" class="note-section content-section">
+        <h2><span class="section-number">02.</span> What is Cloud Computing?</h2>
+        <p>
+          <strong>Cloud computing</strong> is the on-demand delivery of computing services—including servers, storage, databases, networking, software, and analytics—over the internet ("the cloud") with pay-as-you-go pricing.
+        </p>
+
+        <h3>The Real-World Analogy: Electricity Grid &amp; Uber</h3>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">The Electricity Analogy:</h4>
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
+            When you plug your phone charger into the wall socket, you do not build your own coal power station or manage electrical generators. A utility company manages the power plants, and you simply turn on the switch and pay for the exact kilowatt-hours consumed. Cloud computing works identically: Microsoft builds the multi-billion dollar datacenters; you simply consume computing power by the minute.
+          </p>
+        </div>
+
+        <h3>The 5 Core Characteristics of Cloud (NIST Definition):</h3>
+        <ol>
+          <li><strong>On-Demand Self-Service:</strong> You can spin up 100 Linux servers at 2:00 AM using a web portal or CLI command without waiting for human approval.</li>
+          <li><strong>Broad Network Access:</strong> Services are available over the internet from phones, laptops, and servers anywhere worldwide.</li>
+          <li><strong>Resource Pooling:</strong> Physical hardware is dynamically allocated and shared among thousands of customers ("multi-tenancy") with complete cryptographic and kernel-level isolation.</li>
+          <li><strong>Rapid Elasticity:</strong> Systems scale out automatically when millions of Black Friday shoppers visit, and contract instantly when traffic drops.</li>
+          <li><strong>Measured Service:</strong> Every second of CPU usage, byte of network bandwidth, and gigabyte of storage is metered like a utility bill.</li>
+        </ol>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="service-models" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Shared Responsibility Pyramid (IaaS vs PaaS vs SaaS)</h2>
+        <p>
+          Cloud computing is divided into three primary service models. With each step up the pyramid, Microsoft manages more of the underlying complexity, allowing developers to focus purely on business logic.
+        </p>
+
+        <div class="hierarchy-tree">
+=============================================================================
+                  THE SHARED RESPONSIBILITY PYRAMID
+=============================================================================
+
+ LAYER                 YOU MANAGE (Customer)        MICROSOFT MANAGES (Azure)
+-----------------------------------------------------------------------------
+ [SaaS]                Data &amp; User Access           Applications, Runtimes,
+ Software as a Service                              OS, Servers, Networking
+ (e.g. Office 365)
+-----------------------------------------------------------------------------
+ [PaaS]                Application Code, Data,      OS Patching, Web Server,
+ Platform as a Service Database Schemas             Hardware, Scaling, Power
+ (e.g. Azure App Service, Azure SQL)
+-----------------------------------------------------------------------------
+ [IaaS]                Operating System, Runtimes,  Physical Datacenters,
+ Infrastructure as     Network Rules, Updates,      Cables, Physical Racks,
+ a Service (Azure VMs) Backups, App Code            Hypervisors, Air Cooling
+=============================================================================
+        </div>
+
+        <h3>The Pizza Analogy:</h3>
+        <ul>
+          <li><strong>Traditional On-Premises:</strong> You make pizza completely from scratch at home. You buy flour, knead dough, source tomatoes, own the gas oven, and wash the dishes.</li>
+          <li><strong>IaaS (Take &amp; Bake):</strong> You buy a prepared raw pizza from the supermarket. The vendor prepared the crust and cheese; you provide the kitchen oven and dining table.</li>
+          <li><strong>PaaS (Pizza Delivery):</strong> You order a cooked pizza delivered to your doorstep. You provide the dining table and drinks; the restaurant handles the kitchen, baking, and recipe.</li>
+          <li><strong>SaaS (Dining at a Restaurant):</strong> You walk into a pizzeria. You sit down, enjoy the meal, pay the bill, and leave. You don't know or care what brand of oven was used.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="capex-vs-opex" class="note-section content-section">
+        <h2><span class="section-number">04.</span> CapEx vs. OpEx Economics</h2>
+        <p>Why are CFOs and enterprise executives moving workloads to the cloud? It comes down to corporate financial accounting:</p>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Financial Model</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Capital Expenditure (CapEx)</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Operational Expenditure (OpEx)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Payment Timing</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Huge upfront cash payment ($100,000+ for server hardware).</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Zero upfront cost. Monthly pay-as-you-go bill ($50 - $5,000).</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Depreciation</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Hardware depreciates over 3-5 years and becomes obsolete.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Deductible immediately in the current tax year as a business expense.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Business Agility</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Very slow. Ordering new server blades takes 6-12 weeks.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Instant. Spin up or terminate 500 servers in 60 seconds.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="global-infrastructure" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Azure Global Physical Infrastructure</h2>
+        <p>Microsoft operates one of the largest physical computing networks on earth, spanning 60+ regions and hundreds of thousands of miles of subsea and terrestrial fiber optics.</p>
+
+        <div class="hierarchy-tree">
++--------------------------------------------------------------------------+
+|                     AZURE GLOBAL ARCHITECTURE                            |
+|                                                                          |
+|   +------------------------------------------------------------------+   |
+|   | Azure Geography: United States                                   |   |
+|   |                                                                  |   |
+|   |   +----------------------------------------------------------+   |   |
+|   |   | Azure Region: East US (Virginia)                         |   |   |
+|   |   |                                                          |   |   |
+|   |   |   +---------------+  +---------------+  +---------------+|   |   |
+|   |   |   |  Zone 1 (AZ)  |  |  Zone 2 (AZ)  |  |  Zone 3 (AZ)  ||   |   |
+|   |   |   |  Independent  |  |  Independent  |  |  Independent  ||   |   |
+|   |   |   |  Power, Cooling  Power, Cooling  Power, Cooling ||   |   |
+|   |   |   +---------------+  +---------------+  +---------------+|   |   |
+|   |   |       \                     |                     /      |   |   |
+|   |   |        === High-Speed Ultra-Low-Latency Dark Fiber ===   |   |   |
+|   |   +----------------------------------------------------------+   |   |
+|   |                                 ^                                |   |
+|   |             High-Speed Dedicated Azure Backbone Fiber            |   |
+|   |                                 v                                |   |
+|   |   +----------------------------------------------------------+   |   |
+|   |   | Paired Region: West US (California, &gt;300 miles away)     |   |   |
+|   |   +----------------------------------------------------------+   |   |
+|   +------------------------------------------------------------------+   |
++--------------------------------------------------------------------------+
+        </div>
+
+        <h3>Key Infrastructure Definitions:</h3>
+        <ul>
+          <li><strong>Datacenter:</strong> A single physical building packed with server racks, backup diesel generators, cooling towers, and biometric security gates.</li>
+          <li><strong>Availability Zone (AZ):</strong> One or more physically separated datacenters within a single region. Each AZ has independent power, independent chilling systems, and independent networking. A flood or electrical fire in Zone 1 does <em>not</em> impact Zone 2 or Zone 3!</li>
+          <li><strong>Azure Region:</strong> A geographical area containing multiple Availability Zones connected via a private, ultra-low latency (&lt;2ms) fiber optic network (e.g., <code>East US</code>, <code>Central India</code>, <code>North Europe</code>).</li>
+          <li><strong>Paired Regions:</strong> Microsoft connects every Azure region to another region within the same geography at least 300 miles away (e.g., <code>East US</code> is paired with <code>West US</code>; <code>Central India</code> is paired with <code>South India</code>). If an entire region experiences a catastrophe, services fail over cleanly to the paired region.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="hierarchy" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The 4-Level Azure Hierarchy</h2>
+        <p>To keep millions of cloud assets organized, secure, and auditable, Azure enforces a strict 4-level nesting tree:</p>
+
+        <div class="hierarchy-tree">
+(Level 1) [ Management Groups ]  --> Governs policy &amp; compliance across subscriptions
+                 |
+(Level 2) [ Subscriptions ]        --> Billing boundary &amp; quota limit container
+                 |
+(Level 3) [ Resource Groups ]      --> Logical grouping &amp; lifecycle container
+                 |
+(Level 4) [ Resources ]            --> Individual services (VM, Blob, SQL, VNet)
+        </div>
+
+        <div class="callout-danger">
+          <strong>⚠️ The Golden Resource Group Rule:</strong>
+          <p style="margin: 0.5rem 0 0 0;">
+            Every single Azure resource must live inside exactly one Resource Group. If you delete the Resource Group, <strong>all resources inside it are deleted immediately</strong>. For students and engineers experimenting with cloud tools, creating a dedicated Resource Group (e.g. <code>rg-student-demo</code>) and deleting it after your lab session is the ultimate secret to avoiding surprise cloud bills!
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="free-tier" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Setting Up Your Azure Free Tier Account</h2>
+        <p>Microsoft offers a generous free tier program for students and developers:</p>
+        <ol>
+          <li>Navigate to <a href="https://azure.microsoft.com/free" target="_blank" rel="noopener">azure.microsoft.com/free</a>.</li>
+          <li>Sign in using a personal or corporate Microsoft account.</li>
+          <li>Verify your identity with a phone number and debit/credit card. (Microsoft charges a temporary $1 authorization hold that is immediately refunded; you will <strong>never</strong> be auto-charged unless you manually upgrade to Pay-As-You-Go).</li>
+        </ol>
+
+        <div class="callout-tip">
+          <strong>🎁 What You Receive in the Azure Free Tier:</strong>
+          <ul style="margin: 0.5rem 0 0 0;">
+            <li><strong>$200 USD Credit</strong> (approx. ₹15,800 INR) to use freely within your first 30 days.</li>
+            <li><strong>12 Months of Popular Free Services</strong>, including 750 hours of Linux B1s VM, 750 hours of Windows B1s VM, and 5 GB of LRS Blob Storage.</li>
+            <li><strong>55+ Always-Free Services</strong>, including Azure App Service (F1 free tier), Azure Functions (1,000,000 free executions/month), and Microsoft Entra ID.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SUMMARY CHECKLIST -->
+      <section id="summary-checklist" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Summary Checklist</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk1" style="margin-top: 0.25rem;">
+              <label for="chk1">I understand how <strong>virtualization</strong> and <strong>hypervisors</strong> allow multiple isolated VMs to run on one physical server.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk2" style="margin-top: 0.25rem;">
+              <label for="chk2">I can clearly explain the differences between <strong>IaaS</strong>, <strong>PaaS</strong>, and <strong>SaaS</strong> using the pizza and car analogies.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk3" style="margin-top: 0.25rem;">
+              <label for="chk3">I know why <strong>OpEx</strong> (pay-as-you-go) is preferred over <strong>CapEx</strong> (upfront hardware purchases) for cloud agility.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk4" style="margin-top: 0.25rem;">
+              <label for="chk4">I know the difference between an Azure <strong>Region</strong>, <strong>Availability Zone</strong>, and <strong>Paired Region</strong>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk5" style="margin-top: 0.25rem;">
+              <label for="chk5">I understand the 4 levels of Azure hierarchy: <strong>Management Groups &rarr; Subscriptions &rarr; Resource Groups &rarr; Resources</strong>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk6" style="margin-top: 0.25rem;">
+              <label for="chk6">I remember that deleting a <strong>Resource Group</strong> safely wipes out all associated child resources, preventing unexpected cloud costs.</label>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="azure.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Back to Azure Modules
+          </a>
+          <a href="azure-lecture-2.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Module 02 (Virtual Machines) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Microsoft Azure Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure-lecture-1.html">Module 01: Cloud &amp; Azure Basics</a></li>
+              <li><a href="azure-lecture-2.html">Module 02: Virtual Machines</a></li>
+              <li><a href="azure-lecture-3.html">Module 03: Docker Basics</a></li>
+              <li><a href="azure-lecture-4.html">Module 04: Container Instances (ACI)</a></li>
+              <li><a href="azure-lecture-5.html">Module 05: Container Apps (ACA)</a></li>
+              <li><a href="azure-lecture-6.html">Module 06: Blob Storage</a></li>
+              <li><a href="azure-lecture-7.html">Module 07: IAM &amp; RBAC</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Navigation</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Azure Module Hub</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="ai-roadmap.html">AI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

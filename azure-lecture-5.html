@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 5: Azure Container Apps (ACA) | Microsoft Azure Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent { color: #0078d4; }
+    [data-theme="dark"] .azure-accent { color: #50e6ff; }
+    .console-ui-mockup {
+      background: #181c24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #10141c;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #131720;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(0, 120, 212, 0.18);
+      color: #50e6ff;
+      border-left: 3px solid #0078d4;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #0f1218;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(0, 120, 212, 0.2);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .hierarchy-tree {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="azure.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Azure Modules</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 5 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
+        <li><a href="#what-is-aca" class="sidebar-link">1. What is Azure Container Apps?</a></li>
+        <li><a href="#food-truck-analogy" class="sidebar-link">2. The Food Truck Festival Analogy</a></li>
+        <li><a href="#core-architecture" class="sidebar-link">3. Core Building Blocks &amp; Ingress</a></li>
+        <li><a href="#revisions-traffic" class="sidebar-link">4. Revisions &amp; Traffic Splitting</a></li>
+        <li><a href="#scale-to-zero" class="sidebar-link">5. KEDA Autoscaling (Scale to Zero)</a></li>
+        <li><a href="#cli-walkthrough" class="sidebar-link">6. Azure CLI Deployment Walkthrough</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">7. Summary Checklist</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 5</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 05</span>
+          <span class="tag">Azure ACA</span>
+          <span class="tag">Serverless Microservices</span>
+          <span class="tag">KEDA Autoscaling</span>
+          <span class="tag">Envoy Ingress</span>
+          <span class="tag">Zero to N Replicas</span>
+        </div>
+        <h1 class="lecture-main-title">Azure Container Apps (ACA)</h1>
+        <p class="lecture-lead">
+          <strong>What is this module about?</strong> The modern sweet spot for containerized microservices and web APIs: running containers serverlessly on top of Kubernetes, Envoy proxy, KEDA, and Dapr without managing clusters, master nodes, or complex YAML manifests. Understanding Environments, Revisions, Canary traffic splitting, and scaling to zero instances to eliminate idle bills.<br>
+          <strong>Why is this critical for engineers?</strong> Modern cloud applications require HTTP ingress, autoscaling on traffic spikes, and versioning. ACA gives you enterprise Kubernetes power with the operational simplicity of serverless.
+        </p>
+      </div>
+
+      <!-- TIMEFRAME BADGE -->
+      <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:29:35 to 04:38:00</span>
+          </div>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=16175" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="what-is-aca" class="note-section content-section">
+        <h2><span class="section-number">01.</span> What is Azure Container Apps (ACA)?</h2>
+        <p>
+          In modern software engineering, web applications are composed of multiple independent microservices: an authentication service, an order processing API, a frontend web portal, and asynchronous message queue workers.
+        </p>
+        <p>
+          While <strong>ACI</strong> is ideal for executing a single isolated container task, it lacks built-in HTTP ingress routing, autoscaling based on incoming request spikes, and versioning. Conversely, <strong>Azure Kubernetes Service (AKS)</strong> gives you ultimate power, but requires you to manage master control planes, node pools, networking overlays, Helm charts, and complex manifests.
+        </p>
+        <p>
+          <strong>Azure Container Apps (ACA)</strong> is the "Goldilocks" solution. It is a <strong>serverless container platform built on Kubernetes (AKS), Envoy proxy, KEDA (Kubernetes Event-driven Autoscaling), and Dapr (Distributed Application Runtime)</strong>—without exposing any Kubernetes cluster management complexity!
+        </p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="food-truck-analogy" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Food Truck Festival Analogy</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">The Microservice Festival:</h4>
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
+            - <strong>Virtual Machine (VM):</strong> You buy a permanent restaurant building. You pay mortgage, electricity, and maintenance 24/7 even if no customers show up.
+            <br><br>
+            - <strong>ACI (Container Instance):</strong> You rent a single hot dog cart for an afternoon. When the job ends, you pack up. Very fast, but it cannot expand to a full festival.
+            <br><br>
+            - <strong>ACA (Container Apps):</strong> A modern, managed <strong>Food Truck Festival</strong>. The festival venue provides the fenced security perimeter, clean water, and public gate (Container Apps Environment). You park your specialized food trucks (Burger Truck, Taco Truck, Ice Cream Truck). If a huge hungry crowd rushes the Taco Truck at 8:00 PM, the festival instantly allows two more Taco Trucks to pull up and serve the queue. When the crowd disperses at midnight, all trucks leave and your rent drops to <strong>$0</strong>!
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="core-architecture" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Core Building Blocks &amp; Ingress</h2>
+
+        <div class="hierarchy-tree">
++--------------------------------------------------------------------------+
+|                  CONTAINER APPS ENVIRONMENT (VNet Boundary)              |
+|                                                                          |
+|       [ Public HTTPS Traffic from Internet ]                             |
+|                          |                                               |
+|               +----------------------+                                   |
+|               | Built-in Envoy Ingress| (SSL Termination &amp; Routing)      |
+|               +----------+-----------+                                   |
+|                          |                                               |
+|         +----------------+----------------+                              |
+|         | (80% Traffic)                   | (20% Traffic)                |
+|         v                                 v                              |
+|  +--------------------+             +--------------------+               |
+|  | Revision 1 (v1.0)  |             | Revision 2 (v2.0)  |               |
+|  | [Pod 1]  [Pod 2]   |             |      [Pod 1]       |               |
+|  +--------------------+             +--------------------+               |
+|    Frontend Microservice              Canary Test Microservice           |
+|                                                                          |
+|         | (Internal Service-to-Service Calls)                            |
+|         v                                                                |
+|  +--------------------+             +--------------------+               |
+|  | Backend Order API  |             |  Event Processor   |               |
+|  | (Internal Ingress) |             |  (KEDA Scaler)     |               |
+|  +--------------------+             +--------------------+               |
++--------------------------------------------------------------------------+
+        </div>
+
+        <h3>Key Concepts:</h3>
+        <ul>
+          <li><strong>Container Apps Environment:</strong> The secure network wrapper. All apps inside the same environment share the same Virtual Network (VNet) and send telemetry to the same Log Analytics workspace.</li>
+          <li><strong>External Ingress:</strong> Gives your container app a public HTTPS URL with automatic TLS/SSL certificates managed by Microsoft for free.</li>
+          <li><strong>Internal Ingress:</strong> Restricts access so only other containers within the same ACA Environment can communicate with the service (perfect for databases and internal microservices).</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="revisions-traffic" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Revisions &amp; Traffic Splitting (Canary Deployments)</h2>
+        <p>Every time you update container configuration or deploy a new Docker image tag, Azure creates an immutable <strong>Revision</strong> (e.g. <code>app--v1</code>, <code>app--v2</code>).</p>
+        
+        <div class="callout-tip">
+          <strong>🚀 Zero-Downtime Canary Rollouts:</strong>
+          You can split live web traffic between revisions with zero external load balancers. Route <strong>90% of user traffic to v1.0</strong> and <strong>10% to v2.0</strong>. If the new version throws errors, flip 100% of traffic back to v1.0 in one second!
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="scale-to-zero" class="note-section content-section">
+        <h2><span class="section-number">05.</span> KEDA Autoscaling (Scale to Zero)</h2>
+        <p>ACA uses <strong>KEDA</strong> (Kubernetes Event-driven Autoscaling) under the hood:</p>
+        <ul>
+          <li><strong>Scale to 0 Replicas ($0 Compute Cost):</strong> If your internal company app receives zero traffic between 10:00 PM and 6:00 AM, ACA shuts down all running container replicas. You pay <strong>$0 for compute</strong> during idle hours!</li>
+          <li><strong>Scale Out on Demand:</strong> When an HTTP request hits the Envoy ingress in the morning, ACA wakes up a container replica in milliseconds and routes the request.</li>
+          <li><strong>Event-Driven Scalers:</strong> Scale based on HTTP concurrent requests, CPU/Memory percentages, or queue depths (Azure Service Bus, RabbitMQ, Kafka).</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="cli-walkthrough" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Azure CLI Deployment Walkthrough</h2>
+
+        <div class="hierarchy-tree">
+# 1. Install Container Apps Extension &amp; Register Providers
+az extension add --name containerapp --upgrade
+az provider register --namespace Microsoft.App
+
+# 2. Create the ACA Environment
+az containerapp env create \
+  --name my-aca-env \
+  --resource-group my-rg \
+  --location eastus
+
+# 3. Deploy a Public Container App
+az containerapp create \
+  --name my-web-app \
+  --resource-group my-rg \
+  --environment my-aca-env \
+  --image mcr.microsoft.com/azuredocs/aci-helloworld:latest \
+  --target-port 80 \
+  --ingress external \
+  --query properties.configuration.ingress.fqdn
+
+# 4. Configure Traffic Splitting (80% to v1, 20% to v2)
+az containerapp ingress traffic set \
+  --name my-web-app \
+  --resource-group my-rg \
+  --revision-weight my-web-app--v1=80 my-web-app--v2=20
+        </div>
+      </section>
+
+      <!-- SUMMARY CHECKLIST -->
+      <section id="summary-checklist" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Summary Checklist</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m5chk1" style="margin-top: 0.25rem;">
+              <label for="m5chk1">I understand why ACA is the ideal middle ground between ACI (single tasks) and AKS (full cluster management).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m5chk2" style="margin-top: 0.25rem;">
+              <label for="m5chk2">I know that ACA is built on top of Kubernetes, Envoy, KEDA, and Dapr.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m5chk3" style="margin-top: 0.25rem;">
+              <label for="m5chk3">I understand how <strong>Revisions</strong> allow zero-downtime Canary and Blue-Green traffic splitting.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m5chk4" style="margin-top: 0.25rem;">
+              <label for="m5chk4">I understand the difference between <strong>External Ingress</strong> (public web) and <strong>Internal Ingress</strong> (private microservices).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m5chk5" style="margin-top: 0.25rem;">
+              <label for="m5chk5">I know that KEDA allows ACA to scale all the way to <strong>0 replicas</strong>, eliminating idle compute costs.</label>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="azure-lecture-4.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Module 04 (Container Instances)
+          </a>
+          <a href="azure-lecture-6.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Module 06 (Azure Blob Storage) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Microsoft Azure Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure-lecture-1.html">Module 01: Cloud &amp; Azure Basics</a></li>
+              <li><a href="azure-lecture-2.html">Module 02: Virtual Machines</a></li>
+              <li><a href="azure-lecture-3.html">Module 03: Docker Basics</a></li>
+              <li><a href="azure-lecture-4.html">Module 04: Container Instances (ACI)</a></li>
+              <li><a href="azure-lecture-5.html">Module 05: Container Apps (ACA)</a></li>
+              <li><a href="azure-lecture-6.html">Module 06: Blob Storage</a></li>
+              <li><a href="azure-lecture-7.html">Module 07: IAM &amp; RBAC</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Navigation</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Azure Module Hub</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="ai-roadmap.html">AI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

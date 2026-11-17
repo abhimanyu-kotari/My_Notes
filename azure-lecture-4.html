@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 4: Azure Container Instances (ACI) | Microsoft Azure Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent { color: #0078d4; }
+    [data-theme="dark"] .azure-accent { color: #50e6ff; }
+    .console-ui-mockup {
+      background: #181c24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #10141c;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #131720;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(0, 120, 212, 0.18);
+      color: #50e6ff;
+      border-left: 3px solid #0078d4;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #0f1218;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(0, 120, 212, 0.2);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .hierarchy-tree {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="azure.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Azure Modules</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 4 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
+        <li><a href="#what-is-aci" class="sidebar-link">1. What is Azure Container Instances?</a></li>
+        <li><a href="#decision-matrix" class="sidebar-link">2. ACI vs. ACA vs. AKS Decision Matrix</a></li>
+        <li><a href="#container-groups" class="sidebar-link">3. Container Groups Architecture</a></li>
+        <li><a href="#restart-policies" class="sidebar-link">4. Container Restart Policies</a></li>
+        <li><a href="#cli-deployment" class="sidebar-link">5. Deploying ACI via Azure CLI</a></li>
+        <li><a href="#per-second-billing" class="sidebar-link">6. Per-Second Serverless Economics</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">7. Summary Checklist</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 4</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 04</span>
+          <span class="tag">Azure ACI</span>
+          <span class="tag">Serverless Containers</span>
+          <span class="tag">Fast Spin-Up</span>
+          <span class="tag">Batch Processing</span>
+          <span class="tag">Per-Second Billing</span>
+        </div>
+        <h1 class="lecture-main-title">Azure Container Instances (ACI)</h1>
+        <p class="lecture-lead">
+          <strong>What is this module about?</strong> The fastest and simplest way to run a Docker container in the cloud without managing any virtual machines, orchestrators, or clusters. Understanding Container Groups (Pods), restart policies, deploying via Azure CLI with DNS labels, and leveraging per-second serverless economics for batch jobs.<br>
+          <strong>Why is this critical for engineers?</strong> Spinning up a full Kubernetes cluster for a 3-minute video-rendering job is wasteful and slow. ACI gives you instant, frictionless container execution that terminates the moment your job finishes.
+        </p>
+      </div>
+
+      <!-- TIMEFRAME BADGE -->
+      <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:23:35 to 04:29:29</span>
+          </div>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=15815" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="what-is-aci" class="note-section content-section">
+        <h2><span class="section-number">01.</span> What is Azure Container Instances (ACI)?</h2>
+        <p>
+          Before ACI, if you had a Docker container you wanted to test or run in the cloud, you had to:
+        </p>
+        <ol>
+          <li>Provision an Azure Virtual Machine.</li>
+          <li>SSH into the VM and install the Docker daemon engine.</li>
+          <li>Pull your image and execute <code>docker run</code>.</li>
+          <li>Remember to deallocate the VM so you don't get billed for idle compute.</li>
+        </ol>
+        <p>
+          <strong>Azure Container Instances (ACI)</strong> completely revolutionizes this workflow. It is a <strong>pure serverless container service</strong>. You pass your Docker image URL, specify how many vCPUs and gigabytes of memory you require, and Azure spins up and executes your container within 3 to 5 seconds! There are zero virtual machines to manage, zero operating system patches to install, and zero orchestration clusters to configure.
+        </p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="decision-matrix" class="note-section content-section">
+        <h2><span class="section-number">02.</span> ACI vs. ACA vs. AKS Decision Matrix</h2>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Service</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Best Use Cases</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Orchestration &amp; Autoscaling</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Management Overhead</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">ACI</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Short-lived batch jobs, nightly data pipelines, build runners, quick prototypes.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">None. Runs standalone isolated container tasks.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Zero (Fully Serverless)</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">ACA</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Microservices, web APIs, event-driven queue processors, auto-scale to zero.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Built-in KEDA autoscaling, revisions, traffic splitting, Envoy ingress.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Low (Serverless Kubernetes)</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">AKS</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Complex enterprise ecosystems, service meshes, granular networking controls.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Full native Kubernetes API (Deployments, StatefulSets, Ingress Controllers).</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 600;">High (Node pools, Kube upgrades)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="container-groups" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Container Groups Architecture</h2>
+        <p>
+          The top-level resource in ACI is a <strong>Container Group</strong>. A Container Group is a collection of containers that are scheduled on the same host machine, sharing the exact same lifecycle, local network, and storage volumes.
+        </p>
+
+        <div class="hierarchy-tree">
++--------------------------------------------------------------------------+
+|                  AZURE CONTAINER GROUP (e.g. 'analytics-group')          |
+|                                                                          |
+|   Shared IP Address: 20.198.44.12                                        |
+|   Shared Localhost Network &amp; Shared Storage Volume                      |
+|                                                                          |
+|   +-----------------------------+       +-----------------------------+  |
+|   | Primary Container           |       | Sidecar Container           |  |
+|   | (Python Data Processor)     |       | (Log Shipper / Monitoring)  |  |
+|   | Port: 8080                  | &lt;---&gt; | Port: 9090                  |  |
+|   | 1.0 vCPU, 2.0 GB RAM        |       | 0.5 vCPU, 0.5 GB RAM        |  |
+|   +-----------------------------+       +-----------------------------+  |
+|                                                                          |
++--------------------------------------------------------------------------+
+        </div>
+
+        <div class="callout-tip">
+          <strong>💡 Kubernetes Analogy:</strong> A Container Group in ACI is the exact architectural equivalent of a <strong>Pod</strong> in Kubernetes.
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="restart-policies" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Container Restart Policies</h2>
+        <p>When launching an ACI container, you must configure its restart policy according to its workload type:</p>
+        <ul>
+          <li><strong><code>Always</code> (Default):</strong> If the container process stops or crashes, ACI restarts it immediately. Ideal for continuous web servers and long-running APIs.</li>
+          <li><strong><code>Never</code>:</strong> The container runs its task once. When the script exits (Exit Code 0), the container stops and is never restarted. Ideal for one-time database schema migrations or batch reports.</li>
+          <li><strong><code>OnFailure</code>:</strong> The container runs once. If it crashes with an error (non-zero exit code), ACI retries execution. If it succeeds (Exit Code 0), it shuts down peacefully. Ideal for nightly ETL data extract scripts.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="cli-deployment" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Deploying ACI via Azure CLI</h2>
+        
+        <div class="hierarchy-tree">
+# Step 1: Create a Resource Group
+az group create --name my-rg --location eastus
+
+# Step 2: Deploy a Public Web Container with DNS Name Label
+az container create \
+  --resource-group my-rg \
+  --name my-aci-demo \
+  --image mcr.microsoft.com/azuredocs/aci-helloworld:latest \
+  --dns-name-label myuniqueappak2026 \
+  --ports 80 \
+  --cpu 1 \
+  --memory 1.5 \
+  --restart-policy Always
+
+# Step 3: Check Container State &amp; Public FQDN URL
+az container show \
+  --resource-group my-rg \
+  --name my-aci-demo \
+  --query "{FQDN:ipAddress.fqdn,State:instanceView.state}" \
+  --output table
+
+# Step 4: Stream Real-Time Logs
+az container logs --resource-group my-rg --name my-aci-demo
+
+# Step 5: Delete Container when finished
+az container delete --resource-group my-rg --name my-aci-demo --yes
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="per-second-billing" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Per-Second Serverless Economics</h2>
+        <p>Why do data engineering teams love ACI? Because of per-second granularity:</p>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">The Batch Job Calculation:</h4>
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
+            Imagine a machine learning image-processing container that runs for <strong>4 minutes and 15 seconds</strong> (255 seconds) every night at midnight.
+            <br><br>
+            - With a standard <strong>Virtual Machine</strong>: You pay for the entire hour (or keep it running 24/7 if you forget to stop it).
+            <br>
+            - With <strong>Azure Container Instances (ACI)</strong>: You are billed strictly for <strong>255 seconds</strong> of allocated vCPU and RAM. The total nightly compute cost is less than <strong>$0.003 USD</strong>!
+          </p>
+        </div>
+      </section>
+
+      <!-- SUMMARY CHECKLIST -->
+      <section id="summary-checklist" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Summary Checklist</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m4chk1" style="margin-top: 0.25rem;">
+              <label for="m4chk1">I know that ACI runs containers serverlessly in seconds without managing VMs or Kubernetes clusters.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m4chk2" style="margin-top: 0.25rem;">
+              <label for="m4chk2">I understand the difference between <strong>ACI</strong> (batch/standalone), <strong>ACA</strong> (microservices), and <strong>AKS</strong> (full K8s).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m4chk3" style="margin-top: 0.25rem;">
+              <label for="m4chk3">I understand what an ACI <strong>Container Group</strong> is and how it behaves like a Kubernetes Pod.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m4chk4" style="margin-top: 0.25rem;">
+              <label for="m4chk4">I can choose the right restart policy: <code>Always</code>, <code>OnFailure</code>, or <code>Never</code>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m4chk5" style="margin-top: 0.25rem;">
+              <label for="m4chk5">I can deploy an ACI container with a custom DNS label using <code>az container create</code>.</label>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="azure-lecture-3.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Module 03 (Docker Basics)
+          </a>
+          <a href="azure-lecture-5.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Module 05 (Container Apps - ACA) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Microsoft Azure Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure-lecture-1.html">Module 01: Cloud &amp; Azure Basics</a></li>
+              <li><a href="azure-lecture-2.html">Module 02: Virtual Machines</a></li>
+              <li><a href="azure-lecture-3.html">Module 03: Docker Basics</a></li>
+              <li><a href="azure-lecture-4.html">Module 04: Container Instances (ACI)</a></li>
+              <li><a href="azure-lecture-5.html">Module 05: Container Apps (ACA)</a></li>
+              <li><a href="azure-lecture-6.html">Module 06: Blob Storage</a></li>
+              <li><a href="azure-lecture-7.html">Module 07: IAM &amp; RBAC</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Navigation</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Azure Module Hub</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="ai-roadmap.html">AI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

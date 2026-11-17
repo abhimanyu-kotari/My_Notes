@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft Azure Zero to Hero Modules | Tech Notes</title>
+  <meta name="description" content="Master Microsoft Azure from scratch: Cloud fundamentals, Virtual Machines, Docker & Containers, ACI, Azure Container Apps, Blob Storage, and Entra ID IAM & RBAC.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent-color { color: #0078d4; }
+    [data-theme="dark"] .azure-accent-color { color: #50e6ff; }
+    .azure-icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.25), rgba(80, 230, 255, 0.2));
+      border: 1.5px solid rgba(0, 120, 212, 0.5);
+      box-shadow: 0 0 20px rgba(0, 120, 212, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .timeframe-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    [data-theme="dark"] .timeframe-tag {
+      background: rgba(0, 120, 212, 0.22);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .module-subcard-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+    }
+    .module-subcard-item:hover {
+      border-color: rgba(0, 120, 212, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    .module-subcard-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .module-subcard-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin: 0;
+    }
+    .module-subcards-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+      margin: 1.25rem 0;
+      background: rgba(0, 0, 0, 0.08);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    [data-theme="dark"] .module-subcards-wrapper {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="month-8.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Month 8</a>
+        <a href="ai-roadmap.html" class="nav-btn-action"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg><span>AI Roadmap</span></a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="hero" style="padding: 3rem 1.5rem 2.5rem;">
+    <div class="hero-badge">
+      <a href="index.html" style="color: inherit; text-decoration: none;">Technologies</a> &nbsp;/&nbsp; <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &nbsp;/&nbsp; Microsoft Azure
+    </div>
+    <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0.5rem;">Microsoft Azure (Zero to Hero)</h1>
+    <p class="hero-subtitle" style="margin-bottom: 1.25rem;">
+      Comprehensive, deeply structured, and beginner-friendly reference guides for Microsoft Azure: Cloud Architecture, Virtual Machines, Docker &amp; Containers, Azure Container Instances (ACI), Azure Container Apps (ACA), Blob Storage, and Entra ID IAM &amp; RBAC.
+    </p>
+
+    <!-- Source References Strip -->
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+      <a href="https://youtu.be/M1erI5a2wxQ" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;" title="Microsoft AZURE in ONE VIDEO by MPrashant">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#ef4444" style="flex-shrink: 0;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Source Video: Azure in One Video (MPrashant) ↗
+      </a>
+      <a href="https://github.com/abhimanyu-kotari/Azure-zero-to-hero/tree/main" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink: 0;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub Masterclass Repository ↗
+      </a>
+    </div>
+
+    <div class="stats-strip">
+      <span class="stat-badge">
+        <span>☁️</span> 7 Detailed Master Modules
+      </span>
+      <span class="stat-badge">
+        <span>🧩</span> 28 Interactive Sub-Cards
+      </span>
+      <span class="stat-badge">
+        <span>🛡️</span> Zero-Risk Cost Management
+      </span>
+      <span class="stat-badge">
+        <span>⚡</span> Copyable Azure CLI &amp; Portal Paths
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Modules Grid -->
+  <main class="main-container">
+    
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+      <h2 style="margin: 0; border: none; font-size: 1.4rem;">Microsoft Azure Curriculum Modules</h2>
+      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 600;">7 Modules Available</span>
+    </div>
+
+    <div class="modules-container">
+
+      <!-- ======================================================== -->
+      <!-- MODULE 1: CLOUD COMPUTING & AZURE BASICS -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 00:04:32 to 00:51:42</span>
+            <span class="card-lecture-no">MODULE 01</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-1.html" style="color: inherit; text-decoration: none;">Cloud Computing &amp; Microsoft Azure Basics</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Foundations of modern cloud engineering: How virtualization and hypervisors transformed computing, the Uber mental model, IaaS vs. PaaS vs. SaaS shared responsibility pyramid, CapEx vs. OpEx accounting, Azure global physical infrastructure, the 4-level management hierarchy, and unlocking the $200 free tier.
+        </p>
+
+        <!-- Sub-cards inside Module 1 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>💻</span> Virtualization &amp; Hypervisors</div>
+            <p class="module-subcard-desc">Type 1 bare-metal (Hyper-V) vs Type 2 hosted hypervisors; maximizing hardware utilization.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🍕</span> IaaS vs PaaS vs SaaS</div>
+            <p class="module-subcard-desc">The Pizza Analogy &amp; shared responsibility: Who manages what from hardware to application data.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🌍</span> Global Infrastructure</div>
+            <p class="module-subcard-desc">Datacenters, Availability Zones (AZs), 60+ Azure Regions, and 300-mile Paired Regions.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🏗️</span> 4-Level Azure Hierarchy</div>
+            <p class="module-subcard-desc">Management Groups &rarr; Subscriptions &rarr; Resource Groups &rarr; Resources and teardown safety.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Virtualization</span>
+          <span class="tag">Hyper-V</span>
+          <span class="tag">Shared Responsibility</span>
+          <span class="tag">CapEx vs OpEx</span>
+          <span class="tag">Regions &amp; AZs</span>
+          <span class="tag">Resource Groups</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 22 min read</span>
+          </div>
+          <a href="azure-lecture-1.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 2: COMPUTE (VIRTUAL MACHINES) -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 00:51:42 to 01:44:43</span>
+            <span class="card-lecture-no">MODULE 02</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-2.html" style="color: inherit; text-decoration: none;">Compute (Azure Virtual Machines)</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          In-depth guide to Azure VMs: VM sizing series (B-series burstable, D-series general, F-series compute, E-series memory, N-series GPU), managed disks, the ephemeral temporary disk data wipe trap, Network Security Group (NSG) priority firewall rules, SSH key pairs, Nginx deployment, and the Stopped vs Deallocated billing secret.
+        </p>
+
+        <!-- Sub-cards inside Module 2 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>⚙️</span> VM Sizing &amp; Families</div>
+            <p class="module-subcard-desc">B-series credit burst vs D, F, E, and N (GPU) enterprise compute hardware profiles.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>⚠️</span> The Temp Disk Wipe Trap</div>
+            <p class="module-subcard-desc">OS and Data disks persist, but the Temporary Disk (D: / /mnt) wipes all data upon deallocation!</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🛡️</span> NSG Rule Priorities</div>
+            <p class="module-subcard-desc">Priority numbers 100-4096 (lower numbers win); default deny all inbound rule.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>💰</span> Stopped vs. Deallocated</div>
+            <p class="module-subcard-desc">Operating system shutdown keeps billing compute! Run <code>az vm deallocate</code> to reach $0/hr.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Azure VMs</span>
+          <span class="tag">VM Sizing</span>
+          <span class="tag">Managed Disks</span>
+          <span class="tag">NSGs &amp; Firewalls</span>
+          <span class="tag">SSH Key Pairs</span>
+          <span class="tag">Nginx Web Server</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 26 min read</span>
+          </div>
+          <a href="azure-lecture-2.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 3: DOCKER & CONTAINERIZATION BASICS -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 14h6m-6-3h6m-6-3h6m8 6h2m-2-3h2m-2-3h2M2 20h20a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1Z"></path>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 03:49:20 to 03:56:53</span>
+            <span class="card-lecture-no">MODULE 03</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-3.html" style="color: inherit; text-decoration: none;">Docker &amp; Containerization Basics</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Solving the "It works on my machine!" crisis: Comparing heavy virtual machines to lightweight containers, the 1956 shipping container analogy, Dockerfile structure, Docker images, running live containers, port forwarding bridges (<code>-p 8080:80</code>), and the essential Docker CLI cheat sheet.
+        </p>
+
+        <!-- Sub-cards inside Module 3 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>📦</span> The Shipping Analogy</div>
+            <p class="module-subcard-desc">Standardized intermodal freight: packaging code, runtime, and libs into universal containers.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>⚡</span> VMs vs. Containers</div>
+            <p class="module-subcard-desc">Why containers boot in milliseconds: sharing the host OS kernel instead of virtual motherboards.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>📄</span> Dockerfile Blueprint</div>
+            <p class="module-subcard-desc">Deconstructing FROM, WORKDIR, COPY, RUN, EXPOSE, and CMD for production Python APIs.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🔌</span> Port Forwarding Mechanics</div>
+            <p class="module-subcard-desc">Bridging external web browser traffic on host ports to internal sandboxed container ports.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Docker</span>
+          <span class="tag">Containerization</span>
+          <span class="tag">Dockerfile</span>
+          <span class="tag">Docker Images</span>
+          <span class="tag">Port Forwarding</span>
+          <span class="tag">Docker CLI</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 18 min read</span>
+          </div>
+          <a href="azure-lecture-3.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 4: AZURE CONTAINER INSTANCES (ACI) -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 04:23:35 to 04:29:29</span>
+            <span class="card-lecture-no">MODULE 04</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-4.html" style="color: inherit; text-decoration: none;">Azure Container Instances (ACI)</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Pure serverless container execution: Running isolated Docker containers in seconds without creating virtual machines or managing Kubernetes. Decision matrix between ACI, ACA, and AKS, Container Groups (Pods), restart policies (Always, OnFailure, Never), Azure CLI deployment, and per-second billing economics.
+        </p>
+
+        <!-- Sub-cards inside Module 4 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🚀</span> Zero VM Serverless</div>
+            <p class="module-subcard-desc">No cluster maintenance, no OS patches; container launches in under 5 seconds.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>⚖️</span> ACI vs ACA vs AKS</div>
+            <p class="module-subcard-desc">The decision framework: When to use standalone ACI vs microservice ACA vs enterprise AKS.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🔄</span> Restart Policies</div>
+            <p class="module-subcard-desc"><code>Always</code> for web APIs, <code>Never</code> for one-off tasks, and <code>OnFailure</code> for nightly ETL batches.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>⏱️</span> Per-Second Billing</div>
+            <p class="module-subcard-desc">Pay strictly for the exact seconds your container executes; $0 cost when terminated.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Azure ACI</span>
+          <span class="tag">Serverless</span>
+          <span class="tag">Container Groups</span>
+          <span class="tag">Batch Processing</span>
+          <span class="tag">Per-Second Billing</span>
+          <span class="tag">az container</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 16 min read</span>
+          </div>
+          <a href="azure-lecture-4.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 5: AZURE CONTAINER APPS (ACA) -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 04:29:35 to 04:38:00</span>
+            <span class="card-lecture-no">MODULE 05</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-5.html" style="color: inherit; text-decoration: none;">Azure Container Apps (ACA)</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Serverless microservices on Kubernetes without the headaches: Built-in Envoy proxy, KEDA autoscaling, Dapr integration, Container Apps Environments, External HTTPS vs Internal Ingress, Revisions for zero-downtime Canary traffic splitting, and scaling to 0 replicas to eliminate idle hosting bills.
+        </p>
+
+        <!-- Sub-cards inside Module 5 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🚚</span> Food Truck Festival Model</div>
+            <p class="module-subcard-desc">Managed festival park environment: individual trucks scale up or pack up as lines grow.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🌐</span> Built-In Envoy Ingress</div>
+            <p class="module-subcard-desc">Automatic free TLS/SSL certificates and traffic routing without configuring load balancers.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🔀</span> Revisions &amp; Canary Splits</div>
+            <p class="module-subcard-desc">Split traffic (e.g. 90% to v1, 10% to v2) between immutable deployment snapshots.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>📉</span> KEDA Scale-to-Zero</div>
+            <p class="module-subcard-desc">Scale down to 0 container replicas during idle hours; compute charges drop to literally $0.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Azure ACA</span>
+          <span class="tag">Serverless Kubernetes</span>
+          <span class="tag">KEDA Scalers</span>
+          <span class="tag">Canary Deployments</span>
+          <span class="tag">Scale to Zero</span>
+          <span class="tag">Microservices</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 20 min read</span>
+          </div>
+          <a href="azure-lecture-5.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 6: AZURE BLOB STORAGE -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 04:43:48 to 05:25:13</span>
+            <span class="card-lecture-no">MODULE 06</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-6.html" style="color: inherit; text-decoration: none;">Azure Blob Storage</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Massive unstructured object storage: Storage Account hierarchy (Account &rarr; Container &rarr; Blob), global naming rules, Block vs. Append vs. Page Blobs, Hot/Cool/Cold/Archive tiers and rehydration times, 11-16 nines redundancy (LRS, ZRS, GRS, GZRS), SAS token security, and hosting free static websites via <code>$web</code>.
+        </p>
+
+        <!-- Sub-cards inside Module 6 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🏢</span> Amazon Warehouse Model</div>
+            <p class="module-subcard-desc">Storage Account (building) &rarr; Container (aisle) &rarr; Blob (packaged item) with strict 3-24 char naming.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🧊</span> Access Tiers &amp; Rehydration</div>
+            <p class="module-subcard-desc">Hot, Cool, Cold, and Archive: how offline cold blobs rehydrate in 1 to 15 hours.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🛡️</span> Redundancy &amp; Durability</div>
+            <p class="module-subcard-desc">From 11 9s in LRS to 16 9s in GRS/GZRS with cross-region paired asynchronous replication.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🌐</span> Static Website ($web)</div>
+            <p class="module-subcard-desc">Host production web applications straight from Blob Storage without running a web server.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Blob Storage</span>
+          <span class="tag">Object Storage</span>
+          <span class="tag">Block &amp; Append Blobs</span>
+          <span class="tag">Access Tiers</span>
+          <span class="tag">SAS Tokens</span>
+          <span class="tag">Static Websites</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 24 min read</span>
+          </div>
+          <a href="azure-lecture-6.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- ======================================================== -->
+      <!-- MODULE 7: IDENTITY & ACCESS MANAGEMENT (IAM) -->
+      <!-- ======================================================== -->
+      <article class="module-box active-module">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div class="azure-icon-box">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50e6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <circle cx="12" cy="11" r="3"></circle>
+              <path d="M7 18.5a5 5 0 0 1 10 0"></path>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="timeframe-tag">⏱️ 05:25:13 to 05:57:29</span>
+            <span class="card-lecture-no">MODULE 07</span>
+            <span class="card-badge badge-active">Active Notes</span>
+          </div>
+        </div>
+
+        <h3 class="card-title" style="font-size: 1.35rem; margin-bottom: 0.5rem;">
+          <a href="azure-lecture-7.html" style="color: inherit; text-decoration: none;">Identity and Access Management (IAM) &amp; Azure RBAC</a>
+        </h3>
+        <p class="card-desc" style="font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.75rem;">
+          Enterprise cloud governance and Zero Trust: Authentication (AuthN) vs Authorization (AuthZ), Airport passport &amp; boarding pass analogy, Microsoft Entra ID principals, Managed Identities (eliminating hardcoded passwords), the Azure RBAC formula, 4-level scope inheritance, built-in roles, and Least Privilege.
+        </p>
+
+        <!-- Sub-cards inside Module 7 -->
+        <div class="module-subcards-wrapper">
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🛂</span> Airport Passport Analogy</div>
+            <p class="module-subcard-desc">Passport check = AuthN (Who you are); Boarding pass = AuthZ (Where you can sit / cockpit access).</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>🔑</span> Managed Identities</div>
+            <p class="module-subcard-desc">System-Assigned vs User-Assigned: Cloud resources authenticate without hardcoding secrets.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>📐</span> The RBAC Formula</div>
+            <p class="module-subcard-desc"><code>Security Principal + Role Definition + Scope = Role Assignment</code> with downward inheritance.</p>
+          </div>
+          <div class="module-subcard-item">
+            <div class="module-subcard-title"><span>👑</span> Owner vs. Contributor</div>
+            <p class="module-subcard-desc">Why Contributor can create/delete resources, but ONLY Owner can grant access to others.</p>
+          </div>
+        </div>
+
+        <div class="card-tags" style="margin-bottom: 1.5rem;">
+          <span class="tag">Azure IAM</span>
+          <span class="tag">Microsoft Entra ID</span>
+          <span class="tag">Azure RBAC</span>
+          <span class="tag">Managed Identities</span>
+          <span class="tag">Scope Inheritance</span>
+          <span class="tag">Zero Trust</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="card-meta">
+            <span>⏱️ 22 min read</span>
+          </div>
+          <a href="azure-lecture-7.html" class="btn-primary">
+            Open Notes
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Month 8 Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Microsoft Azure (Zero to Hero)</a></li>
+              <li><a href="gcp.html">Google Cloud Platform (GCP)</a></li>
+              <li><a href="gcp-lecture-1.html">GCP Lecture 1: Architecture</a></li>
+              <li><a href="gcp-lecture-2.html">GCP Lecture 2: IAM Security</a></li>
+              <li><a href="gcp-lecture-3.html">GCP Lecture 3: Shell &amp; Teardown</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Technologies</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="month-1.html">Month 1 Foundations</a></li>
+              <li><a href="deep-learning.html">Deep Learning</a></li>
+              <li><a href="ai-roadmap.html">AI &amp; GenAI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

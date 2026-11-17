@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 6: Azure Blob Storage | Microsoft Azure Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent { color: #0078d4; }
+    [data-theme="dark"] .azure-accent { color: #50e6ff; }
+    .console-ui-mockup {
+      background: #181c24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #10141c;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #131720;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(0, 120, 212, 0.18);
+      color: #50e6ff;
+      border-left: 3px solid #0078d4;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #0f1218;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(0, 120, 212, 0.2);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .hierarchy-tree {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="azure.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Azure Modules</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 6 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
+        <li><a href="#what-is-blob" class="sidebar-link">1. What is Azure Blob Storage?</a></li>
+        <li><a href="#warehouse-analogy" class="sidebar-link">2. Amazon Warehouse Analogy &amp; Naming</a></li>
+        <li><a href="#blob-types" class="sidebar-link">3. The 3 Types of Blobs</a></li>
+        <li><a href="#access-tiers" class="sidebar-link">4. Access Tiers &amp; Rehydration</a></li>
+        <li><a href="#redundancy" class="sidebar-link">5. Data Redundancy (LRS, ZRS, GRS)</a></li>
+        <li><a href="#security" class="sidebar-link">6. Security: Keys vs. SAS Tokens</a></li>
+        <li><a href="#static-website" class="sidebar-link">7. Hosting Static Websites ($web)</a></li>
+        <li><a href="#lifecycle-rules" class="sidebar-link">8. Automated Lifecycle Management</a></li>
+        <li><a href="#cli-cheatsheet" class="sidebar-link">9. Azure CLI Cheatsheet</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">10. Summary Checklist</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 6</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 06</span>
+          <span class="tag">Azure Blob Storage</span>
+          <span class="tag">Object Storage</span>
+          <span class="tag">Access Tiers</span>
+          <span class="tag">SAS Tokens</span>
+          <span class="tag">Static Websites ($web)</span>
+        </div>
+        <h1 class="lecture-main-title">Azure Blob Storage</h1>
+        <p class="lecture-lead">
+          <strong>What is this module about?</strong> Microsoft's massively scalable object storage solution: storing terabytes of unstructured photos, videos, backups, and ML datasets. Understanding storage account hierarchy, naming constraints, Block vs. Append vs. Page Blobs, Hot/Cool/Cold/Archive tiers and rehydration, 11 to 16 nines of durability redundancy, time-limited SAS tokens, and hosting free static websites from the <code>$web</code> container.<br>
+          <strong>Why is this critical for engineers?</strong> High-scale apps, AI training pipelines, and data lakes never store multi-gigabyte media inside SQL databases. Blob storage is the foundational data reservoir of the cloud.
+        </p>
+      </div>
+
+      <!-- TIMEFRAME BADGE -->
+      <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:43:48 to 05:25:13</span>
+          </div>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=17028" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="what-is-blob" class="note-section content-section">
+        <h2><span class="section-number">01.</span> What is Azure Blob Storage?</h2>
+        <p>
+          Relational SQL databases are optimized for structured rows and columns. They degrade quickly when forced to store 500 MB video files or millions of PDF receipts.
+        </p>
+        <p>
+          <strong>Azure Blob Storage</strong> is Microsoft's massively scalable <strong>Object Storage</strong> engine.
+          <br>
+          - <strong>"BLOB"</strong> stands for <strong>B</strong>inary <strong>L</strong>arge <strong>OB</strong>ject.
+          <br>
+          - Stores any digital file in native binary format without requiring you to format hard disks or partition file systems.
+          <br>
+          - Every blob is directly addressable anywhere on earth via standard HTTPS REST URLs.
+        </p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="warehouse-analogy" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Amazon Warehouse Analogy &amp; Naming Rules</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">The Logistics Warehouse:</h4>
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
+            - <strong>Storage Account:</strong> The entire Amazon distribution building with its unique global address.
+            <br>
+            - <strong>Container:</strong> An organized aisle or storage bin (e.g., <code>avatars</code>, <code>invoices</code>, <code>videos</code>).
+            <br>
+            - <strong>Blob:</strong> The packaged items inside the container (e.g., <code>user-102.png</code>, <code>tax-2026.pdf</code>).
+          </p>
+        </div>
+
+        <div class="hierarchy-tree">
+URL Format:
+https://&lt;storage-account-name&gt;.blob.core.windows.net/&lt;container-name&gt;/&lt;blob-name&gt;
+
+Example:
+https://mystorageak2026.blob.core.windows.net/images/profile.jpg
+        </div>
+
+        <div class="callout-danger">
+          <strong>⚠️ The 3 Inviolable Storage Account Naming Rules:</strong>
+          <ol style="margin: 0.5rem 0 0 0;">
+            <li>Length must be strictly between <strong>3 and 24 characters</strong>.</li>
+            <li>Contains <strong>ONLY lowercase letters and numbers</strong> (No hyphens, no underscores, no uppercase!).</li>
+            <li>Must be <strong>globally unique across all Azure accounts worldwide</strong> because it creates a public DNS subdomain.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="blob-types" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The 3 Types of Blobs</h2>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Blob Type</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Primary Purpose</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Maximum Size</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Key Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Block Blobs</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Documents, photos, videos, zip archives, application files.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">~190.7 TB</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Composed of up to 50,000 discrete blocks uploaded in parallel and assembled.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Append Blobs</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Server access logs, telemetry streams, audit trails.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">~195 GB</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Append-only operations. Existing data cannot be edited; new logs are committed to the end.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Page Blobs</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Azure VM Hard Disks (<code>.vhd</code> files).</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">8 TB</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Optimized for 512-byte random read/write page operations like a physical hard disk.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="access-tiers" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Access Tiers &amp; Rehydration</h2>
+        <p>Azure matches storage costs to how frequently your files are accessed:</p>
+
+        <div class="hierarchy-tree">
++-----------+-------------------------+--------------+-----------------------+
+| Tier      | Access Frequency        | Storage Cost | Access/Retrieval Cost |
++-----------+-------------------------+--------------+-----------------------+
+| Hot       | Daily active usage      | Highest      | Lowest                |
+| Cool      | Infrequent (30+ days)   | Lower        | Higher                |
+| Cold      | Rarely accessed (90+)   | Very Low     | Much Higher           |
+| Archive   | Long-term backup (180+) | Rock Bottom  | Highest (Must Rehydrate)|
++-----------+-------------------------+--------------+-----------------------+
+        </div>
+
+        <div class="callout-warning">
+          <strong>🧊 The Archive Tier &amp; Rehydration:</strong>
+          Blobs in Archive tier are stored offline. You cannot download them immediately. To read an archived blob, you must <strong>Rehydrate</strong> it back to Hot or Cool:
+          <ul style="margin: 0.5rem 0 0 0;">
+            <li><strong>Standard Priority:</strong> Takes 1 to 15 hours.</li>
+            <li><strong>High Priority:</strong> Takes under 1 hour (for files &lt; 10 GB) with an extra urgency fee.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="redundancy" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Data Redundancy: 11 to 16 Nines of Durability</h2>
+        <ul>
+          <li><strong>Locally Redundant Storage (LRS):</strong> 3 copies maintained in a single datacenter in the primary region. Protects against disk crashes. <em>Durability: 99.999999999% (11 9s).</em></li>
+          <li><strong>Zone-Redundant Storage (ZRS):</strong> 3 copies replicated synchronously across 3 separate Availability Zones in the primary region. Protects against entire datacenter fires. <em>Durability: 99.9999999999% (12 9s).</em></li>
+          <li><strong>Geo-Redundant Storage (GRS):</strong> LRS in primary region + asynchronously copied to a paired secondary region &gt;300 miles away (total 6 copies). Protects against regional natural disasters. <em>Durability: 16 9s.</em></li>
+          <li><strong>Geo-Zone-Redundant Storage (GZRS):</strong> ZRS in primary region across 3 zones + LRS in secondary paired region. The ultimate high-durability standard.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="security" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Security: Storage Keys vs. Shared Access Signatures (SAS)</h2>
+        <p>How do applications access files securely?</p>
+
+        <div class="hierarchy-tree">
+1. Account Access Keys (Key 1 &amp; Key 2):
+   - Master root passwords with unrestricted 100% control over the entire storage account.
+   - NEVER commit these keys to GitHub or embed them inside mobile apps!
+
+2. Shared Access Signatures (SAS Tokens):
+   - Secure, temporary digital pass tickets.
+   - Example: "Allow user Alice to READ only 'invoice.pdf' until 5:00 PM today from IP 192.168.1.5."
+        </div>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="static-website" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Hosting a Serverless Static Website ($web container)</h2>
+        <p>You can host an entire production website directly from Blob Storage for pennies a month without running any web servers or VMs:</p>
+
+        <div class="hierarchy-tree">
+# Step-by-Step Hands-On:
+1. Open your Storage Account in Azure Portal.
+2. In left sidebar, click "Static website" (under Data management).
+3. Select "Enabled".
+4. Set Index document name: "index.html".
+5. Set Error document path: "404.html" &rarr; Click Save.
+6. Azure creates a special container named "$web" and gives you a public URL!
+7. Upload your index.html and style.css into the "$web" container.
+8. Visit the endpoint URL in your browser: Your website is live on the internet!
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="lifecycle-rules" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Automated Lifecycle Management</h2>
+        <p>Azure allows you to write automated rules to save storage costs automatically:</p>
+        <div class="click-path-badge">Rule: Move to Cool after 30 days &rarr; Move to Archive after 90 days &rarr; Delete after 365 days</div>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="cli-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Azure CLI Cheatsheet for Blob Storage</h2>
+
+        <div class="hierarchy-tree">
+# 1. Create a Storage Account
+az storage account create \
+  --name mystorageak2026 \
+  --resource-group my-rg \
+  --location eastus \
+  --sku Standard_LRS
+
+# 2. Create a Container
+az storage container create \
+  --account-name mystorageak2026 \
+  --name media-uploads \
+  --auth-mode login
+
+# 3. Upload a Blob file
+az storage blob upload \
+  --account-name mystorageak2026 \
+  --container-name media-uploads \
+  --name hero.png \
+  --file ./images/hero.png \
+  --auth-mode login
+
+# 4. Generate a 1-Hour Read-Only SAS Token
+az storage blob generate-sas \
+  --account-name mystorageak2026 \
+  --container-name media-uploads \
+  --name hero.png \
+  --permissions r \
+  --expiry $(date -u -d "1 hour" '+%Y-%m-%dT%H:%MZ') \
+  --full-uri
+        </div>
+      </section>
+
+      <!-- SUMMARY CHECKLIST -->
+      <section id="summary-checklist" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Summary Checklist</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk1" style="margin-top: 0.25rem;">
+              <label for="m6chk1">I know the naming rules for Storage Accounts: 3-24 characters, only lowercase letters and numbers, globally unique.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk2" style="margin-top: 0.25rem;">
+              <label for="m6chk2">I know the 3 blob types: <strong>Block Blobs</strong> (files), <strong>Append Blobs</strong> (logs), and <strong>Page Blobs</strong> (VM disks).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk3" style="margin-top: 0.25rem;">
+              <label for="m6chk3">I understand the 4 access tiers (Hot, Cool, Cold, Archive) and know that Archive requires <strong>rehydration</strong>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk4" style="margin-top: 0.25rem;">
+              <label for="m6chk4">I understand redundancy tiers: <strong>LRS</strong>, <strong>ZRS</strong>, <strong>GRS</strong>, and <strong>GZRS</strong>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk5" style="margin-top: 0.25rem;">
+              <label for="m6chk5">I know why <strong>SAS Tokens</strong> are used instead of exposing Account Access Keys.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m6chk6" style="margin-top: 0.25rem;">
+              <label for="m6chk6">I know how to host a serverless static website using the special <code>$web</code> container.</label>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="azure-lecture-5.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Module 05 (Container Apps)
+          </a>
+          <a href="azure-lecture-7.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Module 07 (Identity &amp; Access Management) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Microsoft Azure Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure-lecture-1.html">Module 01: Cloud &amp; Azure Basics</a></li>
+              <li><a href="azure-lecture-2.html">Module 02: Virtual Machines</a></li>
+              <li><a href="azure-lecture-3.html">Module 03: Docker Basics</a></li>
+              <li><a href="azure-lecture-4.html">Module 04: Container Instances (ACI)</a></li>
+              <li><a href="azure-lecture-5.html">Module 05: Container Apps (ACA)</a></li>
+              <li><a href="azure-lecture-6.html">Module 06: Blob Storage</a></li>
+              <li><a href="azure-lecture-7.html">Module 07: IAM &amp; RBAC</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Navigation</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Azure Module Hub</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="ai-roadmap.html">AI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecture 2: Compute (Azure Virtual Machines) | Microsoft Azure Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .azure-accent { color: #0078d4; }
+    [data-theme="dark"] .azure-accent { color: #50e6ff; }
+    .console-ui-mockup {
+      background: #181c24;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+    .console-ui-topbar {
+      background: #10141c;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+    .console-ui-body {
+      display: flex;
+      min-height: 220px;
+    }
+    .console-ui-sidebar {
+      width: 220px;
+      background: #131720;
+      border-right: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+    }
+    .console-ui-menu-item {
+      padding: 0.45rem 1rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .console-ui-menu-item.active {
+      background: rgba(0, 120, 212, 0.18);
+      color: #50e6ff;
+      border-left: 3px solid #0078d4;
+    }
+    .console-ui-canvas {
+      flex: 1;
+      padding: 1.25rem;
+      background: #0f1218;
+      color: #cbd5e1;
+    }
+    .click-path-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0, 120, 212, 0.12);
+      border: 1px solid rgba(0, 120, 212, 0.35);
+      color: #0078d4;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    [data-theme="dark"] .click-path-badge {
+      background: rgba(0, 120, 212, 0.2);
+      border-color: rgba(80, 230, 255, 0.45);
+      color: #50e6ff;
+    }
+    .callout-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-left: 4px solid #eab308;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .callout-tip {
+      background: rgba(34, 197, 94, 0.12);
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--text-primary);
+    }
+    .hierarchy-tree {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="azure.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Back to Azure Modules</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Hide Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Backdrop Overlay for Drawer -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <!-- Docs Layout: Sticky Sidebar + Main Content -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
+        <li><a href="#vm-anatomy" class="sidebar-link">1. Anatomy of an Azure VM</a></li>
+        <li><a href="#sizing-families" class="sidebar-link">2. VM Sizing &amp; Series Families</a></li>
+        <li><a href="#disk-types" class="sidebar-link">3. Managed Disks &amp; The Temp Disk Trap</a></li>
+        <li><a href="#networking" class="sidebar-link">4. VNet, Subnets &amp; NSG Firewalls</a></li>
+        <li><a href="#connecting" class="sidebar-link">5. Connecting via SSH vs. RDP</a></li>
+        <li><a href="#web-server-demo" class="sidebar-link">6. Hands-On: Deploying Nginx Web Server</a></li>
+        <li><a href="#stopped-vs-deallocated" class="sidebar-link">7. Stopped vs. Deallocated Billing Trap</a></li>
+        <li><a href="#cli-commands" class="sidebar-link">8. Azure CLI Commands for VMs</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">9. Summary Checklist</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Notes Content -->
+    <main class="docs-content">
+      
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 2</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 02</span>
+          <span class="tag">Azure Virtual Machines</span>
+          <span class="tag">Compute Sizing</span>
+          <span class="tag">Managed Disks</span>
+          <span class="tag">NSGs &amp; Firewalls</span>
+          <span class="tag">SSH &amp; RDP</span>
+        </div>
+        <h1 class="lecture-main-title">Compute (Azure Virtual Machines)</h1>
+        <p class="lecture-lead">
+          <strong>What is this module about?</strong> Deep dive into Azure Virtual Machines (IaaS compute): understanding VM sizing series (B-series burstable vs D/E/F/N series), managed OS and data disks, the critical data-loss trap of the ephemeral temporary disk, Network Security Group (NSG) priority rules, connecting via SSH key pairs and RDP, and avoiding surprise bills with Stopped vs. Stopped (Deallocated).<br>
+          <strong>Why is this critical for engineers?</strong> Virtual machines are the compute backbone of the cloud. Every Kubernetes node, backend microservice host, and deep learning training cluster runs on top of these fundamental building blocks.
+        </p>
+      </div>
+
+      <!-- TIMEFRAME BADGE -->
+      <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">00:51:42 to 01:44:43</span>
+          </div>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=3102" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <section id="vm-anatomy" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Anatomy of an Azure Virtual Machine</h2>
+        <p>When you click "Create Virtual Machine" in Azure, you are not creating just one isolated file. Azure provisions an ecosystem of interconnected resources that act together as a full computer:</p>
+
+        <div class="hierarchy-tree">
++--------------------------------------------------------------------------+
+|                       AZURE VIRTUAL MACHINE ANATOMY                      |
+|                                                                          |
+|   +------------------------------------------------------------------+   |
+|   | Azure Virtual Machine (e.g. Standard_B2s, 2 vCPUs, 4 GB RAM)     |   |
+|   +------------------------------------------------------------------+   |
+|         |                                      |                         |
+|         v                                      v                         |
+|   +------------------------+             +------------------------+      |
+|   | Network Interface (NIC)|             | Managed Disks          |      |
+|   +------------------------+             +------------------------+      |
+|         |          |                           |             |           |
+|         v          v                           v             v           |
+|     Private IP   Public IP                 OS Disk       Data Disk       |
+|    (10.0.0.4)   (20.52.14.9)              (Ubuntu 22.04) (100 GB SSD)    |
+|         |                                                                |
+|         v                                                                |
+|   +------------------------+                                             |
+|   | Subnet &amp; Virtual Net   |                                             |
+|   +------------------------+                                             |
+|         |                                                                |
+|         v                                                                |
+|   +------------------------+                                             |
+|   | Network Security Group | (Firewall: Port 22 SSH, Port 80 HTTP)       |
+|   +------------------------+                                             |
++--------------------------------------------------------------------------+
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="sizing-families" class="note-section content-section">
+        <h2><span class="section-number">02.</span> VM Sizing &amp; Series Families</h2>
+        <p>Azure names VM sizes systematically (e.g., <code>Standard_D4s_v5</code>). The first letter determines the hardware specialization:</p>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Series Letter</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Category</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Best Suited For</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Cost Tier</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">B-Series</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Burstable Compute</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Development, student labs, low-traffic web servers. Accumulates CPU credits during idle times and bursts up to 100% CPU when busy.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Lowest ($ / hr)</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">D-Series</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">General Purpose</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Balanced CPU-to-memory ratio. Ideal for production web servers, small-to-medium databases, and application backends.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Moderate</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">F-Series</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Compute Optimized</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">High CPU clock speed per GB of RAM. Ideal for video transcoding, batch processing, gaming servers, and scientific math modeling.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Medium - High</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">E-Series</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Memory Optimized</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Massive RAM-to-CPU ratio. Ideal for in-memory databases (SAP HANA, Redis cache), Elasticsearch, and big data data analytics.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">High</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">N-Series</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">GPU Enabled</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Packed with NVIDIA Tesla / Ampere GPUs. Used for Deep Learning model training, AI inference, and 3D rendering.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Enterprise High</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="disk-types" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Managed Disks &amp; The Ephemeral Temporary Disk Warning</h2>
+        <p>Every Azure VM connects to three distinct types of disks:</p>
+        <ol>
+          <li><strong>OS Disk:</strong> Contains the operating system boot files (Windows <code>C:</code> drive or Linux <code>/</code> root). Persists even if the VM is rebooted or stopped.</li>
+          <li><strong>Data Disks:</strong> Additional persistent managed disks attached to the VM for storing database files, repositories, or application data.</li>
+          <li><strong>Temporary Disk:</strong> A physical SSD located directly on the physical host machine running your VM (labeled <code>D:</code> drive on Windows or <code>/dev/sdb1</code> mounted at <code>/mnt</code> on Linux).</li>
+        </ol>
+
+        <div class="callout-danger">
+          <strong>🚨 CRITICAL DATA-LOSS WARNING: The Temporary Disk is Ephemeral!</strong>
+          <p style="margin: 0.5rem 0 0 0;">
+            The temporary disk provides ultra-fast temporary storage for page files, swap files, and temporary caches. However, whenever your VM is stopped, deallocated, or migrated to a different physical server rack during Azure maintenance, <strong>EVERY BYTE OF DATA ON THE TEMPORARY DISK IS PERMANENTLY ERASED AND CANNOT BE RECOVERED</strong>. Never save databases, user uploads, or project files on the temporary drive!
+          </p>
+        </div>
+
+        <h3>Azure Managed Disk Performance Tiers:</h3>
+        <ul>
+          <li><strong>Standard HDD:</strong> Magnetic spinning disk, cheapest cost. Best for dev/test environments and non-critical backups.</li>
+          <li><strong>Standard SSD:</strong> Solid-state drive for light production workloads and consistent entry-level performance.</li>
+          <li><strong>Premium SSD (v1 &amp; v2):</strong> High-performance SSDs delivering up to 20,000 IOPS. Required for enterprise databases and mission-critical web applications.</li>
+          <li><strong>Ultra Disk:</strong> Top-tier storage delivering up to 160,000 IOPS with sub-millisecond latency. Tuned for extreme transactional workloads.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="networking" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Networking: VNet, Subnets &amp; Network Security Groups (NSGs)</h2>
+        <p>A Virtual Machine cannot communicate without network plumbing:</p>
+        <ul>
+          <li><strong>Virtual Network (VNet):</strong> Your private, isolated virtual network slice in the cloud (e.g., CIDR block <code>10.0.0.0/16</code>).</li>
+          <li><strong>Subnet:</strong> A segmented subdivision of your VNet (e.g., <code>10.0.1.0/24</code> for Web Subnet; <code>10.0.2.0/24</code> for Database Subnet).</li>
+          <li><strong>Network Interface Card (NIC):</strong> The virtual network card linking the VM to the Subnet.</li>
+        </ul>
+
+        <h3>Network Security Group (NSG) Rules &amp; Priorities</h3>
+        <p>An NSG acts as a stateful virtual firewall controlling inbound and outbound traffic.</p>
+        <div class="hierarchy-tree">
+RULE PRIORITY NUMBER (100 to 4096)
+Lower numbers are evaluated FIRST! Once a match is found, evaluation stops.
+
+ Priority | Name               | Port | Protocol | Source | Action
+----------+--------------------+------+----------+--------+---------
+ 100      | Allow-SSH          | 22   | TCP      | Any    | ALLOW
+ 110      | Allow-HTTP         | 80   | TCP      | Any    | ALLOW
+ 120      | Allow-HTTPS        | 443  | TCP      | Any    | ALLOW
+ 65000    | AllowVNetInBound   | Any  | Any      | VNet   | ALLOW
+ 65500    | DenyAllInBound     | Any  | Any      | Any    | DENY  &lt;-- Default!
+        </div>
+
+        <div class="callout-tip">
+          <strong>💡 Rule Priority Best Practice:</strong>
+          Always leave gaps between rule priority numbers (e.g., 100, 110, 120). Never use consecutive numbers (100, 101, 102). This allows you to easily insert urgent emergency rules (like priority 105) between existing rules without having to renumber everything!
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="connecting" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Connecting to Your VM: SSH Key Pairs vs. RDP</h2>
+        
+        <h3>1. Connecting to Linux VMs via SSH Key Pair (Recommended):</h3>
+        <p>Passwords are vulnerable to brute-force attacks. The modern standard is asymmetric cryptography using SSH keys (Private Key + Public Key):</p>
+        <div class="click-path-badge">ssh -i ~/.ssh/azure_key.pem azureuser@20.52.14.9</div>
+
+        <h3>2. Connecting to Windows VMs via Remote Desktop Protocol (RDP):</h3>
+        <p>For Windows Server VMs, download the <code>.rdp</code> file from the Azure portal, open the Remote Desktop Connection client on your computer, enter the administrator username and password, and interact with the full graphical Windows desktop.</p>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="web-server-demo" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Hands-On Walkthrough: Hosting an Nginx Web Server on Ubuntu VM</h2>
+        <p>Follow these exact terminal steps after connecting via SSH:</p>
+
+        <div class="hierarchy-tree">
+# Step 1: Update package lists
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+# Step 2: Install Nginx web server
+sudo apt install nginx -y
+
+# Step 3: Verify Nginx service is running
+sudo systemctl status nginx
+
+# Step 4: Create a custom homepage
+echo "&lt;h1&gt;Welcome to Microsoft Azure Zero to Hero!&lt;/h1&gt;&lt;p&gt;Hosted on Azure Virtual Machine&lt;/p&gt;" | sudo tee /var/www/html/index.html
+        </div>
+
+        <div class="callout-warning">
+          <strong>⚠️ Forgot Port 80 in NSG?</strong>
+          If you paste the VM's Public IP address into your browser and the page keeps spinning indefinitely, your NSG firewall has not opened Port 80! Open the Azure Portal &rarr; Virtual Machine &rarr; <strong>Networking</strong> &rarr; <strong>Add inbound port rule</strong> &rarr; Destination port: <code>80</code> &rarr; Protocol: <code>TCP</code> &rarr; Action: <code>Allow</code> &rarr; Click <strong>Add</strong>. The site will load instantly!
+        </div>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="stopped-vs-deallocated" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The Cost Trap: "Stopped" vs. "Stopped (Deallocated)"</h2>
+        <p>This is the most common reason students receive unexpected bills on Azure:</p>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">VM State</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">How It Happened</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Compute Charges?</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Disk &amp; IP Charges?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #ef4444;">Stopped</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">You typed <code>sudo shutdown -h now</code> inside the Linux OS terminal.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 700;">YES! You are still billed for CPU &amp; RAM!</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Yes</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #22c55e;">Stopped (Deallocated)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">You clicked <strong>Stop</strong> in the Azure Portal or ran <code>az vm deallocate</code>.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">NO! Compute charges drop to $0!</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Only for attached storage disks</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="cli-commands" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Essential Azure CLI Commands for VMs</h2>
+        
+        <div class="hierarchy-tree">
+# Create an Ubuntu Linux VM with automatic SSH keys
+az vm create \
+  --resource-group my-rg \
+  --name my-ubuntu-vm \
+  --image Ubuntu2204 \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --public-ip-sku Standard
+
+# Open Port 80 for HTTP traffic
+az vm open-port \
+  --resource-group my-rg \
+  --name my-ubuntu-vm \
+  --port 80
+
+# Properly STOP and DEALLOCATE the VM (Stops compute billing!)
+az vm deallocate \
+  --resource-group my-rg \
+  --name my-ubuntu-vm
+
+# Start the VM again
+az vm start \
+  --resource-group my-rg \
+  --name my-ubuntu-vm
+
+# Delete the entire VM and associated disks cleanly
+az vm delete \
+  --resource-group my-rg \
+  --name my-ubuntu-vm \
+  --yes
+        </div>
+      </section>
+
+      <!-- SUMMARY CHECKLIST -->
+      <section id="summary-checklist" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Summary Checklist</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
+          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk1" style="margin-top: 0.25rem;">
+              <label for="m2chk1">I know the VM sizing families: <strong>B</strong> (burstable), <strong>D</strong> (general), <strong>F</strong> (compute), <strong>E</strong> (memory), and <strong>N</strong> (GPU).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk2" style="margin-top: 0.25rem;">
+              <label for="m2chk2">I understand the critical danger of the <strong>Temporary Disk</strong>: all data is wiped on deallocation/reboot.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk3" style="margin-top: 0.25rem;">
+              <label for="m2chk3">I understand how <strong>Network Security Groups (NSGs)</strong> prioritize rules (lowest number first, e.g. 100 beats 200).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk4" style="margin-top: 0.25rem;">
+              <label for="m2chk4">I can connect to a Linux VM via <strong>SSH Key Pairs</strong> and open Port 80 for web traffic.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk5" style="margin-top: 0.25rem;">
+              <label for="m2chk5">I know the vital difference between <strong>Stopped</strong> (still billed!) and <strong>Stopped (Deallocated)</strong> (compute is $0).</label>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="azure-lecture-1.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Module 01 (Azure Basics)
+          </a>
+          <a href="azure-lecture-3.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Module 03 (Docker &amp; Containers) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-box">AK</span>
+            <span class="logo-text">Tech Notes</span>
+          </div>
+          <p class="footer-tagline">
+            Exhaustive, practical, and beginner-friendly reference guides for Cloud Engineering, Machine Learning, and Generative AI.
+          </p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-col">
+            <h4 class="footer-heading">Microsoft Azure Modules</h4>
+            <ul class="footer-links">
+              <li><a href="azure-lecture-1.html">Module 01: Cloud &amp; Azure Basics</a></li>
+              <li><a href="azure-lecture-2.html">Module 02: Virtual Machines</a></li>
+              <li><a href="azure-lecture-3.html">Module 03: Docker Basics</a></li>
+              <li><a href="azure-lecture-4.html">Module 04: Container Instances (ACI)</a></li>
+              <li><a href="azure-lecture-5.html">Module 05: Container Apps (ACA)</a></li>
+              <li><a href="azure-lecture-6.html">Module 06: Blob Storage</a></li>
+              <li><a href="azure-lecture-7.html">Module 07: IAM &amp; RBAC</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Navigation</h4>
+            <ul class="footer-links">
+              <li><a href="azure.html">Azure Module Hub</a></li>
+              <li><a href="month-8.html">Month 8 Overview</a></li>
+              <li><a href="index.html">Main Dashboard</a></li>
+              <li><a href="ai-roadmap.html">AI Roadmap</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Abhimanyu Kotari. Built with precision for aspiring Cloud &amp; AI Engineers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
