@@ -227,26 +227,35 @@ function initSidebar() {
 
   if (!sidebarNav) return;
 
-  // Restore saved desktop state
-  const isMobile = window.innerWidth <= 992;
+  const isMobile = () => window.innerWidth <= 992;
   const savedState = localStorage.getItem(SIDEBAR_STORAGE_KEY);
 
-  if (!isMobile && savedState === 'collapsed') {
-    document.body.classList.add('sidebar-collapsed');
+  // Restore saved desktop state or set mobile defaults
+  if (isMobile()) {
     updateSidebarToggleUI(true);
+  } else {
+    if (savedState === 'collapsed') {
+      document.body.classList.add('sidebar-collapsed');
+      updateSidebarToggleUI(true);
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+      updateSidebarToggleUI(false);
+    }
   }
 
   // Navbar Toggle Button
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       toggleSidebar();
     });
   }
 
   // Sidebar Internal Close Button (✕)
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      if (window.innerWidth <= 992) {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isMobile()) {
         closeMobileSidebar();
       } else {
         collapseDesktopSidebar(true);
@@ -256,8 +265,9 @@ function initSidebar() {
 
   // Floating TOC Button
   if (floatingBtn) {
-    floatingBtn.addEventListener('click', () => {
-      if (window.innerWidth <= 992) {
+    floatingBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isMobile()) {
         openMobileSidebar();
       } else {
         collapseDesktopSidebar(false);
@@ -276,10 +286,26 @@ function initSidebar() {
   const sidebarLinks = document.querySelectorAll('.sidebar-link');
   sidebarLinks.forEach(link => {
     link.addEventListener('click', () => {
-      if (window.innerWidth <= 992) {
+      if (isMobile()) {
         closeMobileSidebar();
       }
     });
+  });
+
+  // Handle window resize between mobile and desktop
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (isMobile()) {
+        const isOpen = sidebarNav.classList.contains('mobile-open');
+        updateSidebarToggleUI(!isOpen);
+      } else {
+        closeMobileSidebar();
+        const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+        updateSidebarToggleUI(isCollapsed);
+      }
+    }, 120);
   });
 
   // Keyboard shortcut: Pressing '[' or '\' toggles the sidebar
@@ -311,12 +337,10 @@ function collapseDesktopSidebar(shouldCollapse) {
     document.body.classList.add('sidebar-collapsed');
     localStorage.setItem(SIDEBAR_STORAGE_KEY, 'collapsed');
     updateSidebarToggleUI(true);
-    showToast('Sidebar hidden &bull; Full-width notes view');
   } else {
     document.body.classList.remove('sidebar-collapsed');
     localStorage.setItem(SIDEBAR_STORAGE_KEY, 'expanded');
     updateSidebarToggleUI(false);
-    showToast('Sidebar visible');
   }
 }
 
@@ -326,6 +350,7 @@ function openMobileSidebar() {
   if (sidebar) sidebar.classList.add('mobile-open');
   if (backdrop) backdrop.classList.add('active');
   document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  updateSidebarToggleUI(false);
 }
 
 function closeMobileSidebar() {
@@ -334,27 +359,31 @@ function closeMobileSidebar() {
   if (sidebar) sidebar.classList.remove('mobile-open');
   if (backdrop) backdrop.classList.remove('active');
   document.body.style.overflow = ''; // Restore scrolling
+  updateSidebarToggleUI(true);
 }
 
 function updateSidebarToggleUI(isCollapsed) {
   const toggleBtn = document.getElementById('sidebarToggleBtn');
   if (!toggleBtn) return;
   const btnText = toggleBtn.querySelector('.sidebar-btn-text');
+  const svg = toggleBtn.querySelector('svg');
   
   if (isCollapsed) {
-    if (btnText) btnText.textContent = 'Show Contents';
+    toggleBtn.classList.add('is-collapsed');
     toggleBtn.setAttribute('title', 'Show Table of Contents Sidebar');
-    toggleBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-      <span class="sidebar-btn-text">Show Contents</span>
-    `;
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    if (btnText) btnText.textContent = 'Show Contents';
+    if (svg) {
+      svg.innerHTML = '<line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>';
+    }
   } else {
-    if (btnText) btnText.textContent = 'Hide Contents';
+    toggleBtn.classList.remove('is-collapsed');
     toggleBtn.setAttribute('title', 'Hide Table of Contents Sidebar');
-    toggleBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-      <span class="sidebar-btn-text">Hide Contents</span>
-    `;
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    if (btnText) btnText.textContent = 'Hide Contents';
+    if (svg) {
+      svg.innerHTML = '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line>';
+    }
   }
 }
 
