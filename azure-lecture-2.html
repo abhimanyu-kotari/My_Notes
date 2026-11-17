@@ -104,7 +104,7 @@
   <div class="docs-layout">
 
     <!-- Sticky Table of Contents -->
-        <aside class="sidebar" id="sidebarNav">
+            <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-header">
         <div class="sidebar-title">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
@@ -116,19 +116,23 @@
       </div>
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
-        <li><a href="#step-use-case" class="sidebar-link">1. Mental Model &amp; Project Goal</a></li>
+        <li><a href="#step-use-case" class="sidebar-link">1. Laptop vs. Server &amp; Lab Overview</a></li>
         <li><a href="#step-open-portal" class="sidebar-link">2. Portal Dashboard &amp; Empty Resources</a></li>
-        <li><a href="#step-config-vm" class="sidebar-link">3. Step 1: Basics Tab Configuration</a></li>
-        <li><a href="#step-cloud-init" class="sidebar-link">4. Step 2: Advanced Tab &amp; Cloud-Init Script</a></li>
-        <li><a href="#step-create-key" class="sidebar-link">5. Step 3: Review + Create &amp; Key Pair</a></li>
-        <li><a href="#step-resources-created" class="sidebar-link">6. Step 4: Behind the Scenes (7 Resources)</a></li>
-        <li><a href="#step-portal-terminal" class="sidebar-link">7. Step 5: In-Portal CLI Terminal</a></li>
-        <li><a href="#step-verify-apache" class="sidebar-link">8. Step 6: Verify Apache in VM (status / curl)</a></li>
-        <li><a href="#step-nsg-timeout" class="sidebar-link">9. Step 7: Port 80 Browser Timeout Trap &amp; NSG Fix</a></li>
-        <li><a href="#step-local-ssh" class="sidebar-link">10. Step 8: Connecting via Local Terminal</a></li>
-        <li><a href="#step-cost-trap" class="sidebar-link">11. Step 9: Stopped vs. Deallocated Trap</a></li>
-        <li><a href="#step-teardown" class="sidebar-link">12. Step 10: Clean Lab Teardown Protocol</a></li>
-        <li><a href="#step-summary" class="sidebar-link">13. Summary Checklist</a></li>
+        <li><a href="#step-config-vm" class="sidebar-link">3. Linux VM: Basics Tab Configuration</a></li>
+        <li><a href="#step-cloud-init" class="sidebar-link">4. Linux VM: Cloud-Init Apache Script</a></li>
+        <li><a href="#step-create-key" class="sidebar-link">5. Linux VM: Review + Create &amp; Key Pair</a></li>
+        <li><a href="#step-resources-created" class="sidebar-link">6. Behind the Scenes: 7 Resources</a></li>
+        <li><a href="#step-portal-terminal" class="sidebar-link">7. Linux VM: In-Portal CLI Terminal</a></li>
+        <li><a href="#step-verify-apache" class="sidebar-link">8. Linux VM: Verify Apache (status/curl)</a></li>
+        <li><a href="#step-nsg-timeout" class="sidebar-link">9. Port 80 Browser Timeout Trap &amp; NSG Fix</a></li>
+        <li><a href="#step-windows-setup" class="sidebar-link">10. Windows VM: Windows Server 2022 Setup</a></li>
+        <li><a href="#step-windows-rdp" class="sidebar-link">11. Windows VM: Connecting via RDP (Port 3389)</a></li>
+        <li><a href="#step-windows-iis" class="sidebar-link">12. Windows VM: Installing IIS Web Server</a></li>
+        <li><a href="#step-vm-comparison" class="sidebar-link">13. Linux vs. Windows VM Comparison Matrix</a></li>
+        <li><a href="#step-local-ssh" class="sidebar-link">14. Local Terminal SSH Access</a></li>
+        <li><a href="#step-cost-trap" class="sidebar-link">15. The Cost Trap: Stopped vs. Deallocated</a></li>
+        <li><a href="#step-teardown" class="sidebar-link">16. Clean Lab Teardown Protocol ($0 Bill)</a></li>
+        <li><a href="#step-summary" class="sidebar-link">17. Summary Checklist</a></li>
       </ul>
     </aside>
 
@@ -142,39 +146,33 @@
         </div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Module 02 Hands-On</span>
-          <span class="tag">Azure Virtual Machines</span>
-          <span class="tag">Apache Web Server</span>
-          <span class="tag">Cloud-Init Automation</span>
-          <span class="tag">In-Portal CLI Terminal</span>
-          <span class="tag">NSG Port 80 Firewall</span>
+          <span class="tag">Linux Ubuntu VM</span>
+          <span class="tag">Windows Server 2022</span>
+          <span class="tag">Apache &amp; IIS Web Servers</span>
+          <span class="tag">SSH &amp; RDP Port 3389</span>
+          <span class="tag">NSG Firewall Troubleshooting</span>
         </div>
-        <h1 class="lecture-main-title">Compute: Azure Virtual Machines (Hands-On Lab Walkthrough)</h1>
+        <h1 class="lecture-main-title">Compute: Azure Virtual Machines (Complete Linux &amp; Windows Hands-On Lab)</h1>
         <p class="lecture-lead">
-          Follow the exact, progressive step-by-step practical journey from the lecture: building an Ubuntu virtual machine, bootstrapping a live Apache2 web server with cloud-init custom data, logging in directly via the Azure Portal CLI terminal, troubleshooting the public IP browser timeout on Port 80, and preventing unexpected charges.
+          The complete, progressive hands-on masterclass covering both <strong>Linux (Ubuntu)</strong> and <strong>Windows Server</strong> virtual machines in Microsoft Azure: bootstrapping Apache with cloud-init automation, logging in via the in-portal CLI terminal, connecting to Windows Server using Remote Desktop Protocol (RDP Port 3389), installing Internet Information Services (IIS), diagnosing the Port 80 browser timeout trap, and mastering the Stopped vs. Deallocated billing rule.
         </p>
       </div>
 
-      
       <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div class="timeframe-banner">
-          <div class="timeframe-info">
-            <span class="tf-icon">⏱️</span>
-            <div>
-              <div class="tf-label">Source Video Timeframe (Full Hands-on Flow)</div>
-              <div class="tf-value">00:51:42 to 01:44:43</div>
-            </div>
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
+            <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">00:51:42 to 01:44:43</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=3102" target="_blank" rel="noopener" class="btn-watch-source">
-            <span>Watch Segment on YouTube</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-          </a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=3102" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
         </div>
       </section>
 
       <!-- STEP 1 -->
       <section id="step-use-case" class="note-section content-section">
-        <h2><span class="section-number">01.</span> The Core Mental Model &amp; What We Are Building</h2>
+        <h2><span class="section-number">01.</span> Laptop vs. Server &amp; Lab Overview</h2>
         
         <h3>Personal Computer vs. Production Server:</h3>
         <p>What is the fundamental difference between your personal laptop and a production cloud server?</p>
@@ -182,394 +180,524 @@
           <div class="step-card" style="margin: 0; border-left: 3px solid #38bdf8;">
             <div class="step-card-header" style="color: #38bdf8;">💻 Personal Computer (Laptop)</div>
             <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
-              Used for daily personal tasks (browsing, writing code, gaming). It is shut down when you sleep, connects through domestic home Wi-Fi with a dynamic IP, and is not exposed to the public internet.
+              Used for individual daily tasks (browsing, writing code, gaming). Shut down when you sleep, connected via dynamic private IP behind your home Wi-Fi router.
             </p>
           </div>
           <div class="step-card" style="margin: 0; border-left: 3px solid #10b981;">
             <div class="step-card-header" style="color: #10b981;">🌐 Production Server</div>
             <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
-              Its entire job is to actively <strong>serve</strong> content (e.g. serving business web pages or APIs) 24 hours a day, 365 days a year without ever shutting down, running in an enterprise datacenter with redundant power and static public IPs.
+              Its entire job is to actively <strong>serve</strong> content (web pages, databases, APIs) 24/7/365 without interruption. Hosted in an enterprise datacenter with redundant power and a public static IP.
             </p>
           </div>
         </div>
 
         <h3>Why Do We Call It a "Virtual" Machine?</h3>
-        <p>
-          Because there is no physical desktop tower in your room. The actual hardware sits inside Microsoft's enterprise datacenters. You simply choose your desired hardware specifications (vCPU cores, RAM memory, OS version, storage size) and manage it entirely over the internet.
-        </p>
+        <p>Because there is no physical tower or server box sitting in your room. Microsoft allocates dedicated vCPU cores, RAM memory, and disk storage on its physical enterprise hypervisors, and you connect to and manage it entirely over the internet.</p>
 
-        <h3>The Real-Life Problem We Are Solving:</h3>
-        <p>
-          You have built a website for your business. The code is ready. Now you need a server to host it on the internet.
-        </p>
-        <ul style="font-size: 0.92rem; line-height: 1.6;">
-          <li><strong>Old Way:</strong> Buy an expensive physical server, place it in your office, pay for 24/7 power, cooling, and commercial internet lines.</li>
-          <li><strong>Azure Way:</strong> Rent an Ubuntu Virtual Machine in Azure, automatically install and configure the <strong>Apache2 web server</strong> via a startup script, connect to it via web terminal, and expose it safely to the global internet on <strong>Port 80</strong>.</li>
+        <h3>The Two Production Labs We Are Building:</h3>
+        <ul>
+          <li><strong>Lab 1 (Linux Ubuntu):</strong> Deploying an Ubuntu 22.04 VM, bootstrapping the <strong>Apache2</strong> web server using automated cloud-init custom data, connecting via in-portal CLI terminal, and opening Port 80 in NSG.</li>
+          <li><strong>Lab 2 (Windows Server):</strong> Provisioning a <strong>Windows Server 2022</strong> VM, connecting via graphical <strong>Remote Desktop Protocol (RDP Port 3389)</strong>, and installing Microsoft's <strong>Internet Information Services (IIS)</strong> web server.</li>
         </ul>
       </section>
 
       <!-- STEP 2 -->
       <section id="step-open-portal" class="note-section content-section">
-        <h2><span class="section-number">02.</span> Opening the Azure Portal &amp; Checking Resources</h2>
-        <p>The lecturer starts by navigating to the Azure web console:</p>
-        <ol style="font-size: 0.92rem; line-height: 1.6; margin: 1rem 0 1.25rem;">
-          <li>Open your browser and navigate to <a href="https://portal.azure.com" target="_blank" rel="noopener">portal.azure.com</a>.</li>
-          <li>Sign in using your Microsoft Azure account.</li>
-          <li>In the left-hand navigation menu, click on <strong>All resources</strong>:
-            <br><span style="color: var(--text-secondary); font-size: 0.85rem;">Notice that the resource list is initially completely empty. We have not created anything yet.</span>
-          </li>
-          <li>In the top global search bar, type <code>Virtual machines</code> and select the service.</li>
-          <li>On the Virtual Machines dashboard, click <strong>+ Create</strong> &rarr; select <strong>Azure virtual machine</strong>.</li>
+        <h2><span class="section-number">02.</span> Portal Dashboard &amp; Empty Resources</h2>
+        <p>Before launching any resources, let's observe the clean baseline state in the Azure Portal:</p>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Open your browser and navigate to <strong>portal.azure.com</strong>.</li>
+          <li>Sign in with your Azure Free Tier account.</li>
+          <li>Click on <strong>All resources</strong> in the left sidebar menu. Notice the resource table is currently completely empty.</li>
+          <li>In the top search bar, type <code>Virtual Machines</code> and select <strong>Virtual machines</strong> under Services.</li>
+          <li>Click <strong>+ Create</strong> &rarr; select <strong>Azure virtual machine</strong>.</li>
         </ol>
       </section>
 
       <!-- STEP 3 -->
       <section id="step-config-vm" class="note-section content-section">
-        <h2><span class="section-number">03.</span> Configuring the Virtual Machine (The Basics Tab)</h2>
-        <span class="method-badge">⚙️ Azure Portal &bull; Basics Configuration</span>
+        <h2><span class="section-number">03.</span> Linux VM: Basics Tab Configuration</h2>
+        <p>The instructor configures the exact parameters below on the <strong>Basics</strong> tab:</p>
 
-        <div class="step-card">
-          <div class="step-card-header">1. Project Details</div>
-          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
-            <li><strong>Subscription:</strong> Select your active subscription (e.g., <code>Azure subscription 1</code> or Free Trial).</li>
-            <li><strong>Resource Group:</strong> Every Azure resource must live inside a Resource Group. Click <strong>Create new</strong> &rarr; name: <code>azure-vm-rg</code>.</li>
-          </ul>
-        </div>
-
-        <div class="step-card">
-          <div class="step-card-header">2. Instance Details</div>
-          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
-            <li><strong>Virtual Machine Name:</strong> <code>my-web-server</code></li>
-            <li><strong>Region:</strong> Select the region closest to your target audience, e.g. <code>(Asia Pacific) Central India</code> (Pune).</li>
-            <li><strong>Availability Options:</strong> Select <strong>Availability Zone</strong> &rarr; <strong>Zone 1</strong> (Guarantees 99.99% high availability SLA via isolated datacenter buildings).</li>
-            <li><strong>Security Type:</strong> <code>Standard</code>.</li>
-            <li><strong>Image:</strong> <code>Ubuntu Server 22.04 LTS - x64 Gen2</code> (LTS = 5 years free security patches).</li>
-            <li><strong>Size:</strong> Select <strong><code>Standard_B1s</code></strong> (1 vCPU, 1 GiB RAM) &mdash; <strong>Free Tier Eligible</strong> (750 free hours/month).</li>
-          </ul>
-        </div>
-
-        <div class="step-card">
-          <div class="step-card-header">3. Administrator Account (Authentication)</div>
-          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
-            <li><strong>Authentication Type:</strong> Select <strong>SSH public key</strong>.
-              <br><span style="color: var(--text-secondary); font-size: 0.82rem;">(Passwords can be brute-forced by malicious bots; 2048-bit RSA keys cannot be cracked).</span>
-            </li>
-            <li><strong>Username:</strong> <code>azureuser</code> (or your custom admin name).</li>
-            <li><strong>SSH Public Key Source:</strong> Select <strong>Generate new key pair</strong>.</li>
-            <li><strong>Key Pair Name:</strong> <code>my-web-server_key</code>.</li>
-          </ul>
-        </div>
-
-        <div class="step-card">
-          <div class="step-card-header">4. Inbound Port Rules</div>
-          <p style="margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
-            Public inbound ports: Select <strong>Allow selected ports</strong> &rarr; check <strong>only <code>SSH (22)</code></strong>.
-          </p>
-          <div class="callout-tip" style="margin: 0.5rem 0 0 0; padding: 0.75rem 1rem;">
-            <strong>💡 Notice:</strong> In the lecture, we deliberately leave <strong>Port 80 (HTTP) closed for now</strong> so we can experience and troubleshoot the real-world firewall trap!
-          </div>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="concept-table">
+            <thead>
+              <tr>
+                <th>Setting Field</th>
+                <th>Exact Value</th>
+                <th>Architectural Reason Taught in Video</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Subscription</strong></td>
+                <td><code>Azure subscription 1</code> (Free Trial)</td>
+                <td>Applies your $200 free credit without unexpected charges.</td>
+              </tr>
+              <tr>
+                <td><strong>Resource Group</strong></td>
+                <td>Click <em>Create new</em> &rarr; <code>azure-vm-rg</code></td>
+                <td>A single logical container for all lab resources for 1-click cleanup later.</td>
+              </tr>
+              <tr>
+                <td><strong>Virtual machine name</strong></td>
+                <td><code>my-web-server</code></td>
+                <td>Clear naming convention indicating its web hosting role.</td>
+              </tr>
+              <tr>
+                <td><strong>Region</strong></td>
+                <td><code>Central India</code> (or closest region)</td>
+                <td>Selecting the geographically nearest region minimizes network latency.</td>
+              </tr>
+              <tr>
+                <td><strong>Availability zone</strong></td>
+                <td><code>Zone 1</code></td>
+                <td>Guarantees Microsoft's 99.99% high-availability SLA.</td>
+              </tr>
+              <tr>
+                <td><strong>Image</strong></td>
+                <td><code>Ubuntu Server 22.04 LTS - x64 Gen2</code></td>
+                <td>Stable, long-term support Linux distribution.</td>
+              </tr>
+              <tr>
+                <td><strong>Size</strong></td>
+                <td><code>Standard_B1s</code> (1 vCPU, 1 GiB RAM)</td>
+                <td><strong>Free Tier eligible!</strong> Grants 750 free compute hours each month for 12 months.</td>
+              </tr>
+              <tr>
+                <td><strong>Authentication type</strong></td>
+                <td><code>SSH public key</code></td>
+                <td>Cryptographically secure against password brute-force attacks.</td>
+              </tr>
+              <tr>
+                <td><strong>Key pair name</strong></td>
+                <td><code>my-web-server_key</code></td>
+                <td>Name of the downloadable private key (<code>.pem</code>) file.</td>
+              </tr>
+              <tr>
+                <td><strong>Public inbound ports</strong></td>
+                <td>Check <strong>SSH (22)</strong> only</td>
+                <td><span style="color: #f59e0b; font-weight: 700;">Intentional Trap:</span> Leave Port 80 unchecked to demonstrate firewall troubleshooting!</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
       <!-- STEP 4 -->
       <section id="step-cloud-init" class="note-section content-section">
-        <h2><span class="section-number">04.</span> The Advanced Tab &amp; Automated Cloud-Init Script</h2>
-        <p>
-          Instead of manually installing software after logging into the server, the lecturer configures the VM to install Apache automatically the instant it finishes booting!
-        </p>
+        <h2><span class="section-number">04.</span> Linux VM: Cloud-Init Apache Script</h2>
+        <p>Rather than manually SSHing into the VM after boot to type install commands, the instructor automates the entire web server provisioning using <strong>Custom data (cloud-init)</strong>:</p>
 
-        <div class="step-card" style="border-left: 3px solid #0078d4;">
-          <div class="step-card-header">Advanced Tab &gt; Custom data and cloud-init</div>
-          <p style="margin: 0 0 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
-            Scroll down to <strong>Custom data</strong> and paste the exact automated bash script:
-          </p>
-          <div class="terminal-window">
-            <div class="terminal-header">
-              <span class="terminal-title">Bash Bootstrap Script</span>
-            </div>
-            <div class="terminal-body"><span class="term-comment">#!/bin/bash</span>
-<span class="term-cmd">apt-get update -y</span>
-<span class="term-cmd">apt-get install -y apache2</span>
-<span class="term-cmd">systemctl start apache2</span>
-<span class="term-cmd">systemctl enable apache2</span>
-<span class="term-cmd">echo "&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;" &gt; /var/www/html/index.html</span></div>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Click <strong>Next : Disks</strong> (leave Standard SSD defaults).</li>
+          <li>Click <strong>Next : Networking</strong> (Azure prepares virtual network, subnet, and public IP).</li>
+          <li>Click <strong>Next : Management</strong> &rarr; <strong>Next : Monitoring</strong> &rarr; <strong>Next : Advanced</strong>.</li>
+          <li>Scroll down to the <strong>Custom data</strong> box and paste the bash script:</li>
+        </ol>
+
+        <div class="code-block" style="margin: 1rem 0;">
+          <div class="code-header">
+            <span>cloud-init-bootstrap.sh (Custom Data)</span>
+            <button class="btn-copy">Copy Script</button>
           </div>
+          <pre><code>#!/bin/bash
+# 1. Update Ubuntu local package repository index
+apt-get update -y
+
+# 2. Install the Apache2 HTTP web server
+apt-get install -y apache2
+
+# 3. Start Apache immediately
+systemctl start apache2
+
+# 4. Enable Apache to auto-start on system boots
+systemctl enable apache2
+
+# 5. Overwrite the default landing page with a custom heading
+echo "&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;" &gt; /var/www/html/index.html</code></pre>
         </div>
 
-        <ul style="font-size: 0.9rem; line-height: 1.6; margin: 1rem 0;">
-          <li><strong><code>apt-get update -y</code>:</strong> Refreshes the package manager index.</li>
-          <li><strong><code>apt-get install -y apache2</code>:</strong> Installs the Apache HTTP web server software.</li>
-          <li><strong><code>systemctl start apache2</code>:</strong> Launches the web server background daemon.</li>
-          <li><strong><code>systemctl enable apache2</code>:</strong> Ensures Apache restarts automatically on server reboot.</li>
-          <li><strong><code>echo ... &gt; /var/www/html/index.html</code>:</strong> Writes our custom HTML landing page.</li>
-        </ul>
+        <div class="callout-tip">
+          <strong>How Cloud-Init Works:</strong> During the initial Linux kernel boot, cloud-init runs with root privileges and executes this script before user login. Your web server is serving traffic the instant provisioning finishes.
+        </div>
       </section>
 
       <!-- STEP 5 -->
       <section id="step-create-key" class="note-section content-section">
-        <h2><span class="section-number">05.</span> Review, Create &amp; Downloading the Private Key</h2>
-        <ol style="font-size: 0.92rem; line-height: 1.6; margin: 1rem 0 1.25rem;">
-          <li>Click the blue <strong>Review + create</strong> button at the bottom of the portal.</li>
-          <li>Azure runs automated validation checks. Once it displays <strong>Validation passed</strong>, click <strong>Create</strong>.</li>
-          <li>A modal popup appears: <strong>"Generate new key pair"</strong>.</li>
-          <li>Click the blue button: <strong>Download private key and create resource</strong>.</li>
-          <li>Your web browser downloads the private key file: <strong><code>my-web-server_key.pem</code></strong>.
-            <br><span style="color: #ef4444; font-size: 0.85rem; font-weight: 600;">⚠️ Keep this file safe! If you lose this .pem file, you cannot download it again from Azure.</span>
-          </li>
-          <li>Azure begins provisioning the virtual machine in the background.</li>
+        <h2><span class="section-number">05.</span> Linux VM: Review + Create &amp; Key Pair</h2>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Click <strong>Review + create</strong>. Azure performs green validation checks.</li>
+          <li>Click <strong>Create</strong>. A popup window appears: <em>"Generate new key pair"</em>.</li>
+          <li>Click <strong>Download private key and create resource</strong>.</li>
+          <li>Save the downloaded file <code>my-web-server_key.pem</code> to your local computer.</li>
         </ol>
+        <div class="callout-danger">
+          <strong>Security Notice:</strong> Azure never stores your private key. If you misplace this <code>.pem</code> file, you cannot SSH into your Linux VM using this key identity.
+        </div>
       </section>
 
       <!-- STEP 6 -->
       <section id="step-resources-created" class="note-section content-section">
-        <h2><span class="section-number">06.</span> What Did Azure Create in the Background?</h2>
-        <p>
-          While the deployment finishes, the lecturer navigates to <strong>All resources</strong> and opens Resource Group <strong>`azure-vm-rg`</strong>. Notice that Azure deployed 7 interconnected cloud components together:
-        </p>
+        <h2><span class="section-number">06.</span> Behind the Scenes: 7 Resources</h2>
+        <p>After deployment finishes, click on <strong>All resources</strong> in the Azure Portal. Azure provisioned a cluster of <strong>7 distinct resources</strong>:</p>
 
-        <div style="overflow-x: auto; margin: 1.25rem 0;">
-          <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
-            <thead>
-              <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
-                <th style="padding: 0.75rem 1rem; text-align: left;">Resource Name</th>
-                <th style="padding: 0.75rem 1rem; text-align: left;">Azure Resource Type</th>
-                <th style="padding: 0.75rem 1rem; text-align: left;">Operational Purpose</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>my-web-server</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Virtual Machine</td>
-                <td style="padding: 0.75rem 1rem;">The compute processor and RAM running our Ubuntu OS.</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>my-web-server-nsg</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Network Security Group</td>
-                <td style="padding: 0.75rem 1rem;">The virtual stateful firewall filtering port traffic.</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>my-web-server-ip</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Public IP Address</td>
-                <td style="padding: 0.75rem 1rem;">The internet-facing IP address to access the server globally.</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>my-web-server-nic</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Network Interface (NIC)</td>
-                <td style="padding: 0.75rem 1rem;">Connects the VM to the private virtual network.</td>
-              </tr>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>azure-vm-rg-vnet</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Virtual Network (VNet)</td>
-                <td style="padding: 0.75rem 1rem;">The isolated private software-defined network.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; font-weight: 600;"><code>my-web-server_OsDisk_1</code></td>
-                <td style="padding: 0.75rem 1rem; color: #0078d4; font-weight: 600;">Managed Disk (SSD)</td>
-                <td style="padding: 0.75rem 1rem;">The 30 GB persistent drive holding the Ubuntu filesystem.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #60a5fa;">1. Virtual Machine</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Dedicated vCPU and RAM compute allocation.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">my-web-server</div>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #34d399;">2. Network Interface (NIC)</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Virtual network adapter bridging VM to VNet.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">my-web-server-nic</div>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #f59e0b;">3. Public IP Address</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Routable public IPv4 address for internet access.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">my-web-server-ip</div>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #ef4444;">4. Network Security Group (NSG)</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Virtual perimeter firewall filtering traffic ports.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">my-web-server-nsg</div>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #a855f7;">5. Virtual Network (VNet)</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Private software-defined cloud network boundary.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">azure-vm-rg-vnet</div>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #ec4899;">6. OS Disk</span></div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Persistent storage containing the Ubuntu OS files.</p>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">my-web-server_OsDisk_1_xxx</div>
+          </div>
         </div>
       </section>
 
       <!-- STEP 7 -->
       <section id="step-portal-terminal" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Connecting to the VM via Azure Portal (SSH via Azure CLI)</h2>
-        <p>
-          Once deployment finishes, click <strong>Go to resource</strong>. The lecturer demonstrates connecting directly inside the Azure Portal without installing any local software:
-        </p>
-
-        <ol style="font-size: 0.92rem; line-height: 1.6; margin: 1rem 0 1.25rem;">
-          <li>In the VM toolbar at the top, click <strong>Connect</strong>.</li>
-          <li>Select <strong>More ways to connect</strong> &rarr; click <strong>SSH using Azure CLI</strong>.</li>
-          <li>Click the blue button: <strong>Configure + Check Access</strong>.
-            <br><span style="color: var(--text-secondary); font-size: 0.85rem;">Azure automatically performs 4 health checks: verifies VM is running, port 22 is open, network interface is connected, and Cloud Shell proxy is authenticated.</span>
-          </li>
-          <li>When all 4 checkmarks turn green, click the <strong>Connect</strong> button below them.</li>
-          <li>A terminal drawer slides up at the bottom of the portal.</li>
-          <li>When prompted: <code>Are you sure you want to continue connecting (yes/no)?</code> &rarr; Type <code>yes</code> and press Enter.</li>
-          <li>Your live command prompt appears:
-            <div style="font-family: var(--font-mono); font-size: 0.9rem; background: var(--bg-secondary); padding: 0.5rem 0.8rem; border-radius: 6px; margin-top: 0.5rem; color: #10b981;">
-              azureuser@my-web-server:~$
-            </div>
-          </li>
+        <h2><span class="section-number">07.</span> Linux VM: In-Portal CLI Terminal</h2>
+        <p>The instructor shows how to open a live Linux shell session without leaving your web browser:</p>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Click on <strong>my-web-server</strong> in the VM list.</li>
+          <li>In the top action bar, click <strong>Connect</strong> &rarr; select <strong>Connect</strong> (or <em>More ways to connect</em>).</li>
+          <li>Choose <strong>SSH using Azure CLI</strong>.</li>
+          <li>Azure checks 4 prerequisites: Port 22 open, Public IP assigned, Network reachable, Valid login.</li>
+          <li>Select your authentication credentials and click <strong>Connect</strong>.</li>
+          <li>An interactive terminal pane initializes in your browser: <code>azureuser@my-web-server:~$</code>.</li>
         </ol>
       </section>
 
       <!-- STEP 8 -->
       <section id="step-verify-apache" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Terminal Verification Commands (Run Inside the VM)</h2>
-        <p>Now that you have a live terminal inside your cloud server, run the exact verification commands demonstrated in the video:</p>
+        <h2><span class="section-number">08.</span> Linux VM: Verify Apache (status / curl)</h2>
+        <p>Run these commands inside your virtual machine terminal to verify that the automated cloud-init setup succeeded:</p>
 
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <span class="terminal-title">azureuser@my-web-server:~</span>
+        <div class="code-block" style="margin: 1rem 0;">
+          <div class="code-header">
+            <span>Terminal Commands Inside Ubuntu VM</span>
+            <button class="btn-copy">Copy Commands</button>
           </div>
-          <div class="terminal-body"><span class="term-comment"># 1. Clear the terminal screen</span>
-<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">clear</span>
+          <pre><code># 1. Clear terminal screen
+clear
 
-<span class="term-comment"># 2. Check Apache service status (Must say: active (running)!)</span>
-<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">systemctl status apache2</span>
-<span class="term-output">● apache2.service - The Apache HTTP Server
-     Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
-     Active: active (running) since Tue 2026-11-17 14:30:12 UTC; 2min ago</span>
+# 2. Check Apache service status (should be active running in green)
+systemctl status apache2
 
-<span class="term-comment"># 3. Inspect the custom HTML file created by our bootstrap script</span>
-<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">cat /var/www/html/index.html</span>
-<span class="term-output">&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;</span>
+# 3. View the custom HTML generated by cloud-init
+cat /var/www/html/index.html
 
-<span class="term-comment"># 4. Test web server response locally inside the VM</span>
-<span class="term-prompt">azureuser@my-web-server:~$</span> <span class="term-cmd">curl http://localhost</span>
-<span class="term-output">&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;</span></div>
+# 4. Test local HTTP response inside the VM
+curl http://localhost</code></pre>
         </div>
-
-        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.75rem;">
-          Apache responds with our custom HTML! This proves that the web server is actively running inside the VM.
-        </p>
+        <p><strong>Result:</strong> <code>curl http://localhost</code> immediately outputs: <code>&lt;h1&gt;Welcome to Apache Web Server on Azure&lt;/h1&gt;</code>.</p>
       </section>
 
       <!-- STEP 9 -->
       <section id="step-nsg-timeout" class="note-section content-section">
-        <h2><span class="section-number">09.</span> The Port 80 Browser Timeout Trap &amp; NSG Fix</h2>
+        <h2><span class="section-number">09.</span> Port 80 Browser Timeout Trap &amp; NSG Fix</h2>
 
         <h3>The Real-World Problem:</h3>
-        <p>
-          1. Copy the <strong>Public IP address</strong> from your Azure Portal VM overview (e.g., <code>20.198.64.120</code>).<br>
-          2. Paste <code>http://20.198.64.120</code> into a new browser tab and press Enter.<br>
-          3. <strong>The browser tab continuously spins and eventually fails with:</strong>
-        </p>
+        <p>Copy the <strong>Public IP address</strong> of your VM (e.g., <code>20.198.x.x</code>), paste it into your computer's browser tab, and press Enter. The tab spins indefinitely and eventually crashes with <strong><code>ERR_CONNECTION_TIMED_OUT</code></strong>!</p>
 
-        <div class="callout-warning" style="margin: 1rem 0;">
-          <strong>⚠️ ERR_CONNECTION_TIMED_OUT:</strong>
-          Even though Apache is running inside the VM and responding to <code>curl http://localhost</code>, external internet users cannot reach it! Why? Because in Step 3, we only opened <strong>Port 22 (SSH)</strong>. Azure's default Network Security Group (NSG) firewall rule <code>DenyAllInbound</code> blocks Port 80 completely!
+        <div class="callout-warning">
+          <strong>Why did it fail?</strong> Apache is running perfectly inside the VM. The block happens at the <strong>Network Security Group (NSG)</strong> perimeter firewall. By default, Azure NSGs enforce a <strong>Default Deny</strong> policy for all inbound internet traffic except the ports you explicitly allow. Since we only allowed Port 22 (SSH), Port 80 (HTTP) traffic is dropped.
         </div>
 
-        <h3>The Fix: Adding the Port 80 Inbound Rule</h3>
-        <ol style="font-size: 0.92rem; line-height: 1.6; margin: 1rem 0 1.25rem;">
-          <li>In the Azure Portal, open your VM (<code>my-web-server</code>).</li>
-          <li>In the left navigation menu under <strong>Networking</strong>, click <strong>Network settings</strong> (or <strong>Networking</strong>).</li>
-          <li>Select the <strong>Inbound port rules</strong> tab.</li>
-          <li>On the far right, click the <strong>Add inbound port rule</strong> button.</li>
-          <li>In the configuration drawer, set:
-            <ul style="margin-top: 0.35rem;">
-              <li><strong>Source:</strong> <code>Any</code></li>
-              <li><strong>Service:</strong> Select <code>HTTP</code> (automatically sets Port <code>80</code>, Protocol <code>TCP</code>)</li>
-              <li><strong>Action:</strong> <code>Allow</code></li>
-              <li><strong>Priority:</strong> <code>300</code> (must be lower number than 65500)</li>
-              <li><strong>Name:</strong> <code>Port_80</code> (or <code>Allow-HTTP-80</code>)</li>
-            </ul>
-          </li>
-          <li>Click <strong>Add</strong>. Wait 10 to 15 seconds for Azure to deploy the rule.</li>
-          <li>Switch back to your browser tab with <code>http://&lt;Public-IP&gt;</code> and hit Refresh!</li>
-          <li><strong>"Welcome to Apache Web Server on Azure"</strong> loads immediately on your screen! 🎉</li>
+        <h3>The Fix (Adding Inbound Rule):</h3>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>In the VM left menu, click <strong>Networking</strong> (or <strong>Network settings</strong>).</li>
+          <li>Notice the <strong>Inbound port rules</strong> table has <code>SSH</code> (Port 22) allowed, followed by <code>DenyAllInBound</code>.</li>
+          <li>Click <strong>+ Add inbound port rule</strong> on the top right.</li>
+          <li>Set <strong>Service</strong> to <code>HTTP</code> (Port <code>80</code>, Protocol <code>TCP</code>), <strong>Action</strong> to <code>Allow</code>, <strong>Priority</strong> to <code>310</code>, and <strong>Name</strong> to <code>Allow-HTTP-Port-80</code>.</li>
+          <li>Click <strong>Add</strong>. Wait 5 seconds, then refresh your browser tab on <code>http://&lt;VM_PUBLIC_IP&gt;</code>.</li>
+          <li><strong>Success!</strong> The heading <strong>"Welcome to Apache Web Server on Azure"</strong> renders instantly.</li>
         </ol>
       </section>
 
       <!-- STEP 10 -->
-      <section id="step-local-ssh" class="note-section content-section">
-        <h2><span class="section-number">10.</span> Connecting from Your Local Computer Terminal (Native SSH)</h2>
-        <p>You can also connect to the VM directly from your laptop's terminal using the downloaded <code>.pem</code> key:</p>
+      <section id="step-windows-setup" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Windows VM: Windows Server 2022 Setup</h2>
+        <p>Next, the instructor demonstrates spinning up a <strong>Windows Virtual Machine</strong> to compare administrative workflows with Linux:</p>
 
-        <h3>1. On macOS / Linux / WSL:</h3>
-        <div class="terminal-window">
-          <div class="terminal-body"><span class="term-comment"># Set strict read-only permissions on private key</span>
-<span class="term-prompt">$</span> <span class="term-cmd">chmod 400 ~/Downloads/my-web-server_key.pem</span>
-
-<span class="term-comment"># Connect via SSH using the VM's Public IP</span>
-<span class="term-prompt">$</span> <span class="term-cmd">ssh -i ~/Downloads/my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
-        </div>
-
-        <h3>2. On Windows PowerShell (Fixing "Permissions are too open" error):</h3>
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <span class="terminal-title">Windows PowerShell</span>
-          </div>
-          <div class="terminal-body"><span class="term-comment"># Remove inherited permissions</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\my-web-server_key.pem /inheritance:r</span>
-
-<span class="term-comment"># Grant read permission strictly to your Windows username</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\my-web-server_key.pem /grant:r "$($env:USERNAME):(R)"</span>
-
-<span class="term-comment"># Connect cleanly</span>
-<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">ssh -i .\my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
-        </div>
-      </section>
-
-      <!-- STEP 11 -->
-      <section id="step-cost-trap" class="note-section content-section">
-        <h2><span class="section-number">11.</span> The Cost Trap: "Stopped" vs. "Stopped (Deallocated)"</h2>
-        <div class="callout-warning">
-          <strong>⚠️ Critical Billing Rule:</strong>
-          If you shut down the VM from inside Ubuntu (<code>sudo shutdown now</code>), Azure marks the VM as <strong>Stopped</strong>, NOT deallocated. Microsoft still holds physical hardware reserved for you and <strong>continues billing your CPU and RAM every minute!</strong>
-        </div>
-
-        <div style="overflow-x: auto; margin: 1.25rem 0;">
-          <table class="comparison-table" style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="concept-table">
             <thead>
-              <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
-                <th style="padding: 0.75rem 1rem; text-align: left;">Action Taken</th>
-                <th style="padding: 0.75rem 1rem; text-align: left;">Status in Azure Portal</th>
-                <th style="padding: 0.75rem 1rem; text-align: left;">Compute (CPU/RAM) Billing</th>
-                <th style="padding: 0.75rem 1rem; text-align: left;">Disk Storage Billing</th>
+              <tr>
+                <th>Setting Field</th>
+                <th>Windows Configuration</th>
+                <th>Engineering Explanation</th>
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom: 1px solid var(--border-color);">
-                <td style="padding: 0.75rem 1rem; font-weight: 600;">Guest OS Shutdown</td>
-                <td style="padding: 0.75rem 1rem; color: #ef4444; font-weight: 600;">Stopped</td>
-                <td style="padding: 0.75rem 1rem; color: #ef4444; font-weight: 600;">💸 STILL BILLED!</td>
-                <td style="padding: 0.75rem 1rem;">💸 Billed</td>
+              <tr>
+                <td><strong>Resource group</strong></td>
+                <td>Select existing <code>azure-vm-rg</code></td>
+                <td>Group with Linux VM for combined lifecycle management.</td>
               </tr>
               <tr>
-                <td style="padding: 0.75rem 1rem; font-weight: 600;">Azure Portal Stop Button</td>
-                <td style="padding: 0.75rem 1rem; color: #10b981; font-weight: 600;">Stopped (deallocated)</td>
-                <td style="padding: 0.75rem 1rem; color: #10b981; font-weight: 600;">🛑 ₹0 / $0 (COMPUTE FREE)</td>
-                <td style="padding: 0.75rem 1rem;">💸 Minor disk only (~cents)</td>
+                <td><strong>VM name</strong></td>
+                <td><code>my-windows-server</code></td>
+                <td>Distinct identifier for the Windows workload.</td>
+              </tr>
+              <tr>
+                <td><strong>Region / Zone</strong></td>
+                <td><code>Central India</code> / <code>Zone 1</code></td>
+                <td>Same low-latency availability zone.</td>
+              </tr>
+              <tr>
+                <td><strong>Image</strong></td>
+                <td><code>Windows Server 2022 Datacenter: Azure Edition - x64 Gen2</code></td>
+                <td>Enterprise Windows Server operating system.</td>
+              </tr>
+              <tr>
+                <td><strong>Size</strong></td>
+                <td><code>Standard_B2s</code> (2 vCPUs, 4 GiB RAM)</td>
+                <td><strong>Sizing Rule:</strong> The Windows graphical desktop requires at least 4 GB RAM to prevent extreme lag.</td>
+              </tr>
+              <tr>
+                <td><strong>Administrator account</strong></td>
+                <td>Username: <code>azureuser</code> + Strong Password</td>
+                <td>Windows uses username/password credentials rather than SSH key pairs.</td>
+              </tr>
+              <tr>
+                <td><strong>Public inbound ports</strong></td>
+                <td>Allow <strong>RDP (Port 3389)</strong></td>
+                <td>Enables Microsoft's Remote Desktop Protocol connection over the internet.</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-          <strong>Always click STOP in the Azure Portal</strong> (or run <code>az vm deallocate</code>) when you finish studying!
-        </p>
       </section>
 
-      <!-- STEP 12 -->
-      <section id="step-teardown" class="note-section content-section">
-        <h2><span class="section-number">12.</span> Clean Lab Teardown Protocol ($0 Bill Guarantee)</h2>
-        <p>Because all resources were created inside the <code>azure-vm-rg</code> Resource Group, you can delete everything in one single action:</p>
-        <ol style="font-size: 0.92rem; line-height: 1.6; margin: 1rem 0;">
-          <li>In the Azure Portal search bar, type <code>Resource groups</code> &rarr; click on <code>azure-vm-rg</code>.</li>
-          <li>In the top action bar, click <strong>Delete resource group</strong>.</li>
-          <li>Type <code>azure-vm-rg</code> into the confirmation field &rarr; click <strong>Delete</strong>.</li>
-          <li>Azure cleanly destroys the VM, OS disk, public IP, NIC, and virtual network together.</li>
+      <!-- STEP 11 -->
+      <section id="step-windows-rdp" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Windows VM: Connecting via RDP (Port 3389)</h2>
+        <p>Once <code>my-windows-server</code> reaches the <strong>Running</strong> state:</p>
+
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Click on <code>my-windows-server</code> &rarr; in the top action bar, click <strong>Connect</strong> &rarr; select <strong>RDP</strong>.</li>
+          <li>Under <strong>Native RDP</strong>, confirm the Public IP and Port (<code>3389</code>) &rarr; click <strong>Download RDP file</strong>.</li>
+          <li>Save <code>my-windows-server.rdp</code> to your desktop.</li>
+          <li><strong>Launch Remote Desktop:</strong>
+            <ul>
+              <li><strong>Windows PC:</strong> Double-click the file to launch <code>mstsc.exe</code>.</li>
+              <li><strong>macOS:</strong> Open <em>Microsoft Remote Desktop</em> from the Mac App Store and drop the <code>.rdp</code> file into it.</li>
+            </ul>
+          </li>
+          <li>Click <strong>Connect</strong> when prompted by the unknown publisher warning.</li>
+          <li>Enter your username (<code>azureuser</code>) and password. Accept the certificate prompt by clicking <strong>Yes</strong>.</li>
+          <li><strong>Boom!</strong> The full graphical Windows Server 2022 desktop launches in a window on your screen.</li>
         </ol>
       </section>
 
-      <!-- STEP 13: SUMMARY CHECKLIST -->
+      <!-- STEP 12 -->
+      <section id="step-windows-iis" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Windows VM: Installing IIS Web Server</h2>
+        <p>Inside the Windows remote desktop, the instructor installs Microsoft's native web server: <strong>Internet Information Services (IIS)</strong>.</p>
+
+        <h3>Installing via PowerShell (Automated 1-Liner):</h3>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Inside the remote desktop session, click the Start menu.</li>
+          <li>Right-click <strong>Windows PowerShell</strong> &rarr; select <strong>Run as administrator</strong>.</li>
+          <li>Run the official feature installation command:</li>
+        </ol>
+
+        <div class="code-block" style="margin: 1rem 0;">
+          <div class="code-header">
+            <span>PowerShell (Run as Administrator inside Windows VM)</span>
+            <button class="btn-copy">Copy Command</button>
+          </div>
+          <pre><code>Install-WindowsFeature -name Web-Server -IncludeManagementTools</code></pre>
+        </div>
+
+        <h3>Verifying &amp; Exposing IIS:</h3>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>Open Microsoft Edge inside the Windows remote desktop and visit <code>http://localhost</code>.</li>
+          <li><strong>Local Test:</strong> The official blue <strong>Internet Information Services (IIS)</strong> welcome page appears!</li>
+          <li><strong>Internet Test:</strong> Go back to Azure Portal &rarr; <code>my-windows-server-nsg</code> &rarr; Add an Inbound Rule allowing <strong>HTTP (Port 80)</strong>.</li>
+          <li>Now anyone in the world can load your Windows Server IIS website via its Public IP!</li>
+        </ol>
+      </section>
+
+      <!-- STEP 13 -->
+      <section id="step-vm-comparison" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Linux vs. Windows VM Comparison Matrix</h2>
+        <p>A comprehensive side-by-side comparison summarizing how Linux and Windows virtual machines operate in Microsoft Azure:</p>
+
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="concept-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Linux VM (Ubuntu 22.04)</th>
+                <th>Windows VM (Windows Server 2022)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Administrative Protocol</strong></td>
+                <td><strong>SSH (Port 22)</strong></td>
+                <td><strong>RDP (Port 3389)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Authentication</strong></td>
+                <td>SSH Key Pair (<code>.pem</code> file)</td>
+                <td>Administrator Username + Password</td>
+              </tr>
+              <tr>
+                <td><strong>User Interface</strong></td>
+                <td>Headless command-line interface (CLI)</td>
+                <td>Full Graphical User Interface (GUI Desktop)</td>
+              </tr>
+              <tr>
+                <td><strong>Recommended Sizing</strong></td>
+                <td><code>Standard_B1s</code> (1 vCPU, 1 GB RAM)</td>
+                <td><code>Standard_B2s</code> (2 vCPUs, 4 GB RAM)</td>
+              </tr>
+              <tr>
+                <td><strong>Default Web Server</strong></td>
+                <td><strong>Apache2</strong> (or Nginx)</td>
+                <td><strong>Internet Information Services (IIS)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Default Web Root</strong></td>
+                <td><code>/var/www/html/index.html</code></td>
+                <td><code>C:\inetpub\wwwroot\iisstart.htm</code></td>
+              </tr>
+              <tr>
+                <td><strong>OS License Cost</strong></td>
+                <td>$0 (Free open source)</td>
+                <td>Windows Server license overhead included in billing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- STEP 14 -->
+      <section id="step-local-ssh" class="note-section content-section">
+        <h2><span class="section-number">14.</span> Local Terminal SSH Access</h2>
+        <p>To connect to your Linux VM directly from your local terminal using the downloaded <code>my-web-server_key.pem</code>:</p>
+
+        <h3>macOS / Linux Terminal:</h3>
+        <div class="code-block" style="margin: 0.5rem 0 1rem;">
+          <pre><code># 1. Lock down permissions so SSH doesn't reject an open key file
+chmod 400 ~/Downloads/my-web-server_key.pem
+
+# 2. Connect via SSH
+ssh -i ~/Downloads/my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</code></pre>
+        </div>
+
+        <h3>Windows PowerShell:</h3>
+        <div class="code-block" style="margin: 0.5rem 0 1rem;">
+          <pre><code># 1. Reset permissions so only your Windows account can read the key
+icacls .\my-web-server_key.pem /inheritance:r
+icacls .\my-web-server_key.pem /grant:r "$($env:USERNAME):(R)"
+
+# 2. Connect via OpenSSH
+ssh -i .\my-web-server_key.pem azureuser@&lt;VM_PUBLIC_IP&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- STEP 15 -->
+      <section id="step-cost-trap" class="note-section content-section">
+        <h2><span class="section-number">15.</span> The Cost Trap: Stopped vs. Deallocated</h2>
+
+        <div class="callout-danger">
+          <strong>The Biggest Azure Billing Pitfall:</strong>
+          If you shut down a virtual machine from inside the operating system (e.g., Start &rarr; Shut Down in Windows or <code>sudo poweroff</code> in Ubuntu), Azure status displays <strong>Stopped</strong>. Microsoft <strong>CONTINUES TO CHARGE YOU</strong> for the compute cores because the physical host server remains reserved!
+        </div>
+
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="concept-table">
+            <thead>
+              <tr>
+                <th>Portal Status</th>
+                <th>Physical Hardware Reserved?</th>
+                <th>Compute Billing Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="color: #22c55e;">Running</strong></td>
+                <td>Yes (Dedicated host hypervisor slot)</td>
+                <td>Billing active per second</td>
+              </tr>
+              <tr>
+                <td><strong style="color: #ef4444;">Stopped (Guest Shutdown)</strong></td>
+                <td>Yes (Physical slot kept warm for you)</td>
+                <td><strong style="color: #ef4444;">BILL STILL CHARGES!</strong></td>
+              </tr>
+              <tr>
+                <td><strong style="color: #38bdf8;">Stopped (deallocated)</strong></td>
+                <td>No (Hardware released back to Azure)</td>
+                <td><strong>$0 Compute Charges</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>The Fix:</strong> Always click the <strong>Stop</strong> button in the Azure Portal toolbar until the status explicitly reads <strong>Stopped (deallocated)</strong>.</p>
+      </section>
+
+      <!-- STEP 16 -->
+      <section id="step-teardown" class="note-section content-section">
+        <h2><span class="section-number">16.</span> Clean Lab Teardown Protocol ($0 Bill)</h2>
+        <p>Because all resources for both VMs reside inside <code>azure-vm-rg</code>, clean teardown requires only 1 operation:</p>
+        <ol style="margin-left: 1.25rem; font-size: 0.95rem; line-height: 1.8;">
+          <li>In the Azure search bar, type <code>Resource groups</code> and click <strong>azure-vm-rg</strong>.</li>
+          <li>Click <strong>Delete resource group</strong> in the top menu.</li>
+          <li>Type <code>azure-vm-rg</code> into the confirmation field and click <strong>Delete</strong>.</li>
+          <li>Azure deletes both VMs, disks, public IPs, NICs, and VNets together, guaranteeing a $0 recurring bill!</li>
+        </ol>
+      </section>
+
+      <!-- STEP 17 -->
       <section id="step-summary" class="note-section content-section">
-        <h2><span class="section-number">13.</span> Summary Checklist</h2>
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+        <h2><span class="section-number">17.</span> Summary Checklist</h2>
+        <div class="checklist-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk1" checked style="margin-top: 0.25rem;">
-              <label for="chk1">I understand why a <strong>production server</strong> runs 24/7 actively serving web pages compared to an offline personal computer.</label>
+              <label for="chk1">I understand the difference between a personal PC and a 24/7 production server.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk2" checked style="margin-top: 0.25rem;">
-              <label for="chk2">I created a dedicated Resource Group (<code>azure-vm-rg</code>) and selected Zone 1 (99.99% SLA) in Central India.</label>
+              <label for="chk2">I created an Ubuntu Linux VM (<code>my-web-server</code>) using Free Tier eligible <code>Standard_B1s</code> in Zone 1.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk3" checked style="margin-top: 0.25rem;">
-              <label for="chk3">I configured automated Apache2 web server bootstrapping using the <strong>Custom data (cloud-init)</strong> script under the Advanced tab.</label>
+              <label for="chk3">I automated Apache2 web server bootstrapping using <strong>Custom data (cloud-init)</strong> under the Advanced tab.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk4" checked style="margin-top: 0.25rem;">
-              <label for="chk4">I connected directly via the Azure Portal web terminal using <strong>SSH via Azure CLI</strong> (Configure + Check Access).</label>
+              <label for="chk4">I connected directly via Azure Portal using <strong>SSH via Azure CLI</strong> (Configure + Check Access).</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk5" checked style="margin-top: 0.25rem;">
-              <label for="chk5">I verified Apache2 active status with <code>systemctl status apache2</code> and inspected <code>index.html</code>.</label>
+              <label for="chk5">I verified Apache2 status with <code>systemctl status apache2</code> and tested response with <code>curl http://localhost</code>.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk6" checked style="margin-top: 0.25rem;">
@@ -577,7 +705,19 @@
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="chk7" checked style="margin-top: 0.25rem;">
-              <label for="chk7">I know that only <strong>Stopped (deallocated)</strong> releases physical hardware and stops Azure compute billing.</label>
+              <label for="chk7">I created a <strong>Windows Server 2022</strong> VM (<code>my-windows-server</code>) using <code>Standard_B2s</code> and password auth.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk8" checked style="margin-top: 0.25rem;">
+              <label for="chk8">I connected to the Windows desktop using <strong>Remote Desktop Protocol (RDP Port 3389)</strong> and the downloaded <code>.rdp</code> file.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk9" checked style="margin-top: 0.25rem;">
+              <label for="chk9">I installed <strong>IIS Web Server</strong> on Windows Server using PowerShell <code>Install-WindowsFeature -name Web-Server</code>.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="chk10" checked style="margin-top: 0.25rem;">
+              <label for="chk10">I know that only <strong>Stopped (deallocated)</strong> releases physical hardware and stops Azure compute billing.</label>
             </li>
           </ul>
         </div>
