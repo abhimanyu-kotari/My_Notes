@@ -2546,18 +2546,195 @@ footer {
   color: #e6edf3;
   border: 1px solid #30363d;
   border-radius: 10px;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   margin: 1.5rem 0;
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.7;
+  font-size: 0.85rem;
+  line-height: 1.6;
   overflow-x: auto;
   box-shadow: var(--shadow-md);
+  white-space: pre;
 }
 
 .hierarchy-tree div {
   color: #e6edf3;
 }
+
+/* Modern Structured Visual Architecture Diagrams */
+.diagram-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.diagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.diagram-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Visual Shared Responsibility Layers */
+.pyramid-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.pyramid-layer {
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+
+.pyramid-layer:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.layer-saas {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.layer-paas {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.layer-iaas {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.layer-onprem {
+  background: rgba(100, 116, 139, 0.08);
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+.layer-badge {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.badge-saas { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+.badge-paas { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+.badge-iaas { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-onprem { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
+
+.layer-info {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .layer-info {
+    grid-template-columns: 1fr;
+  }
+}
+
+.layer-col-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.col-user { color: #f59e0b; }
+.col-azure { color: #38bdf8; }
+
+.layer-col-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Visual Terminal Box */
+.terminal-window {
+  background: #0f141c;
+  border: 1px solid #2d3748;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1.25rem 0;
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-mono);
+}
+
+.terminal-header {
+  background: #1a202c;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #2d3748;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.term-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #f59e0b; }
+.dot-green { background: #10b981; }
+
+.terminal-title {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.terminal-body {
+  padding: 1rem 1.25rem;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.term-prompt { color: #10b981; }
+.term-cmd { color: #f8fafc; font-weight: 600; }
+.term-comment { color: #64748b; font-style: italic; }
+.term-output { color: #94a3b8; }
+.term-highlight { color: #38bdf8; }
 
 
 

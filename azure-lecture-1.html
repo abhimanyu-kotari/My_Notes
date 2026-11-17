@@ -218,21 +218,30 @@
           <strong>Virtualization</strong> is the foundational technology that solved this dilemma. It enables a single physical computer (the host) to run multiple independent, isolated virtual computers (Guest Virtual Machines) simultaneously.
         </p>
 
-        <div class="hierarchy-tree">
-+-------------------------------------------------------------+
-|                     VIRTUALIZATION ENGINE                   |
-|                                                             |
-|  +--------------------+  +--------------------+  +--------+ |
-|  |   VM 1 (Ubuntu)    |  |   VM 2 (Windows)   |  | VM 3...| |
-|  |  Web Server App    |  |   SQL Database     |  | Email  | |
-|  +--------------------+  +--------------------+  +--------+ |
-|  | Guest OS (Linux)   |  | Guest OS (Windows) |  | GuestOS| |
-|  +--------------------+  +--------------------+  +--------+ |
-|                                                             |
-|             HYPERVISOR (ESXi, Hyper-V, KVM)                 |
-|  +--------------------------------------------------------+ |
-|  |          PHYSICAL HARDWARE (CPU, RAM, DISK, NIC)       | |
-+--+--------------------------------------------------------+-+
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">🖥️ Virtualization Architecture (Host vs Hypervisor vs Guest VMs)</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.85rem; margin-bottom: 0.85rem;">
+            <div class="step-card" style="margin: 0; border-top: 3px solid #38bdf8;">
+              <div class="step-card-header">VM 1 (Ubuntu Linux)</div>
+              <p style="font-size: 0.82rem; margin: 0; color: var(--text-secondary);">Web Server App &bull; Guest OS</p>
+            </div>
+            <div class="step-card" style="margin: 0; border-top: 3px solid #a855f7;">
+              <div class="step-card-header">VM 2 (Windows Server)</div>
+              <p style="font-size: 0.82rem; margin: 0; color: var(--text-secondary);">SQL Database &bull; Guest OS</p>
+            </div>
+            <div class="step-card" style="margin: 0; border-top: 3px solid #10b981;">
+              <div class="step-card-header">VM 3 (Debian Linux)</div>
+              <p style="font-size: 0.82rem; margin: 0; color: var(--text-secondary);">API Backend &bull; Guest OS</p>
+            </div>
+          </div>
+          <div style="background: rgba(0, 120, 212, 0.15); border: 1px solid rgba(0, 120, 212, 0.4); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; font-weight: 700; color: #50e6ff; margin-bottom: 0.85rem;">
+            HYPERVISOR (Type 1 Bare-Metal: Microsoft Hyper-V)
+          </div>
+          <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">
+            PHYSICAL HARDWARE POOL (Intel/AMD CPUs &bull; DDR5 RAM &bull; NVMe Disks &bull; 100GbE NICs)
+          </div>
         </div>
 
         <h3>The Magic Behind it: The Hypervisor</h3>
@@ -275,25 +284,73 @@
           Cloud computing is divided into three primary service models. With each step up the pyramid, Microsoft manages more of the underlying complexity, allowing developers to focus purely on business logic.
         </p>
 
-        <div class="hierarchy-tree">
-=============================================================================
-                  THE SHARED RESPONSIBILITY PYRAMID
-=============================================================================
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">⚖️ Cloud Shared Responsibility Model</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">SaaS &bull; PaaS &bull; IaaS &bull; On-Premises</span>
+          </div>
 
- LAYER                 YOU MANAGE (Customer)        MICROSOFT MANAGES (Azure)
------------------------------------------------------------------------------
- [SaaS]                Data &amp; User Access           Applications, Runtimes,
- Software as a Service                              OS, Servers, Networking
- (e.g. Office 365)
------------------------------------------------------------------------------
- [PaaS]                Application Code, Data,      OS Patching, Web Server,
- Platform as a Service Database Schemas             Hardware, Scaling, Power
- (e.g. Azure App Service, Azure SQL)
------------------------------------------------------------------------------
- [IaaS]                Operating System, Runtimes,  Physical Datacenters,
- Infrastructure as     Network Rules, Updates,      Cables, Physical Racks,
- a Service (Azure VMs) Backups, App Code            Hypervisors, Air Cooling
-=============================================================================
+          <div class="pyramid-stack">
+            <!-- SaaS -->
+            <div class="pyramid-layer layer-saas">
+              <span class="layer-badge badge-saas">SaaS</span>
+              <div class="layer-info">
+                <div>
+                  <div class="layer-col-title col-user">You Manage (Customer)</div>
+                  <p class="layer-col-desc">Customer data, user identity, access permissions, MFA, and client devices.</p>
+                </div>
+                <div>
+                  <div class="layer-col-title col-azure">Microsoft Manages (Azure)</div>
+                  <p class="layer-col-desc">Application code, runtimes, OS updates, hypervisors, physical datacenters &amp; networking (e.g. Office 365, PowerBI).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- PaaS -->
+            <div class="pyramid-layer layer-paas">
+              <span class="layer-badge badge-paas">PaaS</span>
+              <div class="layer-info">
+                <div>
+                  <div class="layer-col-title col-user">You Manage (Customer)</div>
+                  <p class="layer-col-desc">Application source code, database schemas, API configurations, and user secrets.</p>
+                </div>
+                <div>
+                  <div class="layer-col-title col-azure">Microsoft Manages (Azure)</div>
+                  <p class="layer-col-desc">OS patching, web server software, auto-scaling, high availability, and hardware (e.g. Azure App Service, Azure SQL).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- IaaS -->
+            <div class="pyramid-layer layer-iaas">
+              <span class="layer-badge badge-iaas">IaaS</span>
+              <div class="layer-info">
+                <div>
+                  <div class="layer-col-title col-user">You Manage (Customer)</div>
+                  <p class="layer-col-desc">Operating System (patching/updates), installed runtimes, firewall rules, and application code.</p>
+                </div>
+                <div>
+                  <div class="layer-col-title col-azure">Microsoft Manages (Azure)</div>
+                  <p class="layer-col-desc">Physical hypervisors, host blade servers, datacenter cooling, power grids, and physical racks (e.g. Azure VMs).</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- On-Premises -->
+            <div class="pyramid-layer layer-onprem">
+              <span class="layer-badge badge-onprem">On-Prem</span>
+              <div class="layer-info">
+                <div>
+                  <div class="layer-col-title col-user">You Manage (100%)</div>
+                  <p class="layer-col-desc">Every single layer from real estate, power generators, cables, switches, to OS and software.</p>
+                </div>
+                <div>
+                  <div class="layer-col-title col-azure">Microsoft Manages</div>
+                  <p class="layer-col-desc">None (traditional private datacenter).</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <h3>The Pizza Analogy:</h3>
@@ -345,32 +402,53 @@
         <h2><span class="section-number">05.</span> Azure Global Physical Infrastructure</h2>
         <p>Microsoft operates one of the largest physical computing networks on earth, spanning 60+ regions and hundreds of thousands of miles of subsea and terrestrial fiber optics.</p>
 
-        <div class="hierarchy-tree">
-+--------------------------------------------------------------------------+
-|                     AZURE GLOBAL ARCHITECTURE                            |
-|                                                                          |
-|   +------------------------------------------------------------------+   |
-|   | Azure Geography: United States                                   |   |
-|   |                                                                  |   |
-|   |   +----------------------------------------------------------+   |   |
-|   |   | Azure Region: East US (Virginia)                         |   |   |
-|   |   |                                                          |   |   |
-|   |   |   +---------------+  +---------------+  +---------------+|   |   |
-|   |   |   |  Zone 1 (AZ)  |  |  Zone 2 (AZ)  |  |  Zone 3 (AZ)  ||   |   |
-|   |   |   |  Independent  |  |  Independent  |  |  Independent  ||   |   |
-|   |   |   |  Power, Cooling  Power, Cooling  Power, Cooling ||   |   |
-|   |   |   +---------------+  +---------------+  +---------------+|   |   |
-|   |   |       \                     |                     /      |   |   |
-|   |   |        === High-Speed Ultra-Low-Latency Dark Fiber ===   |   |   |
-|   |   +----------------------------------------------------------+   |   |
-|   |                                 ^                                |   |
-|   |             High-Speed Dedicated Azure Backbone Fiber            |   |
-|   |                                 v                                |   |
-|   |   +----------------------------------------------------------+   |   |
-|   |   | Paired Region: West US (California, &gt;300 miles away)     |   |   |
-|   |   +----------------------------------------------------------+   |   |
-|   +------------------------------------------------------------------+   |
-+--------------------------------------------------------------------------+
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">🌐 Azure Global Physical Infrastructure</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Region &bull; Availability Zones &bull; Paired Region</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <!-- Primary Region with 3 Zones -->
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem;">
+              <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.75rem; color: #50e6ff; display: flex; align-items: center; justify-content: space-between;">
+                <span>Primary Region: East US (Virginia)</span>
+                <span class="tag" style="margin: 0;">Active Region</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem;">
+                <div class="step-card" style="margin: 0; text-align: center; padding: 0.75rem 0.5rem;">
+                  <div style="font-weight: 700; font-size: 0.88rem; color: #34d399;">Zone 1</div>
+                  <p style="font-size: 0.75rem; margin: 0.25rem 0 0; color: var(--text-secondary);">Datacenter A<br>Power &amp; Cooling</p>
+                </div>
+                <div class="step-card" style="margin: 0; text-align: center; padding: 0.75rem 0.5rem;">
+                  <div style="font-weight: 700; font-size: 0.88rem; color: #34d399;">Zone 2</div>
+                  <p style="font-size: 0.75rem; margin: 0.25rem 0 0; color: var(--text-secondary);">Datacenter B<br>Power &amp; Cooling</p>
+                </div>
+                <div class="step-card" style="margin: 0; text-align: center; padding: 0.75rem 0.5rem;">
+                  <div style="font-weight: 700; font-size: 0.88rem; color: #34d399;">Zone 3</div>
+                  <p style="font-size: 0.75rem; margin: 0.25rem 0 0; color: var(--text-secondary);">Datacenter C<br>Power &amp; Cooling</p>
+                </div>
+              </div>
+              <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted); text-align: center; font-family: var(--font-mono);">
+                &harr; Connected via Private Ultra-Low Latency (&lt;2ms) Dark Fiber Network &harr;
+              </div>
+            </div>
+
+            <!-- Secondary Paired Region -->
+            <div style="background: var(--bg-secondary); border: 1px dashed var(--border-color); border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: #f59e0b;">
+                  Paired Region: West US
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                  Located <strong>&gt;300 miles away</strong> in California. Asynchronously replicated for disaster recovery and regional failover.
+                </p>
+              </div>
+              <div style="margin-top: 0.75rem; font-size: 0.76rem; font-family: var(--font-mono); color: var(--text-muted); text-align: center;">
+                Backbone Fiber Link
+              </div>
+            </div>
+          </div>
         </div>
 
         <h3>Key Infrastructure Definitions:</h3>
@@ -387,14 +465,30 @@
         <h2><span class="section-number">06.</span> The 4-Level Azure Hierarchy</h2>
         <p>To keep millions of cloud assets organized, secure, and auditable, Azure enforces a strict 4-level nesting tree:</p>
 
-        <div class="hierarchy-tree">
-(Level 1) [ Management Groups ]  --> Governs policy &amp; compliance across subscriptions
-                 |
-(Level 2) [ Subscriptions ]        --> Billing boundary &amp; quota limit container
-                 |
-(Level 3) [ Resource Groups ]      --> Logical grouping &amp; lifecycle container
-                 |
-(Level 4) [ Resources ]            --> Individual services (VM, Blob, SQL, VNet)
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">🏗️ The 4-Level Azure Management Hierarchy</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Governance &bull; Billing &bull; Lifecycle</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <div class="step-card" style="margin: 0; border-left: 4px solid #c084fc;">
+              <div class="step-card-header"><span style="color: #c084fc;">Level 1: Management Groups</span></div>
+              <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Governs enterprise access, compliance policies, and budgets across multiple subscriptions.</p>
+            </div>
+            <div class="step-card" style="margin: 0; margin-left: 1.5rem; border-left: 4px solid #60a5fa;">
+              <div class="step-card-header"><span style="color: #60a5fa;">Level 2: Subscriptions</span></div>
+              <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">The primary billing boundary and resource quota limit container (e.g. "Production Subscription", "Dev/Test").</p>
+            </div>
+            <div class="step-card" style="margin: 0; margin-left: 3rem; border-left: 4px solid #34d399;">
+              <div class="step-card-header"><span style="color: #34d399;">Level 3: Resource Groups</span></div>
+              <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Logical container sharing the exact same lifecycle. Deleting the Resource Group wipes all child assets!</p>
+            </div>
+            <div class="step-card" style="margin: 0; margin-left: 4.5rem; border-left: 4px solid #f59e0b;">
+              <div class="step-card-header"><span style="color: #f59e0b;">Level 4: Resources</span></div>
+              <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Individual deployed cloud services (Virtual Machines, Storage Accounts, VNets, SQL Databases).</p>
+            </div>
+          </div>
         </div>
 
         <div class="callout-danger">

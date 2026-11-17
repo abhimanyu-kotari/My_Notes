@@ -234,20 +234,41 @@
       <section id="vms-vs-containers" class="note-section content-section">
         <h2><span class="section-number">02.</span> Virtual Machines vs. Containers</h2>
         
-        <div class="hierarchy-tree">
-+------------------------------------+    +------------------------------------+
-|       VIRTUAL MACHINES (VMs)       |    |         DOCKER CONTAINERS          |
-+------------------------------------+    +------------------------------------+
-|  [App A]      [App B]      [App C] |    |  [App A]      [App B]      [App C] |
-|  [Libs]       [Libs]       [Libs]  |    |  [Libs]       [Libs]       [Libs]  |
-|  +---------+  +---------+  +-----+ |    +------------------------------------+
-|  |Guest OS |  |Guest OS |  |Guest| |    |          DOCKER ENGINE             |
-|  | (Linux) |  | (Win)   |  | OS  | |    +------------------------------------+
-|  +---------+  +---------+  +-----+ |    |      HOST OPERATING SYSTEM         |
-|  | HYPERVISOR (ESXi / Hyper-V)   | |    |       (Shared Linux Kernel)        |
-|  +-------------------------------+ |    +------------------------------------+
-|  | PHYSICAL HARDWARE (CPU/RAM)   | |    | PHYSICAL HARDWARE (CPU/RAM)        |
-+------------------------------------+    +------------------------------------+
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">⚖️ Architecture Comparison: Virtual Machines vs. Docker Containers</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Guest OS Overhead vs Shared Kernel Isolation</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+            <!-- VM Column -->
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-weight: 700; color: #f59e0b; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>Virtual Machines (VMs)</span>
+                <span class="tag" style="margin: 0; background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Heavy (GBs)</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">Applications &amp; Binaries (App A, B, C)</div>
+                <div style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #ef4444;">Guest OS per VM (Ubuntu, Windows - 20 GB+)</div>
+                <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Hypervisor (Hyper-V, ESXi)</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware Host (CPU/RAM/Disk)</div>
+              </div>
+            </div>
+
+            <!-- Container Column -->
+            <div style="background: var(--bg-secondary); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-weight: 700; color: #34d399; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                <span>Docker Containers</span>
+                <span class="tag" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: #34d399;">Featherweight (MBs)</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">Applications &amp; Binaries (App A, B, C)</div>
+                <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #34d399;">Docker Daemon Engine (Process Isolation)</div>
+                <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Shared Host OS Kernel (No Duplicate OS!)</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware Host (CPU/RAM/Disk)</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div style="overflow-x: auto; margin: 1.5rem 0;">
@@ -296,18 +317,37 @@
       <section id="docker-lifecycle" class="note-section content-section">
         <h2><span class="section-number">04.</span> The 4 Core Docker Pillars</h2>
 
-        <div class="hierarchy-tree">
-+------------------+         docker build         +------------------+
-|    Dockerfile    |  ------------------------&gt;   |   Docker Image   |
-| (Source Recipe)  |                              |  (Baked Template)|
-+------------------+                              +------------------+
-                                                           |
-                                               docker push | docker run
-                                                           v
-+------------------+                              +------------------+
-|Container Registry| &lt;--------------------------  | Docker Container |
-| (Docker Hub/ACR) |                              | (Live Instance)  |
-+------------------+                              +------------------+
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">🔄 The 4-Stage Container Lifecycle</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Build &bull; Ship &bull; Run</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
+            <div class="step-card" style="margin: 0; border-top: 3px solid #38bdf8;">
+              <div class="step-card-header"><span style="color: #38bdf8;">1. Dockerfile</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Plaintext recipe with build instructions.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">FROM, COPY, RUN, CMD</div>
+            </div>
+
+            <div class="step-card" style="margin: 0; border-top: 3px solid #a855f7;">
+              <div class="step-card-header"><span style="color: #a855f7;">2. Docker Image</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Immutable read-only binary template.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker build -t app:v1 .</div>
+            </div>
+
+            <div class="step-card" style="margin: 0; border-top: 3px solid #10b981;">
+              <div class="step-card-header"><span style="color: #10b981;">3. Live Container</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Active running process instance.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker run -d -p 80:80</div>
+            </div>
+
+            <div class="step-card" style="margin: 0; border-top: 3px solid #f59e0b;">
+              <div class="step-card-header"><span style="color: #f59e0b;">4. Registry (ACR)</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Cloud repository for storing images.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker push myacr.azurecr.io</div>
+            </div>
+          </div>
         </div>
 
         <ol>
@@ -323,27 +363,35 @@
         <h2><span class="section-number">05.</span> Dissecting a Real Production Dockerfile</h2>
         <p>Here is a clean, minimal Dockerfile for a Python Web API:</p>
 
-        <div class="hierarchy-tree">
-# 1. Base Image: Start with an official lightweight Python runtime
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="terminal-title">Dockerfile</span>
+          </div>
+          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Base Image: Start with an official lightweight Python runtime</span>
 FROM python:3.11-slim
 
-# 2. Working Directory: Set the active directory inside the container
+<span class="cmd-comment"># 2. Working Directory: Set the active directory inside the container</span>
 WORKDIR /app
 
-# 3. Copy Dependency Manifest first (enables Docker build caching!)
+<span class="cmd-comment"># 3. Copy Dependency Manifest first (enables Docker build caching!)</span>
 COPY requirements.txt .
 
-# 4. Install Dependencies
+<span class="cmd-comment"># 4. Install Dependencies</span>
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copy Application Source Code
+<span class="cmd-comment"># 5. Copy Application Source Code</span>
 COPY . .
 
-# 6. Inform Docker that the application listens on port 5000
+<span class="cmd-comment"># 6. Inform Docker that the application listens on port 5000</span>
 EXPOSE 5000
 
-# 7. Container Startup Command
-CMD ["python", "app.py"]
+<span class="cmd-comment"># 7. Container Startup Command</span>
+CMD ["python", "app.py"]</code></pre></div>
         </div>
       </section>
 
@@ -354,14 +402,27 @@ CMD ["python", "app.py"]
 
         <div class="click-path-badge">docker run -d -p 8080:5000 my-python-app</div>
 
-        <div class="hierarchy-tree">
-User Browser (http://localhost:8080)
-            |
-            v
-[ HOST MACHINE PORT 8080 ]
-            |  (Traffic forwarded via bridge)
-            v
-[ CONTAINER PORT 5000 ]  --&gt; Python app.py receives the HTTP request!
+        <div class="diagram-container">
+          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 1.25rem; text-align: center;">
+            PORT FORWARDING BRIDGE ARCHITECTURE (-p 8080:5000)
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem; max-width: 580px; margin: 0 auto;">
+            <div style="width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-weight: 600; color: var(--text-primary);">🌐 User Browser Client</span>
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #38bdf8;">http://localhost:8080</span>
+            </div>
+            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
+            <div style="width: 100%; background: rgba(56, 189, 248, 0.08); border: 1px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-weight: 700; color: #38bdf8;">🖥️ Host Machine Ingress</span>
+              <span style="background: #0284c7; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; font-family: var(--font-mono);">HOST PORT :8080</span>
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Docker Bridge Network Forwarding</div>
+            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
+            <div style="width: 100%; background: rgba(34, 197, 94, 0.08); border: 1px solid #16a34a; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-weight: 700; color: #4ade80;">📦 Isolated Container Runtime</span>
+              <span style="background: #16a34a; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; font-family: var(--font-mono);">CONTAINER PORT :5000</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -369,33 +430,41 @@ User Browser (http://localhost:8080)
       <section id="docker-cheatsheet" class="note-section content-section">
         <h2><span class="section-number">07.</span> Essential Docker CLI Cheatsheet</h2>
 
-        <div class="hierarchy-tree">
-# 1. Build an image from Dockerfile in current directory
-docker build -t myapp:v1 .
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="terminal-title">Bash / Terminal</span>
+          </div>
+          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Build an image from Dockerfile in current directory</span>
+<span class="cmd-prompt">$ </span>docker build -t myapp:v1 .
 
-# 2. Run container in detached mode (-d) with port mapping (-p)
-docker run -d -p 8080:80 --name web-service nginx:alpine
+<span class="cmd-comment"># 2. Run container in detached mode (-d) with port mapping (-p)</span>
+<span class="cmd-prompt">$ </span>docker run -d -p 8080:80 --name web-service nginx:alpine
 
-# 3. List all currently RUNNING containers
-docker ps
+<span class="cmd-comment"># 3. List all currently RUNNING containers</span>
+<span class="cmd-prompt">$ </span>docker ps
 
-# 4. List ALL containers (including stopped ones)
-docker ps -a
+<span class="cmd-comment"># 4. List ALL containers (including stopped ones)</span>
+<span class="cmd-prompt">$ </span>docker ps -a
 
-# 5. View live logs streamed from a running container
-docker logs -f web-service
+<span class="cmd-comment"># 5. View live logs streamed from a running container</span>
+<span class="cmd-prompt">$ </span>docker logs -f web-service
 
-# 6. Open an interactive bash/sh shell inside a live container
-docker exec -it web-service sh
+<span class="cmd-comment"># 6. Open an interactive bash/sh shell inside a live container</span>
+<span class="cmd-prompt">$ </span>docker exec -it web-service sh
 
-# 7. Stop and remove a container
-docker stop web-service
-docker rm web-service
+<span class="cmd-comment"># 7. Stop and remove a container</span>
+<span class="cmd-prompt">$ </span>docker stop web-service
+<span class="cmd-prompt">$ </span>docker rm web-service
 
-# 8. Tag and push to Azure Container Registry (ACR)
-az acr login --name myregistry
-docker tag myapp:v1 myregistry.azurecr.io/myapp:v1
-docker push myregistry.azurecr.io/myapp:v1
+<span class="cmd-comment"># 8. Tag and push to Azure Container Registry (ACR)</span>
+<span class="cmd-prompt">$ </span>az acr login --name myregistry
+<span class="cmd-prompt">$ </span>docker tag myapp:v1 myregistry.azurecr.io/myapp:v1
+<span class="cmd-prompt">$ </span>docker push myregistry.azurecr.io/myapp:v1</code></pre></div>
         </div>
       </section>
 

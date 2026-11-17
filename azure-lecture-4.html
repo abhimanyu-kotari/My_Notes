@@ -269,21 +269,45 @@
           The top-level resource in ACI is a <strong>Container Group</strong>. A Container Group is a collection of containers that are scheduled on the same host machine, sharing the exact same lifecycle, local network, and storage volumes.
         </p>
 
-        <div class="hierarchy-tree">
-+--------------------------------------------------------------------------+
-|                  AZURE CONTAINER GROUP (e.g. 'analytics-group')          |
-|                                                                          |
-|   Shared IP Address: 20.198.44.12                                        |
-|   Shared Localhost Network &amp; Shared Storage Volume                      |
-|                                                                          |
-|   +-----------------------------+       +-----------------------------+  |
-|   | Primary Container           |       | Sidecar Container           |  |
-|   | (Python Data Processor)     |       | (Log Shipper / Monitoring)  |  |
-|   | Port: 8080                  | &lt;---&gt; | Port: 9090                  |  |
-|   | 1.0 vCPU, 2.0 GB RAM        |       | 0.5 vCPU, 0.5 GB RAM        |  |
-|   +-----------------------------+       +-----------------------------+  |
-|                                                                          |
-+--------------------------------------------------------------------------+
+        <div class="diagram-container">
+          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 0.75rem; text-align: center;">
+            AZURE CONTAINER GROUP ARCHITECTURE ('analytics-group')
+          </div>
+          <div style="display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <span style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px; font-family: var(--font-mono);">Public IP: 20.198.44.12</span>
+            <span style="background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px;">Shared Localhost Bridge</span>
+            <span style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px;">Shared Storage Volume Mount</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; align-items: stretch;">
+            <div style="background: var(--bg-card); border: 1px solid #0284c7; border-radius: 8px; padding: 1.15rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+                <span style="font-weight: 700; color: #38bdf8; font-size: 0.95rem;">📦 Primary Container</span>
+                <span style="background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Main App</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.75rem 0;">Python Data Processor & Web API</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-primary);">
+                <div>Port: <strong style="color: #38bdf8;">8080</strong></div>
+                <div>Compute: <strong>1.0 vCPU, 2.0 GB RAM</strong></div>
+              </div>
+            </div>
+
+            <div style="background: var(--bg-card); border: 1px solid #16a34a; border-radius: 8px; padding: 1.15rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+                <span style="font-weight: 700; color: #4ade80; font-size: 0.95rem;">🛡️ Sidecar Container</span>
+                <span style="background: #16a34a; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Helper</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.75rem 0;">Log Shipper, Metrics & Prometheus Exporter</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-primary);">
+                <div>Port: <strong style="color: #4ade80;">9090</strong></div>
+                <div>Compute: <strong>0.5 vCPU, 0.5 GB RAM</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem; text-align: center; font-size: 0.82rem; color: var(--text-muted); background: var(--bg-secondary); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color);">
+            Inter-container communication occurs via <code>localhost:9090 &harr; localhost:8080</code> with zero network hops or latency.
+          </div>
         </div>
 
         <div class="callout-tip">
@@ -306,12 +330,20 @@
       <section id="cli-deployment" class="note-section content-section">
         <h2><span class="section-number">05.</span> Deploying ACI via Azure CLI</h2>
         
-        <div class="hierarchy-tree">
-# Step 1: Create a Resource Group
-az group create --name my-rg --location eastus
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="terminal-title">Azure CLI / Bash</span>
+          </div>
+          <div class="terminal-body"><pre><code><span class="cmd-comment"># Step 1: Create a Resource Group</span>
+<span class="cmd-prompt">$ </span>az group create --name my-rg --location eastus
 
-# Step 2: Deploy a Public Web Container with DNS Name Label
-az container create \
+<span class="cmd-comment"># Step 2: Deploy a Public Web Container with DNS Name Label</span>
+<span class="cmd-prompt">$ </span>az container create \
   --resource-group my-rg \
   --name my-aci-demo \
   --image mcr.microsoft.com/azuredocs/aci-helloworld:latest \
@@ -321,18 +353,18 @@ az container create \
   --memory 1.5 \
   --restart-policy Always
 
-# Step 3: Check Container State &amp; Public FQDN URL
-az container show \
+<span class="cmd-comment"># Step 3: Check Container State & Public FQDN URL</span>
+<span class="cmd-prompt">$ </span>az container show \
   --resource-group my-rg \
   --name my-aci-demo \
   --query "{FQDN:ipAddress.fqdn,State:instanceView.state}" \
   --output table
 
-# Step 4: Stream Real-Time Logs
-az container logs --resource-group my-rg --name my-aci-demo
+<span class="cmd-comment"># Step 4: Stream Real-Time Logs</span>
+<span class="cmd-prompt">$ </span>az container logs --resource-group my-rg --name my-aci-demo
 
-# Step 5: Delete Container when finished
-az container delete --resource-group my-rg --name my-aci-demo --yes
+<span class="cmd-comment"># Step 5: Delete Container when finished</span>
+<span class="cmd-prompt">$ </span>az container delete --resource-group my-rg --name my-aci-demo --yes</code></pre></div>
         </div>
       </section>
 

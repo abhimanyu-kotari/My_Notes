@@ -11,68 +11,21 @@
   <style>
     .azure-accent { color: #0078d4; }
     [data-theme="dark"] .azure-accent { color: #50e6ff; }
-    .console-ui-mockup {
-      background: #181c24;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 1.5rem 0;
-      box-shadow: var(--shadow-md);
-      font-family: var(--font-mono);
-      font-size: 0.84rem;
-    }
-    .console-ui-topbar {
-      background: #10141c;
-      padding: 0.65rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-color);
-      color: #e2e8f0;
-    }
-    .console-ui-body {
-      display: flex;
-      min-height: 220px;
-    }
-    .console-ui-sidebar {
-      width: 220px;
-      background: #131720;
-      border-right: 1px solid var(--border-color);
-      padding: 0.75rem 0;
-    }
-    .console-ui-menu-item {
-      padding: 0.45rem 1rem;
-      color: #94a3b8;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .console-ui-menu-item.active {
-      background: rgba(0, 120, 212, 0.18);
-      color: #50e6ff;
-      border-left: 3px solid #0078d4;
-    }
-    .console-ui-canvas {
-      flex: 1;
-      padding: 1.25rem;
-      background: #0f1218;
-      color: #cbd5e1;
-    }
-    .click-path-badge {
+    .method-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
       background: rgba(0, 120, 212, 0.12);
       border: 1px solid rgba(0, 120, 212, 0.35);
       color: #0078d4;
-      padding: 0.35rem 0.75rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 8px;
       font-family: var(--font-mono);
-      font-size: 0.84rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 700;
       margin: 0.5rem 0;
     }
-    [data-theme="dark"] .click-path-badge {
+    [data-theme="dark"] .method-badge {
       background: rgba(0, 120, 212, 0.2);
       border-color: rgba(80, 230, 255, 0.45);
       color: #50e6ff;
@@ -101,18 +54,21 @@
       margin: 1.25rem 0;
       color: var(--text-primary);
     }
-    .hierarchy-tree {
-      background: #0d1117;
-      color: #e6edf3;
-      border: 1px solid #30363d;
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      font-family: var(--font-mono);
-      font-size: 0.88rem;
-      line-height: 1.7;
-      overflow-x: auto;
-      box-shadow: var(--shadow-md);
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    .step-card-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   </style>
 </head>
@@ -162,13 +118,17 @@
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
         <li><a href="#vm-anatomy" class="sidebar-link">1. Anatomy of an Azure VM</a></li>
         <li><a href="#sizing-families" class="sidebar-link">2. VM Sizing &amp; Series Families</a></li>
-        <li><a href="#disk-types" class="sidebar-link">3. Managed Disks &amp; The Temp Disk Trap</a></li>
-        <li><a href="#networking" class="sidebar-link">4. VNet, Subnets &amp; NSG Firewalls</a></li>
-        <li><a href="#connecting" class="sidebar-link">5. Connecting via SSH vs. RDP</a></li>
-        <li><a href="#web-server-demo" class="sidebar-link">6. Hands-On: Deploying Nginx Web Server</a></li>
-        <li><a href="#stopped-vs-deallocated" class="sidebar-link">7. Stopped vs. Deallocated Billing Trap</a></li>
-        <li><a href="#cli-commands" class="sidebar-link">8. Azure CLI Commands for VMs</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">9. Summary Checklist</a></li>
+        <li><a href="#disk-types" class="sidebar-link">3. Managed Disks &amp; Temp Disk Trap</a></li>
+        <li><a href="#method-cloudshell" class="sidebar-link">4. Method 1: Azure Cloud Shell</a></li>
+        <li><a href="#method-local" class="sidebar-link">5. Method 2: Local Computer CLI</a></li>
+        <li><a href="#method-portal" class="sidebar-link">6. Method 3: Azure Portal GUI</a></li>
+        <li><a href="#connecting-ssh" class="sidebar-link">7. SSH Keys &amp; Windows/Mac Fix</a></li>
+        <li><a href="#inspection-commands" class="sidebar-link">8. System Inspection Commands</a></li>
+        <li><a href="#web-server-demo" class="sidebar-link">9. Nginx &amp; NSG Troubleshooting</a></li>
+        <li><a href="#data-disks" class="sidebar-link">10. Attaching &amp; Persisting Disks</a></li>
+        <li><a href="#stopped-vs-deallocated" class="sidebar-link">11. Stopped vs. Deallocated Trap</a></li>
+        <li><a href="#teardown-protocol" class="sidebar-link">12. Teardown Protocol ($0 Bill)</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">13. Summary Checklist</a></li>
       </ul>
     </aside>
 
@@ -183,23 +143,23 @@
           <span style="color: var(--text-primary);">Module 2</span>
         </div>
         <div class="lecture-badge-row">
-          <span class="card-badge badge-active">Module 02</span>
+          <span class="card-badge badge-active">Module 02 Masterclass</span>
           <span class="tag">Azure Virtual Machines</span>
-          <span class="tag">Compute Sizing</span>
-          <span class="tag">Managed Disks</span>
-          <span class="tag">NSGs &amp; Firewalls</span>
-          <span class="tag">SSH &amp; RDP</span>
+          <span class="tag">3 Creation Methods</span>
+          <span class="tag">Cloud Shell</span>
+          <span class="tag">Local Terminal</span>
+          <span class="tag">Disks &amp; NSGs</span>
         </div>
-        <h1 class="lecture-main-title">Compute (Azure Virtual Machines)</h1>
+        <h1 class="lecture-main-title">Compute: Azure Virtual Machines (Complete Walkthrough)</h1>
         <p class="lecture-lead">
-          <strong>What is this module about?</strong> Deep dive into Azure Virtual Machines (IaaS compute): understanding VM sizing series (B-series burstable vs D/E/F/N series), managed OS and data disks, the critical data-loss trap of the ephemeral temporary disk, Network Security Group (NSG) priority rules, connecting via SSH key pairs and RDP, and avoiding surprise bills with Stopped vs. Stopped (Deallocated).<br>
-          <strong>Why is this critical for engineers?</strong> Virtual machines are the compute backbone of the cloud. Every Kubernetes node, backend microservice host, and deep learning training cluster runs on top of these fundamental building blocks.
+          <strong>What is this module about?</strong> The definitive masterclass on Azure Virtual Machines: 3 distinct deployment methods (Cloud Shell in-browser, local PC terminal via Azure CLI, and the full Azure Portal GUI), fixing SSH permissions on Windows and macOS, executing hardware and cloud metadata inspection commands, setting up Nginx web servers, troubleshooting NSG firewall blocks, formatting and persisting attached data disks, and mastering the Stopped vs. Deallocated billing trap.<br>
+          <strong>Why is this critical for engineers?</strong> Virtual machines power the modern cloud. Knowing how to spin up, configure, inspect, and safely terminate VMs from both the web console and your computer's terminal is an indispensable core skill.
         </p>
       </div>
 
       <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap: 0.5rem;">
+        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
@@ -212,83 +172,96 @@
       <!-- SECTION 1 -->
       <section id="vm-anatomy" class="note-section content-section">
         <h2><span class="section-number">01.</span> The Anatomy of an Azure Virtual Machine</h2>
-        <p>When you click "Create Virtual Machine" in Azure, you are not creating just one isolated file. Azure provisions an ecosystem of interconnected resources that act together as a full computer:</p>
+        <p>When you create an Azure VM, Azure provisions a coordinated set of interconnected cloud infrastructure resources:</p>
 
-        <div class="hierarchy-tree">
-+--------------------------------------------------------------------------+
-|                       AZURE VIRTUAL MACHINE ANATOMY                      |
-|                                                                          |
-|   +------------------------------------------------------------------+   |
-|   | Azure Virtual Machine (e.g. Standard_B2s, 2 vCPUs, 4 GB RAM)     |   |
-|   +------------------------------------------------------------------+   |
-|         |                                      |                         |
-|         v                                      v                         |
-|   +------------------------+             +------------------------+      |
-|   | Network Interface (NIC)|             | Managed Disks          |      |
-|   +------------------------+             +------------------------+      |
-|         |          |                           |             |           |
-|         v          v                           v             v           |
-|     Private IP   Public IP                 OS Disk       Data Disk       |
-|    (10.0.0.4)   (20.52.14.9)              (Ubuntu 22.04) (100 GB SSD)    |
-|         |                                                                |
-|         v                                                                |
-|   +------------------------+                                             |
-|   | Subnet &amp; Virtual Net   |                                             |
-|   +------------------------+                                             |
-|         |                                                                |
-|         v                                                                |
-|   +------------------------+                                             |
-|   | Network Security Group | (Firewall: Port 22 SSH, Port 80 HTTP)       |
-|   +------------------------+                                             |
-+--------------------------------------------------------------------------+
+        <!-- Structured Visual Diagram Container -->
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">🖥️ Azure Virtual Machine Architecture Blueprint</span>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">vCPU &bull; RAM &bull; NIC &bull; Disks</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+            <div class="step-card" style="margin: 0;">
+              <div class="step-card-header"><span style="color: #60a5fa;">1. Compute Host</span></div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Allocates dedicated vCPUs and RAM on physical hypervisors.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">
+                Size: Standard_B1s (1 vCPU, 1 GB)
+              </div>
+            </div>
+
+            <div class="step-card" style="margin: 0;">
+              <div class="step-card-header"><span style="color: #34d399;">2. Network Interface (NIC)</span></div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Bridges VM to VNet and assigns IP addresses.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">
+                Private IP: 10.0.0.4 | Public IP: 20.x.x.x
+              </div>
+            </div>
+
+            <div class="step-card" style="margin: 0;">
+              <div class="step-card-header"><span style="color: #f59e0b;">3. Network Security Group (NSG)</span></div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">Stateful virtual firewall protecting inbound/outbound ports.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">
+                Port 22 (SSH) | Port 80 (HTTP)
+              </div>
+            </div>
+
+            <div class="step-card" style="margin: 0;">
+              <div class="step-card-header"><span style="color: #ef4444;">4. Storage Array</span></div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.5rem;">OS disk (persistent), Data disk (persistent), Temp disk (ephemeral wipe).</p>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-secondary); padding: 0.4rem 0.6rem; border-radius: 6px;">
+                /dev/sda1 (OS) &bull; /dev/sdb1 (/mnt)
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- SECTION 2 -->
       <section id="sizing-families" class="note-section content-section">
         <h2><span class="section-number">02.</span> VM Sizing &amp; Series Families</h2>
-        <p>Azure names VM sizes systematically (e.g., <code>Standard_D4s_v5</code>). The first letter determines the hardware specialization:</p>
+        <p>Azure names VM sizes systematically (e.g., <code>Standard_B1s</code>, <code>Standard_D4s_v5</code>). The first letter designates the computational specialization:</p>
 
         <div style="overflow-x: auto; margin: 1.5rem 0;">
           <table class="notes-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Series Letter</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Series</th>
                 <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Category</th>
                 <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Best Suited For</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Cost Tier</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Free Tier Eligible?</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">B-Series</td>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Burstable Compute</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Development, student labs, low-traffic web servers. Accumulates CPU credits during idle times and bursts up to 100% CPU when busy.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Lowest ($ / hr)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Student labs, low-traffic websites, dev/test environments. Accrues CPU credits during idle time and bursts up to 100% when active.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">✅ YES (B1s - 750 hrs/mo)</td>
               </tr>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">D-Series</td>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">General Purpose</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Balanced CPU-to-memory ratio. Ideal for production web servers, small-to-medium databases, and application backends.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Moderate</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Balanced CPU-to-memory ratio (4GB RAM per vCPU). Production web servers, medium SQL databases.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #94a3b8;">No</td>
               </tr>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">F-Series</td>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Compute Optimized</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">High CPU clock speed per GB of RAM. Ideal for video transcoding, batch processing, gaming servers, and scientific math modeling.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Medium - High</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">High clock speeds. Batch processing, video transcoding, math algorithms.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #94a3b8;">No</td>
               </tr>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">E-Series</td>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Memory Optimized</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Massive RAM-to-CPU ratio. Ideal for in-memory databases (SAP HANA, Redis cache), Elasticsearch, and big data data analytics.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">High</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Large RAM-to-CPU ratio (8GB+ RAM per vCPU). In-memory caching (Redis), SAP HANA.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #94a3b8;">No</td>
               </tr>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">N-Series</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">GPU Enabled</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Packed with NVIDIA Tesla / Ampere GPUs. Used for Deep Learning model training, AI inference, and 3D rendering.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Enterprise High</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">GPU Accelerated</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Equipped with NVIDIA Tesla GPUs for Deep Learning training and LLM inference.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #94a3b8;">No</td>
               </tr>
             </tbody>
           </table>
@@ -297,193 +270,408 @@
 
       <!-- SECTION 3 -->
       <section id="disk-types" class="note-section content-section">
-        <h2><span class="section-number">03.</span> Managed Disks &amp; The Ephemeral Temporary Disk Warning</h2>
-        <p>Every Azure VM connects to three distinct types of disks:</p>
-        <ol>
-          <li><strong>OS Disk:</strong> Contains the operating system boot files (Windows <code>C:</code> drive or Linux <code>/</code> root). Persists even if the VM is rebooted or stopped.</li>
-          <li><strong>Data Disks:</strong> Additional persistent managed disks attached to the VM for storing database files, repositories, or application data.</li>
-          <li><strong>Temporary Disk:</strong> A physical SSD located directly on the physical host machine running your VM (labeled <code>D:</code> drive on Windows or <code>/dev/sdb1</code> mounted at <code>/mnt</code> on Linux).</li>
-        </ol>
+        <h2><span class="section-number">03.</span> Managed Disks &amp; The Ephemeral Temporary Disk Trap</h2>
+        <p>Every Azure VM connects to 3 distinct categories of storage:</p>
 
-        <div class="callout-danger">
-          <strong>🚨 CRITICAL DATA-LOSS WARNING: The Temporary Disk is Ephemeral!</strong>
-          <p style="margin: 0.5rem 0 0 0;">
-            The temporary disk provides ultra-fast temporary storage for page files, swap files, and temporary caches. However, whenever your VM is stopped, deallocated, or migrated to a different physical server rack during Azure maintenance, <strong>EVERY BYTE OF DATA ON THE TEMPORARY DISK IS PERMANENTLY ERASED AND CANNOT BE RECOVERED</strong>. Never save databases, user uploads, or project files on the temporary drive!
-          </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div class="step-card" style="margin: 0; border-top: 3px solid #3b82f6;">
+            <div class="step-card-header">1. OS Disk (Persistent)</div>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Holds the OS boot files (Linux <code>/</code> or Windows <code>C:</code>). Never erased upon VM stop or reboot.</p>
+          </div>
+          <div class="step-card" style="margin: 0; border-top: 3px solid #10b981;">
+            <div class="step-card-header">2. Data Disks (Persistent)</div>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Dedicated managed disks attached to the VM for databases and application files. Persist independently.</p>
+          </div>
+          <div class="step-card" style="margin: 0; border-top: 3px solid #ef4444;">
+            <div class="step-card-header">3. Temporary Disk (EPHEMERAL)</div>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Physical SSD on the host server (<code>/mnt</code> or <code>D:</code>). <strong>All data is permanently wiped on deallocate/maintenance!</strong></p>
+          </div>
         </div>
 
-        <h3>Azure Managed Disk Performance Tiers:</h3>
-        <ul>
-          <li><strong>Standard HDD:</strong> Magnetic spinning disk, cheapest cost. Best for dev/test environments and non-critical backups.</li>
-          <li><strong>Standard SSD:</strong> Solid-state drive for light production workloads and consistent entry-level performance.</li>
-          <li><strong>Premium SSD (v1 &amp; v2):</strong> High-performance SSDs delivering up to 20,000 IOPS. Required for enterprise databases and mission-critical web applications.</li>
-          <li><strong>Ultra Disk:</strong> Top-tier storage delivering up to 160,000 IOPS with sub-millisecond latency. Tuned for extreme transactional workloads.</li>
-        </ul>
+        <div class="callout-danger">
+          <strong>🚨 The Temporary Disk Wipe Trap:</strong>
+          <p style="margin: 0.5rem 0 0 0;">
+            Azure automatically creates a file named <code>/mnt/DATALOSS_WARNING_README.txt</code> on every Linux VM. It warns: <em>"Any data stored on this drive will NOT be recovered during events like VM migration or resize."</em> Never put your code, databases, or documents in <code>/mnt</code>!
+          </p>
+        </div>
       </section>
 
       <!-- SECTION 4 -->
-      <section id="networking" class="note-section content-section">
-        <h2><span class="section-number">04.</span> Networking: VNet, Subnets &amp; Network Security Groups (NSGs)</h2>
-        <p>A Virtual Machine cannot communicate without network plumbing:</p>
-        <ul>
-          <li><strong>Virtual Network (VNet):</strong> Your private, isolated virtual network slice in the cloud (e.g., CIDR block <code>10.0.0.0/16</code>).</li>
-          <li><strong>Subnet:</strong> A segmented subdivision of your VNet (e.g., <code>10.0.1.0/24</code> for Web Subnet; <code>10.0.2.0/24</code> for Database Subnet).</li>
-          <li><strong>Network Interface Card (NIC):</strong> The virtual network card linking the VM to the Subnet.</li>
-        </ul>
+      <section id="method-cloudshell" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Method 1: Creating a VM via Azure Cloud Shell (In-Browser CLI)</h2>
+        <p>The fastest way to deploy a VM without installing anything on your laptop is the in-browser **Azure Cloud Shell**.</p>
+        <span class="method-badge">💻 Method 1 &bull; Cloud Shell (Bash)</span>
 
-        <h3>Network Security Group (NSG) Rules &amp; Priorities</h3>
-        <p>An NSG acts as a stateful virtual firewall controlling inbound and outbound traffic.</p>
-        <div class="hierarchy-tree">
-RULE PRIORITY NUMBER (100 to 4096)
-Lower numbers are evaluated FIRST! Once a match is found, evaluation stops.
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="term-dot dot-red"></span>
+              <span class="term-dot dot-yellow"></span>
+              <span class="term-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">Azure Cloud Shell (Bash)</span>
+          </div>
+          <div class="terminal-body"><span class="term-comment"># 1. Create a dedicated Resource Group in East US</span>
+<span class="term-prompt">user@Azure:~$</span> <span class="term-cmd">az group create --name rg-azure-demo --location eastus</span>
 
- Priority | Name               | Port | Protocol | Source | Action
-----------+--------------------+------+----------+--------+---------
- 100      | Allow-SSH          | 22   | TCP      | Any    | ALLOW
- 110      | Allow-HTTP         | 80   | TCP      | Any    | ALLOW
- 120      | Allow-HTTPS        | 443  | TCP      | Any    | ALLOW
- 65000    | AllowVNetInBound   | Any  | Any      | VNet   | ALLOW
- 65500    | DenyAllInBound     | Any  | Any      | Any    | DENY  &lt;-- Default!
-        </div>
+<span class="term-comment"># 2. Deploy Ubuntu 22.04 VM with auto-generated SSH keys</span>
+<span class="term-prompt">user@Azure:~$</span> <span class="term-cmd">az vm create \
+  --resource-group rg-azure-demo \
+  --name vm-cloudshell-demo \
+  --image Ubuntu2204 \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --public-ip-sku Standard</span>
 
-        <div class="callout-tip">
-          <strong>💡 Rule Priority Best Practice:</strong>
-          Always leave gaps between rule priority numbers (e.g., 100, 110, 120). Never use consecutive numbers (100, 101, 102). This allows you to easily insert urgent emergency rules (like priority 105) between existing rules without having to renumber everything!
+<span class="term-comment"># 3. Check VM Status and inspect its assigned Public IP</span>
+<span class="term-prompt">user@Azure:~$</span> <span class="term-cmd">az vm show -d -g rg-azure-demo -n vm-cloudshell-demo \
+  --query "{Name:name, PublicIP:publicIps, State:powerState}" -o table</span>
+
+<span class="term-comment"># 4. Open Port 80 for Web Traffic</span>
+<span class="term-prompt">user@Azure:~$</span> <span class="term-cmd">az vm open-port \
+  --resource-group rg-azure-demo \
+  --name vm-cloudshell-demo \
+  --port 80 \
+  --priority 100</span></div>
         </div>
       </section>
 
       <!-- SECTION 5 -->
-      <section id="connecting" class="note-section content-section">
-        <h2><span class="section-number">05.</span> Connecting to Your VM: SSH Key Pairs vs. RDP</h2>
-        
-        <h3>1. Connecting to Linux VMs via SSH Key Pair (Recommended):</h3>
-        <p>Passwords are vulnerable to brute-force attacks. The modern standard is asymmetric cryptography using SSH keys (Private Key + Public Key):</p>
-        <div class="click-path-badge">ssh -i ~/.ssh/azure_key.pem azureuser@20.52.14.9</div>
+      <section id="method-local" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Method 2: Creating a VM from Our Local Computer (Terminal / PowerShell)</h2>
+        <p>You can manage and provision Azure resources from your local laptop using the official Azure CLI.</p>
+        <span class="method-badge">🖥️ Method 2 &bull; Local Computer Terminal</span>
 
-        <h3>2. Connecting to Windows VMs via Remote Desktop Protocol (RDP):</h3>
-        <p>For Windows Server VMs, download the <code>.rdp</code> file from the Azure portal, open the Remote Desktop Connection client on your computer, enter the administrator username and password, and interact with the full graphical Windows desktop.</p>
+        <h3>Step 1: Install Azure CLI Locally</h3>
+        <ul>
+          <li><strong>Windows (PowerShell):</strong> <code>winget install -e --id Microsoft.AzureCLI</code></li>
+          <li><strong>macOS (Homebrew):</strong> <code>brew install azure-cli</code></li>
+          <li><strong>Linux (Ubuntu/Debian):</strong> <code>curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash</code></li>
+        </ul>
+
+        <h3>Step 2: Authenticate and Create VM</h3>
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="term-dot dot-red"></span>
+              <span class="term-dot dot-yellow"></span>
+              <span class="term-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">Local Terminal (PowerShell / Bash)</span>
+          </div>
+          <div class="terminal-body"><span class="term-comment"># 1. Sign in to your Azure account via browser popup</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az login</span>
+
+<span class="term-comment"># 2. Generate custom SSH key pair on your computer</span>
+<span class="term-prompt">$</span> <span class="term-cmd">ssh-keygen -t rsa -b 4096 -f ~/.ssh/azure_local_key</span>
+
+<span class="term-comment"># 3. Provision VM using your local public key</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az vm create \
+  --resource-group rg-azure-demo \
+  --name vm-from-local \
+  --image Ubuntu2204 \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --ssh-key-values ~/.ssh/azure_local_key.pub \
+  --public-ip-sku Standard</span></div>
+        </div>
       </section>
 
       <!-- SECTION 6 -->
-      <section id="web-server-demo" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Hands-On Walkthrough: Hosting an Nginx Web Server on Ubuntu VM</h2>
-        <p>Follow these exact terminal steps after connecting via SSH:</p>
+      <section id="method-portal" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Method 3: Creating a VM via Azure Portal (GUI Step-by-Step)</h2>
+        <span class="method-badge">🖱️ Method 3 &bull; Azure Portal (portal.azure.com)</span>
 
-        <div class="hierarchy-tree">
-# Step 1: Update package lists
-sudo apt update &amp;&amp; sudo apt upgrade -y
-
-# Step 2: Install Nginx web server
-sudo apt install nginx -y
-
-# Step 3: Verify Nginx service is running
-sudo systemctl status nginx
-
-# Step 4: Create a custom homepage
-echo "&lt;h1&gt;Welcome to Microsoft Azure Zero to Hero!&lt;/h1&gt;&lt;p&gt;Hosted on Azure Virtual Machine&lt;/p&gt;" | sudo tee /var/www/html/index.html
+        <div class="step-card">
+          <div class="step-card-header">1. Basics Tab Configuration</div>
+          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
+            <li><strong>Subscription:</strong> Select your Free Trial or active subscription.</li>
+            <li><strong>Resource Group:</strong> Select <code>rg-azure-demo</code> (or click *Create new*).</li>
+            <li><strong>Virtual Machine Name:</strong> <code>vm-portal-demo</code></li>
+            <li><strong>Region:</strong> <code>East US</code> &bull; <strong>Availability zone:</strong> <code>Zone 1</code></li>
+            <li><strong>Image:</strong> <code>Ubuntu Server 22.04 LTS - x64 Gen2</code></li>
+            <li><strong>Size:</strong> Select <code>Standard_B1s</code> (1 vCPU, 1 GiB memory) &mdash; Eligible for free tier.</li>
+            <li><strong>Authentication Type:</strong> Select <strong>SSH public key</strong> &rarr; Username: <code>azureuser</code>.</li>
+            <li><strong>Inbound Port Rules:</strong> Select ports <code>SSH (22)</code> and <code>HTTP (80)</code>.</li>
+          </ul>
         </div>
 
-        <div class="callout-warning">
-          <strong>⚠️ Forgot Port 80 in NSG?</strong>
-          If you paste the VM's Public IP address into your browser and the page keeps spinning indefinitely, your NSG firewall has not opened Port 80! Open the Azure Portal &rarr; Virtual Machine &rarr; <strong>Networking</strong> &rarr; <strong>Add inbound port rule</strong> &rarr; Destination port: <code>80</code> &rarr; Protocol: <code>TCP</code> &rarr; Action: <code>Allow</code> &rarr; Click <strong>Add</strong>. The site will load instantly!
+        <div class="step-card">
+          <div class="step-card-header">2. Disks &amp; Networking Tabs</div>
+          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
+            <li><strong>OS Disk Type:</strong> Select <code>Standard SSD (locally-redundant storage)</code>.</li>
+            <li><strong>Delete with VM:</strong> Ensure the checkbox is <strong>Checked</strong> for both OS disk and NIC/Public IP.</li>
+          </ul>
+        </div>
+
+        <div class="step-card" style="border-left: 3px solid #10b981;">
+          <div class="step-card-header">3. Management Tab: The Auto-Shutdown Safeguard</div>
+          <p style="margin: 0 0 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+            Never leave a VM running overnight by accident!
+          </p>
+          <ul style="margin: 0; font-size: 0.88rem; line-height: 1.6;">
+            <li>Check <strong>Enable auto-shutdown</strong>.</li>
+            <li>Set shutdown time to <code>19:00:00</code> (7:00 PM local time).</li>
+            <li>Enter your notification email to receive confirmation when Azure powers it down.</li>
+          </ul>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">4. Review + Create &amp; Download Key</div>
+          <p style="margin: 0; font-size: 0.88rem;">
+            Click <strong>Review + create</strong>. When validation passes, click <strong>Create</strong>. In the popup, click <strong>Download private key and create resource</strong> to save <code>vm-portal-demo.pem</code> on your machine!
+          </p>
         </div>
       </section>
 
       <!-- SECTION 7 -->
+      <section id="connecting-ssh" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Connecting via SSH &amp; Fixing Key Permissions</h2>
+        
+        <h3>1. On macOS / Linux:</h3>
+        <div class="terminal-window">
+          <div class="terminal-body"><span class="term-comment"># Set strict read-only permissions on private key</span>
+<span class="term-prompt">$</span> <span class="term-cmd">chmod 400 ~/.ssh/vm-portal-demo.pem</span>
+
+<span class="term-comment"># Connect via SSH</span>
+<span class="term-prompt">$</span> <span class="term-cmd">ssh -i ~/.ssh/vm-portal-demo.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
+        </div>
+
+        <h3>2. On Windows (Fixing "UNPROTECTED PRIVATE KEY FILE" Error):</h3>
+        <div class="callout-warning">
+          <strong>⚠️ Windows PowerShell Key Permissions:</strong>
+          Windows file permissions often grant read rights to "Users" or "Everyone", which SSH rejects with <code>Permissions for 'key.pem' are too open</code>. Run these two commands in PowerShell to fix it immediately:
+        </div>
+
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="term-dot dot-red"></span>
+              <span class="term-dot dot-yellow"></span>
+              <span class="term-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">Windows PowerShell (Administrator / User)</span>
+          </div>
+          <div class="terminal-body"><span class="term-comment"># Step 1: Remove inherited permissions</span>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\vm-portal-demo.pem /inheritance:r</span>
+
+<span class="term-comment"># Step 2: Grant read permission strictly to your current Windows username</span>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">icacls.exe .\vm-portal-demo.pem /grant:r "$($env:USERNAME):(R)"</span>
+
+<span class="term-comment"># Step 3: Connect cleanly!</span>
+<span class="term-prompt">PS C:\&gt;</span> <span class="term-cmd">ssh -i .\vm-portal-demo.pem azureuser@&lt;VM_PUBLIC_IP&gt;</span></div>
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="inspection-commands" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Inside the VM: Comprehensive System Inspection Commands</h2>
+        <p>Once you are connected to your virtual machine terminal, run these commands to inspect hardware, storage, and cloud metadata:</p>
+
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="term-dot dot-red"></span>
+              <span class="term-dot dot-yellow"></span>
+              <span class="term-dot dot-green"></span>
+            </div>
+            <span class="terminal-title">azureuser@vm-portal-demo:~</span>
+          </div>
+          <div class="terminal-body"><span class="term-comment"># 1. Kernel and architecture details</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">uname -a</span>
+
+<span class="term-comment"># 2. Detailed CPU core count, hypervisor brand, and architecture</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">lscpu</span>
+
+<span class="term-comment"># 3. Check RAM memory allocation in human-readable MB / GB</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">free -m -h</span>
+
+<span class="term-comment"># 4. Check mounted storage filesystems and free disk space</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">df -h</span>
+
+<span class="term-comment"># 5. List block devices (Notice sda = OS disk, sdb = temporary disk)</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">lsblk</span>
+
+<span class="term-comment"># 6. Read the actual Microsoft warning text on the ephemeral temp disk!</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">cat /mnt/DATALOSS_WARNING_README.txt</span>
+
+<span class="term-comment"># 7. Check internal private network IP (eth0)</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">ip a</span>
+
+<span class="term-comment"># 8. Query the Azure Instance Metadata Service (IMDS) from inside the VM!</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">curl -s -H Metadata:true --noproxy "*" \
+  "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | python3 -m json.tool</span></div>
+        </div>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="web-server-demo" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Installing Nginx &amp; Troubleshooting NSG Port 80 Firewall Blocks</h2>
+
+        <h3>Step 1: Install Nginx Web Server</h3>
+        <div class="terminal-window">
+          <div class="terminal-body"><span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo apt update</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo apt install nginx -y</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo systemctl status nginx</span></div>
+        </div>
+
+        <h3>Step 2: Test Locally</h3>
+        <div class="terminal-window">
+          <div class="terminal-body"><span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">curl -I http://localhost</span>
+<span class="term-output">HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)</span></div>
+        </div>
+
+        <h3>Step 3: Test from External Browser &amp; Troubleshoot NSG</h3>
+        <p>Open your browser and navigate to <code>http://&lt;VM_PUBLIC_IP&gt;</code>. If the page loads the default welcome page, everything succeeded! If the browser hangs indefinitely, port 80 is blocked by your Network Security Group (NSG).</p>
+
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <span class="terminal-title">Cloud Shell / Local Terminal &bull; Fix NSG Rule</span>
+          </div>
+          <div class="terminal-body"><span class="term-comment"># 1. List existing NSG rules</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az network nsg rule list -g rg-azure-demo --nsg-name vm-cloudshell-demoNSG -o table</span>
+
+<span class="term-comment"># 2. Add Inbound Allow Rule for Port 80 (HTTP)</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az network nsg rule create \
+  --resource-group rg-azure-demo \
+  --nsg-name vm-cloudshell-demoNSG \
+  --name Allow-HTTP-80 \
+  --priority 110 \
+  --direction Inbound \
+  --access Allow \
+  --protocol Tcp \
+  --destination-port-ranges 80</span></div>
+        </div>
+      </section>
+
+      <!-- SECTION 10 -->
+      <section id="data-disks" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Attaching, Formatting &amp; Persisting a Data Disk</h2>
+
+        <div class="step-card">
+          <div class="step-card-header">Step 1: Attach New 10 GB Managed Disk via CLI</div>
+          <div class="terminal-window" style="margin: 0.5rem 0 0;">
+            <div class="terminal-body"><span class="term-prompt">$</span> <span class="term-cmd">az vm disk attach \
+  --resource-group rg-azure-demo \
+  --vm-name vm-cloudshell-demo \
+  --name datadisk-01 \
+  --size-gb 10 \
+  --new \
+  --sku StandardSSD_LRS</span></div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-card-header">Step 2: Format and Mount Inside the VM</div>
+          <div class="terminal-window" style="margin: 0.5rem 0 0;">
+            <div class="terminal-body"><span class="term-comment"># 1. Check disk block name (shows new /dev/sdc disk)</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">lsblk</span>
+
+<span class="term-comment"># 2. Format with ext4 filesystem</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo mkfs.ext4 /dev/sdc</span>
+
+<span class="term-comment"># 3. Mount to /datadrive</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo mkdir -p /datadrive</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">sudo mount /dev/sdc /datadrive</span>
+
+<span class="term-comment"># 4. Persist in /etc/fstab using UUID so it auto-mounts on reboot</span>
+<span class="term-prompt">azureuser@vm:~$</span> <span class="term-cmd">echo "UUID=$(sudo blkid -s UUID -o value /dev/sdc) /datadrive ext4 defaults,nofail 1 2" | sudo tee -a /etc/fstab</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 11 -->
       <section id="stopped-vs-deallocated" class="note-section content-section">
-        <h2><span class="section-number">07.</span> The Cost Trap: "Stopped" vs. "Stopped (Deallocated)"</h2>
-        <p>This is the most common reason students receive unexpected bills on Azure:</p>
+        <h2><span class="section-number">11.</span> The Cost Trap: "Stopped" vs. "Stopped (Deallocated)"</h2>
 
         <div style="overflow-x: auto; margin: 1.5rem 0;">
           <table class="notes-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">VM State</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">State</th>
                 <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">How It Happened</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Compute Charges?</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Disk &amp; IP Charges?</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Compute Billed (vCPU/RAM)?</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Storage Disks Billed?</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #ef4444;">Stopped</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">You typed <code>sudo shutdown -h now</code> inside the Linux OS terminal.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 700;">YES! You are still billed for CPU &amp; RAM!</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Ran <code>sudo poweroff</code> inside Linux OS terminal.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 700;">❌ YES (Still billed!)</td>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Yes</td>
               </tr>
               <tr>
                 <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #22c55e;">Stopped (Deallocated)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">You clicked <strong>Stop</strong> in the Azure Portal or ran <code>az vm deallocate</code>.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">NO! Compute charges drop to $0!</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Only for attached storage disks</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Clicked <strong>Stop</strong> in Portal or ran <code>az vm deallocate</code>.</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">✅ $0.00 / hour (Compute freed!)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Only storage disks</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="terminal-window">
+          <div class="terminal-body"><span class="term-comment"># Proper way to stop compute billing via CLI:</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az vm deallocate --resource-group rg-azure-demo --name vm-cloudshell-demo</span>
+
+<span class="term-comment"># Start the VM again:</span>
+<span class="term-prompt">$</span> <span class="term-cmd">az vm start --resource-group rg-azure-demo --name vm-cloudshell-demo</span></div>
+        </div>
       </section>
 
-      <!-- SECTION 8 -->
-      <section id="cli-commands" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Essential Azure CLI Commands for VMs</h2>
-        
-        <div class="hierarchy-tree">
-# Create an Ubuntu Linux VM with automatic SSH keys
-az vm create \
-  --resource-group my-rg \
-  --name my-ubuntu-vm \
-  --image Ubuntu2204 \
-  --admin-username azureuser \
-  --generate-ssh-keys \
-  --public-ip-sku Standard
+      <!-- SECTION 12 -->
+      <section id="teardown-protocol" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Complete Lab Teardown Protocol ($0 Bill Guarantee)</h2>
+        <p>When you finish your practice session, delete the entire Resource Group to immediately destroy the VM, all disks, NICs, public IPs, and NSGs in a single command:</p>
 
-# Open Port 80 for HTTP traffic
-az vm open-port \
-  --resource-group my-rg \
-  --name my-ubuntu-vm \
-  --port 80
-
-# Properly STOP and DEALLOCATE the VM (Stops compute billing!)
-az vm deallocate \
-  --resource-group my-rg \
-  --name my-ubuntu-vm
-
-# Start the VM again
-az vm start \
-  --resource-group my-rg \
-  --name my-ubuntu-vm
-
-# Delete the entire VM and associated disks cleanly
-az vm delete \
-  --resource-group my-rg \
-  --name my-ubuntu-vm \
-  --yes
+        <div class="terminal-window">
+          <div class="terminal-body"><span class="term-prompt">$</span> <span class="term-cmd">az group delete --name rg-azure-demo --yes --no-wait</span></div>
         </div>
       </section>
 
       <!-- SUMMARY CHECKLIST -->
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">09.</span> Summary Checklist</h2>
+        <h2><span class="section-number">13.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
           <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="m2chk1" style="margin-top: 0.25rem;">
-              <label for="m2chk1">I know the VM sizing families: <strong>B</strong> (burstable), <strong>D</strong> (general), <strong>F</strong> (compute), <strong>E</strong> (memory), and <strong>N</strong> (GPU).</label>
+              <label for="m2chk1">I know how to deploy an Azure VM via <strong>Azure Portal</strong>, <strong>Azure Cloud Shell</strong>, and <strong>Local PC terminal</strong>.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="m2chk2" style="margin-top: 0.25rem;">
-              <label for="m2chk2">I understand the critical danger of the <strong>Temporary Disk</strong>: all data is wiped on deallocation/reboot.</label>
+              <label for="m2chk2">I know the VM sizing families (B, D, F, E, N) and select <code>Standard_B1s</code> for free tier practice.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="m2chk3" style="margin-top: 0.25rem;">
-              <label for="m2chk3">I understand how <strong>Network Security Groups (NSGs)</strong> prioritize rules (lowest number first, e.g. 100 beats 200).</label>
+              <label for="m2chk3">I understand the critical danger of the <strong>Temporary Disk</strong>: all data is wiped on deallocation/reboot.</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="m2chk4" style="margin-top: 0.25rem;">
-              <label for="m2chk4">I can connect to a Linux VM via <strong>SSH Key Pairs</strong> and open Port 80 for web traffic.</label>
+              <label for="m2chk4">I can fix SSH permissions on Linux (<code>chmod 400</code>) and Windows PowerShell (<code>icacls</code>).</label>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
               <input type="checkbox" id="m2chk5" style="margin-top: 0.25rem;">
-              <label for="m2chk5">I know the vital difference between <strong>Stopped</strong> (still billed!) and <strong>Stopped (Deallocated)</strong> (compute is $0).</label>
+              <label for="m2chk5">I know the commands to inspect VM hardware (<code>uname</code>, <code>lscpu</code>, <code>free -m</code>, <code>df -h</code>, <code>lsblk</code>, IMDS).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk6" style="margin-top: 0.25rem;">
+              <label for="m2chk6">I know how to install Nginx, test locally, and troubleshoot NSG port 80 firewall blocks.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk7" style="margin-top: 0.25rem;">
+              <label for="m2chk7">I know how to format an attached data disk (<code>mkfs.ext4</code>) and persist it in <code>/etc/fstab</code> using UUID.</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk8" style="margin-top: 0.25rem;">
+              <label for="m2chk8">I know the vital difference between <strong>Stopped</strong> (still billed!) and <strong>Stopped (Deallocated)</strong> ($0 compute).</label>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
+              <input type="checkbox" id="m2chk9" style="margin-top: 0.25rem;">
+              <label for="m2chk9">I can destroy the entire lab using <code>az group delete --yes --no-wait</code> to ensure a $0 bill.</label>
             </li>
           </ul>
         </div>

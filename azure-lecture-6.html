@@ -241,12 +241,14 @@
           </p>
         </div>
 
-        <div class="hierarchy-tree">
-URL Format:
-https://&lt;storage-account-name&gt;.blob.core.windows.net/&lt;container-name&gt;/&lt;blob-name&gt;
-
-Example:
-https://mystorageak2026.blob.core.windows.net/images/profile.jpg
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: #50e6ff; text-transform: uppercase; margin-bottom: 0.4rem;">Public Endpoint URL Structure:</div>
+          <div style="font-family: var(--font-mono); font-size: 0.9rem; color: #38bdf8; word-break: break-all; margin-bottom: 0.5rem;">
+            https://<span style="color: #4ade80;">&lt;storage-account-name&gt;</span>.blob.core.windows.net/<span style="color: #fbbf24;">&lt;container-name&gt;</span>/<span style="color: #f472b6;">&lt;blob-name&gt;</span>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted); word-break: break-all;">
+            Example: https://<span style="color: #4ade80;">mystorageak2026</span>.blob.core.windows.net/<span style="color: #fbbf24;">images</span>/<span style="color: #f472b6;">profile.jpg</span>
+          </div>
         </div>
 
         <div class="callout-danger">
@@ -302,15 +304,43 @@ https://mystorageak2026.blob.core.windows.net/images/profile.jpg
         <h2><span class="section-number">04.</span> Access Tiers &amp; Rehydration</h2>
         <p>Azure matches storage costs to how frequently your files are accessed:</p>
 
-        <div class="hierarchy-tree">
-+-----------+-------------------------+--------------+-----------------------+
-| Tier      | Access Frequency        | Storage Cost | Access/Retrieval Cost |
-+-----------+-------------------------+--------------+-----------------------+
-| Hot       | Daily active usage      | Highest      | Lowest                |
-| Cool      | Infrequent (30+ days)   | Lower        | Higher                |
-| Cold      | Rarely accessed (90+)   | Very Low     | Much Higher           |
-| Archive   | Long-term backup (180+) | Rock Bottom  | Highest (Must Rehydrate)|
-+-----------+-------------------------+--------------+-----------------------+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-card); text-align: left;">
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Tier</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Access Frequency</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Storage Cost</th>
+                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Access / Retrieval Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #ef4444;">Hot</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Daily active reads &amp; writes</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 600;">Highest</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Lowest</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #38bdf8;">Cool</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Infrequently accessed (&ge; 30 days)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Lower</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Higher</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #818cf8;">Cold</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Rarely accessed (&ge; 90 days)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Very Low</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444;">Much Higher</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #94a3b8;">Archive</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Long-term regulatory backups (&ge; 180 days)</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">Rock Bottom</td>
+                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #f59e0b; font-weight: 600;">Highest (Requires Rehydration)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="callout-warning">
@@ -339,14 +369,32 @@ https://mystorageak2026.blob.core.windows.net/images/profile.jpg
         <h2><span class="section-number">06.</span> Security: Storage Keys vs. Shared Access Signatures (SAS)</h2>
         <p>How do applications access files securely?</p>
 
-        <div class="hierarchy-tree">
-1. Account Access Keys (Key 1 &amp; Key 2):
-   - Master root passwords with unrestricted 100% control over the entire storage account.
-   - NEVER commit these keys to GitHub or embed them inside mobile apps!
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid #ef4444; border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span style="font-weight: 700; color: #ef4444; font-size: 0.95rem;">🔑 Account Access Keys (1 &amp; 2)</span>
+              <span style="background: #ef4444; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Root Passwords</span>
+            </div>
+            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0 0 0.5rem 0;">
+              Full 100% root access to create, read, delete, or reconfigure anything in the storage account.
+            </p>
+            <div style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.8rem; color: #fca5a5;">
+              ⚠️ <strong>Critical Security Warning:</strong> NEVER commit access keys to GitHub or hardcode them inside mobile apps or frontend JavaScript.
+            </div>
+          </div>
 
-2. Shared Access Signatures (SAS Tokens):
-   - Secure, temporary digital pass tickets.
-   - Example: "Allow user Alice to READ only 'invoice.pdf' until 5:00 PM today from IP 192.168.1.5."
+          <div style="background: var(--bg-card); border: 1px solid #0284c7; border-radius: 8px; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span style="font-weight: 700; color: #38bdf8; font-size: 0.95rem;">🎟️ Shared Access Signatures (SAS)</span>
+              <span style="background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Best Practice</span>
+            </div>
+            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0 0 0.5rem 0;">
+              Temporary URI pass tickets granting granular, time-bound, and scoped permissions without sharing master keys.
+            </p>
+            <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #0284c7; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.8rem; color: var(--text-primary);">
+              💡 <strong>Example:</strong> "Grant Alice <em>Read-Only</em> access to <code>report.pdf</code> expiring in 30 minutes from IP <code>10.0.4.2</code>."
+            </div>
+          </div>
         </div>
       </section>
 
@@ -355,16 +403,35 @@ https://mystorageak2026.blob.core.windows.net/images/profile.jpg
         <h2><span class="section-number">07.</span> Hosting a Serverless Static Website ($web container)</h2>
         <p>You can host an entire production website directly from Blob Storage for pennies a month without running any web servers or VMs:</p>
 
-        <div class="hierarchy-tree">
-# Step-by-Step Hands-On:
-1. Open your Storage Account in Azure Portal.
-2. In left sidebar, click "Static website" (under Data management).
-3. Select "Enabled".
-4. Set Index document name: "index.html".
-5. Set Error document path: "404.html" &rarr; Click Save.
-6. Azure creates a special container named "$web" and gives you a public URL!
-7. Upload your index.html and style.css into the "$web" container.
-8. Visit the endpoint URL in your browser: Your website is live on the internet!
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0;">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Open Static Website Feature in Portal</h4>
+              <p>Navigate to your Storage Account &rarr; Under left sidebar <strong>Data management</strong>, click <strong>Static website</strong>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Configure Document Defaults</h4>
+              <p>Select <strong>Enabled</strong> &bull; Set Index document name: <code>index.html</code> &bull; Set Error document path: <code>404.html</code> &rarr; Click <strong>Save</strong>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Upload Files to Special <code>$web</code> Container</h4>
+              <p>Azure automatically provisions a root container named <code>$web</code>. Upload your HTML, CSS, and JS files into <code>$web</code>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Launch Live Web Endpoint</h4>
+              <p>Copy the generated Primary Endpoint URL (e.g., <code>https://mystorage.z13.web.core.windows.net/</code>) and load it in any browser!</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -379,36 +446,44 @@ https://mystorageak2026.blob.core.windows.net/images/profile.jpg
       <section id="cli-cheatsheet" class="note-section content-section">
         <h2><span class="section-number">09.</span> Azure CLI Cheatsheet for Blob Storage</h2>
 
-        <div class="hierarchy-tree">
-# 1. Create a Storage Account
-az storage account create \
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="terminal-title">Azure CLI / Bash</span>
+          </div>
+          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Create a Storage Account</span>
+<span class="cmd-prompt">$ </span>az storage account create \
   --name mystorageak2026 \
   --resource-group my-rg \
   --location eastus \
   --sku Standard_LRS
 
-# 2. Create a Container
-az storage container create \
+<span class="cmd-comment"># 2. Create a Container</span>
+<span class="cmd-prompt">$ </span>az storage container create \
   --account-name mystorageak2026 \
   --name media-uploads \
   --auth-mode login
 
-# 3. Upload a Blob file
-az storage blob upload \
+<span class="cmd-comment"># 3. Upload a Blob file</span>
+<span class="cmd-prompt">$ </span>az storage blob upload \
   --account-name mystorageak2026 \
   --container-name media-uploads \
   --name hero.png \
   --file ./images/hero.png \
   --auth-mode login
 
-# 4. Generate a 1-Hour Read-Only SAS Token
-az storage blob generate-sas \
+<span class="cmd-comment"># 4. Generate a 1-Hour Read-Only SAS Token</span>
+<span class="cmd-prompt">$ </span>az storage blob generate-sas \
   --account-name mystorageak2026 \
   --container-name media-uploads \
   --name hero.png \
   --permissions r \
   --expiry $(date -u -d "1 hour" '+%Y-%m-%dT%H:%MZ') \
-  --full-uri
+  --full-uri</code></pre></div>
         </div>
       </section>
 
