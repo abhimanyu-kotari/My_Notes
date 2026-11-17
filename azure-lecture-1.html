@@ -191,8 +191,7 @@
         </div>
         <h1 class="lecture-main-title">Cloud Computing &amp; Microsoft Azure Basics</h1>
         <p class="lecture-lead">
-          <strong>What is this module about?</strong> The foundational principles of modern cloud computing and Microsoft Azure: how virtualization transformed physical servers, why companies switched from upfront capital spending (CapEx) to operational spending (OpEx), how Microsoft's global fiber network powers 60+ regions, and how to structure resources using Azure's strict 4-level management hierarchy.<br>
-          <strong>Why is this critical for engineers?</strong> Every enterprise application, cloud native architecture, and modern AI solution relies on understanding shared responsibility, latency-aware region selection, and fault-tolerant multi-zone deployments.
+          Master the core foundation of Microsoft Azure through the exact practical analogies taught in the lecture: solving the software engineer's dilemma (running Linux on Windows/macOS without dual-booting), hypervisors carving out isolated mini-computers, the Ice Cream Parlor model for IaaS vs. PaaS vs. SaaS, city buses vs. private cars for cloud deployment models, the food delivery startup for CapEx vs. OpEx, and setting up your Azure Free Tier account with Microsoft's zero-risk spending protection guarantee.
         </p>
       </div>
 
@@ -490,13 +489,50 @@
           </div>
         </div>
 
-        <h3>The Pizza Analogy:</h3>
-        <ul>
-          <li><strong>Traditional On-Premises:</strong> You make pizza completely from scratch at home. You buy flour, knead dough, source tomatoes, own the gas oven, and wash the dishes.</li>
-          <li><strong>IaaS (Take &amp; Bake):</strong> You buy a prepared raw pizza from the supermarket. The vendor prepared the crust and cheese; you provide the kitchen oven and dining table.</li>
-          <li><strong>PaaS (Pizza Delivery):</strong> You order a cooked pizza delivered to your doorstep. You provide the dining table and drinks; the restaurant handles the kitchen, baking, and recipe.</li>
-          <li><strong>SaaS (Dining at a Restaurant):</strong> You walk into a pizzeria. You sit down, enjoy the meal, pay the bill, and leave. You don't know or care what brand of oven was used.</li>
-        </ul>
+        <h3>The Ice Cream Parlor Analogy (As Taught in Lecture):</h3>
+        <p>To intuitively understand the boundary between your responsibility and Azure's responsibility, imagine opening an ice cream business:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0 1.25rem;">
+          <div class="step-card" style="margin: 0; border-left: 3px solid #38bdf8;">
+            <div class="step-card-header" style="color: #38bdf8;">🏬 IaaS: Empty Shop in a Mall</div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              You rent bare four walls. You must paint the walls, build furniture, buy ice cream churning machines, and manage the shop. Complete freedom to customize, but maximum operational responsibility.
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0; border-left: 3px solid #10b981;">
+            <div class="step-card-header" style="color: #10b981;">🍦 PaaS: Fully-Equipped Franchise Stall</div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              The counter, commercial display freezers, and soft-serve machines are pre-installed and maintained by the mall. You simply bring your secret ice cream flavors and start selling from day one. Pure focus on your product.
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0; border-left: 3px solid #a855f7;">
+            <div class="step-card-header" style="color: #a855f7;">🤖 SaaS: Ice Cream Vending Machine</div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              A 100% automated vending machine. Customers tap their debit card, select a flavor, and get their ice cream instantly. Zero maintenance, zero ingredient management, fully turnkey software over the web (like Google Sheets).
+            </p>
+          </div>
+        </div>
+
+        <h3>Cloud Deployment Models (The Transportation Analogy):</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0 1.25rem;">
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #38bdf8;">🚌 Public Cloud = City Bus</span></div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              You buy a ticket and get a seat on a shared vehicle running on public roads. Multiple commuters share the infrastructure securely (Azure, AWS). Cost-effective and infinitely scalable.
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #f59e0b;">🚗 Private Cloud = Personal Car</span></div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              You purchase the entire car exclusively for your family. No strangers allowed, but you bear all upfront costs, insurance, fuel, and engine maintenance (On-premises enterprise datacenter).
+            </p>
+          </div>
+          <div class="step-card" style="margin: 0;">
+            <div class="step-card-header"><span style="color: #10b981;">🚆 Hybrid Cloud = Car to Metro Station</span></div>
+            <p style="font-size: 0.88rem; line-height: 1.6; margin: 0; color: var(--text-primary);">
+              You drive your personal car to the train station, park it securely, and take the rapid express metro into downtown. Keep sensitive regulatory data in your private datacenter while scaling public web traffic on Azure.
+            </p>
+          </div>
+        </div>
       </section>
 
       <!-- SECTION 4 -->
