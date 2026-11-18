@@ -160,442 +160,329 @@
       </div>
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
-        <li><a href="#what-is-iam" class="sidebar-link">1. AuthN vs. AuthZ Foundations</a></li>
-        <li><a href="#airport-analogy" class="sidebar-link">2. The Airport Security Analogy</a></li>
-        <li><a href="#entra-id" class="sidebar-link">3. Microsoft Entra ID Principals</a></li>
-        <li><a href="#managed-identities" class="sidebar-link">4. Managed Identities (No Passwords)</a></li>
-        <li><a href="#rbac-formula" class="sidebar-link">5. The Azure RBAC Formula</a></li>
-        <li><a href="#scope-hierarchy" class="sidebar-link">6. Scope &amp; Downward Inheritance</a></li>
-        <li><a href="#builtin-roles" class="sidebar-link">7. Built-in Roles: Owner vs Contributor</a></li>
-        <li><a href="#hands-on-portal" class="sidebar-link">8. Hands-on: Assigning a Role in Portal</a></li>
-        <li><a href="#cli-commands" class="sidebar-link">9. Azure CLI Commands for IAM</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">10. Summary Checklist</a></li>
+        <li><a href="#what-is-iam" class="sidebar-link">1. AuthN vs. AuthZ — The Core Theory</a></li>
+        <li><a href="#airport-analogy" class="sidebar-link">2. Airport Security Analogy</a></li>
+        <li><a href="#entra-id" class="sidebar-link">3. Microsoft Entra ID Deep Dive</a></li>
+        <li><a href="#tenant-theory" class="sidebar-link">4. Tenant Architecture Theory</a></li>
+        <li><a href="#managed-identities" class="sidebar-link">5. Managed Identities — No Passwords</a></li>
+        <li><a href="#rbac-formula" class="sidebar-link">6. RBAC Formula Explained</a></li>
+        <li><a href="#scope-hierarchy" class="sidebar-link">7. Scope Hierarchy &amp; Inheritance</a></li>
+        <li><a href="#builtin-roles" class="sidebar-link">8. Built-In Roles &amp; Data Plane Roles</a></li>
+        <li><a href="#hands-on-portal" class="sidebar-link">9. Role Assignment Walkthrough</a></li>
+        <li><a href="#cli-commands" class="sidebar-link">10. CLI Commands</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">11. Summary Checklist</a></li>
       </ul>
     </aside>
 
     <!-- Main Notes Content -->
     <main class="docs-content">
-      
       <div class="lecture-header">
         <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
-          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
-          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo;
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo;
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo;
           <span style="color: var(--text-primary);">Module 7</span>
         </div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Module 07</span>
-          <span class="tag">Azure IAM</span>
+          <span class="tag">IAM</span>
           <span class="tag">Entra ID</span>
-          <span class="tag">Azure RBAC</span>
+          <span class="tag">RBAC</span>
           <span class="tag">Managed Identities</span>
+          <span class="tag">PIM</span>
           <span class="tag">Zero Trust</span>
         </div>
-        <h1 class="lecture-main-title">Identity and Access Management (IAM) &amp; Azure RBAC</h1>
+        <h1 class="lecture-main-title">Identity &amp; Access Management — Theory, Entra ID &amp; RBAC</h1>
         <p class="lecture-lead">
-          Master cloud security and enterprise governance through the practical foundations taught in the lecture: demystifying Authentication vs. Authorization through the Airport Security analogy, managing identities in Microsoft Entra ID, banishing hardcoded credentials forever with Managed Identities, mastering the 3-part Azure RBAC formula (<code>Who + What + Where</code>), enforcing downward scope inheritance, and executing least-privilege role assignments directly inside the Azure Portal.
+          Cloud security begins with identity. Before any firewall rule, any network policy, or any encryption key — you must answer two questions: <em>Who is trying to access this resource?</em> (Authentication) and <em>What are they allowed to do?</em> (Authorization). This module covers the full theory: how Microsoft Entra ID manages identities as a cloud directory, why the RBAC permission model uses a three-part formula, how scope inheritance flows down the Azure resource hierarchy, and why Managed Identities eliminate the most dangerous anti-pattern in cloud development — hardcoded credentials.
         </p>
       </div>
 
-      <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="background: rgba(0,120,212,0.1); border: 1px solid rgba(0,120,212,0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
             <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">05:25:13 to 05:57:29</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=19513" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=19513" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment &#8599;</a>
         </div>
       </section>
 
-      <!-- SECTION 1 -->
       <section id="what-is-iam" class="note-section content-section">
-        <h2><span class="section-number">01.</span> Authentication (AuthN) vs. Authorization (AuthZ)</h2>
-        <p>
-          Cloud security rests upon two distinct, non-negotiable security questions:
-        </p>
+        <h2><span class="section-number">01.</span> AuthN vs. AuthZ — The Foundational Theory</h2>
+        <p>All of cloud security rests on two distinct processes that are often confused but are fundamentally different operations happening in sequence:</p>
 
-        <div style="overflow-x: auto; margin: 1.5rem 0;">
-          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Concept</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">The Core Question</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">How It Is Proven</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Azure Service Responsible</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Authentication (AuthN)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">"Who are you?"</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Password, biometric fingerprint, FIDO2 security key, 6-digit MFA authenticator code.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);"><strong>Microsoft Entra ID</strong></td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Authorization (AuthZ)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">"What are you allowed to do?"</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Permissions attached to your role (e.g. Can you reboot this VM? Can you read this table?).</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);"><strong>Azure RBAC</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- SECTION 2 -->
-      <section id="airport-analogy" class="note-section content-section">
-        <h2><span class="section-number">02.</span> The Airport Security Analogy</h2>
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The International Flight:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            - <strong>Authentication (AuthN):</strong> At the immigration counter, the border officer checks your physical passport and verifies your biometric face scan against international records. This proves beyond doubt that you are who you claim to be.
-            <br><br>
-            - <strong>Authorization (AuthZ):</strong> After passing immigration, your passport does not let you open the airplane cockpit door or stroll into the First-Class airport lounge if you hold an Economy ticket! Your <strong>Boarding Pass</strong> determines your exact Role and Scope.
-            <br><br>
-            - <strong>Managed Identity:</strong> An aircraft mechanic or airline pilot wears an airport RFID badge. They do not memorize 40 individual passwords to open maintenance doors—the airport infrastructure automatically authenticates their authorized role!
-          </p>
-        </div>
-      </section>
-
-      <!-- SECTION 3 -->
-      <section id="entra-id" class="note-section content-section">
-        <h2><span class="section-number">03.</span> Microsoft Entra ID Security Principals</h2>
-        <p><strong>Microsoft Entra ID</strong> manages four distinct types of identities (Security Principals):</p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; margin: 1.25rem 0;">
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
-            <div style="font-size: 1.25rem; margin-bottom: 0.35rem;">👤</div>
-            <div style="font-weight: 700; color: #38bdf8; font-size: 0.92rem; margin-bottom: 0.25rem;">1. Users</div>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
-              Individual humans (e.g. <code>alice@company.com</code>) authenticated with password, MFA, or Passkey.
-            </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.25rem 0;">
+          <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #60a5fa; margin-top: 0;">Authentication (AuthN) — "Who Are You?"</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">The process of verifying the claimed identity of a user, computer, or application. The system asks: <em>"Prove that you are who you say you are."</em></p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Methods: Password + username, Multi-Factor Authentication (MFA), OAuth2/OIDC tokens, X.509 certificates, biometrics.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">In Azure: Microsoft Entra ID performs authentication and issues a JWT access token.</p>
           </div>
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
-            <div style="font-size: 1.25rem; margin-bottom: 0.35rem;">👥</div>
-            <div style="font-weight: 700; color: #4ade80; font-size: 0.92rem; margin-bottom: 0.25rem;">2. Groups</div>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
-              Collections of users (e.g. <code>DevOps-Engineers</code>) allowing bulk permission grant and revocation.
-            </div>
+          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #34d399; margin-top: 0;">Authorization (AuthZ) — "What Can You Do?"</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Once identity is confirmed, the system checks what <em>actions</em> that identity is permitted to perform and on which resources.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Methods: RBAC role assignments, Azure Policy, Attribute-Based Access Control (ABAC).</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">In Azure: Azure Resource Manager (ARM) evaluates the authenticated identity's RBAC role assignments at the target resource scope.</p>
           </div>
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
-            <div style="font-size: 1.25rem; margin-bottom: 0.35rem;">🤖</div>
-            <div style="font-weight: 700; color: #fbbf24; font-size: 0.92rem; margin-bottom: 0.25rem;">3. Service Principals</div>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
-              App identities for automated CI/CD pipelines (GitHub Actions, Jenkins) calling Azure REST APIs.
-            </div>
-          </div>
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
-            <div style="font-size: 1.25rem; margin-bottom: 0.35rem;">🛡️</div>
-            <div style="font-weight: 700; color: #a78bfa; font-size: 0.92rem; margin-bottom: 0.25rem;">4. Managed Identities</div>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
-              Cloud-native identities for Azure VMs &amp; Containers with automatic credential rotation and zero stored secrets!
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION 4 -->
-      <section id="managed-identities" class="note-section content-section">
-        <h2><span class="section-number">04.</span> Managed Identities (Eliminating Hardcoded Passwords)</h2>
-        <p>One of the worst cloud blunders is saving database credentials or storage keys in git code:</p>
-
-        <div class="callout-danger">
-          <strong>❌ THE OLD, DANGEROUS WAY:</strong>
-          <pre style="background: transparent; border: none; padding: 0; margin: 0.5rem 0; color: #ef4444; font-family: var(--font-mono);">
-# Hardcoded connection string in app.py
-AZURE_STORAGE_KEY = "xK9#8d298374982374987..." # Committed to GitHub &rarr; Hacker theft!
-          </pre>
         </div>
 
         <div class="callout-tip">
-          <strong>✅ THE MODERN MANAGED IDENTITY WAY:</strong>
-          <p style="margin: 0.5rem 0 0 0;">
-            You enable a <strong>Managed Identity</strong> on your Azure VM or Container App. Azure automatically provisions an identity in Entra ID and injects temporary rotating tokens into the VM metadata endpoint. Your Python app simply asks Azure for a token using <code>DefaultAzureCredential()</code>—no passwords or keys exist anywhere in your codebase!
-          </p>
+          <strong>The sequence matters:</strong> Authentication always happens BEFORE authorization. You cannot check what someone is allowed to do until you have verified who they are. If authentication fails, authorization is never evaluated.
         </div>
-
-        <h3>System-Assigned vs. User-Assigned Managed Identity:</h3>
-        <ul>
-          <li><strong>System-Assigned:</strong> Tied 1-to-1 to a single Azure resource (e.g. 1 VM). If that VM is deleted, Azure automatically deletes the identity.</li>
-          <li><strong>User-Assigned:</strong> Created as an independent standalone Azure resource. Can be attached to multiple resources simultaneously (e.g., 10 VMs running the same microservice pool).</li>
-        </ul>
       </section>
 
-      <!-- SECTION 5 -->
-      <section id="rbac-formula" class="note-section content-section">
-        <h2><span class="section-number">05.</span> The Azure RBAC Formula</h2>
-        <p>Every permission assignment in Azure is governed by this mathematical formula:</p>
-
-        <div class="diagram-container">
-          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 1.25rem; text-align: center;">
-            THE AZURE RBAC EQUATION
-          </div>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap;">
-            <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; text-align: center; flex: 1; min-width: 140px;">
-              <div style="font-size: 0.74rem; color: #38bdf8; font-weight: 700; text-transform: uppercase;">Who?</div>
-              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem; margin-top: 0.2rem;">Security Principal</div>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.2rem;">(e.g., Alice)</div>
+      <section id="airport-analogy" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Airport Security Analogy</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: rgba(59,130,246,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127959;</div>
+              <strong style="color: #60a5fa;">Passport (AuthN)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">Immigration desk checks your photo and biometrics. This is <strong>authentication</strong> — confirming your identity is real.</p>
             </div>
-
-            <span style="font-size: 1.3rem; font-weight: 700; color: var(--text-muted);">+</span>
-
-            <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid #7c3aed; border-radius: 8px; padding: 0.85rem 1rem; text-align: center; flex: 1; min-width: 140px;">
-              <div style="font-size: 0.74rem; color: #c084fc; font-weight: 700; text-transform: uppercase;">What?</div>
-              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem; margin-top: 0.2rem;">Role Definition</div>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.2rem;">(e.g., Contributor)</div>
+            <div style="text-align: center; padding: 1rem; background: rgba(16,185,129,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127801;</div>
+              <strong style="color: #34d399;">Boarding Pass (AuthZ)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">Once past passport control, your boarding pass defines your seat, lounge access, and gate. This is <strong>authorization</strong> — your allowed scope.</p>
             </div>
-
-            <span style="font-size: 1.3rem; font-weight: 700; color: var(--text-muted);">+</span>
-
-            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid #16a34a; border-radius: 8px; padding: 0.85rem 1rem; text-align: center; flex: 1; min-width: 140px;">
-              <div style="font-size: 0.74rem; color: #4ade80; font-weight: 700; text-transform: uppercase;">Where?</div>
-              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem; margin-top: 0.2rem;">Scope</div>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.2rem;">(e.g., RG 'prod-backend')</div>
+            <div style="text-align: center; padding: 1rem; background: rgba(168,85,247,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#128737;</div>
+              <strong style="color: #a855f7;">RFID Badge (Managed Identity)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">A pilot's biometric airport badge. No password to remember — the airport system automatically recognizes the pilot's authorized access level.</p>
             </div>
-
-            <span style="font-size: 1.3rem; font-weight: 700; color: var(--text-muted);">=</span>
-
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #d97706; border-radius: 8px; padding: 0.85rem 1rem; text-align: center; flex: 1; min-width: 150px;">
-              <div style="font-size: 0.74rem; color: #fbbf24; font-weight: 700; text-transform: uppercase;">Result</div>
-              <div style="font-weight: 700; color: #fbbf24; font-size: 0.95rem; margin-top: 0.2rem;">Role Assignment</div>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.2rem;">(Effective Access)</div>
-            </div>
-          </div>
-          <div style="margin-top: 1rem; text-align: center; font-size: 0.82rem; color: var(--text-muted);">
-            Result: Alice can manage infrastructure <strong>strictly within 'prod-backend'</strong>, and nowhere else!
           </div>
         </div>
       </section>
 
-      <!-- SECTION 6 -->
-      <section id="scope-hierarchy" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Scope Hierarchy &amp; Downward Permission Inheritance</h2>
+      <section id="entra-id" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Microsoft Entra ID — Cloud Identity Directory Deep Dive</h2>
+        <p><strong>Microsoft Entra ID</strong> (formerly Azure Active Directory / Azure AD) is Microsoft's cloud-native identity and access management service. It is <em>not</em> the same as on-premise Windows Server Active Directory — it is a cloud-first directory designed for internet-scale authentication using modern protocols (OAuth2, OIDC, SAML 2.0).</p>
 
-        <div class="diagram-container">
-          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 1.25rem; text-align: center;">
-            AZURE RBAC 4-LEVEL SCOPE HIERARCHY
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.65rem; max-width: 600px; margin: 0 auto;">
-            <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid #7c3aed; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <div>
-                <span style="font-weight: 700; color: #c084fc;">Level 1: Management Groups</span>
-                <div style="font-size: 0.76rem; color: var(--text-secondary);">Highest scope; governs multiple Azure subscriptions across the enterprise</div>
-              </div>
-              <span style="font-size: 0.74rem; background: #7c3aed; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">Root Scope</span>
-            </div>
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; line-height: 1;">&darr; (Inherited Downwards)</div>
-
-            <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <div>
-                <span style="font-weight: 700; color: #38bdf8;">Level 2: Subscriptions</span>
-                <div style="font-size: 0.76rem; color: var(--text-secondary);">Billing boundary &amp; cloud account container</div>
-              </div>
-              <span style="font-size: 0.74rem; background: #0284c7; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">Account Scope</span>
-            </div>
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; line-height: 1;">&darr; (Inherited Downwards)</div>
-
-            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid #16a34a; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <div>
-                <span style="font-weight: 700; color: #4ade80;">Level 3: Resource Groups</span>
-                <div style="font-size: 0.76rem; color: var(--text-secondary);">Logical lifecycle folder for related project resources (Recommended Scope!)</div>
-              </div>
-              <span style="font-size: 0.74rem; background: #16a34a; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">Project Scope</span>
-            </div>
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; line-height: 1;">&darr; (Inherited Downwards)</div>
-
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #d97706; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <div>
-                <span style="font-weight: 700; color: #fbbf24;">Level 4: Individual Resources</span>
-                <div style="font-size: 0.76rem; color: var(--text-secondary);">Specific VM, Storage Account, Azure SQL Database, Key Vault</div>
-              </div>
-              <span style="font-size: 0.74rem; background: #d97706; color: #000; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">Leaf Scope</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="callout-warning">
-          <strong>⚠️ The Law of Downward Inheritance:</strong>
-          Permissions granted at a higher level are <strong>automatically inherited</strong> by all child levels below it!
-          <br><br>
-          If you assign someone the <code>Reader</code> role at the <strong>Subscription</strong> level, they can see every single resource group, virtual machine, and storage account inside that entire subscription. Always follow the <strong>Principle of Least Privilege (PoLP)</strong>: assign roles at the lowest required scope (usually the Resource Group).
-        </div>
-      </section>
-
-      <!-- SECTION 7 -->
-      <section id="builtin-roles" class="note-section content-section">
-        <h2><span class="section-number">07.</span> The 4 Core Built-In Roles</h2>
-
-        <div style="overflow-x: auto; margin: 1.5rem 0;">
-          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Role Name</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Read?</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Create/Update/Delete?</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Assign Access to Others?</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Typical Use Case</th>
-              </tr>
-            </thead>
+        <h4>The 4 Types of Security Principals in Entra ID</h4>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Principal Type</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">What It Represents</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Real Example</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Key Properties</th>
+            </tr></thead>
             <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #ef4444;">Owner</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">YES</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Cloud administrators and lead architects.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Contributor</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 700;">NO</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Developers &amp; DevOps engineers deploying infrastructure.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #94a3b8;">Reader</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444;">No</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444;">No</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Auditors, interns, monitoring dashboards.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #a78bfa;">User Access Admin</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Yes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444;">No (Compute/Disk)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">YES</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Security officers managing role assignments without touching servers.</td>
-              </tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">User</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">A human being with an interactive login session</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">alice@company.com (developer), bob@company.com (admin)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Requires password + optional MFA. Can be internal (member) or external (guest via B2B).</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#34d399;">Group</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">A collection of users (or other groups) managed together</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">DevOps-Engineers, Frontend-Team, Cloud-Admins</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">RBAC roles assigned to a group cascade to all members. Easier to manage than individual assignments.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">Service Principal</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">A machine identity for applications and automation scripts</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">GitHub Actions runner, Terraform automation bot, Jenkins CI</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Authenticates using a client secret or certificate. Must be rotated manually — this is the security risk of service principals.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#a855f7;">Managed Identity</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">An Azure-managed machine identity for Azure resources</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">An Azure VM accessing Blob Storage without any password</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">No secrets to manage. Azure automatically rotates certificates. Cannot be used outside Azure.</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- SECTION 8 -->
+      <section id="tenant-theory" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Tenant Architecture Theory</h2>
+        <p>When an organization signs up for Microsoft 365 or Azure, Microsoft creates a dedicated <strong>Tenant</strong> — a private, isolated instance of Entra ID belonging exclusively to that organization. Think of a tenant as your company's private directory database in Microsoft's cloud.</p>
+
+        <div class="hierarchy-tree">Microsoft Entra ID Global Infrastructure
+  ├── Tenant: contoso.onmicrosoft.com   (Contoso Corp)
+  │     ├── Users: alice@contoso.com, bob@contoso.com
+  │     ├── Groups: DevOps-Team, Finance-Admins
+  │     ├── Apps: Contoso ERP, GitHub Enterprise
+  │     └── Azure Subscriptions: Sub-Production, Sub-Dev
+  │
+  └── Tenant: fabrikam.onmicrosoft.com  (Fabrikam Ltd)
+        ├── Users: carol@fabrikam.com
+        └── Azure Subscriptions: Sub-Main
+
+ZERO cross-tenant data leakage. Fabrikam cannot see Contoso's users.</div>
+
+        <div class="callout-tip">
+          <strong>Tenant ID vs. Subscription ID:</strong> These are two different concepts. A single Entra ID Tenant can have <em>multiple</em> Azure Subscriptions linked to it (e.g., Production, Development, Sandbox). The Tenant manages identity; the Subscription manages billing and resource grouping. When you run <code>az login</code>, you authenticate to your tenant. When you run <code>az account set</code>, you select which subscription's resources to work with.
+        </div>
+      </section>
+
+      <section id="managed-identities" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Managed Identities — Eliminating Credential Sprawl</h2>
+        <p>The most dangerous security mistake in cloud development is embedding credentials inside code:</p>
+        <pre class="code-block" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 1.25rem; font-size: 0.85rem; overflow-x: auto;"><code style="color: #ef4444;">// ❌ NEVER DO THIS — API keys in source code
+const storageKey = "DefaultEndpointsProtocol=https;AccountName=mystorage;AccountKey=abc123..."
+// This key is now in your git history FOREVER — even if you delete the commit</code></pre>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid rgba(59,130,246,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #60a5fa; margin-top: 0;">System-Assigned Managed Identity</h4>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Created automatically and tied to a <em>single specific Azure resource</em> (e.g., one VM). When the VM is deleted, Entra ID automatically deletes the identity.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;"><strong>Use when:</strong> One resource, one identity. Simple 1:1 mapping. The resource will never be shared with another service.</p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #34d399; margin-top: 0;">User-Assigned Managed Identity</h4>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">Created as a <em>standalone Azure resource</em>. Can be assigned to multiple VMs, Container Apps, or Functions. When one VM is deleted, the identity persists.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;"><strong>Use when:</strong> Multiple resources share the same identity (e.g., 5 worker VMs all need to access the same Storage Account).</p>
+          </div>
+        </div>
+
+        <div class="hierarchy-tree">How Managed Identity Works at Runtime:
+
+1. Developer deploys VM with System-Assigned Managed Identity enabled
+2. Entra ID creates a Service Principal for the VM automatically
+3. Azure grants the VM's identity "Storage Blob Data Reader" on the target storage account
+
+At runtime inside the VM:
+4. App calls: http://169.254.169.254/metadata/identity/oauth2/token (Instance Metadata Service)
+5. Azure IMDS returns a fresh JWT access token (valid 1 hour, auto-rotated)
+6. App uses the token to call the Blob Storage REST API
+7. Azure validates the token signature against Entra ID — grants access
+
+NO passwords. NO secrets. NO rotation headaches.</div>
+      </section>
+
+      <section id="rbac-formula" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Azure RBAC — The Three-Part Permission Formula</h2>
+        <p>Every access decision in Azure RBAC is determined by exactly three components combined into a <strong>Role Assignment</strong>:</p>
+
+        <div style="background: rgba(0,120,212,0.08); border: 2px solid rgba(0,120,212,0.4); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0; text-align: center;">
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.02em;">
+            Role Assignment = Security Principal + Role Definition + Scope
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.25rem; text-align: left;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+              <div style="color: #60a5fa; font-weight: 700; margin-bottom: 0.5rem;">Security Principal</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">WHO gets access<br><em>Alice, DevOps-Group, GitHub-Actions-SP, VM Managed Identity</em></div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+              <div style="color: #34d399; font-weight: 700; margin-bottom: 0.5rem;">Role Definition</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">WHAT actions they can perform<br><em>Reader, Contributor, Owner, Storage Blob Data Reader</em></div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+              <div style="color: #f59e0b; font-weight: 700; margin-bottom: 0.5rem;">Scope</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);">WHERE the permission applies<br><em>Management Group, Subscription, Resource Group, or specific Resource</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-tip">
+          <strong>Practical Example:</strong> "Alice (<em>principal</em>) has the Contributor role (<em>role</em>) on the rg-ecommerce-prod resource group (<em>scope</em>)." This means Alice can create, modify, and delete any resource inside <code>rg-ecommerce-prod</code> — but has zero permissions on any other resource group or subscription.
+        </div>
+      </section>
+
+      <section id="scope-hierarchy" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Scope Hierarchy &amp; Permission Inheritance</h2>
+        <div class="hierarchy-tree">[1. Management Groups]   ← Organizational governance across subscriptions
+         │  Assign: Azure Policy, Compliance Standards
+         │  Permissions set here apply to ALL child subscriptions
+         ▼
+[2. Subscriptions]       ← Billing boundary and high-level access control
+         │  Assign: Billing Administrators, Cost Management
+         │  Permissions set here apply to ALL child resource groups
+         ▼
+[3. Resource Groups]     ← Project lifecycle container (recommended RBAC level)
+         │  Assign: Developer access per project
+         │  Permissions set here apply to ALL resources in the group
+         ▼
+[4. Individual Resources] ← Finest grain (specific VM, Storage Account, etc.)
+           Assign: Emergency break-glass access or service-to-service identity</div>
+
+        <div style="overflow-x: auto; margin: 1.25rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Inheritance Rule</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Example</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Parent permissions flow down</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Reader on Subscription &#8594; Reader on every Resource Group and Resource within it</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Deny overrides Allow</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">If Deny Assignment blocks deletion, even Owner cannot delete that resource</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Least Privilege best practice</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Grant access at <strong>Resource Group</strong> level, not Subscription level, to limit blast radius</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="builtin-roles" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Built-In Roles &amp; Data Plane Roles</h2>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Role</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Read</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Create/Update/Delete</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Grant Access</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Ideal For</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#ef4444;">Owner</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444; font-weight:700;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Cloud admins and subscription owners. Full power including IAM management.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">Contributor</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444;">&#10007;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Developers and DevOps engineers. Full resource management, cannot touch IAM.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">Reader</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444;">&#10007;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444;">&#10007;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Auditors, interns, monitoring tools. Read-only view of resources and configuration.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#a855f7;">User Access Admin</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#22c55e;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444;">&#10007;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); text-align:center; color:#ef4444; font-weight:700;">&#10003;</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Security officers who manage role assignments but cannot touch resource configurations.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout-warning">
+          <strong>Control Plane vs. Data Plane — The Critical Distinction:</strong><br>
+          The <code>Contributor</code> role on a Storage Account lets you change firewall rules, modify the account configuration, and even <em>delete the entire storage account</em>. But by default, it does <strong>NOT</strong> allow you to <em>read the files inside containers</em>. That is the <strong>data plane</strong>. To access blobs, you need separate data-plane roles:<br>
+          <code>Storage Blob Data Reader</code> — read blobs<br>
+          <code>Storage Blob Data Contributor</code> — read, write, and delete blobs<br>
+          <code>Key Vault Secrets User</code> — read secrets from Key Vault
+        </div>
+
+        <div class="callout-tip">
+          <strong>Privileged Identity Management (PIM):</strong> In production enterprise environments, you should never have standing Owner or Contributor permissions. PIM (a premium Entra ID feature) enables <strong>Just-In-Time (JIT) access</strong> — a developer requests elevated permissions for a 4-hour window, a manager approves it, and Azure automatically revokes the permissions when the timer expires. This follows the Zero Trust security model: "assume breach, verify explicitly, use least privilege."
+        </div>
+      </section>
+
       <section id="hands-on-portal" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Hands-on: Assigning a Role in Azure Portal</h2>
-        
-        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0;">
-          <div class="step-card">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h4>Navigate to Target Scope</h4>
-              <p>In Azure Portal, open your target Resource Group (e.g., <code>rg-ecommerce-prod</code>) or Subscription.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h4>Open Access Control (IAM)</h4>
-              <p>In the left sidebar menu, click <strong>Access control (IAM)</strong> &rarr; Click <strong>+ Add</strong> &rarr; Select <strong>Add role assignment</strong>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h4>Select Role Definition</h4>
-              <p>Under the <em>Role</em> tab, search for and choose <strong>Contributor</strong> (or your target role) &rarr; Click <strong>Next</strong>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">4</div>
-            <div class="step-content">
-              <h4>Assign Members</h4>
-              <p>Select <em>User, group, or service principal</em> &bull; Click <strong>+ Select members</strong> &bull; Search for teammate's email (e.g. <code>alice@company.com</code>) &rarr; Click <strong>Select</strong> &rarr; Click <strong>Next</strong>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">5</div>
-            <div class="step-content">
-              <h4>Review + Assign</h4>
-              <p>Review the scope and role summary &rarr; Click <strong>Review + assign</strong>. The RBAC permission takes effect immediately!</p>
-            </div>
-          </div>
-        </div>
+        <h2><span class="section-number">09.</span> Step-by-Step Role Assignment in Azure Portal</h2>
+        <div class="hierarchy-tree">Azure Portal → Target Resource Group (e.g., rg-ecommerce-prod)
+  └── Left Menu: "Access control (IAM)"
+        └── Tab: "Role assignments" → see all current assignments
+              └── Button: "+ Add" → "Add role assignment"
+                    └── Step 1 — Role: Search "Contributor" → Select → Next
+                    └── Step 2 — Members:
+                          "Assign access to" = User, group, or service principal
+                          Click "+ Select members" → search alice@company.com
+                          Select → Next
+                    └── Step 3 — Review + assign → Review Principal + Role + Scope
+                          Click "Review + assign"
+                          ✓ Permission active within seconds</div>
       </section>
 
-      <!-- SECTION 9 -->
       <section id="cli-commands" class="note-section content-section">
-        <h2><span class="section-number">09.</span> Azure CLI Commands for IAM</h2>
+        <h2><span class="section-number">10.</span> Essential CLI Commands for IAM</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #38bdf8; margin-top: 0;">List &amp; Assign Roles</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>az role assignment list   --resource-group my-rg --output table
 
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <span class="terminal-title">Azure CLI / Bash</span>
+az role assignment create   --assignee "alice@company.com"   --role "Contributor"   --resource-group "my-rg"</code></pre>
           </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. List existing role assignments on a Resource Group</span>
-<span class="cmd-prompt">$ </span>az role assignment list \
-  --resource-group my-rg \
-  --output table
-
-<span class="cmd-comment"># 2. Assign 'Reader' role to a developer on a Resource Group</span>
-<span class="cmd-prompt">$ </span>az role assignment create \
-  --assignee "alice@company.com" \
-  --role "Reader" \
-  --resource-group "my-rg"
-
-<span class="cmd-comment"># 3. Assign 'Storage Blob Data Contributor' to a Managed Identity</span>
-<span class="cmd-prompt">$ </span>az role assignment create \
-  --assignee-object-id "&lt;vm-managed-identity-guid&gt;" \
-  --role "Storage Blob Data Contributor" \
-  --scope "/subscriptions/&lt;sub-id&gt;/resourceGroups/my-rg"
-
-<span class="cmd-comment"># 4. Revoke a role assignment</span>
-<span class="cmd-prompt">$ </span>az role assignment delete \
-  --assignee "alice@company.com" \
-  --role "Reader" \
-  --resource-group "my-rg"</code></pre></div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #34d399; margin-top: 0;">Managed Identity Assignment</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>az role assignment create   --assignee-object-id "&lt;managed-identity-id&gt;"   --role "Storage Blob Data Reader"   --scope "/subscriptions/&lt;sub&gt;/resourceGroups/my-rg/providers/Microsoft.Storage/storageAccounts/mystorage"</code></pre>
+          </div>
         </div>
       </section>
 
-      <!-- SUMMARY CHECKLIST -->
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">10.</span> Summary Checklist</h2>
+        <h2><span class="section-number">11.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk1" style="margin-top: 0.25rem;">
-              <label for="m7chk1">I can clearly define the difference between <strong>Authentication (AuthN)</strong> and <strong>Authorization (AuthZ)</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk2" style="margin-top: 0.25rem;">
-              <label for="m7chk2">I know the 4 Microsoft Entra ID principals: <strong>Users</strong>, <strong>Groups</strong>, <strong>Service Principals</strong>, and <strong>Managed Identities</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk3" style="margin-top: 0.25rem;">
-              <label for="m7chk3">I understand how <strong>Managed Identities</strong> eliminate hardcoded database credentials and storage keys.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk4" style="margin-top: 0.25rem;">
-              <label for="m7chk4">I can recite the RBAC formula: <strong>Principal + Role Definition + Scope = Role Assignment</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk5" style="margin-top: 0.25rem;">
-              <label for="m7chk5">I know the 4 levels of Azure scope and that permissions inherit <strong>downwards</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m7chk6" style="margin-top: 0.25rem;">
-              <label for="m7chk6">I know the differences between <strong>Owner</strong>, <strong>Contributor</strong>, <strong>Reader</strong>, and <strong>User Access Administrator</strong>.</label>
-            </li>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk1" style="margin-top: 0.25rem;"><label for="m7chk1">I can clearly explain the difference between <strong>Authentication (AuthN)</strong> and <strong>Authorization (AuthZ)</strong> and why AuthN always comes first.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk2" style="margin-top: 0.25rem;"><label for="m7chk2">I know the 4 security principal types in <strong>Entra ID</strong>: Users, Groups, Service Principals, and Managed Identities — and when to use each.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk3" style="margin-top: 0.25rem;"><label for="m7chk3">I understand why <strong>Managed Identities</strong> eliminate credential sprawl and how the Instance Metadata Service (IMDS) provides automatic token rotation.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk4" style="margin-top: 0.25rem;"><label for="m7chk4">I can explain the RBAC formula: <strong>Security Principal + Role Definition + Scope = Role Assignment</strong>.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk5" style="margin-top: 0.25rem;"><label for="m7chk5">I understand the 4-level scope hierarchy and that permissions <strong>inherit downwards</strong>: Management Groups &#8594; Subscriptions &#8594; Resource Groups &#8594; Resources.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk6" style="margin-top: 0.25rem;"><label for="m7chk6">I know the control-plane/data-plane distinction: <strong>Contributor</strong> does NOT grant access to blob data; you need <code>Storage Blob Data Contributor</code> for that.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m7chk7" style="margin-top: 0.25rem;"><label for="m7chk7">I can explain <strong>PIM (Just-In-Time access)</strong> and why it is the enterprise standard for Zero Trust security.</label></li>
           </ul>
         </div>
-
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="azure-lecture-6.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Previous: Module 06 (Blob Storage)
-          </a>
-          <a href="azure.html" class="btn-primary" style="text-decoration: none !important;">
-            Back to Azure Modules Hub 🏠
-          </a>
+          <a href="azure-lecture-6.html" class="btn-secondary" style="text-decoration: none !important;">&#8592; Previous: Module 06 (Blob Storage)</a>
+          <a href="azure.html" class="btn-primary" style="text-decoration: none !important;">&#8594; Back to Azure Hub</a>
         </div>
       </section>
 
     </main>
+  </div>
   </div>
 
   <!-- Footer -->

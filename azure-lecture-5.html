@@ -161,257 +161,268 @@
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
         <li><a href="#what-is-aca" class="sidebar-link">1. What is Azure Container Apps?</a></li>
-        <li><a href="#food-truck-analogy" class="sidebar-link">2. The Food Truck Festival Analogy</a></li>
-        <li><a href="#core-architecture" class="sidebar-link">3. Core Building Blocks &amp; Ingress</a></li>
-        <li><a href="#revisions-traffic" class="sidebar-link">4. Revisions &amp; Traffic Splitting</a></li>
-        <li><a href="#scale-to-zero" class="sidebar-link">5. KEDA Autoscaling (Scale to Zero)</a></li>
-        <li><a href="#cli-walkthrough" class="sidebar-link">6. Azure CLI Deployment Walkthrough</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">7. Summary Checklist</a></li>
+        <li><a href="#food-truck-analogy" class="sidebar-link">2. Food Truck Festival Analogy</a></li>
+        <li><a href="#core-architecture" class="sidebar-link">3. Core Architecture Deep Dive</a></li>
+        <li><a href="#keda-theory" class="sidebar-link">4. KEDA Autoscaling Theory</a></li>
+        <li><a href="#revisions-traffic" class="sidebar-link">5. Revisions &amp; Traffic Splitting</a></li>
+        <li><a href="#ingress-theory" class="sidebar-link">6. Ingress &amp; Envoy Proxy Theory</a></li>
+        <li><a href="#scale-to-zero" class="sidebar-link">7. Scale-to-Zero Economics</a></li>
+        <li><a href="#cli-walkthrough" class="sidebar-link">8. CLI Deployment Walkthrough</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">9. Summary Checklist</a></li>
       </ul>
     </aside>
 
     <!-- Main Notes Content -->
     <main class="docs-content">
-      
       <div class="lecture-header">
         <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
-          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
-          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo;
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo;
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo;
           <span style="color: var(--text-primary);">Module 5</span>
         </div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Module 05</span>
-          <span class="tag">Azure ACA</span>
-          <span class="tag">Serverless Microservices</span>
-          <span class="tag">KEDA Autoscaling</span>
-          <span class="tag">Envoy Ingress</span>
-          <span class="tag">Zero to N Replicas</span>
+          <span class="tag">ACA</span>
+          <span class="tag">KEDA</span>
+          <span class="tag">Dapr</span>
+          <span class="tag">Revisions</span>
+          <span class="tag">Canary Deployments</span>
+          <span class="tag">Scale-to-Zero</span>
         </div>
-        <h1 class="lecture-main-title">Azure Container Apps (ACA)</h1>
+        <h1 class="lecture-main-title">Azure Container Apps (ACA) — Architecture &amp; Scaling Theory</h1>
         <p class="lecture-lead">
-          Deploy containerized microservices and APIs with full serverless power on top of managed Kubernetes—without touching a single Kubernetes manifest or managing a cluster: understanding the Food Truck Festival analogy, configuring automatic HTTPS ingress, scaling dynamically from zero to hundreds of replicas with KEDA, executing zero-downtime canary traffic splits, and optimizing cloud spend.
+          Azure Container Apps is the "sweet spot" between the simplicity of ACI and the full power of Kubernetes. It sits on top of Kubernetes, Envoy proxy, KEDA, and Dapr — but hides all of that complexity from you. Understanding <em>why</em> those four technologies work together — and what KEDA actually measures, how Envoy routes traffic, and what a Revision really is — gives you the conceptual clarity to build and troubleshoot modern microservices confidently.
         </p>
       </div>
 
-      <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="background: rgba(0,120,212,0.1); border: 1px solid rgba(0,120,212,0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
             <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:29:35 to 04:38:00</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=16175" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=16175" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment &#8599;</a>
         </div>
       </section>
 
-      <!-- SECTION 1 -->
       <section id="what-is-aca" class="note-section content-section">
         <h2><span class="section-number">01.</span> What is Azure Container Apps (ACA)?</h2>
-        <p>
-          In modern software engineering, web applications are composed of multiple independent microservices: an authentication service, an order processing API, a frontend web portal, and asynchronous message queue workers.
-        </p>
-        <p>
-          While <strong>ACI</strong> is ideal for executing a single isolated container task, it lacks built-in HTTP ingress routing, autoscaling based on incoming request spikes, and versioning. Conversely, <strong>Azure Kubernetes Service (AKS)</strong> gives you ultimate power, but requires you to manage master control planes, node pools, networking overlays, Helm charts, and complex manifests.
-        </p>
-        <p>
-          <strong>Azure Container Apps (ACA)</strong> is the "Goldilocks" solution. It is a <strong>serverless container platform built on Kubernetes (AKS), Envoy proxy, KEDA (Kubernetes Event-driven Autoscaling), and Dapr (Distributed Application Runtime)</strong>—without exposing any Kubernetes cluster management complexity!
-        </p>
+        <p><strong>Azure Container Apps (ACA)</strong> is a fully managed serverless container platform for running microservices and containerized applications. Unlike ACI (which runs a single isolated container), ACA is designed for multi-service architectures where multiple containers need to communicate, scale independently, and share common infrastructure.</p>
+
+        <div style="overflow-x: auto; margin: 1.25rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Service</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Underlying Tech</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Best For</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Complexity</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">ACI</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Azure hypervisor fabric</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Isolated batch jobs, quick tests</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Low</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#34d399;">ACA</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Kubernetes + Envoy + KEDA + Dapr</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Microservices, event-driven apps, scale-to-zero</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#f59e0b;">Medium</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">AKS</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Raw Kubernetes (you manage)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Complex enterprise systems, custom CRDs</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#ef4444;">High</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <!-- SECTION 2 -->
       <section id="food-truck-analogy" class="note-section content-section">
         <h2><span class="section-number">02.</span> The Food Truck Festival Analogy</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The Microservice Festival:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            - <strong>Virtual Machine (VM):</strong> You buy a permanent restaurant building. You pay mortgage, electricity, and maintenance 24/7 even if no customers show up.
-            <br><br>
-            - <strong>ACI (Container Instance):</strong> You rent a single hot dog cart for an afternoon. When the job ends, you pack up. Very fast, but it cannot expand to a full festival.
-            <br><br>
-            - <strong>ACA (Container Apps):</strong> A modern, managed <strong>Food Truck Festival</strong>. The festival venue provides the fenced security perimeter, clean water, and public gate (Container Apps Environment). You park your specialized food trucks (Burger Truck, Taco Truck, Ice Cream Truck). If a huge hungry crowd rushes the Taco Truck at 8:00 PM, the festival instantly allows two more Taco Trucks to pull up and serve the queue. When the crowd disperses at midnight, all trucks leave and your rent drops to <strong>$0</strong>!
-          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: rgba(239,68,68,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127968;</div>
+              <strong style="color: #ef4444;">VM</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">You own a full restaurant building. Pay rent 24/7 even when no customers arrive.</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(59,130,246,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127789;</div>
+              <strong style="color: #60a5fa;">ACI</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">Rent a single hot dog cart for one event. Simple, but only sells one thing.</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(16,185,129,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127822;</div>
+              <strong style="color: #34d399;">ACA</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">Managed Food Truck Festival. Shared power, water, entry gate (Environment). Trucks scale instantly when crowds arrive. Zero cost at midnight.</p>
+            </div>
+          </div>
         </div>
+        <p>The <strong>Festival Park</strong> (Container Apps Environment) provides shared infrastructure. Your <strong>specialized food trucks</strong> (individual Container Apps) serve different menu items (microservices). The festival organizer (KEDA + Envoy) manages crowd flow and truck scaling automatically.</p>
       </section>
 
-      <!-- SECTION 3 -->
       <section id="core-architecture" class="note-section content-section">
-        <h2><span class="section-number">03.</span> Core Building Blocks &amp; Ingress</h2>
+        <h2><span class="section-number">03.</span> Core Architecture Deep Dive</h2>
+        <div class="hierarchy-tree">Azure Subscription
+  └── Resource Group
+        └── Container Apps Environment  (the shared "festival park")
+              │   - Shared Log Analytics workspace
+              │   - Shared Virtual Network (VNet) for all apps
+              │   - Shared Dapr configuration
+              │
+              ├── Container App: "api-service"
+              │     ├── Revision 1 (v1.0) — 80% traffic
+              │     └── Revision 2 (v2.0) — 20% canary traffic
+              │
+              ├── Container App: "worker-service"
+              │     └── Revision 1 — scales 0 to 10 based on queue depth
+              │
+              └── Container App: "frontend"
+                    └── Revision 1 — public HTTPS ingress via Envoy</div>
 
-        <div class="diagram-container">
-          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 0.75rem; text-align: center;">
-            AZURE CONTAINER APPS (ACA) ENVIRONMENT ARCHITECTURE
+        <h4 style="margin-top: 1.5rem;">The 4 Technologies Inside Every ACA Environment</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin: 1rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid rgba(59,130,246,0.3); border-radius: 8px; padding: 1rem;">
+            <h5 style="color: #60a5fa; margin-top: 0;">Kubernetes</h5>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">The underlying container orchestration engine. ACA uses it but abstracts all YAML manifests, node management, and CRDs from you. You never interact with <code>kubectl</code> directly.</p>
           </div>
-          <div style="text-align: center; margin-bottom: 1rem;">
-            <span style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px;">Secure VNet Boundary &bull; Shared Log Analytics Workspace</span>
+          <div style="background: var(--bg-card); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 1rem;">
+            <h5 style="color: #f59e0b; margin-top: 0;">Envoy Proxy</h5>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">A high-performance Layer 7 proxy that handles all inbound HTTP/HTTPS traffic, automatic TLS termination, traffic splitting, and service-to-service routing. Runs as the ingress controller.</p>
           </div>
-
-          <!-- Public Internet to Envoy Ingress -->
-          <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-primary);">
-              🌐 Public Internet (HTTPS Incoming Requests)
-            </div>
-            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
-            <div style="width: 100%; background: rgba(56, 189, 248, 0.08); border: 1px solid #0284c7; border-radius: 8px; padding: 0.85rem; text-align: center;">
-              <div style="font-weight: 700; color: #38bdf8; font-size: 0.9rem;">Built-in Envoy Edge Ingress Proxy</div>
-              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.2rem;">Free Managed TLS/SSL Termination &bull; URL Routing &bull; Traffic Splitting</div>
-            </div>
-            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
+          <div style="background: var(--bg-card); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 1rem;">
+            <h5 style="color: #34d399; margin-top: 0;">KEDA</h5>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Kubernetes Event-Driven Autoscaler. Extends Kubernetes HPA to scale on external metrics (queue depth, HTTP RPS, Kafka lag) rather than just CPU/RAM. Enables true scale-to-zero.</p>
           </div>
-
-          <!-- Traffic Split Columns -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
-            <div style="background: var(--bg-card); border: 1px solid #16a34a; border-radius: 8px; padding: 1.1rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span style="font-weight: 700; color: #4ade80; font-size: 0.9rem;">Revision 1 (v1.0 Production)</span>
-                <span style="background: #16a34a; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">80% Traffic</span>
-              </div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.6rem 0;">Primary Web Frontend Service</p>
-              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                <span style="background: var(--bg-secondary); border: 1px solid var(--border-color); font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Replica 1</span>
-                <span style="background: var(--bg-secondary); border: 1px solid var(--border-color); font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Replica 2</span>
-              </div>
-            </div>
-
-            <div style="background: var(--bg-card); border: 1px solid #f59e0b; border-radius: 8px; padding: 1.1rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span style="font-weight: 700; color: #fbbf24; font-size: 0.9rem;">Revision 2 (v2.0 Canary)</span>
-                <span style="background: #f59e0b; color: #000; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">20% Traffic</span>
-              </div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.6rem 0;">Staged Feature Deployment</p>
-              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                <span style="background: var(--bg-secondary); border: 1px solid var(--border-color); font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Replica 1 (Canary)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Internal Microservices -->
-          <div style="margin-top: 1rem; padding: 0.9rem; background: var(--bg-secondary); border: 1px dashed var(--border-color); border-radius: 8px;">
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">🔒 Internal Microservices (No Public IP):</div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.65rem;">
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.8rem;">
-                <div style="font-weight: 600; font-size: 0.82rem; color: #38bdf8;">Backend Order API</div>
-                <div style="font-size: 0.74rem; color: var(--text-muted);">Internal Ingress (Private VNet DNS)</div>
-              </div>
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.6rem 0.8rem;">
-                <div style="font-weight: 600; font-size: 0.82rem; color: #a78bfa;">Event Processor &amp; Queue Worker</div>
-                <div style="font-size: 0.74rem; color: var(--text-muted);">KEDA Event Scaler (Scales 0 &harr; 50)</div>
-              </div>
-            </div>
+          <div style="background: var(--bg-card); border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 1rem;">
+            <h5 style="color: #a855f7; margin-top: 0;">Dapr</h5>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Distributed Application Runtime. A sidecar that provides service discovery, pub/sub messaging, state management, and secret access — all via a simple HTTP/gRPC API, abstracting the backend provider.</p>
           </div>
         </div>
-
-        <h3>Key Concepts:</h3>
-        <ul>
-          <li><strong>Container Apps Environment:</strong> The secure network wrapper. All apps inside the same environment share the same Virtual Network (VNet) and send telemetry to the same Log Analytics workspace.</li>
-          <li><strong>External Ingress:</strong> Gives your container app a public HTTPS URL with automatic TLS/SSL certificates managed by Microsoft for free.</li>
-          <li><strong>Internal Ingress:</strong> Restricts access so only other containers within the same ACA Environment can communicate with the service (perfect for databases and internal microservices).</li>
-        </ul>
       </section>
 
-      <!-- SECTION 4 -->
+      <section id="keda-theory" class="note-section content-section">
+        <h2><span class="section-number">04.</span> KEDA Autoscaling Theory — How Event-Driven Scaling Works</h2>
+        <p><strong>KEDA (Kubernetes Event-Driven Autoscaler)</strong> works by polling <em>external metric sources</em> (called "scalers") and feeding those metrics into the Kubernetes HPA (Horizontal Pod Autoscaler). When a metric exceeds a threshold, KEDA signals Kubernetes to add more container replicas. When the metric drops to zero, KEDA allows scaling all the way down to <strong>0 replicas</strong> — which is impossible with the default Kubernetes HPA.</p>
+
+        <div class="hierarchy-tree">External Event Source (e.g., Azure Service Bus Queue)
+              │
+              ▼ KEDA polls every 30 seconds (configurable)
+        KEDA ScaledObject reads: "Queue has 500 messages"
+              │
+              ▼ Compares to target threshold (e.g., 50 msgs/replica)
+        KEDA tells Kubernetes HPA: "Scale to 10 replicas"
+              │
+              ▼ Kubernetes creates 9 new container pods
+        10 Worker containers drain the queue in parallel
+              │
+              ▼ Queue reaches 0 messages
+        KEDA tells HPA: "Scale to 0 replicas"
+        All containers terminate → Cost = $0</div>
+
+        <h4>Supported KEDA Scalers in ACA</h4>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.85rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Scaler Type</th>
+              <th style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Metric Measured</th>
+              <th style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Example Sources</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">HTTP Traffic</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Concurrent requests per second</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Any HTTP endpoint exposed via Envoy</td></tr>
+              <tr><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Azure Queue</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Number of messages in queue</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Azure Storage Queue, Azure Service Bus</td></tr>
+              <tr><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Apache Kafka</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Consumer group lag (messages behind)</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Azure Event Hubs, Confluent Cloud</td></tr>
+              <tr><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">CPU / Memory</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">% utilization of allocated resources</td><td style="padding:0.6rem 1rem; border:1px solid var(--border-color);">Built-in Kubernetes metrics server</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section id="revisions-traffic" class="note-section content-section">
-        <h2><span class="section-number">04.</span> Revisions &amp; Traffic Splitting (Canary Deployments)</h2>
-        <p>Every time you update container configuration or deploy a new Docker image tag, Azure creates an immutable <strong>Revision</strong> (e.g. <code>app--v1</code>, <code>app--v2</code>).</p>
-        
-        <div class="callout-tip">
-          <strong>🚀 Zero-Downtime Canary Rollouts:</strong>
-          You can split live web traffic between revisions with zero external load balancers. Route <strong>90% of user traffic to v1.0</strong> and <strong>10% to v2.0</strong>. If the new version throws errors, flip 100% of traffic back to v1.0 in one second!
-        </div>
-      </section>
+        <h2><span class="section-number">05.</span> Revisions &amp; Traffic Splitting — Zero-Downtime Deployments</h2>
+        <p>Every time you update a Container App's configuration or deploy a new Docker image tag, ACA automatically creates a new immutable <strong>Revision</strong>. A revision is a versioned snapshot of the container app configuration — it cannot be changed once created.</p>
 
-      <!-- SECTION 5 -->
-      <section id="scale-to-zero" class="note-section content-section">
-        <h2><span class="section-number">05.</span> KEDA Autoscaling (Scale to Zero)</h2>
-        <p>ACA uses <strong>KEDA</strong> (Kubernetes Event-driven Autoscaling) under the hood:</p>
-        <ul>
-          <li><strong>Scale to 0 Replicas ($0 Compute Cost):</strong> If your internal company app receives zero traffic between 10:00 PM and 6:00 AM, ACA shuts down all running container replicas. You pay <strong>$0 for compute</strong> during idle hours!</li>
-          <li><strong>Scale Out on Demand:</strong> When an HTTP request hits the Envoy ingress in the morning, ACA wakes up a container replica in milliseconds and routes the request.</li>
-          <li><strong>Event-Driven Scalers:</strong> Scale based on HTTP concurrent requests, CPU/Memory percentages, or queue depths (Azure Service Bus, RabbitMQ, Kafka).</li>
-        </ul>
-      </section>
-
-      <!-- SECTION 6 -->
-      <section id="cli-walkthrough" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Azure CLI Deployment Walkthrough</h2>
-
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">Deployment Strategies Using Revisions</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <strong style="color: #60a5fa;">Blue-Green Deployment</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Route 100% traffic to Revision 1 (Blue). Deploy Revision 2 (Green). Test Green internally. When ready, flip 100% traffic to Green instantly. Zero downtime, instant rollback possible.</p>
             </div>
-            <span class="terminal-title">Azure CLI / Bash</span>
+            <div>
+              <strong style="color: #34d399;">Canary Deployment</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Start with 90% Revision 1, 10% Revision 2. Monitor error rates and latency. Gradually shift: 80/20 → 50/50 → 0/100 as confidence builds. Catch production bugs with 10% blast radius.</p>
+            </div>
           </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Install Container Apps Extension & Register Providers</span>
-<span class="cmd-prompt">$ </span>az extension add --name containerapp --upgrade
-<span class="cmd-prompt">$ </span>az provider register --namespace Microsoft.App
+        </div>
 
-<span class="cmd-comment"># 2. Create the ACA Environment</span>
-<span class="cmd-prompt">$ </span>az containerapp env create \
-  --name my-aca-env \
-  --resource-group my-rg \
-  --location eastus
-
-<span class="cmd-comment"># 3. Deploy a Public Container App</span>
-<span class="cmd-prompt">$ </span>az containerapp create \
-  --name my-web-app \
-  --resource-group my-rg \
-  --environment my-aca-env \
-  --image mcr.microsoft.com/azuredocs/aci-helloworld:latest \
-  --target-port 80 \
-  --ingress external \
-  --query properties.configuration.ingress.fqdn
-
-<span class="cmd-comment"># 4. Configure Traffic Splitting (80% to v1, 20% to v2)</span>
-<span class="cmd-prompt">$ </span>az containerapp ingress traffic set \
-  --name my-web-app \
-  --resource-group my-rg \
-  --revision-weight my-web-app--v1=80 my-web-app--v2=20</code></pre></div>
+        <div class="callout-tip">
+          <strong>Why "canary"?</strong> Coal miners used canary birds to detect carbon monoxide — the canary would die before humans were affected, providing early warning. In software, the "canary" revision receives a small percentage of real user traffic first. If it fails, only that small group is impacted; the rest stay on the stable version.
         </div>
       </section>
 
-      <!-- SUMMARY CHECKLIST -->
+      <section id="ingress-theory" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Ingress &amp; Envoy Proxy Theory</h2>
+        <p>All traffic into ACA flows through <strong>Envoy Proxy</strong> — a battle-tested Layer 7 proxy originally developed at Lyft and now used by Netflix, Google, and Airbnb. ACA runs Envoy as a managed ingress controller, so you get its capabilities without configuring it yourself.</p>
+
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Ingress Type</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Who Can Access It</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">TLS/HTTPS</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Use Case</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">External</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Anyone on the public internet</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Auto-managed certificate</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Public APIs, frontend websites</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Internal</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Only apps within the same ACA Environment</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Auto-managed certificate</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Internal microservices, databases, queue workers</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">None</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">No network access — triggered by events only</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#94a3b8;">N/A</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Background KEDA-triggered workers, Dapr subscribers</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="scale-to-zero" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Scale-to-Zero Economics</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <div class="hierarchy-tree">Time:   00:00  02:00  04:00  06:00  08:00  10:00  12:00  18:00  23:00
+Replicas:  3      0      0      0      5     12      8      3      0
+
+                    Scale-to-Zero Window (2 AM - 6 AM)
+                    Cost during this window: $0.00
+
+vs. Traditional VM:
+Replicas:  3      3      3      3      3      3      3      3      3
+           Paying for 3 VMs all night even with 0 users</div>
+          <p style="margin: 1rem 0 0; font-size: 0.9rem; color: var(--text-secondary);">ACA scales to <strong>0 replicas</strong> automatically when no traffic arrives. The first request triggers a cold start (1–5 seconds for a container already cached in the region). For latency-sensitive apps, you can set a <strong>minimum replicas = 1</strong> to avoid cold starts at the cost of one always-on container.</p>
+        </div>
+      </section>
+
+      <section id="cli-walkthrough" class="note-section content-section">
+        <h2><span class="section-number">08.</span> CLI Deployment Walkthrough</h2>
+        <pre class="code-block" style="background: #0d1117; color: #e6edf3; border-radius: 10px; padding: 1.5rem; overflow-x: auto; font-size: 0.84rem; line-height: 1.7;"><code><span style="color:#8b949e;"># Install ACA CLI extension</span>
+az extension add --name containerapp --upgrade
+
+<span style="color:#8b949e;"># Create environment (the shared "festival park")</span>
+az containerapp env create   --name my-aca-env   --resource-group my-rg   --location eastus
+
+<span style="color:#8b949e;"># Deploy a public-facing microservice (external ingress + scale-to-zero)</span>
+az containerapp create   --name my-web-app   --resource-group my-rg   --environment my-aca-env   --image mcr.microsoft.com/azuredocs/aci-helloworld:latest   --target-port 80   --ingress external   --min-replicas 0   --max-replicas 10   --query properties.configuration.ingress.fqdn
+
+<span style="color:#8b949e;"># Configure canary traffic split (90% v1, 10% v2)</span>
+az containerapp ingress traffic set   --name my-web-app   --resource-group my-rg   --revision-weight my-web-app--v1=90 my-web-app--v2=10</code></pre>
+      </section>
+
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Summary Checklist</h2>
+        <h2><span class="section-number">09.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m5chk1" style="margin-top: 0.25rem;">
-              <label for="m5chk1">I understand why ACA is the ideal middle ground between ACI (single tasks) and AKS (full cluster management).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m5chk2" style="margin-top: 0.25rem;">
-              <label for="m5chk2">I know that ACA is built on top of Kubernetes, Envoy, KEDA, and Dapr.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m5chk3" style="margin-top: 0.25rem;">
-              <label for="m5chk3">I understand how <strong>Revisions</strong> allow zero-downtime Canary and Blue-Green traffic splitting.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m5chk4" style="margin-top: 0.25rem;">
-              <label for="m5chk4">I understand the difference between <strong>External Ingress</strong> (public web) and <strong>Internal Ingress</strong> (private microservices).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m5chk5" style="margin-top: 0.25rem;">
-              <label for="m5chk5">I know that KEDA allows ACA to scale all the way to <strong>0 replicas</strong>, eliminating idle compute costs.</label>
-            </li>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m5chk1" style="margin-top: 0.25rem;"><label for="m5chk1">I know the 4 technologies inside every ACA environment: <strong>Kubernetes + Envoy + KEDA + Dapr</strong>.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m5chk2" style="margin-top: 0.25rem;"><label for="m5chk2">I understand how <strong>KEDA</strong> polls external metrics (queue depth, HTTP RPS) to scale replicas from 0 to N and back.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m5chk3" style="margin-top: 0.25rem;"><label for="m5chk3">I understand <strong>Revisions</strong> as immutable versioned snapshots and how they enable canary + blue-green deployments.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m5chk4" style="margin-top: 0.25rem;"><label for="m5chk4">I know the difference between <strong>External Ingress</strong> (public internet via Envoy) and <strong>Internal Ingress</strong> (same ACA environment only).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m5chk5" style="margin-top: 0.25rem;"><label for="m5chk5">I can explain why <strong>scale-to-zero</strong> eliminates idle compute costs and what trade-off it introduces (cold starts).</label></li>
           </ul>
         </div>
-
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="azure-lecture-4.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Previous: Module 04 (Container Instances)
-          </a>
-          <a href="azure-lecture-6.html" class="btn-primary" style="text-decoration: none !important;">
-            Next: Module 06 (Azure Blob Storage) →
-          </a>
+          <a href="azure-lecture-4.html" class="btn-secondary" style="text-decoration: none !important;">&#8592; Previous: Module 04 (ACI)</a>
+          <a href="azure-lecture-6.html" class="btn-primary" style="text-decoration: none !important;">Next: Module 06 (Blob Storage) &#8594;</a>
         </div>
       </section>
 
     </main>
+  </div>
   </div>
 
   <!-- Footer -->

@@ -161,19 +161,20 @@
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
         <li><a href="#works-on-my-machine" class="sidebar-link">1. The "Works on My Machine" Crisis</a></li>
-        <li><a href="#vms-vs-containers" class="sidebar-link">2. Virtual Machines vs. Containers</a></li>
-        <li><a href="#shipping-analogy" class="sidebar-link">3. The Shipping Container Analogy</a></li>
-        <li><a href="#docker-lifecycle" class="sidebar-link">4. The 4 Core Docker Pillars</a></li>
-        <li><a href="#dissecting-dockerfile" class="sidebar-link">5. Dissecting a Real Dockerfile</a></li>
-        <li><a href="#port-forwarding" class="sidebar-link">6. Port Forwarding Explained</a></li>
-        <li><a href="#docker-cheatsheet" class="sidebar-link">7. Essential Docker CLI Cheatsheet</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">8. Summary Checklist</a></li>
+        <li><a href="#linux-kernel-theory" class="sidebar-link">2. Linux Kernel Isolation Theory</a></li>
+        <li><a href="#vms-vs-containers" class="sidebar-link">3. Virtual Machines vs. Containers</a></li>
+        <li><a href="#shipping-analogy" class="sidebar-link">4. The Shipping Container Analogy</a></li>
+        <li><a href="#docker-lifecycle" class="sidebar-link">5. The 4 Core Docker Pillars</a></li>
+        <li><a href="#image-layer-theory" class="sidebar-link">6. Image Layers & Union File System</a></li>
+        <li><a href="#dissecting-dockerfile" class="sidebar-link">7. Dissecting a Real Dockerfile</a></li>
+        <li><a href="#port-forwarding" class="sidebar-link">8. Port Forwarding Explained</a></li>
+        <li><a href="#docker-cheatsheet" class="sidebar-link">9. Essential Docker CLI Cheatsheet</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">10. Summary Checklist</a></li>
       </ul>
     </aside>
 
     <!-- Main Notes Content -->
     <main class="docs-content">
-      
       <div class="lecture-header">
         <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
           <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
@@ -185,13 +186,14 @@
           <span class="card-badge badge-active">Module 03</span>
           <span class="tag">Docker</span>
           <span class="tag">Containerization</span>
+          <span class="tag">Linux Namespaces</span>
+          <span class="tag">cgroups</span>
+          <span class="tag">Union FS</span>
           <span class="tag">Microservices</span>
-          <span class="tag">Dockerfile</span>
-          <span class="tag">Port Forwarding</span>
         </div>
-        <h1 class="lecture-main-title">Docker &amp; Containerization Basics</h1>
+        <h1 class="lecture-main-title">Docker &amp; Containerization — Deep Theory</h1>
         <p class="lecture-lead">
-          Understand why modern cloud engineering standardized on Docker containers: ending the developer's nightmare of 'it works on my machine!', understanding how containers share the host OS kernel to launch in milliseconds, the real-world cargo shipping container revolution, dissecting a production Dockerfile line by line, mastering host-to-container port mapping (<code>-p 8080:80</code>), and running essential container lifecycle commands before deploying to Microsoft Azure.
+          Why do containers exist? The answer lives deep inside the Linux kernel: namespaces isolate processes and cgroups cap their resources. Understanding these primitives — not just the CLI commands — is what separates engineers who <em>use</em> Docker from engineers who <em>understand</em> Docker. This module covers the theory from the ground up: environment drift, kernel isolation mechanics, the Union File System that makes images lightning-fast, and how every <code>docker run</code> translates to a Linux system call.
         </p>
       </div>
 
@@ -203,68 +205,90 @@
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
             <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">03:49:20 to 03:56:53</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=13760" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=13760" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment &#8599;</a>
         </div>
       </section>
 
       <!-- SECTION 1 -->
       <section id="works-on-my-machine" class="note-section content-section">
         <h2><span class="section-number">01.</span> The "It Works on My Machine!" Crisis</h2>
-        <p>
-          Every software engineer knows this infamous story:
-        </p>
-        <p>
-          A developer writes a Python web application on their MacBook. Everything runs smoothly. They push the code to production or hand it to the QA testing team running Windows or Linux. Instantly, the app crashes with runtime errors!
-        </p>
+        <p>Every software engineer eventually faces the same frustrating situation: code runs perfectly on a developer's laptop but crashes immediately in production or on a teammate's machine. This is called <strong>Environment Drift</strong> — the gap between two machines grows over time because each has different OS versions, library versions, environment variables, and system configurations.</p>
         <div class="callout-warning">
-          <strong>Why did it fail? Environment Drift!</strong>
+          <strong>Why does the same code behave differently?</strong>
           <ul style="margin: 0.5rem 0 0 0;">
-            <li>Mac had Python 3.11 installed; production had Python 3.8.</li>
-            <li>Mac had local environment variables pre-configured.</li>
-            <li>A system C-library (e.g. <code>libpq-dev</code> for PostgreSQL) was missing on the server.</li>
+            <li>Developer has Python 3.11; production server has Python 3.8.</li>
+            <li>Local Mac has <code>libssl</code> v3.0 baked into macOS; Linux server has <code>libssl</code> v1.1.</li>
+            <li>Developer forgot that a specific environment variable (<code>DATABASE_URL</code>) was set locally.</li>
+            <li>A compiled C extension was built for macOS ARM64 but needs x86-64 Linux.</li>
           </ul>
         </div>
-        <p>
-          Docker eliminates this entire crisis forever by packaging <strong>the application code, the exact runtime, system libraries, configuration files, and dependencies into a single, immutable, self-contained unit called a Container</strong>.
-        </p>
+        <p><strong>Docker's answer:</strong> Stop shipping code. Start shipping <em>environments</em>. Package the application code, the exact runtime version, system libraries, OS user-space, and configuration into a single immutable binary artifact — a <strong>Container Image</strong>. If it runs in one environment, it runs identically everywhere.</p>
       </section>
 
-      <!-- SECTION 2 -->
+      <!-- SECTION 2 — THEORY DEEP DIVE -->
+      <section id="linux-kernel-theory" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Linux Kernel Isolation Theory: Namespaces &amp; cgroups</h2>
+        <p>Containers are <strong>not virtual machines</strong>. They are not a new invention of Docker. They are a composition of two Linux kernel features that have existed since 2002 and 2007 respectively. Docker simply made these kernel features easy to use.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #60a5fa; margin-top: 0;">Linux Namespaces (Isolation)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">A namespace is a Linux kernel feature that wraps a global system resource and makes it appear as if each process has its own isolated instance of that resource.</p>
+            <table style="width: 100%; font-size: 0.82rem; border-collapse: collapse;">
+              <tr><th style="text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">Namespace</th><th style="text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">What It Isolates</th></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);"><code>pid</code></td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Process IDs — container's PID 1 is independent of host.</td></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);"><code>net</code></td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Network stack (interfaces, routing tables, ports).</td></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);"><code>mnt</code></td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Mount points and file system hierarchy.</td></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);"><code>uts</code></td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Hostname and domain name.</td></tr>
+              <tr><td style="padding: 0.4rem;"><code>user</code></td><td style="padding: 0.4rem;">User and group IDs (UID/GID remapping).</td></tr>
+            </table>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #34d399; margin-top: 0;">cgroups (Control Groups — Resource Limiting)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">cgroups (control groups) is a Linux kernel mechanism that limits, accounts for, and isolates the <em>resource usage</em> of a collection of processes — CPU, RAM, disk I/O, and network bandwidth.</p>
+            <table style="width: 100%; font-size: 0.82rem; border-collapse: collapse;">
+              <tr><th style="text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">Resource</th><th style="text-align: left; padding: 0.4rem; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">What cgroups Controls</th></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">CPU</td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Max CPU cycles a container process can consume.</td></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Memory</td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">RAM limit; OOM killer kills container if exceeded.</td></tr>
+              <tr><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Block I/O</td><td style="padding: 0.4rem; border-bottom: 1px solid var(--border-color);">Disk read/write throughput throttling.</td></tr>
+              <tr><td style="padding: 0.4rem;">Network</td><td style="padding: 0.4rem;">Bandwidth limits on the container's virtual NIC.</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout-tip">
+          <strong>Key Insight:</strong> When you run <code>docker run --memory=512m --cpus=1</code>, Docker translates this into cgroup configuration. When you expose a port with <code>-p 80:8080</code>, Docker creates a network namespace and sets up iptables NAT rules automatically. You are not doing anything magical — you are using a well-designed API over mature Linux primitives.
+        </div>
+
+        <p><strong>Why containers are NOT full isolation like VMs:</strong> All containers on the same host share the <em>same Linux kernel</em>. If you run a container on Ubuntu but the host runs Ubuntu 22.04, the container uses the host's 22.04 kernel. This is why Docker on Windows and macOS requires a lightweight Linux VM (WSL2 or HyperKit) to run Linux containers — there is no native Linux kernel on those operating systems.</p>
+      </section>
+
+      <!-- SECTION 3 -->
       <section id="vms-vs-containers" class="note-section content-section">
-        <h2><span class="section-number">02.</span> Virtual Machines vs. Containers</h2>
-        
+        <h2><span class="section-number">03.</span> Virtual Machines vs. Containers — Architecture Comparison</h2>
+
         <div class="diagram-container">
           <div class="diagram-header">
-            <span class="diagram-title">⚖️ Architecture Comparison: Virtual Machines vs. Docker Containers</span>
+            <span class="diagram-title">&#9878; Architecture Comparison: VMs vs. Docker Containers</span>
             <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Guest OS Overhead vs Shared Kernel Isolation</span>
           </div>
-
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
-            <!-- VM Column -->
             <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem;">
-              <div style="font-weight: 700; color: #f59e0b; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-                <span>Virtual Machines (VMs)</span>
-                <span class="tag" style="margin: 0; background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Heavy (GBs)</span>
-              </div>
+              <div style="font-weight: 700; color: #f59e0b; margin-bottom: 0.75rem;">Virtual Machines (VMs) <span class="tag" style="margin-left: 0.5rem; background: rgba(245,158,11,0.15); color:#f59e0b;">Heavy — GBs</span></div>
               <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">Applications &amp; Binaries (App A, B, C)</div>
-                <div style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #ef4444;">Guest OS per VM (Ubuntu, Windows - 20 GB+)</div>
-                <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Hypervisor (Hyper-V, ESXi)</div>
-                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware Host (CPU/RAM/Disk)</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">App A &nbsp;|&nbsp; App B &nbsp;|&nbsp; App C</div>
+                <div style="background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #ef4444;">Guest OS per VM (Ubuntu/Windows — 10–30 GB)</div>
+                <div style="background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Hypervisor (Hyper-V / ESXi / KVM)</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware</div>
               </div>
             </div>
-
-            <!-- Container Column -->
-            <div style="background: var(--bg-secondary); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 10px; padding: 1.25rem;">
-              <div style="font-weight: 700; color: #34d399; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
-                <span>Docker Containers</span>
-                <span class="tag" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: #34d399;">Featherweight (MBs)</span>
-              </div>
+            <div style="background: var(--bg-secondary); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 1.25rem;">
+              <div style="font-weight: 700; color: #34d399; margin-bottom: 0.75rem;">Docker Containers <span class="tag" style="margin-left: 0.5rem; background: rgba(16,185,129,0.15); color:#34d399;">Featherweight — MBs</span></div>
               <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">Applications &amp; Binaries (App A, B, C)</div>
-                <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #34d399;">Docker Daemon Engine (Process Isolation)</div>
-                <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Shared Host OS Kernel (No Duplicate OS!)</div>
-                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware Host (CPU/RAM/Disk)</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem;">App A &nbsp;|&nbsp; App B &nbsp;|&nbsp; App C (Namespace Isolated)</div>
+                <div style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.35); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; font-weight: 700; color: #34d399;">Docker Daemon (uses namespaces + cgroups)</div>
+                <div style="background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #60a5fa;">Shared Host OS Kernel — NO duplicate OS!</div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.6rem; border-radius: 6px; text-align: center; font-size: 0.82rem; color: var(--text-muted);">Physical Hardware</div>
               </div>
             </div>
           </div>
@@ -272,240 +296,209 @@
 
         <div style="overflow-x: auto; margin: 1.5rem 0;">
           <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Attribute</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Virtual Machine (VM)</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Docker Container</th>
-              </tr>
-            </thead>
+            <thead><tr style="background: var(--bg-card); text-align: left;">
+              <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Attribute</th>
+              <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Virtual Machine (VM)</th>
+              <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Docker Container</th>
+            </tr></thead>
             <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Operating System</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Full, heavy Guest OS per VM (10 GB - 30 GB each).</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Shares the Host OS kernel directly (50 MB - 500 MB).</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Boot Time</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Minutes (must boot the entire virtual motherboard &amp; OS).</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Milliseconds (it is simply an isolated OS process!).</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Density</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">5 to 20 VMs per physical server.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Hundreds of containers on the same physical host.</td>
-              </tr>
+              <tr><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">OS Kernel</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Full guest kernel per VM (10–30 GB)</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Shares host kernel (50 MB–500 MB)</td></tr>
+              <tr><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Start Time</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Minutes (boot virtual motherboard + OS)</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Milliseconds (fork a new process)</td></tr>
+              <tr><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Density</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">5–20 VMs per physical server</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Hundreds of containers per host</td></tr>
+              <tr><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Security Boundary</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Strong — hypervisor provides hardware-level isolation</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Moderate — kernel sharing means kernel exploit = all containers compromised</td></tr>
+              <tr><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 600;">Portability</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Tied to hypervisor format (VHD, VMDK)</td><td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">100% write-once, run-anywhere on any Docker host</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- SECTION 3 -->
-      <section id="shipping-analogy" class="note-section content-section">
-        <h2><span class="section-number">03.</span> The Standard Cargo Shipping Container Analogy</h2>
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The Historic Breakthrough of 1956:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            Before standard shipping containers existed, transporting goods was chaotic. A cargo ship had to load loose bananas, wooden barrels of rum, steel pipes, and cars individually. Loading and unloading took weeks at the docks. In 1956, Malcolm McLean invented the standardized steel <strong>shipping container</strong>. The cargo vessel and port crane don't care what is packed inside the container—whether it is grand pianos or frozen meat—the dimensions and corner locks are standard. It moves smoothly from container ship to rail car to freight truck.<br><br>
-            <strong>Docker does the exact same thing for software.</strong> Your container can hold a Python FastAPI app, a Java Spring Boot monolith, or a Node.js microservice. The cloud host (Azure ACI, ACA, or AKS) runs it with the exact same standard commands!
-          </p>
-        </div>
-      </section>
-
       <!-- SECTION 4 -->
-      <section id="docker-lifecycle" class="note-section content-section">
-        <h2><span class="section-number">04.</span> The 4 Core Docker Pillars</h2>
-
-        <div class="diagram-container">
-          <div class="diagram-header">
-            <span class="diagram-title">🔄 The 4-Stage Container Lifecycle</span>
-            <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Build &bull; Ship &bull; Run</span>
-          </div>
-
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
-            <div class="step-card" style="margin: 0; border-top: 3px solid #38bdf8;">
-              <div class="step-card-header"><span style="color: #38bdf8;">1. Dockerfile</span></div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Plaintext recipe with build instructions.</p>
-              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">FROM, COPY, RUN, CMD</div>
-            </div>
-
-            <div class="step-card" style="margin: 0; border-top: 3px solid #a855f7;">
-              <div class="step-card-header"><span style="color: #a855f7;">2. Docker Image</span></div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Immutable read-only binary template.</p>
-              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker build -t app:v1 .</div>
-            </div>
-
-            <div class="step-card" style="margin: 0; border-top: 3px solid #10b981;">
-              <div class="step-card-header"><span style="color: #10b981;">3. Live Container</span></div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Active running process instance.</p>
-              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker run -d -p 80:80</div>
-            </div>
-
-            <div class="step-card" style="margin: 0; border-top: 3px solid #f59e0b;">
-              <div class="step-card-header"><span style="color: #f59e0b;">4. Registry (ACR)</span></div>
-              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Cloud repository for storing images.</p>
-              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker push myacr.azurecr.io</div>
-            </div>
-          </div>
+      <section id="shipping-analogy" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The Standard Cargo Shipping Container Analogy</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">The 1956 Revolution That Changed Global Trade:</h4>
+          <p style="margin: 0; font-size: 1rem; line-height: 1.6;">Before standardized shipping containers existed, loading a cargo ship was chaos. Loose barrels, wooden crates, irregular machinery — dock workers had to hand-load every item individually. Unloading took weeks. In 1956, Malcolm McLean invented the standardized steel shipping container. The crane and ship <em>do not care</em> what's inside. The external dimensions and corner locks are always identical. It moves seamlessly from ship to train to truck with the same mechanical interface everywhere.<br><br>
+          <strong>Docker does the exact same thing for software.</strong> Your container holds a Python Flask API, a Java Spring Boot app, or a Node.js microservice. Azure ACI, ACA, AKS, or any Kubernetes cluster on any cloud provider runs it with identical commands — because the container <em>interface</em> is standardized via the OCI (Open Container Initiative) specification.</p>
         </div>
-
-        <ol>
-          <li><strong>Dockerfile:</strong> The plaintext recipe or blueprint that lists instructions line-by-line on how to assemble the software environment.</li>
-          <li><strong>Docker Image:</strong> The compiled, frozen, immutable snapshot containing the code and dependencies. It is read-only.</li>
-          <li><strong>Docker Container:</strong> A live, running instance of an image. If the image is the recipe for a chocolate cake, the container is the physical cake you can eat. You can spin up 10 containers from 1 image!</li>
-          <li><strong>Container Registry:</strong> The online warehouse for storing and sharing Docker images (e.g., Docker Hub, Azure Container Registry - ACR).</li>
-        </ol>
       </section>
 
       <!-- SECTION 5 -->
-      <section id="dissecting-dockerfile" class="note-section content-section">
-        <h2><span class="section-number">05.</span> Dissecting a Real Production Dockerfile</h2>
-        <p>Here is a clean, minimal Dockerfile for a Python Web API:</p>
-
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <span class="terminal-title">Dockerfile</span>
+      <section id="docker-lifecycle" class="note-section content-section">
+        <h2><span class="section-number">05.</span> The 4 Core Docker Pillars</h2>
+        <div class="diagram-container">
+          <div class="diagram-header">
+            <span class="diagram-title">&#8635; The Container Build-Ship-Run Lifecycle</span>
           </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Base Image: Start with an official lightweight Python runtime</span>
-FROM python:3.11-slim
-
-<span class="cmd-comment"># 2. Working Directory: Set the active directory inside the container</span>
-WORKDIR /app
-
-<span class="cmd-comment"># 3. Copy Dependency Manifest first (enables Docker build caching!)</span>
-COPY requirements.txt .
-
-<span class="cmd-comment"># 4. Install Dependencies</span>
-RUN pip install --no-cache-dir -r requirements.txt
-
-<span class="cmd-comment"># 5. Copy Application Source Code</span>
-COPY . .
-
-<span class="cmd-comment"># 6. Inform Docker that the application listens on port 5000</span>
-EXPOSE 5000
-
-<span class="cmd-comment"># 7. Container Startup Command</span>
-CMD ["python", "app.py"]</code></pre></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
+            <div class="step-card" style="margin: 0; border-top: 3px solid #38bdf8;">
+              <div class="step-card-header"><span style="color: #38bdf8;">1. Dockerfile</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Plaintext recipe with build instructions. Defines the base OS, what software to install, what files to copy, and what command to run on startup.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">FROM, COPY, RUN, EXPOSE, CMD</div>
+            </div>
+            <div class="step-card" style="margin: 0; border-top: 3px solid #a855f7;">
+              <div class="step-card-header"><span style="color: #a855f7;">2. Docker Image</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">Immutable read-only binary artifact produced by <code>docker build</code>. Contains all layers (OS, libraries, app code). Can be versioned and shared globally.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker build -t app:v1 .</div>
+            </div>
+            <div class="step-card" style="margin: 0; border-top: 3px solid #10b981;">
+              <div class="step-card-header"><span style="color: #10b981;">3. Live Container</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">A running instance of an image. Docker adds a thin writable layer on top of the read-only image layers. 50 containers can run from 1 image simultaneously.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker run -d -p 80:80 app:v1</div>
+            </div>
+            <div class="step-card" style="margin: 0; border-top: 3px solid #f59e0b;">
+              <div class="step-card-header"><span style="color: #f59e0b;">4. Container Registry</span></div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 0.4rem;">A centralized cloud library for storing and distributing images. Docker Hub is the public registry. Azure Container Registry (ACR) is the enterprise private option.</p>
+              <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);">docker push myacr.azurecr.io/app:v1</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- SECTION 6 -->
-      <section id="port-forwarding" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Port Forwarding Mechanics: Host Port vs. Container Port</h2>
-        <p>A container runs inside its own isolated network sandbox. By default, your laptop or cloud server cannot talk to it unless you establish a port bridge:</p>
+      <!-- SECTION 6 — NEW THEORY -->
+      <section id="image-layer-theory" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Image Layers &amp; the Union File System — Why Images Are Efficient</h2>
+        <p>A Docker Image is not a single monolithic blob. It is a <strong>stack of read-only layers</strong>, where each layer represents one instruction in the Dockerfile. This is managed by a <strong>Union File System</strong> (OverlayFS on modern Linux systems), which merges multiple directory trees into a single cohesive view.</p>
 
-        <div class="click-path-badge">docker run -d -p 8080:5000 my-python-app</div>
+        <div class="hierarchy-tree">Layer 0 (Base): FROM python:3.11-slim     → ~45 MB (Python runtime + Debian slim)
+Layer 1: RUN pip install flask           → ~8 MB  (Flask + Werkzeug + Jinja2)
+Layer 2: RUN pip install gunicorn        → ~1 MB  (Gunicorn WSGI server)
+Layer 3: COPY requirements.txt .         → ~2 KB  (Dependency manifest)
+Layer 4: COPY . .                        → ~500 KB (Your application source code)
+Layer 5: CMD ["gunicorn", "app:app"]     → ~0 KB  (Metadata only — no files)
+─────────────────────────────────────────────────────
+Total Image: ~55 MB  (vs. a full Ubuntu VM: ~1 GB+)
 
-        <div class="diagram-container">
-          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 1.25rem; text-align: center;">
-            PORT FORWARDING BRIDGE ARCHITECTURE (-p 8080:5000)
-          </div>
-          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem; max-width: 580px; margin: 0 auto;">
-            <div style="width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-weight: 600; color: var(--text-primary);">🌐 User Browser Client</span>
-              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #38bdf8;">http://localhost:8080</span>
-            </div>
-            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
-            <div style="width: 100%; background: rgba(56, 189, 248, 0.08); border: 1px solid #0284c7; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-weight: 700; color: #38bdf8;">🖥️ Host Machine Ingress</span>
-              <span style="background: #0284c7; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; font-family: var(--font-mono);">HOST PORT :8080</span>
-            </div>
-            <div style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">Docker Bridge Network Forwarding</div>
-            <div style="color: var(--text-muted); font-size: 1.1rem; line-height: 1;">↓</div>
-            <div style="width: 100%; background: rgba(34, 197, 94, 0.08); border: 1px solid #16a34a; border-radius: 8px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-weight: 700; color: #4ade80;">📦 Isolated Container Runtime</span>
-              <span style="background: #16a34a; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; font-family: var(--font-mono);">CONTAINER PORT :5000</span>
-            </div>
-          </div>
+When you run this image:
+  ┌─────────────────────────────────────────────────────┐
+  │  Writable Layer (Container) — ephemeral, deleted on stop  │
+  ├─────────────────────────────────────────────────────┤
+  │  Layer 5: CMD instruction (read-only)                     │
+  │  Layer 4: App source code (read-only)                     │
+  │  Layer 3: requirements.txt (read-only)                    │
+  │  Layer 2: Gunicorn (read-only)                            │
+  │  Layer 1: Flask (read-only)                               │
+  │  Layer 0: Python + Debian base (read-only)                │
+  └─────────────────────────────────────────────────────┘</div>
+
+        <div class="callout-tip">
+          <strong>Build Cache Efficiency:</strong> If you change only your app source code (Layer 4), Docker reuses all previous layers (0–3) from cache and only rebuilds Layer 4 onwards. This is why the best practice is to <code>COPY requirements.txt .</code> and <code>RUN pip install</code> <em>before</em> <code>COPY . .</code> — dependencies change rarely, code changes frequently.
         </div>
       </section>
 
       <!-- SECTION 7 -->
-      <section id="docker-cheatsheet" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Essential Docker CLI Cheatsheet</h2>
+      <section id="dissecting-dockerfile" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Dissecting a Real Dockerfile — Line by Line</h2>
+        <pre class="code-block" style="background: #0d1117; color: #e6edf3; border-radius: 10px; padding: 1.5rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.7;"><code><span style="color: #8b949e;"># 1. Base Image — the foundation everything builds on</span>
+<span style="color: #79c0ff;">FROM</span> <span style="color: #a5d6ff;">python:3.11-slim</span>
 
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <span class="terminal-title">Bash / Terminal</span>
-          </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Build an image from Dockerfile in current directory</span>
-<span class="cmd-prompt">$ </span>docker build -t myapp:v1 .
+<span style="color: #8b949e;"># 2. Working directory inside the container's isolated filesystem</span>
+<span style="color: #79c0ff;">WORKDIR</span> <span style="color: #a5d6ff;">/app</span>
 
-<span class="cmd-comment"># 2. Run container in detached mode (-d) with port mapping (-p)</span>
-<span class="cmd-prompt">$ </span>docker run -d -p 8080:80 --name web-service nginx:alpine
+<span style="color: #8b949e;"># 3. Copy dependency manifest FIRST (exploits build cache)</span>
+<span style="color: #79c0ff;">COPY</span> <span style="color: #a5d6ff;">requirements.txt .</span>
 
-<span class="cmd-comment"># 3. List all currently RUNNING containers</span>
-<span class="cmd-prompt">$ </span>docker ps
+<span style="color: #8b949e;"># 4. Install inside the image (not on your host machine!)</span>
+<span style="color: #79c0ff;">RUN</span> <span style="color: #a5d6ff;">pip install --no-cache-dir -r requirements.txt</span>
 
-<span class="cmd-comment"># 4. List ALL containers (including stopped ones)</span>
-<span class="cmd-prompt">$ </span>docker ps -a
+<span style="color: #8b949e;"># 5. Copy application source code (changes frequently)</span>
+<span style="color: #79c0ff;">COPY</span> <span style="color: #a5d6ff;">. .</span>
 
-<span class="cmd-comment"># 5. View live logs streamed from a running container</span>
-<span class="cmd-prompt">$ </span>docker logs -f web-service
+<span style="color: #8b949e;"># 6. Document which port the app listens on (metadata only)</span>
+<span style="color: #79c0ff;">EXPOSE</span> <span style="color: #a5d6ff;">8000</span>
 
-<span class="cmd-comment"># 6. Open an interactive bash/sh shell inside a live container</span>
-<span class="cmd-prompt">$ </span>docker exec -it web-service sh
+<span style="color: #8b949e;"># 7. Default command to execute when container starts</span>
+<span style="color: #79c0ff;">CMD</span> <span style="color: #a5d6ff;">["python", "app.py"]</span></code></pre>
 
-<span class="cmd-comment"># 7. Stop and remove a container</span>
-<span class="cmd-prompt">$ </span>docker stop web-service
-<span class="cmd-prompt">$ </span>docker rm web-service
-
-<span class="cmd-comment"># 8. Tag and push to Azure Container Registry (ACR)</span>
-<span class="cmd-prompt">$ </span>az acr login --name myregistry
-<span class="cmd-prompt">$ </span>docker tag myapp:v1 myregistry.azurecr.io/myapp:v1
-<span class="cmd-prompt">$ </span>docker push myregistry.azurecr.io/myapp:v1</code></pre></div>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Instruction</th>
+              <th style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">What It Does</th>
+              <th style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Creates New Layer?</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">FROM</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Sets the base image — the starting operating environment</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #f59e0b;">Yes</td></tr>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">WORKDIR</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Sets the working directory for all subsequent instructions</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #f59e0b;">Yes</td></tr>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">RUN</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Executes a shell command during build time — installs software</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #f59e0b;">Yes</td></tr>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">COPY</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Copies files from host into the image filesystem</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #f59e0b;">Yes</td></tr>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">EXPOSE</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Documents a port (does NOT actually open/publish it)</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #94a3b8;">No (metadata)</td></tr>
+              <tr><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); font-family: var(--font-mono);">CMD</td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color);">Default command at container start — overridable by <code>docker run</code></td><td style="padding: 0.65rem 1rem; border: 1px solid var(--border-color); text-align:center; color: #94a3b8;">No (metadata)</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <!-- SUMMARY CHECKLIST -->
+      <!-- SECTION 8 -->
+      <section id="port-forwarding" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Port Forwarding Explained — Host ↔ Container Networking</h2>
+        <p>By default, every container lives inside its own private <code>net</code> namespace — completely isolated from both the host network and other containers. If your web app listens on port 8000 <em>inside</em> the container, nothing outside can reach it without an explicit bridge.</p>
+
+        <div class="hierarchy-tree">User Browser: http://localhost:80
+              │
+              ▼ (Host Machine Network Interface — eth0)
+        [ Host Port :80 ]
+              │
+              ▼ Docker creates iptables NAT DNAT rule:
+              │  DNAT :80 → 172.17.0.2:8000
+              ▼
+      [ Container Virtual NIC — net namespace ]
+              │
+              ▼
+    [ App Process: python app.py listening on :8000 ]</div>
+
+        <p>The <code>-p 80:8000</code> flag tells Docker: "Create a NAT rule so that any TCP packet arriving on the host's port 80 is forwarded to the container's internal port 8000." This is handled by Linux <strong>iptables</strong> DNAT rules, automatically managed by the Docker daemon.</p>
+      </section>
+
+      <!-- SECTION 9 -->
+      <section id="docker-cheatsheet" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Essential Docker CLI Cheatsheet</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #38bdf8; margin-top: 0;">Build &amp; Images</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>docker build -t myapp:1.0 .
+docker images
+docker rmi myapp:1.0
+docker pull nginx:latest</code></pre>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #34d399; margin-top: 0;">Run &amp; Manage</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>docker run -d -p 80:8000 --name site myapp:1.0
+docker ps          # running only
+docker ps -a       # all containers
+docker stop site
+docker rm site</code></pre>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #f59e0b; margin-top: 0;">Debug &amp; Inspect</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>docker logs -f site        # live logs
+docker exec -it site bash  # shell inside
+docker inspect site        # full JSON metadata
+docker stats               # live resource usage</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 10 — SUMMARY -->
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Summary Checklist</h2>
+        <h2><span class="section-number">10.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m3chk1" style="margin-top: 0.25rem;">
-              <label for="m3chk1">I understand why Docker eliminates the "It works on my machine!" crisis through containerized bundling.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m3chk2" style="margin-top: 0.25rem;">
-              <label for="m3chk2">I can explain why containers boot in milliseconds compared to virtual machines (shared OS kernel vs full guest OS).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m3chk3" style="margin-top: 0.25rem;">
-              <label for="m3chk3">I know the 4 Docker pillars: <strong>Dockerfile &rarr; Image &rarr; Container &rarr; Registry</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m3chk4" style="margin-top: 0.25rem;">
-              <label for="m3chk4">I understand how port forwarding works (<code>-p HOST:CONTAINER</code>).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m3chk5" style="margin-top: 0.25rem;">
-              <label for="m3chk5">I know common Docker CLI commands: <code>build</code>, <code>run</code>, <code>ps</code>, <code>logs</code>, <code>exec</code>, and <code>stop</code>.</label>
-            </li>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m3chk1" style="margin-top: 0.25rem;"><label for="m3chk1">I can explain <strong>Environment Drift</strong> and why Docker was invented to solve it.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m3chk2" style="margin-top: 0.25rem;"><label for="m3chk2">I know that containers use <strong>Linux namespaces</strong> for isolation and <strong>cgroups</strong> for resource limiting — not full hardware virtualization.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m3chk3" style="margin-top: 0.25rem;"><label for="m3chk3">I understand the 4 Docker pillars: <strong>Dockerfile &rarr; Image &rarr; Container &rarr; Registry</strong>.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m3chk4" style="margin-top: 0.25rem;"><label for="m3chk4">I understand how the <strong>Union File System (OverlayFS)</strong> stacks read-only image layers and why build cache matters.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m3chk5" style="margin-top: 0.25rem;"><label for="m3chk5">I understand <strong>port forwarding</strong> (<code>-p HOST:CONTAINER</code>) and how Docker uses iptables NAT rules under the hood.</label></li>
           </ul>
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="azure-lecture-2.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Previous: Module 02 (Virtual Machines)
-          </a>
-          <a href="azure-lecture-4.html" class="btn-primary" style="text-decoration: none !important;">
-            Next: Module 04 (Container Instances) →
-          </a>
+          <a href="azure-lecture-2.html" class="btn-secondary" style="text-decoration: none !important;">&#8592; Previous: Module 02 (Virtual Machines)</a>
+          <a href="azure-lecture-4.html" class="btn-primary" style="text-decoration: none !important;">Next: Module 04 (Container Instances) &#8594;</a>
         </div>
       </section>
 
     </main>
+  </div>
   </div>
 
   <!-- Footer -->

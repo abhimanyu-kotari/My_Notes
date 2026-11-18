@@ -161,374 +161,311 @@
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
         <li><a href="#what-is-blob" class="sidebar-link">1. What is Azure Blob Storage?</a></li>
-        <li><a href="#warehouse-analogy" class="sidebar-link">2. Amazon Warehouse Analogy &amp; Naming</a></li>
-        <li><a href="#blob-types" class="sidebar-link">3. The 3 Types of Blobs</a></li>
-        <li><a href="#access-tiers" class="sidebar-link">4. Access Tiers &amp; Rehydration</a></li>
-        <li><a href="#redundancy" class="sidebar-link">5. Data Redundancy (LRS, ZRS, GRS)</a></li>
-        <li><a href="#security" class="sidebar-link">6. Security: Keys vs. SAS Tokens</a></li>
-        <li><a href="#static-website" class="sidebar-link">7. Hosting Static Websites ($web)</a></li>
-        <li><a href="#lifecycle-rules" class="sidebar-link">8. Automated Lifecycle Management</a></li>
-        <li><a href="#cli-cheatsheet" class="sidebar-link">9. Azure CLI Cheatsheet</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">10. Summary Checklist</a></li>
+        <li><a href="#storage-types-theory" class="sidebar-link">2. Object vs. Block vs. File Storage</a></li>
+        <li><a href="#warehouse-analogy" class="sidebar-link">3. The Warehouse Analogy</a></li>
+        <li><a href="#blob-types" class="sidebar-link">4. Three Types of Blobs</a></li>
+        <li><a href="#access-tiers" class="sidebar-link">5. Access Tiers &amp; Rehydration</a></li>
+        <li><a href="#redundancy" class="sidebar-link">6. Redundancy Theory (LRS/ZRS/GRS)</a></li>
+        <li><a href="#security" class="sidebar-link">7. Security: Keys, SAS &amp; Entra ID</a></li>
+        <li><a href="#static-website" class="sidebar-link">8. Static Website Hosting</a></li>
+        <li><a href="#lifecycle-rules" class="sidebar-link">9. Lifecycle Management Rules</a></li>
+        <li><a href="#cli-cheatsheet" class="sidebar-link">10. CLI Cheatsheet</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">11. Summary Checklist</a></li>
       </ul>
     </aside>
 
     <!-- Main Notes Content -->
     <main class="docs-content">
-      
       <div class="lecture-header">
         <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
-          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
-          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo;
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo;
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo;
           <span style="color: var(--text-primary);">Module 6</span>
         </div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Module 06</span>
-          <span class="tag">Azure Blob Storage</span>
+          <span class="tag">Blob Storage</span>
           <span class="tag">Object Storage</span>
           <span class="tag">Access Tiers</span>
+          <span class="tag">Redundancy</span>
           <span class="tag">SAS Tokens</span>
-          <span class="tag">Static Websites ($web)</span>
+          <span class="tag">Lifecycle Rules</span>
         </div>
-        <h1 class="lecture-main-title">Azure Blob Storage</h1>
+        <h1 class="lecture-main-title">Azure Blob Storage — Theory, Architecture &amp; Concepts</h1>
         <p class="lecture-lead">
-          Store terabytes of unstructured images, documents, and streaming media with enterprise durability: understanding the Amazon Warehouse analogy for accounts, containers, and blobs, optimizing costs across Hot, Cool, Cold, and Archive tiers, architecting multi-zone and geo-redundant durability, securing data with time-limited SAS tokens, and hosting an automated serverless static website for pennies directly out of the <code>$web</code> container.
+          Blob Storage is not just "cloud file storage." It is a massively distributed object storage system architected for exabytes of unstructured data with eleven-to-sixteen nines of annual durability. Understanding the theory behind object storage vs. block storage, how the LRS/ZRS/GRS redundancy hierarchy protects against failures at different physical scopes, the cryptographic anatomy of a SAS token, and how lifecycle rules automate cost optimization — this is the knowledge that separates an Azure user from an Azure architect.
         </p>
       </div>
 
-      <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="background: rgba(0,120,212,0.1); border: 1px solid rgba(0,120,212,0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
             <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:43:48 to 05:25:13</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=17028" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=17028" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment &#8599;</a>
         </div>
       </section>
 
-      <!-- SECTION 1 -->
       <section id="what-is-blob" class="note-section content-section">
         <h2><span class="section-number">01.</span> What is Azure Blob Storage?</h2>
-        <p>
-          Relational SQL databases are optimized for structured rows and columns. They degrade quickly when forced to store 500 MB video files or millions of PDF receipts.
-        </p>
-        <p>
-          <strong>Azure Blob Storage</strong> is Microsoft's massively scalable <strong>Object Storage</strong> engine.
-          <br>
-          - <strong>"BLOB"</strong> stands for <strong>B</strong>inary <strong>L</strong>arge <strong>OB</strong>ject.
-          <br>
-          - Stores any digital file in native binary format without requiring you to format hard disks or partition file systems.
-          <br>
-          - Every blob is directly addressable anywhere on earth via standard HTTPS REST URLs.
-        </p>
+        <p><strong>Azure Blob Storage</strong> is Microsoft's massively scalable object storage service for the cloud. The word "BLOB" stands for <strong>B</strong>inary <strong>L</strong>arge <strong>OB</strong>ject. It stores any type of digital file — images, videos, audio, PDFs, ML training datasets, server logs — in native binary format without requiring disk formatting or partitioning.</p>
+        <p>Unlike a traditional file system where you navigate folders and files, Blob Storage uses a flat namespace. Every blob has a unique URL:</p>
+        <div class="hierarchy-tree">https://&lt;storage-account-name&gt;.blob.core.windows.net/&lt;container&gt;/&lt;blob-name&gt;
+
+Example:
+https://mycompanystorage.blob.core.windows.net/user-uploads/profile-photo-1049.jpg
+         ↑                                       ↑              ↑
+  Storage Account                            Container        Blob (file)</div>
       </section>
 
-      <!-- SECTION 2 -->
+      <section id="storage-types-theory" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Object Storage vs. Block Storage vs. File Storage</h2>
+        <div style="overflow-x: auto; margin: 1.25rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Dimension</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color:#60a5fa;">Object Storage (Blob)</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color:#f59e0b;">Block Storage (Managed Disks)</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color:#34d399;">File Storage (Azure Files)</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Abstraction</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Key-Value store: URL &#8594; binary blob</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Raw disk blocks (like a physical hard drive)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">POSIX-style directory tree (SMB/NFS mount)</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Access Method</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">HTTP REST API (GET/PUT/DELETE)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Attached to a single VM (read/write like local disk)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Mounted via network share (accessible by multiple VMs)</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Scalability</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Virtually unlimited (exabytes)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Up to 32 TB per disk</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Up to 100 TiB per share</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Best For</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Media files, backups, ML datasets, static websites</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">VM OS disks, databases (SQL Server data files)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Shared config files, legacy apps needing shared network drive</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section id="warehouse-analogy" class="note-section content-section">
-        <h2><span class="section-number">02.</span> The Amazon Warehouse Analogy &amp; Naming Rules</h2>
+        <h2><span class="section-number">03.</span> The Amazon Fulfillment Warehouse Analogy</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The Logistics Warehouse:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            - <strong>Storage Account:</strong> The entire Amazon distribution building with its unique global address.
-            <br>
-            - <strong>Container:</strong> An organized aisle or storage bin (e.g., <code>avatars</code>, <code>invoices</code>, <code>videos</code>).
-            <br>
-            - <strong>Blob:</strong> The packaged items inside the container (e.g., <code>user-102.png</code>, <code>tax-2026.pdf</code>).
-          </p>
-        </div>
-
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;">
-          <div style="font-size: 0.8rem; font-weight: 700; color: #50e6ff; text-transform: uppercase; margin-bottom: 0.4rem;">Public Endpoint URL Structure:</div>
-          <div style="font-family: var(--font-mono); font-size: 0.9rem; color: #38bdf8; word-break: break-all; margin-bottom: 0.5rem;">
-            https://<span style="color: #4ade80;">&lt;storage-account-name&gt;</span>.blob.core.windows.net/<span style="color: #fbbf24;">&lt;container-name&gt;</span>/<span style="color: #f472b6;">&lt;blob-name&gt;</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: rgba(0,120,212,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#127970;</div>
+              <strong style="color: #0078d4;">Storage Account</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">The entire warehouse building with its unique address and security checkpoint. One account per region per project.</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(16,185,129,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#128194;</div>
+              <strong style="color: #34d399;">Container</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">An organized aisle or section inside the warehouse (e.g., "user-avatars", "invoice-pdfs", "system-logs").</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(245,158,11,0.08); border-radius: 8px;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#128230;</div>
+              <strong style="color: #f59e0b;">Blob</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0;">The individual package on the shelf. Can be tiny (1 KB text file) or massive (1 TB video archive).</p>
+            </div>
           </div>
-          <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted); word-break: break-all;">
-            Example: https://<span style="color: #4ade80;">mystorageak2026</span>.blob.core.windows.net/<span style="color: #fbbf24;">images</span>/<span style="color: #f472b6;">profile.jpg</span>
-          </div>
         </div>
-
-        <div class="callout-danger">
-          <strong>⚠️ The 3 Inviolable Storage Account Naming Rules:</strong>
-          <ol style="margin: 0.5rem 0 0 0;">
-            <li>Length must be strictly between <strong>3 and 24 characters</strong>.</li>
-            <li>Contains <strong>ONLY lowercase letters and numbers</strong> (No hyphens, no underscores, no uppercase!).</li>
-            <li>Must be <strong>globally unique across all Azure accounts worldwide</strong> because it creates a public DNS subdomain.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- SECTION 3 -->
-      <section id="blob-types" class="note-section content-section">
-        <h2><span class="section-number">03.</span> The 3 Types of Blobs</h2>
-
-        <div style="overflow-x: auto; margin: 1.5rem 0;">
-          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Blob Type</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Primary Purpose</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Maximum Size</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Key Behavior</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Block Blobs</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Documents, photos, videos, zip archives, application files.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">~190.7 TB</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Composed of up to 50,000 discrete blocks uploaded in parallel and assembled.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Append Blobs</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Server access logs, telemetry streams, audit trails.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">~195 GB</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Append-only operations. Existing data cannot be edited; new logs are committed to the end.</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">Page Blobs</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Azure VM Hard Disks (<code>.vhd</code> files).</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">8 TB</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Optimized for 512-byte random read/write page operations like a physical hard disk.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- SECTION 4 -->
-      <section id="access-tiers" class="note-section content-section">
-        <h2><span class="section-number">04.</span> Access Tiers &amp; Rehydration</h2>
-        <p>Azure matches storage costs to how frequently your files are accessed:</p>
-
-        <div style="overflow-x: auto; margin: 1.5rem 0;">
-          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Tier</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Access Frequency</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Storage Cost</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Access / Retrieval Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #ef4444;">Hot</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Daily active reads &amp; writes</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 600;">Highest</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Lowest</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #38bdf8;">Cool</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Infrequently accessed (&ge; 30 days)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Lower</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Higher</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #818cf8;">Cold</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Rarely accessed (&ge; 90 days)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e;">Very Low</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444;">Much Higher</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #94a3b8;">Archive</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Long-term regulatory backups (&ge; 180 days)</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 700;">Rock Bottom</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #f59e0b; font-weight: 600;">Highest (Requires Rehydration)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
         <div class="callout-warning">
-          <strong>🧊 The Archive Tier &amp; Rehydration:</strong>
-          Blobs in Archive tier are stored offline. You cannot download them immediately. To read an archived blob, you must <strong>Rehydrate</strong> it back to Hot or Cool:
+          <strong>Storage Account Naming Rules (Exam Classic):</strong>
           <ul style="margin: 0.5rem 0 0 0;">
-            <li><strong>Standard Priority:</strong> Takes 1 to 15 hours.</li>
-            <li><strong>High Priority:</strong> Takes under 1 hour (for files &lt; 10 GB) with an extra urgency fee.</li>
+            <li>3 to 24 characters in length</li>
+            <li>Lowercase letters and numbers only — NO uppercase, hyphens, underscores, or spaces</li>
+            <li>Must be <strong>globally unique</strong> across all of Azure (it becomes a public DNS subdomain)</li>
           </ul>
         </div>
       </section>
 
-      <!-- SECTION 5 -->
+      <section id="blob-types" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Three Types of Blobs — Choosing the Right Storage Primitive</h2>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Blob Type</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Internal Architecture</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Max Size</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Best For</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">Block Blobs</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">File split into 4,000 MiB blocks uploaded in parallel, then committed in order</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">~190.7 TB</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Images, videos, documents, app binaries, ML datasets — the default choice</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#34d399;">Append Blobs</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Append-only — new data always added to the end; existing blocks immutable</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">~195 GB</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Server logs, audit trails, continuous sensor telemetry, event streams</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">Page Blobs</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">512-byte aligned pages supporting random read/write anywhere in the file</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">8 TB</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Azure VM Managed Disk storage (VHD files), database WAL files</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="access-tiers" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Access Tiers &amp; Rehydration — Matching Cost to Data Temperature</h2>
+        <p>Data has a "temperature" — how frequently it is accessed over its lifetime. Azure offers four access tiers to balance storage costs against access fees based on data temperature.</p>
+        <div style="overflow-x: auto; margin: 1.25rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Tier</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Storage Cost</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Access Cost</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Min Retention</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Availability</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Best For</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#ef4444;">Hot</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Highest</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Lowest</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">None</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">99.9%</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Active daily files, streaming assets, live websites</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">Cool</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Lower</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Moderate</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">30 days</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">99%</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Monthly reports, infrequently accessed customer data</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">Cold</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Very Low</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">High</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">90 days</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">99%</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Quarterly backups, regulatory data rarely accessed</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#94a3b8;">Archive</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">Rock Bottom</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#ef4444;">Highest (+ rehydration)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">180 days</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#ef4444;">Offline</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Legal compliance archives, 7-year tax records</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout-warning">
+          <strong>Archive Tier Rehydration:</strong> Blobs in Archive tier are stored offline on magnetic tape-equivalent infrastructure. To read an archived blob you must first <strong>rehydrate</strong> it back to Hot or Cool tier. Standard Priority rehydration takes <strong>1–15 hours</strong>. High Priority takes under 1 hour (for blobs under 10 GB) but costs significantly more. You cannot read an archived blob in-place — there is no such thing as instant archive access.
+        </div>
+      </section>
+
       <section id="redundancy" class="note-section content-section">
-        <h2><span class="section-number">05.</span> Data Redundancy: 11 to 16 Nines of Durability</h2>
-        <ul>
-          <li><strong>Locally Redundant Storage (LRS):</strong> 3 copies maintained in a single datacenter in the primary region. Protects against disk crashes. <em>Durability: 99.999999999% (11 9s).</em></li>
-          <li><strong>Zone-Redundant Storage (ZRS):</strong> 3 copies replicated synchronously across 3 separate Availability Zones in the primary region. Protects against entire datacenter fires. <em>Durability: 99.9999999999% (12 9s).</em></li>
-          <li><strong>Geo-Redundant Storage (GRS):</strong> LRS in primary region + asynchronously copied to a paired secondary region &gt;300 miles away (total 6 copies). Protects against regional natural disasters. <em>Durability: 16 9s.</em></li>
-          <li><strong>Geo-Zone-Redundant Storage (GZRS):</strong> ZRS in primary region across 3 zones + LRS in secondary paired region. The ultimate high-durability standard.</li>
-        </ul>
+        <h2><span class="section-number">06.</span> Redundancy Theory — Durability at Different Failure Scopes</h2>
+        <p>Azure automatically maintains multiple copies of every blob. The redundancy strategy you choose determines <em>where</em> those copies are stored and therefore what failure scenarios they protect against.</p>
+
+        <div class="hierarchy-tree">Failure Scope Hierarchy (smallest to largest):
+  Disk failure     → Protected by: ALL redundancy tiers
+  Rack failure     → Protected by: LRS (3 copies across racks in 1 datacenter)
+  Datacenter fire  → Protected by: ZRS (3 copies across 3 Availability Zones)
+  Regional disaster → Protected by: GRS (3 copies in 2nd geographic region)
+  Multi-zone + regional → Protected by: GZRS (ZRS primary + GRS secondary)</div>
+
+        <div style="overflow-x: auto; margin: 1.5rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.85rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Strategy</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Copies</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Geographic Scope</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Annual Durability</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">LRS (Locally Redundant)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 synchronous copies</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">1 datacenter, different racks</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">11 nines (99.999999999%)</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">ZRS (Zone Redundant)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 synchronous copies</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 Availability Zones, 1 region</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">12 nines</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">GRS (Geo Redundant)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 primary + 3 secondary async</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">2 geographic regions (paired)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">16 nines</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">GZRS (Geo-Zone Redundant)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 zone copies + 3 geo copies</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">3 zones in primary + 2nd region</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">16 nines</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout-tip">
+          <strong>RA-GRS / RA-GZRS (Read-Access variants):</strong> GRS replicates data to the secondary region but does NOT allow you to read from it during normal operation. RA-GRS provides a read-only endpoint at the secondary region (URL suffix: <code>-secondary.blob.core.windows.net</code>) so your app remains readable even during a full primary region outage.
+        </div>
       </section>
 
-      <!-- SECTION 6 -->
       <section id="security" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Security: Storage Keys vs. Shared Access Signatures (SAS)</h2>
-        <p>How do applications access files securely?</p>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
-          <div style="background: var(--bg-card); border: 1px solid #ef4444; border-radius: 8px; padding: 1.25rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-              <span style="font-weight: 700; color: #ef4444; font-size: 0.95rem;">🔑 Account Access Keys (1 &amp; 2)</span>
-              <span style="background: #ef4444; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Root Passwords</span>
-            </div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0 0 0.5rem 0;">
-              Full 100% root access to create, read, delete, or reconfigure anything in the storage account.
-            </p>
-            <div style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.8rem; color: #fca5a5;">
-              ⚠️ <strong>Critical Security Warning:</strong> NEVER commit access keys to GitHub or hardcode them inside mobile apps or frontend JavaScript.
-            </div>
-          </div>
-
-          <div style="background: var(--bg-card); border: 1px solid #0284c7; border-radius: 8px; padding: 1.25rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-              <span style="font-weight: 700; color: #38bdf8; font-size: 0.95rem;">🎟️ Shared Access Signatures (SAS)</span>
-              <span style="background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Best Practice</span>
-            </div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin: 0 0 0.5rem 0;">
-              Temporary URI pass tickets granting granular, time-bound, and scoped permissions without sharing master keys.
-            </p>
-            <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #0284c7; padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.8rem; color: var(--text-primary);">
-              💡 <strong>Example:</strong> "Grant Alice <em>Read-Only</em> access to <code>report.pdf</code> expiring in 30 minutes from IP <code>10.0.4.2</code>."
-            </div>
-          </div>
+        <h2><span class="section-number">07.</span> Security: Access Keys, SAS Tokens &amp; Entra ID</h2>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Mechanism</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">What It Is</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Risk Level</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Best Practice</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Account Access Keys</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">512-bit symmetric keys (Key1 + Key2). Like a root password — grants full control over the entire storage account.</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#ef4444; font-weight:700;">&#9888; Critical Risk</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Never embed in code or commits. Store in Azure Key Vault only. Rotate regularly.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">SAS Token</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">A URL query string signed with the Account Key. Grants scoped, time-limited access to specific resources and operations.</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#f59e0b; font-weight:700;">&#128737; Controlled</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Ideal for temporary download links, client uploads, third-party integrations.</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Microsoft Entra ID (RBAC)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Identity-based role assignment. The user/service proves identity to Entra ID and Azure validates permissions via RBAC role lookup.</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e; font-weight:700;">&#128274; Enterprise Best Practice</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Use for all production apps, Managed Identities, and VM-to-storage access patterns.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #0078d4;">SAS Token Anatomy — What's Inside a SAS URL?</h4>
+          <div class="hierarchy-tree">https://mystorage.blob.core.windows.net/images/logo.png
+  ?sv=2023-01-03         ← Storage service version
+  &ss=b                  ← Services: b=blob
+  &srt=o                 ← Resource type: o=object (specific blob)
+  &sp=r                  ← Permissions: r=read only
+  &se=2026-11-18T18:00Z  ← Expiry: access dies at 6 PM UTC
+  &sip=203.0.113.0/24    ← Allowed IP range (optional)
+  &spr=https             ← Protocol: HTTPS only
+  &sig=abc123...xyz      ← HMAC-SHA256 signature (tamper-proof)</div>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0.75rem 0 0;">If anyone modifies even one character of the URL parameters, the signature verification fails and Azure returns 403 Forbidden — the SAS token is cryptographically tamper-proof.</p>
         </div>
       </section>
 
-      <!-- SECTION 7 -->
       <section id="static-website" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Hosting a Serverless Static Website ($web container)</h2>
-        <p>You can host an entire production website directly from Blob Storage for pennies a month without running any web servers or VMs:</p>
+        <h2><span class="section-number">08.</span> Static Website Hosting on Blob Storage</h2>
+        <p>Azure Storage allows you to host an entire static website (HTML, CSS, JS, React/Vue production builds) directly from a special container named <code>$web</code> without any web server, VM, or App Service plan. The endpoint uses Azure's global CDN infrastructure.</p>
+        <div class="hierarchy-tree">Storage Account: myportfolio2026
+  └── $web container (special magic container)
+        ├── index.html      ← Served at / and /index.html
+        ├── 404.html        ← Custom error page
+        ├── styles.css
+        └── app.js
 
-        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0;">
-          <div class="step-card">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h4>Open Static Website Feature in Portal</h4>
-              <p>Navigate to your Storage Account &rarr; Under left sidebar <strong>Data management</strong>, click <strong>Static website</strong>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h4>Configure Document Defaults</h4>
-              <p>Select <strong>Enabled</strong> &bull; Set Index document name: <code>index.html</code> &bull; Set Error document path: <code>404.html</code> &rarr; Click <strong>Save</strong>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h4>Upload Files to Special <code>$web</code> Container</h4>
-              <p>Azure automatically provisions a root container named <code>$web</code>. Upload your HTML, CSS, and JS files into <code>$web</code>.</p>
-            </div>
-          </div>
-          <div class="step-card">
-            <div class="step-num">4</div>
-            <div class="step-content">
-              <h4>Launch Live Web Endpoint</h4>
-              <p>Copy the generated Primary Endpoint URL (e.g., <code>https://mystorage.z13.web.core.windows.net/</code>) and load it in any browser!</p>
-            </div>
-          </div>
+Public endpoint: https://myportfolio2026.z13.web.core.windows.net/
+                                              ↑
+                              Zone-specific CDN edge node identifier</div>
+        <div class="callout-tip">
+          <strong>Free HTTPS included:</strong> The <code>.web.core.windows.net</code> domain comes with a free TLS/SSL certificate managed by Microsoft. For a custom domain (e.g., <code>www.yourname.dev</code>), you can use Azure Front Door or Azure CDN to map it, which also adds global caching and DDoS protection.
         </div>
       </section>
 
-      <!-- SECTION 8 -->
       <section id="lifecycle-rules" class="note-section content-section">
-        <h2><span class="section-number">08.</span> Automated Lifecycle Management</h2>
-        <p>Azure allows you to write automated rules to save storage costs automatically:</p>
-        <div class="click-path-badge">Rule: Move to Cool after 30 days &rarr; Move to Archive after 90 days &rarr; Delete after 365 days</div>
+        <h2><span class="section-number">09.</span> Lifecycle Management Rules — Automated Cost Optimization</h2>
+        <p>Lifecycle Management Rules are JSON-based policies that automatically move or delete blobs based on their age or last access time — no manual intervention required. Azure evaluates rules once per day.</p>
+        <pre class="code-block" style="background: #0d1117; color: #e6edf3; border-radius: 10px; padding: 1.5rem; overflow-x: auto; font-size: 0.84rem; line-height: 1.7;"><code>{
+  "rules": [{
+    "name": "AutoTierLogs",
+    "enabled": true,
+    "type": "Lifecycle",
+    "definition": {
+      "actions": {
+        "baseBlob": {
+          <span style="color:#8b949e;">// Move to Cool after 30 days of no modification</span>
+          "tierToCool": { "daysAfterModificationGreaterThan": 30 },
+          <span style="color:#8b949e;">// Move to Archive after 90 days</span>
+          "tierToArchive": { "daysAfterModificationGreaterThan": 90 },
+          <span style="color:#8b949e;">// Delete permanently after 365 days</span>
+          "delete": { "daysAfterModificationGreaterThan": 365 }
+        }
+      },
+      "filters": {
+        "blobTypes": ["blockBlob"],
+        <span style="color:#8b949e;">// Only applies to blobs in the "logs/" virtual directory</span>
+        "prefixMatch": ["logs/"]
+      }
+    }
+  }]
+}</code></pre>
       </section>
 
-      <!-- SECTION 9 -->
       <section id="cli-cheatsheet" class="note-section content-section">
-        <h2><span class="section-number">09.</span> Azure CLI Cheatsheet for Blob Storage</h2>
+        <h2><span class="section-number">10.</span> Essential CLI Cheatsheet</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #38bdf8; margin-top: 0;">Create Account &amp; Container</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>az storage account create   --name mystorageak2026   --resource-group my-rg   --sku Standard_LRS   --kind StorageV2
 
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <span class="terminal-title">Azure CLI / Bash</span>
+az storage container create   --account-name mystorageak2026   --name project-assets   --auth-mode login</code></pre>
           </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># 1. Create a Storage Account</span>
-<span class="cmd-prompt">$ </span>az storage account create \
-  --name mystorageak2026 \
-  --resource-group my-rg \
-  --location eastus \
-  --sku Standard_LRS
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+            <h4 style="color: #34d399; margin-top: 0;">Upload &amp; SAS Token</h4>
+            <pre style="font-size: 0.8rem; margin: 0; overflow-x: auto;"><code>az storage blob upload   --account-name mystorageak2026   --container-name project-assets   --name logo.png   --file ./images/logo.png
 
-<span class="cmd-comment"># 2. Create a Container</span>
-<span class="cmd-prompt">$ </span>az storage container create \
-  --account-name mystorageak2026 \
-  --name media-uploads \
-  --auth-mode login
-
-<span class="cmd-comment"># 3. Upload a Blob file</span>
-<span class="cmd-prompt">$ </span>az storage blob upload \
-  --account-name mystorageak2026 \
-  --container-name media-uploads \
-  --name hero.png \
-  --file ./images/hero.png \
-  --auth-mode login
-
-<span class="cmd-comment"># 4. Generate a 1-Hour Read-Only SAS Token</span>
-<span class="cmd-prompt">$ </span>az storage blob generate-sas \
-  --account-name mystorageak2026 \
-  --container-name media-uploads \
-  --name hero.png \
-  --permissions r \
-  --expiry $(date -u -d "1 hour" '+%Y-%m-%dT%H:%MZ') \
-  --full-uri</code></pre></div>
+az storage blob generate-sas   --account-name mystorageak2026   --container-name project-assets   --name logo.png   --permissions r   --expiry 2026-12-01T00:00Z   --full-uri</code></pre>
+          </div>
         </div>
       </section>
 
-      <!-- SUMMARY CHECKLIST -->
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">10.</span> Summary Checklist</h2>
+        <h2><span class="section-number">11.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk1" style="margin-top: 0.25rem;">
-              <label for="m6chk1">I know the naming rules for Storage Accounts: 3-24 characters, only lowercase letters and numbers, globally unique.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk2" style="margin-top: 0.25rem;">
-              <label for="m6chk2">I know the 3 blob types: <strong>Block Blobs</strong> (files), <strong>Append Blobs</strong> (logs), and <strong>Page Blobs</strong> (VM disks).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk3" style="margin-top: 0.25rem;">
-              <label for="m6chk3">I understand the 4 access tiers (Hot, Cool, Cold, Archive) and know that Archive requires <strong>rehydration</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk4" style="margin-top: 0.25rem;">
-              <label for="m6chk4">I understand redundancy tiers: <strong>LRS</strong>, <strong>ZRS</strong>, <strong>GRS</strong>, and <strong>GZRS</strong>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk5" style="margin-top: 0.25rem;">
-              <label for="m6chk5">I know why <strong>SAS Tokens</strong> are used instead of exposing Account Access Keys.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m6chk6" style="margin-top: 0.25rem;">
-              <label for="m6chk6">I know how to host a serverless static website using the special <code>$web</code> container.</label>
-            </li>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk1" style="margin-top: 0.25rem;"><label for="m6chk1">I can explain the difference between <strong>object storage</strong> (Blob), <strong>block storage</strong> (Managed Disks), and <strong>file storage</strong> (Azure Files).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk2" style="margin-top: 0.25rem;"><label for="m6chk2">I know the 3 blob types: <strong>Block Blobs</strong> (general files), <strong>Append Blobs</strong> (logs), <strong>Page Blobs</strong> (VM disks).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk3" style="margin-top: 0.25rem;"><label for="m6chk3">I can describe all 4 access tiers and explain why Archive blobs require <strong>rehydration</strong> (1–15 hours).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk4" style="margin-top: 0.25rem;"><label for="m6chk4">I understand the redundancy hierarchy: <strong>LRS</strong> (1 DC) → <strong>ZRS</strong> (3 zones) → <strong>GRS</strong> (2 regions) → <strong>GZRS</strong>.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk5" style="margin-top: 0.25rem;"><label for="m6chk5">I understand what a <strong>SAS token</strong> is, what each URL parameter means, and why it is cryptographically tamper-proof.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m6chk6" style="margin-top: 0.25rem;"><label for="m6chk6">I know how to host a static website from the <strong>$web container</strong> and how lifecycle rules automate tier transitions.</label></li>
           </ul>
         </div>
-
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="azure-lecture-5.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Previous: Module 05 (Container Apps)
-          </a>
-          <a href="azure-lecture-7.html" class="btn-primary" style="text-decoration: none !important;">
-            Next: Module 07 (Identity &amp; Access Management) →
-          </a>
+          <a href="azure-lecture-5.html" class="btn-secondary" style="text-decoration: none !important;">&#8592; Previous: Module 05 (ACA)</a>
+          <a href="azure-lecture-7.html" class="btn-primary" style="text-decoration: none !important;">Next: Module 07 (IAM &amp; RBAC) &#8594;</a>
         </div>
       </section>
 
     </main>
+  </div>
   </div>
 
   <!-- Footer -->

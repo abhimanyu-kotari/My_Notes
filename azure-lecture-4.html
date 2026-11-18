@@ -160,268 +160,227 @@
       </div>
       <ul class="sidebar-nav">
         <li><a href="#timeframe" class="sidebar-link">Source Timeframe</a></li>
-        <li><a href="#what-is-aci" class="sidebar-link">1. What is Azure Container Instances?</a></li>
-        <li><a href="#decision-matrix" class="sidebar-link">2. ACI vs. ACA vs. AKS Decision Matrix</a></li>
-        <li><a href="#container-groups" class="sidebar-link">3. Container Groups Architecture</a></li>
-        <li><a href="#restart-policies" class="sidebar-link">4. Container Restart Policies</a></li>
-        <li><a href="#cli-deployment" class="sidebar-link">5. Deploying ACI via Azure CLI</a></li>
-        <li><a href="#per-second-billing" class="sidebar-link">6. Per-Second Serverless Economics</a></li>
-        <li><a href="#summary-checklist" class="sidebar-link">7. Summary Checklist</a></li>
+        <li><a href="#what-is-aci" class="sidebar-link">1. What is ACI?</a></li>
+        <li><a href="#serverless-theory" class="sidebar-link">2. Serverless Execution Theory</a></li>
+        <li><a href="#decision-matrix" class="sidebar-link">3. ACI vs. ACA vs. AKS</a></li>
+        <li><a href="#container-groups" class="sidebar-link">4. Container Groups Theory</a></li>
+        <li><a href="#restart-policies" class="sidebar-link">5. Restart Policies</a></li>
+        <li><a href="#per-second-billing" class="sidebar-link">6. Per-Second Billing Model</a></li>
+        <li><a href="#cli-deployment" class="sidebar-link">7. Hands-On CLI Deployment</a></li>
+        <li><a href="#summary-checklist" class="sidebar-link">8. Summary Checklist</a></li>
       </ul>
     </aside>
 
     <!-- Main Notes Content -->
     <main class="docs-content">
-      
       <div class="lecture-header">
         <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
-          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo; 
-          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo; 
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo;
+          <a href="month-8.html" style="color: inherit; text-decoration: none;">Month 8</a> &rsaquo;
+          <a href="azure.html" style="color: inherit; text-decoration: none;">Microsoft Azure</a> &rsaquo;
           <span style="color: var(--text-primary);">Module 4</span>
         </div>
         <div class="lecture-badge-row">
           <span class="card-badge badge-active">Module 04</span>
-          <span class="tag">Azure ACI</span>
-          <span class="tag">Serverless Containers</span>
-          <span class="tag">Fast Spin-Up</span>
-          <span class="tag">Batch Processing</span>
+          <span class="tag">ACI</span>
+          <span class="tag">Serverless</span>
+          <span class="tag">Container Groups</span>
+          <span class="tag">Restart Policies</span>
           <span class="tag">Per-Second Billing</span>
         </div>
-        <h1 class="lecture-main-title">Azure Container Instances (ACI)</h1>
+        <h1 class="lecture-main-title">Azure Container Instances (ACI) — Theory &amp; Concepts</h1>
         <p class="lecture-lead">
-          Run isolated Docker containers in the cloud within seconds without managing a single virtual machine: the fastest serverless container deployment model in Azure, choosing between ACI, ACA, and AKS, configuring public DNS names and ports, understanding restart policies (<code>Always</code> vs. <code>OnFailure</code> vs. <code>Never</code>), inspecting real-time container logs, and leveraging per-second billing for zero wasted spend.
+          Azure Container Instances answers a simple question: what if you could run a Docker container in the cloud <em>without ever thinking about servers?</em> No VMs to provision, no OS to patch, no cluster to manage. ACI achieves this through the serverless execution model — understanding <em>why</em> that works, what a Container Group is, how restart policies control container lifecycle, and why per-second billing changes economics completely.
         </p>
       </div>
 
-      <!-- TIMEFRAME BADGE -->
       <section id="timeframe" class="note-section content-section" style="padding-bottom: 0.5rem;">
-        <div style="background: rgba(0, 120, 212, 0.1); border: 1px solid rgba(0, 120, 212, 0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+        <div style="background: rgba(0,120,212,0.1); border: 1px solid rgba(0,120,212,0.3); border-radius: 8px; padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#0078d4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
             <span style="font-weight: 700; color: var(--text-primary);">Source Video Timeframe:</span>
             <span style="font-family: var(--font-mono); color: #0078d4; font-weight: 700;">04:23:35 to 04:29:29</span>
           </div>
-          <a href="https://youtu.be/M1erI5a2wxQ?t=15815" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment ↗</a>
+          <a href="https://youtu.be/M1erI5a2wxQ?t=15815" target="_blank" rel="noopener" class="card-action-btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">Watch Video Segment &#8599;</a>
         </div>
       </section>
 
-      <!-- SECTION 1 -->
       <section id="what-is-aci" class="note-section content-section">
         <h2><span class="section-number">01.</span> What is Azure Container Instances (ACI)?</h2>
-        <p>
-          Before ACI, if you had a Docker container you wanted to test or run in the cloud, you had to:
-        </p>
-        <ol>
-          <li>Provision an Azure Virtual Machine.</li>
-          <li>SSH into the VM and install the Docker daemon engine.</li>
-          <li>Pull your image and execute <code>docker run</code>.</li>
-          <li>Remember to deallocate the VM so you don't get billed for idle compute.</li>
-        </ol>
-        <p>
-          <strong>Azure Container Instances (ACI)</strong> completely revolutionizes this workflow. It is a <strong>pure serverless container service</strong>. You pass your Docker image URL, specify how many vCPUs and gigabytes of memory you require, and Azure spins up and executes your container within 3 to 5 seconds! There are zero virtual machines to manage, zero operating system patches to install, and zero orchestration clusters to configure.
-        </p>
+        <p><strong>Azure Container Instances (ACI)</strong> is Microsoft Azure's pure serverless container runtime. It is the fastest way to run a container in the cloud — you provide a Docker image, specify CPU and RAM requirements, and Azure runs the container within seconds, with zero infrastructure management on your part.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.25rem 0;">
+          <div style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #ef4444; margin-top: 0;">Traditional Approach (Before ACI)</h4>
+            <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">
+              <li>Create an Azure Virtual Machine (3–5 min wait)</li>
+              <li>SSH into the VM and run <code>apt update</code></li>
+              <li>Install Docker Engine on the VM</li>
+              <li>Pull your Docker image</li>
+              <li>Configure NSG firewall rules</li>
+              <li>Run the container manually</li>
+              <li>Keep paying for the VM 24/7, even when idle</li>
+            </ol>
+          </div>
+          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 1.25rem;">
+            <h4 style="color: #34d399; margin-top: 0;">With ACI (Serverless Containers)</h4>
+            <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">
+              <li>Provide: image URL, CPU, RAM, port</li>
+              <li>ACI provisions everything in ~10 seconds</li>
+              <li>Container is live with a public FQDN</li>
+              <li>Pay only while the container is running</li>
+              <li>Delete with one command — billing stops instantly</li>
+            </ol>
+          </div>
+        </div>
       </section>
 
-      <!-- SECTION 2 -->
-      <section id="decision-matrix" class="note-section content-section">
-        <h2><span class="section-number">02.</span> ACI vs. ACA vs. AKS Decision Matrix</h2>
+      <section id="serverless-theory" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Serverless Execution Theory — What "Serverless" Actually Means</h2>
+        <p><strong>Serverless does not mean "no servers exist."</strong> Servers absolutely exist — you simply do not <em>own, manage, patch, or provision</em> them. Microsoft's Azure infrastructure manages a large pool of bare-metal servers. When you request an ACI container, Azure's control plane allocates resources from this shared pool on-demand, runs your container, and returns the resources to the pool when you're done.</p>
 
-        <div style="overflow-x: auto; margin: 1.5rem 0;">
-          <table class="notes-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-card); text-align: left;">
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Service</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Best Use Cases</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Orchestration &amp; Autoscaling</th>
-                <th style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Management Overhead</th>
-              </tr>
-            </thead>
+        <div class="callout-tip">
+          <strong>The Core Serverless Value Proposition:</strong> You declare <em>what</em> you want to run (a container image), not <em>where</em> it should run (a specific server). Azure's orchestration layer handles placement, scheduling, health monitoring, and restart logic. This is called the "serverless abstraction."
+        </div>
+
+        <h4>Cold Start vs. Warm Start in ACI</h4>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Scenario</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">What Happens</th>
+              <th style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Typical Time</th>
+            </tr></thead>
             <tbody>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">ACI</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Short-lived batch jobs, nightly data pipelines, build runners, quick prototypes.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">None. Runs standalone isolated container tasks.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Zero (Fully Serverless)</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">ACA</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Microservices, web APIs, event-driven queue processors, auto-scale to zero.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Built-in KEDA autoscaling, revisions, traffic splitting, Envoy ingress.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #22c55e; font-weight: 600;">Low (Serverless Kubernetes)</td>
-              </tr>
-              <tr>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); font-weight: 700; color: #50e6ff;">AKS</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Complex enterprise ecosystems, service meshes, granular networking controls.</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color);">Full native Kubernetes API (Deployments, StatefulSets, Ingress Controllers).</td>
-                <td style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); color: #ef4444; font-weight: 600;">High (Node pools, Kube upgrades)</td>
-              </tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Cold Start</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">No pre-warmed container. Azure must pull the image (if not cached), allocate resources, and launch the process from scratch.</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#f59e0b;">5–15 seconds</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Subsequent Runs</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Image is cached in the Azure region. Resource allocation is faster because Azure pre-warms infrastructure.</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">2–5 seconds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;"><em>Note: ACI cold starts are measured in seconds (not milliseconds like a simple function), because launching a full container process is heavier than a function invocation. For sub-second cold starts, use Azure Functions instead.</em></p>
+      </section>
+
+      <section id="decision-matrix" class="note-section content-section">
+        <h2><span class="section-number">03.</span> ACI vs. ACA vs. AKS — Choosing the Right Container Service</h2>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse; font-size: 0.88rem;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Dimension</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color: #60a5fa;">ACI</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color: #34d399;">ACA</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color); color: #f59e0b;">AKS</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Abstraction Level</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Single container / container group</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Managed microservices platform</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Full Kubernetes cluster</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Autoscaling</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">No built-in autoscaling</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">KEDA event-driven (HTTP, queues)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">HPA + KEDA + cluster autoscaler</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Networking / Ingress</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Direct public IP / FQDN</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Built-in Envoy ingress + TLS</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Custom ingress controllers</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Best For</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Batch jobs, CI/CD runners, quick tests, isolated tasks</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Modern microservices, event-driven apps</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Complex enterprise distributed systems</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600;">Complexity</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#22c55e;">&#9679; Low</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#f59e0b;">&#9679;&#9679; Medium</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); color:#ef4444;">&#9679;&#9679;&#9679; High</td></tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- SECTION 3 -->
       <section id="container-groups" class="note-section content-section">
-        <h2><span class="section-number">03.</span> Container Groups Architecture</h2>
-        <p>
-          The top-level resource in ACI is a <strong>Container Group</strong>. A Container Group is a collection of containers that are scheduled on the same host machine, sharing the exact same lifecycle, local network, and storage volumes.
-        </p>
+        <h2><span class="section-number">04.</span> Container Groups — ACI's Fundamental Resource Unit</h2>
+        <p>In ACI, the top-level deployable unit is a <strong>Container Group</strong> — a collection of one or more containers that are co-scheduled on the same physical host machine. This concept is directly analogous to a <strong>Pod</strong> in Kubernetes.</p>
 
-        <div class="diagram-container">
-          <div style="font-weight: 700; color: #50e6ff; font-size: 0.95rem; margin-bottom: 0.75rem; text-align: center;">
-            AZURE CONTAINER GROUP ARCHITECTURE ('analytics-group')
-          </div>
-          <div style="display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.25rem;">
-            <span style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px; font-family: var(--font-mono);">Public IP: 20.198.44.12</span>
-            <span style="background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px;">Shared Localhost Bridge</span>
-            <span style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 6px;">Shared Storage Volume Mount</span>
-          </div>
+        <div class="hierarchy-tree">Container Group: "web-and-sidecar"
+  ├── Container 1: nginx (port 80)        ← Main web server
+  │     - Shares local network with Container 2
+  │     - Communicates via localhost:9090
+  └── Container 2: log-forwarder (port 9090) ← Sidecar pattern
+        - Reads nginx access logs from shared volume
+        - Ships logs to Azure Monitor
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; align-items: stretch;">
-            <div style="background: var(--bg-card); border: 1px solid #0284c7; border-radius: 8px; padding: 1.15rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
-                <span style="font-weight: 700; color: #38bdf8; font-size: 0.95rem;">📦 Primary Container</span>
-                <span style="background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Main App</span>
-              </div>
-              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.75rem 0;">Python Data Processor & Web API</p>
-              <div style="font-family: var(--font-mono); font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-primary);">
-                <div>Port: <strong style="color: #38bdf8;">8080</strong></div>
-                <div>Compute: <strong>1.0 vCPU, 2.0 GB RAM</strong></div>
-              </div>
-            </div>
-
-            <div style="background: var(--bg-card); border: 1px solid #16a34a; border-radius: 8px; padding: 1.15rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
-                <span style="font-weight: 700; color: #4ade80; font-size: 0.95rem;">🛡️ Sidecar Container</span>
-                <span style="background: #16a34a; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;">Helper</span>
-              </div>
-              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 0.75rem 0;">Log Shipper, Metrics & Prometheus Exporter</p>
-              <div style="font-family: var(--font-mono); font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-primary);">
-                <div>Port: <strong style="color: #4ade80;">9090</strong></div>
-                <div>Compute: <strong>0.5 vCPU, 0.5 GB RAM</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top: 1rem; text-align: center; font-size: 0.82rem; color: var(--text-muted); background: var(--bg-secondary); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color);">
-            Inter-container communication occurs via <code>localhost:9090 &harr; localhost:8080</code> with zero network hops or latency.
-          </div>
-        </div>
+Shared Resources within the group:
+  ✓ Same lifecycle    (start/stop together)
+  ✓ Same localhost    (containers talk via 127.0.0.1)
+  ✓ Same storage volumes (mounted to both containers)
+  ✗ NOT shared: CPU/RAM (each container has own allocation)</div>
 
         <div class="callout-tip">
-          <strong>💡 Kubernetes Analogy:</strong> A Container Group in ACI is the exact architectural equivalent of a <strong>Pod</strong> in Kubernetes.
+          <strong>The Sidecar Pattern:</strong> The classic use case for multi-container groups is the "sidecar" architecture — a main application container paired with a helper container that handles cross-cutting concerns like logging, monitoring, or configuration refresh. The sidecar lives alongside the main container, sharing its network and storage, without modifying the main container's code.
         </div>
       </section>
 
-      <!-- SECTION 4 -->
       <section id="restart-policies" class="note-section content-section">
-        <h2><span class="section-number">04.</span> Container Restart Policies</h2>
-        <p>When launching an ACI container, you must configure its restart policy according to its workload type:</p>
-        <ul>
-          <li><strong><code>Always</code> (Default):</strong> If the container process stops or crashes, ACI restarts it immediately. Ideal for continuous web servers and long-running APIs.</li>
-          <li><strong><code>Never</code>:</strong> The container runs its task once. When the script exits (Exit Code 0), the container stops and is never restarted. Ideal for one-time database schema migrations or batch reports.</li>
-          <li><strong><code>OnFailure</code>:</strong> The container runs once. If it crashes with an error (non-zero exit code), ACI retries execution. If it succeeds (Exit Code 0), it shuts down peacefully. Ideal for nightly ETL data extract scripts.</li>
-        </ul>
-      </section>
-
-      <!-- SECTION 5 -->
-      <section id="cli-deployment" class="note-section content-section">
-        <h2><span class="section-number">05.</span> Deploying ACI via Azure CLI</h2>
-        
-        <div class="terminal-window">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <span class="terminal-title">Azure CLI / Bash</span>
-          </div>
-          <div class="terminal-body"><pre><code><span class="cmd-comment"># Step 1: Create a Resource Group</span>
-<span class="cmd-prompt">$ </span>az group create --name my-rg --location eastus
-
-<span class="cmd-comment"># Step 2: Deploy a Public Web Container with DNS Name Label</span>
-<span class="cmd-prompt">$ </span>az container create \
-  --resource-group my-rg \
-  --name my-aci-demo \
-  --image mcr.microsoft.com/azuredocs/aci-helloworld:latest \
-  --dns-name-label myuniqueappak2026 \
-  --ports 80 \
-  --cpu 1 \
-  --memory 1.5 \
-  --restart-policy Always
-
-<span class="cmd-comment"># Step 3: Check Container State & Public FQDN URL</span>
-<span class="cmd-prompt">$ </span>az container show \
-  --resource-group my-rg \
-  --name my-aci-demo \
-  --query "{FQDN:ipAddress.fqdn,State:instanceView.state}" \
-  --output table
-
-<span class="cmd-comment"># Step 4: Stream Real-Time Logs</span>
-<span class="cmd-prompt">$ </span>az container logs --resource-group my-rg --name my-aci-demo
-
-<span class="cmd-comment"># Step 5: Delete Container when finished</span>
-<span class="cmd-prompt">$ </span>az container delete --resource-group my-rg --name my-aci-demo --yes</code></pre></div>
+        <h2><span class="section-number">05.</span> Restart Policies — Matching Container Lifecycle to Your Workload</h2>
+        <div style="overflow-x: auto; margin: 1rem 0;">
+          <table class="notes-table" style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background: var(--bg-card);">
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Policy</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Restart Trigger</th>
+              <th style="padding:0.75rem 1rem; border:1px solid var(--border-color);">Ideal Use Case</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#60a5fa;">Always <em>(default)</em></td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Restarts automatically on crash OR successful exit (exit code 0 or non-zero)</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Long-running web services, HTTP APIs, background queue listeners — anything that must stay up permanently</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#f59e0b;">OnFailure</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Restarts only when the container exits with a non-zero (error) exit code</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">ETL batch jobs, database backup routines, scheduled data transformations</td></tr>
+              <tr><td style="padding:0.65rem 1rem; border:1px solid var(--border-color); font-weight:600; color:#22c55e;">Never</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">Runs exactly once to completion — never restarted regardless of exit code</td><td style="padding:0.65rem 1rem; border:1px solid var(--border-color);">One-time migration scripts, CI/CD build agents, database seeding tasks</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout-warning">
+          <strong>Billing implication of "Always" on a task container:</strong> If you run a data processing script with <code>--restart-policy Always</code>, ACI will restart it in a loop after each completion — costing you money indefinitely! Always use <code>Never</code> or <code>OnFailure</code> for one-shot tasks.
         </div>
       </section>
 
-      <!-- SECTION 6 -->
       <section id="per-second-billing" class="note-section content-section">
-        <h2><span class="section-number">06.</span> Per-Second Serverless Economics</h2>
-        <p>Why do data engineering teams love ACI? Because of per-second granularity:</p>
+        <h2><span class="section-number">06.</span> Per-Second Billing — The Economics of Serverless Containers</h2>
+        <p>ACI uses <strong>per-second billing</strong> measured against allocated vCPU cores and GiB of memory. You pay only for the duration the container group is in a "Running" state.</p>
+
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #0078d4;">The Batch Job Calculation:</h4>
-          <p style="margin: 0; font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
-            Imagine a machine learning image-processing container that runs for <strong>4 minutes and 15 seconds</strong> (255 seconds) every night at midnight.
-            <br><br>
-            - With a standard <strong>Virtual Machine</strong>: You pay for the entire hour (or keep it running 24/7 if you forget to stop it).
-            <br>
-            - With <strong>Azure Container Instances (ACI)</strong>: You are billed strictly for <strong>255 seconds</strong> of allocated vCPU and RAM. The total nightly compute cost is less than <strong>$0.003 USD</strong>!
-          </p>
+          <h4 style="margin-top: 0; color: #0078d4;">Real Cost Example</h4>
+          <p>A nightly ETL script running 1 vCPU + 1.5 GiB RAM for <strong>8 minutes</strong> at approx. $0.000012/vCPU-second and $0.0000013/GiB-second:</p>
+          <div class="hierarchy-tree">vCPU cost:   1 core × 480 seconds × $0.0000012 = $0.000576
+Memory cost: 1.5 GiB × 480 seconds × $0.0000013 = $0.000936
+─────────────────────────────────────────────────────
+Total:  $0.001512  (~0.15 US cents per nightly job run)
+
+Compare to: Keeping a B1s VM running 24/7 = ~$7.59/month
+            Your 30 nightly jobs        = ~$0.045/month
+            Savings: 99.4%</div>
         </div>
+
+        <p><strong>Key rule:</strong> ACI billing starts the moment the container group transitions to "Running" state and stops the moment you delete the container group or it exits (for <code>Never</code> restart policy). There is no charge for stopped or terminated groups.</p>
       </section>
 
-      <!-- SUMMARY CHECKLIST -->
+      <section id="cli-deployment" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Hands-On: Deploying ACI via Azure CLI</h2>
+        <pre class="code-block" style="background: #0d1117; color: #e6edf3; border-radius: 10px; padding: 1.5rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.7;"><code><span style="color:#8b949e;"># 1. Create a Resource Group</span>
+az group create --name RG-ContainerDemo --location eastus
+
+<span style="color:#8b949e;"># 2. Deploy a container with a public DNS label</span>
+az container create   --resource-group RG-ContainerDemo   --name my-first-aci   --image mcr.microsoft.com/azuredocs/aci-helloworld   --dns-name-label myunique-student-demo   --ports 80   --cpu 1   --memory 1.5   --restart-policy Never
+
+<span style="color:#8b949e;"># 3. Check status and get the public URL</span>
+az container show   --resource-group RG-ContainerDemo   --name my-first-aci   --query "{Status:instanceView.state, URL:ipAddress.fqdn}"   --output table
+
+<span style="color:#8b949e;"># 4. View live logs</span>
+az container logs --resource-group RG-ContainerDemo --name my-first-aci
+
+<span style="color:#8b949e;"># 5. Delete the container (billing stops)</span>
+az container delete --resource-group RG-ContainerDemo --name my-first-aci --yes</code></pre>
+      </section>
+
       <section id="summary-checklist" class="note-section content-section">
-        <h2><span class="section-number">07.</span> Summary Checklist</h2>
+        <h2><span class="section-number">08.</span> Summary Checklist</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem;">
-          <ul style="list-style-type: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m4chk1" style="margin-top: 0.25rem;">
-              <label for="m4chk1">I know that ACI runs containers serverlessly in seconds without managing VMs or Kubernetes clusters.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m4chk2" style="margin-top: 0.25rem;">
-              <label for="m4chk2">I understand the difference between <strong>ACI</strong> (batch/standalone), <strong>ACA</strong> (microservices), and <strong>AKS</strong> (full K8s).</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m4chk3" style="margin-top: 0.25rem;">
-              <label for="m4chk3">I understand what an ACI <strong>Container Group</strong> is and how it behaves like a Kubernetes Pod.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m4chk4" style="margin-top: 0.25rem;">
-              <label for="m4chk4">I can choose the right restart policy: <code>Always</code>, <code>OnFailure</code>, or <code>Never</code>.</label>
-            </li>
-            <li style="display: flex; align-items: flex-start; gap: 0.6rem;">
-              <input type="checkbox" id="m4chk5" style="margin-top: 0.25rem;">
-              <label for="m4chk5">I can deploy an ACI container with a custom DNS label using <code>az container create</code>.</label>
-            </li>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m4chk1" style="margin-top: 0.25rem;"><label for="m4chk1">I understand that <strong>ACI is serverless</strong> — Azure manages all infrastructure; I only provide the container image.</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m4chk2" style="margin-top: 0.25rem;"><label for="m4chk2">I know what a <strong>cold start</strong> is and why ACI has 5–15 second cold starts (image pull + resource allocation).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m4chk3" style="margin-top: 0.25rem;"><label for="m4chk3">I can choose between <strong>ACI</strong> (simple isolated jobs), <strong>ACA</strong> (microservices + autoscaling), and <strong>AKS</strong> (full Kubernetes control).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m4chk4" style="margin-top: 0.25rem;"><label for="m4chk4">I know the 3 <strong>Restart Policies</strong>: Always (web services), OnFailure (batch jobs), Never (one-shot tasks).</label></li>
+            <li style="display: flex; align-items: flex-start; gap: 0.6rem;"><input type="checkbox" id="m4chk5" style="margin-top: 0.25rem;"><label for="m4chk5">I understand <strong>Container Groups</strong> as pods — containers sharing lifecycle, localhost, and volumes.</label></li>
           </ul>
         </div>
-
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="azure-lecture-3.html" class="btn-secondary" style="text-decoration: none !important;">
-            ← Previous: Module 03 (Docker Basics)
-          </a>
-          <a href="azure-lecture-5.html" class="btn-primary" style="text-decoration: none !important;">
-            Next: Module 05 (Container Apps - ACA) →
-          </a>
+          <a href="azure-lecture-3.html" class="btn-secondary" style="text-decoration: none !important;">&#8592; Previous: Module 03 (Docker)</a>
+          <a href="azure-lecture-5.html" class="btn-primary" style="text-decoration: none !important;">Next: Module 05 (Container Apps) &#8594;</a>
         </div>
       </section>
 
     </main>
+  </div>
   </div>
 
   <!-- Footer -->
