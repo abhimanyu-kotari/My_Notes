@@ -9,101 +9,544 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    .english-accent { color: #a855f7; }
-    [data-theme="dark"] .english-accent { color: #c084fc; }
+    /* ==========================================================================
+       Tech Notes — Spoken English Masterclass (Strict Editorial Dark UI)
+       Strict Color Palette:
+       - Main Background:      #0A0A0A
+       - Card Background:      #141414
+       - Secondary Background: #1A1A1A
+       - Subtle Borders:       #262626
+       - Border Hover:         #3F3F46
+       - Primary Text:         #F5F5F5
+       - Secondary Text:       #A1A1AA
+       - Muted Text:           #71717A
+       - Primary Accent:       #A3E635 (Subtle Lime Green)
+       - Accent Hover:         #BEF264
+       - Accent Subtle:        rgba(163, 230, 53, 0.08)
+       - Accent Border:        rgba(163, 230, 53, 0.25)
+       ========================================================================== */
 
+    :root {
+      --se-bg-main: #0A0A0A;
+      --se-bg-card: #141414;
+      --se-bg-secondary: #1A1A1A;
+      --se-border: #262626;
+      --se-border-hover: #3F3F46;
+      --se-text-primary: #F5F5F5;
+      --se-text-secondary: #A1A1AA;
+      --se-text-muted: #71717A;
+      --se-accent: #A3E635;
+      --se-accent-hover: #BEF264;
+      --se-accent-subtle: rgba(163, 230, 53, 0.08);
+      --se-accent-border: rgba(163, 230, 53, 0.25);
+    }
+
+    body {
+      background-color: var(--se-bg-main) !important;
+      color: var(--se-text-primary) !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* Minimal Top Navbar */
+    .navbar {
+      background: rgba(10, 10, 10, 0.88) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border-bottom: 1px solid var(--se-border) !important;
+    }
+    .nav-brand-text, .nav-brand {
+      color: var(--se-text-primary) !important;
+    }
+    .nav-link-subtle {
+      color: var(--se-text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .nav-link-subtle:hover {
+      color: var(--se-text-primary);
+    }
+
+    /* Layout & Sidebar */
+    .docs-layout {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .sidebar {
+      background: var(--se-bg-main) !important;
+      border-right: 1px solid var(--se-border) !important;
+      width: 270px;
+      min-width: 270px;
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+      padding-right: 1.5rem;
+    }
+    .sidebar-header {
+      border-bottom: 1px solid var(--se-border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar-title {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--se-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-nav li {
+      margin-bottom: 0.25rem;
+    }
+    .sidebar-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--se-text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-link:hover {
+      color: var(--se-text-primary);
+      background: var(--se-bg-secondary);
+    }
+    .sidebar-link.active {
+      color: var(--se-text-primary);
+      background: var(--se-bg-secondary);
+      border-left-color: var(--se-accent);
+      font-weight: 600;
+    }
+
+    .docs-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 980px;
+    }
+
+    /* Lecture Header Card */
+    .lecture-header {
+      background: var(--se-bg-card);
+      border: 1px solid var(--se-border);
+      border-radius: 10px;
+      padding: 2.25rem 2rem;
+      margin-bottom: 2rem;
+    }
+    .breadcrumb {
+      font-size: 0.82rem;
+      color: var(--se-text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .breadcrumb a {
+      color: var(--se-text-secondary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .breadcrumb a:hover {
+      color: var(--se-text-primary);
+    }
+    .lecture-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .card-badge.badge-active {
+      background: var(--se-accent) !important;
+      color: #0A0A0A !important;
+      font-weight: 700 !important;
+      font-size: 0.72rem !important;
+      padding: 0.25rem 0.6rem !important;
+      border-radius: 4px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag {
+      background: var(--se-bg-secondary) !important;
+      border: 1px solid var(--se-border) !important;
+      color: var(--se-text-muted) !important;
+      font-size: 0.74rem !important;
+      padding: 0.2rem 0.55rem !important;
+      border-radius: 4px !important;
+      font-weight: 500;
+    }
+    .lecture-main-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--se-text-primary);
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+    .lecture-lead {
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--se-text-secondary);
+      margin: 0;
+    }
+
+    /* Note Section Cards */
+    .note-section.content-section {
+      background: var(--se-bg-card);
+      border: 1px solid var(--se-border);
+      border-radius: 10px;
+      padding: 2.25rem 2.25rem;
+      margin-bottom: 2.25rem;
+    }
+    .note-section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--se-text-primary);
+      letter-spacing: -0.015em;
+      margin: 0 0 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--se-border);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+    .section-number {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--se-accent);
+      background: var(--se-accent-subtle);
+      border: 1px solid var(--se-accent-border);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+    .note-section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--se-text-primary);
+      margin: 1.75rem 0 0.85rem;
+      letter-spacing: -0.01em;
+    }
+    .note-section h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--se-text-primary);
+      margin: 1.25rem 0 0.65rem;
+    }
+    .note-section p, .note-section li {
+      color: var(--se-text-secondary);
+      font-size: 0.93rem;
+      line-height: 1.65;
+    }
+    .note-section strong {
+      color: var(--se-text-primary);
+      font-weight: 600;
+    }
+    .note-section em {
+      color: var(--se-text-primary);
+      font-style: italic;
+    }
+
+    /* Visual Formula Boxes */
     .visual-formula-box {
-      background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(15, 23, 42, 0.6) 100%);
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      border-radius: 12px;
+      background: var(--se-bg-secondary);
+      border: 1px solid var(--se-border);
+      border-radius: 8px;
       padding: 1.5rem;
       margin: 1.5rem 0;
-      box-shadow: var(--shadow-md);
+    }
+    .visual-formula-box h4 {
+      margin: 0 0 0.65rem;
+      color: var(--se-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .formula-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 1rem;
       margin-top: 1rem;
     }
     .formula-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1rem;
-      text-align: center;
+      background: var(--se-bg-card);
+      border: 1px solid var(--se-border);
+      border-radius: 6px;
+      padding: 1.15rem;
+      text-align: left;
     }
     .formula-badge {
-      font-size: 0.75rem;
-      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.72rem;
+      font-weight: 700;
       text-transform: uppercase;
-      padding: 0.25rem 0.6rem;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.5rem;
       border-radius: 4px;
       display: inline-block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.65rem;
+      background: var(--se-accent-subtle) !important;
+      color: var(--se-accent) !important;
+      border: 1px solid var(--se-accent-border) !important;
     }
 
+    /* Word Bank Table */
     .word-bank-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 1rem 0;
-      font-size: 0.9rem;
-    }
-    .word-bank-table th {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 0.75rem 1rem;
-      text-align: left;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .word-bank-table td {
-      border: 1px solid var(--border-color);
-      padding: 0.75rem 1rem;
-      vertical-align: top;
-    }
-    .word-highlight {
-      font-weight: 700;
-      color: #c084fc;
-    }
-    .meaning-hindi {
-      color: #fbbf24;
+      margin: 1.35rem 0;
       font-size: 0.88rem;
     }
+    .word-bank-table th {
+      background: var(--se-bg-secondary);
+      border: 1px solid var(--se-border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--se-text-muted);
+    }
+    .word-bank-table td {
+      border: 1px solid var(--se-border);
+      padding: 0.85rem 1rem;
+      vertical-align: top;
+      background: var(--se-bg-card);
+      color: var(--se-text-secondary);
+      line-height: 1.55;
+    }
+    .word-highlight {
+      font-weight: 600;
+      color: var(--se-text-primary);
+    }
+    .meaning-hindi {
+      color: var(--se-accent);
+      font-weight: 500;
+      font-size: 0.88rem;
+    }
+    .pronunciation-tip {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.75rem;
+      color: var(--se-text-muted);
+    }
 
+    /* Dialogue Cards */
     .dialogue-box {
-      background: var(--bg-secondary);
-      border-left: 4px solid #a855f7;
-      border-radius: 0 10px 10px 0;
-      padding: 1.25rem 1.5rem;
-      margin: 1.25rem 0;
+      background: var(--se-bg-secondary);
+      border: 1px solid var(--se-border);
+      border-left: 3px solid var(--se-accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1.35rem 1.5rem;
+      margin: 1.35rem 0;
     }
     .dialogue-turn {
       margin-bottom: 0.75rem;
-      font-size: 0.92rem;
-      line-height: 1.5;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--se-text-secondary);
     }
     .dialogue-speaker {
-      font-weight: 700;
-      color: #c084fc;
-      margin-right: 0.4rem;
+      font-weight: 600;
+      color: var(--se-text-primary);
+      margin-right: 0.45rem;
     }
 
+    /* Fix Comparison Grid */
+    .fix-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.35rem 0;
+    }
+    @media (max-width: 680px) {
+      .fix-comparison-grid { grid-template-columns: 1fr; }
+    }
+    .fix-wrong {
+      background: var(--se-bg-card);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 8px;
+      padding: 1.15rem 1.25rem;
+    }
+    .fix-right {
+      background: var(--se-bg-card);
+      border: 1px solid var(--se-accent-border);
+      border-radius: 8px;
+      padding: 1.15rem 1.25rem;
+    }
+    .fix-wrong h4 {
+      color: #F87171 !important;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.76rem !important;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0 0 0.5rem;
+    }
+    .fix-right h4 {
+      color: var(--se-accent) !important;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.76rem !important;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0 0 0.5rem;
+    }
+
+    /* Speak Out Loud Drill Box */
     .drill-box {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(126, 34, 206, 0.05) 100%);
-      border: 2px dashed rgba(168, 85, 247, 0.4);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
+      background: var(--se-bg-secondary);
+      border: 1px dashed #3F3F46;
+      border-radius: 8px;
+      padding: 1.35rem 1.5rem;
       margin: 1.5rem 0;
     }
     .drill-title {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-weight: 800;
-      color: #c084fc;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--se-accent);
+      margin-bottom: 0.65rem;
+    }
+
+    /* Callouts */
+    .callout-tip, .callout-info {
+      background: var(--se-bg-secondary);
+      border: 1px solid var(--se-border);
+      border-left: 3px solid var(--se-accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.35rem 0;
+      color: var(--se-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .callout-tip strong, .callout-info strong {
+      color: var(--se-text-primary);
+    }
+
+    /* Navigation Buttons */
+    .btn-se-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      background: var(--se-accent);
+      color: #0A0A0A !important;
+      padding: 0.5rem 1.15rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .btn-se-primary:hover {
+      background: var(--se-accent-hover);
+    }
+    .btn-se-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      background: var(--se-bg-secondary);
+      border: 1px solid var(--se-border);
+      color: var(--se-text-secondary) !important;
+      padding: 0.48rem 1rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-se-ghost:hover {
+      border-color: #52525B;
+      color: var(--se-text-primary) !important;
+      background: #202020;
+    }
+
+    /* Minimal Footer */
+    .se-footer {
+      border-top: 1px solid var(--se-border);
+      padding: 3rem 0 2.5rem;
+      margin-top: 4rem;
+    }
+    .se-footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+    .se-footer-brand {
+      font-size: 0.88rem;
+      color: var(--se-text-muted);
+    }
+    .se-footer-brand strong {
+      color: var(--se-text-primary);
+    }
+    .se-footer-links {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.84rem;
+      flex-wrap: wrap;
+    }
+    .se-footer-links a {
+      color: var(--se-text-secondary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .se-footer-links a:hover {
+      color: var(--se-accent);
+    }
+    .se-footer-links a.active {
+      color: var(--se-text-primary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 992px) {
+      .docs-layout {
+        display: block;
+        padding: 1.5rem 1rem 4rem;
+      }
+      .sidebar {
+        display: none; /* toggleable on mobile */
+      }
+      .docs-content {
+        max-width: 100%;
+      }
+      .lecture-header, .note-section.content-section {
+        padding: 1.5rem 1.25rem;
+      }
+      .lecture-main-title {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
@@ -175,7 +618,7 @@
           <span style="color: var(--text-primary);">Volume 3 (Days 16-22)</span>
         </div>
         <div class="lecture-badge-row">
-          <span class="card-badge badge-active" style="background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);">Volume 3</span>
+          <span class="card-badge badge-active" style="background: var(--se-bg-secondary);">Volume 3</span>
           <span class="tag">Days 16-22</span>
           <span class="tag">Has/Have/Do/Does</span>
           <span class="tag">Active &amp; Passive</span>
@@ -202,16 +645,16 @@
         <p>Why do these four words cause so much panic? Because they play two different games: <strong>Possession</strong> (मेरे पास कुछ है) and <strong>Action / Helping</strong> (काम हो चुका है या सवाल पूछना).</p>
 
         <div class="visual-formula-box">
-          <h4 style="margin: 0 0 0.75rem; color: #c084fc;">⚡ Subject Split: The Two Teams</h4>
+          <h4 style="margin: 0 0 0.75rem; color: var(--se-text-primary);">⚡ Subject Split: The Two Teams</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 3px solid #38bdf8;">
-              <strong style="color: #38bdf8;">Team Plural + I/You</strong>
-              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: #38bdf8;">HAVE</strong> &amp; <strong style="color: #38bdf8;">DO</strong></div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 2px solid var(--se-accent);">
+              <strong style="color: var(--se-text-primary);">Team Plural + I/You</strong>
+              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: var(--se-text-primary);">HAVE</strong> &amp; <strong style="color: var(--se-text-primary);">DO</strong></div>
               <div style="font-size: 0.82rem; color: var(--text-muted);">I, You, We, They, Friends, Developers</div>
             </div>
-            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 3px solid #ec4899;">
-              <strong style="color: #ec4899;">Team Singular (He / She / It)</strong>
-              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: #ec4899;">HAS</strong> &amp; <strong style="color: #ec4899;">DOES</strong></div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 2px solid var(--se-accent);">
+              <strong style="color: var(--se-text-primary);">Team Singular (He / She / It)</strong>
+              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: var(--se-text-primary);">HAS</strong> &amp; <strong style="color: var(--se-text-primary);">DOES</strong></div>
               <div style="font-size: 0.82rem; color: var(--text-muted);">He, She, It, Rahul, The Manager, My Friend</div>
             </div>
           </div>
@@ -239,11 +682,11 @@
         <div class="visual-formula-box">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
-              <strong style="color: #60a5fa;">Active (Focus on WHO did it)</strong>
+              <strong style="color: var(--se-text-primary);">Active (Focus on WHO did it)</strong>
               <p style="font-size: 0.85rem; margin: 0.35rem 0 0;">"The chef cooked the food."</p>
             </div>
             <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
-              <strong style="color: #c084fc;">Passive (Focus on the RESULT)</strong>
+              <strong style="color: var(--se-text-primary);">Passive (Focus on the RESULT)</strong>
               <p style="font-size: 0.85rem; margin: 0.35rem 0 0;">"The food is ready / was cooked." (Nobody cares who cooked it!)</p>
             </div>
           </div>
@@ -264,18 +707,18 @@
         <p>Modal verbs are your emotional and probability tuning knobs. How sure are you? Look at the certainty scale:</p>
 
         <div class="visual-formula-box">
-          <h4 style="margin: 0 0 0.75rem; color: #fbbf24;">🌡️ The Certainty &amp; Obligation Thermometer</h4>
+          <h4 style="margin: 0 0 0.75rem; color: var(--se-accent);">🌡️ The Certainty &amp; Obligation Thermometer</h4>
           <div style="display: flex; flex-direction: column; gap: 0.6rem; font-family: var(--font-mono); font-size: 0.85rem;">
             <div style="background: rgba(239, 68, 68, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #f87171;">
               <strong>MUST (100% Compulsion):</strong> "You must wear a helmet." / "It must be true!"
             </div>
-            <div style="background: rgba(245, 158, 11, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #fbbf24;">
+            <div style="background: rgba(245, 158, 11, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: var(--se-accent);">
               <strong>SHOULD (Advice / Moral duty):</strong> "You should sleep early." / "We should help them."
             </div>
-            <div style="background: rgba(56, 189, 248, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #38bdf8;">
+            <div style="background: rgba(56, 189, 248, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: var(--se-text-primary);">
               <strong>CAN / COULD (Ability &amp; Polite option):</strong> "I can solve this." / "Could you pass the salt?"
             </div>
-            <div style="background: rgba(168, 85, 247, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #c084fc;">
+            <div style="background: rgba(168, 85, 247, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: var(--se-text-primary);">
               <strong>MAY / MIGHT (30% - 50% Possibility):</strong> "It might rain today." / "He may join the call."
             </div>
           </div>
@@ -338,7 +781,7 @@
             </ul>
           </div>
           <div class="fix-right">
-            <h4 style="color: #10b981; margin-top: 0;">✅ The Correct Harmony</h4>
+            <h4 style="color: var(--se-accent); margin-top: 0;">✅ The Correct Harmony</h4>
             <ul style="margin: 0; padding-left: 1rem; font-size: 0.85rem; line-height: 1.6; font-weight: 600;">
               <li>"He <strong>doesn't</strong> know anything."</li>
               <li>"Everyone <strong>is</strong> present." (Everyone = singular unit)</li>
@@ -354,7 +797,7 @@
         <p>Practice shifting the same action across time:</p>
 
         <div class="visual-formula-box">
-          <h4 style="margin: 0 0 0.5rem; color: #38bdf8;">🔄 Time-Shifting Drill (The "Learn" Action)</h4>
+          <h4 style="margin: 0 0 0.5rem; color: var(--se-text-primary);">🔄 Time-Shifting Drill (The "Learn" Action)</h4>
           <div style="font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.8;">
             Routine: &nbsp;&nbsp;&nbsp;&nbsp;<em>"I <strong>learn</strong> English every day."</em><br>
             Right Now: &nbsp;&nbsp;<em>"I <strong>am learning</strong> English right now."</em><br>
@@ -376,7 +819,7 @@
       <section id="phase-3-summary" class="note-section content-section">
         <h2><span class="section-number">22.</span> Phase 3 Summary Cheatsheet</h2>
         <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.25rem 0;">
-          <h4 style="margin-top: 0; color: #c084fc;">Your Week 3 Power Takeaways:</h4>
+          <h4 style="margin-top: 0; color: var(--se-text-primary);">Your Week 3 Power Takeaways:</h4>
           <ul style="line-height: 1.8; font-size: 0.92rem; color: var(--text-secondary); margin: 0; padding-left: 1.25rem;">
             <li><strong>Has vs Have:</strong> He/She/It has; I/You/We/They have. When 'does' appears, the main verb drops the 's'.</li>
             <li><strong>Passive Voice:</strong> Use it when the outcome is more important than who did it (<em>"The task is done"</em>).</li>
@@ -386,10 +829,10 @@
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-          <a href="spoken-english-part-2.html" class="btn-secondary" style="text-decoration: none !important;">
+          <a href="spoken-english-part-2.html" class="btn-se-ghost" style="text-decoration: none !important;">
             ← Previous: Volume 2 (Days 08-15)
           </a>
-          <a href="spoken-english-part-4.html" class="btn-primary" style="text-decoration: none !important;">
+          <a href="spoken-english-part-4.html" class="btn-se-primary" style="text-decoration: none !important;">
             Next: Volume 4 (Days 23-30) →
           </a>
         </div>
