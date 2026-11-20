@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume 2: Functional Grammar &amp; Tenses for Speaking | Complete Spoken English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .english-accent { color: #10b981; }
+    [data-theme="dark"] .english-accent { color: #34d399; }
+
+    .visual-formula-box {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.3) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .formula-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .formula-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .word-bank-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .word-bank-table th {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .word-bank-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      vertical-align: top;
+    }
+    .word-highlight {
+      font-weight: 700;
+      color: #34d399;
+    }
+    .meaning-hindi {
+      color: #fbbf24;
+      font-size: 0.88rem;
+    }
+
+    .dialogue-box {
+      background: var(--bg-secondary);
+      border-left: 4px solid #10b981;
+      border-radius: 0 10px 10px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .dialogue-turn {
+      margin-bottom: 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .dialogue-speaker {
+      font-weight: 700;
+      color: #34d399;
+      margin-right: 0.4rem;
+    }
+
+    .drill-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border: 2px dashed rgba(16, 185, 129, 0.4);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .drill-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      color: #34d399;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="spoken-english.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Spoken English Hub</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Volume 2 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro" class="sidebar-link">Phase 2 Overview</a></li>
+        <li><a href="#day-8" class="sidebar-link">Day 08: Prepositions (In, On, At)</a></li>
+        <li><a href="#day-9" class="sidebar-link">Day 09: Pronouns &amp; Ownership</a></li>
+        <li><a href="#day-10" class="sidebar-link">Day 10-11: 4 Key Parts of Speech</a></li>
+        <li><a href="#day-12" class="sidebar-link">Day 12: Expressing Likes &amp; Preferences</a></li>
+        <li><a href="#day-13" class="sidebar-link">Day 13: Polite Requests (Could/Would)</a></li>
+        <li><a href="#day-14" class="sidebar-link">Day 14: Present Tense Made Simple</a></li>
+        <li><a href="#day-15" class="sidebar-link">Day 15: Past &amp; Future Storytelling</a></li>
+        <li><a href="#phase-2-summary" class="sidebar-link">Phase 2 Summary Cheatsheet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="spoken-english.html" style="color: inherit; text-decoration: none;">Spoken English</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Volume 2 (Days 08-15)</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);">Volume 2</span>
+          <span class="tag">Days 8-15</span>
+          <span class="tag">Prepositions Map</span>
+          <span class="tag">Pronouns &amp; Ownership</span>
+          <span class="tag">Polite Requests</span>
+          <span class="tag">Tenses Simplified</span>
+          <span class="tag">Storytelling</span>
+        </div>
+        <h1 class="lecture-main-title">Functional Grammar &amp; Tenses for Speaking</h1>
+        <p class="lecture-lead">
+          Now that you have the basic S-V-O structure, it's time to add natural color and precision. In this volume, you will master the visual prepositions map (In vs. On vs. At), learn how to talk about ownership without tripping over pronouns, transform blunt commands into elegant polite requests, and conquer tenses (Past, Present, and Future) for storytelling without memorizing boring grammar charts!
+        </p>
+      </div>
+
+      <!-- INTRO -->
+      <section id="intro" class="note-section content-section">
+        <h2><span class="section-number">00.</span> The Goal of Phase 2: From Broken Sentences to Smooth Flow</h2>
+        <p>In Week 1, you learned how to put 3 words together: <em>"I code software."</em></p>
+        <p>In Week 2, you will learn how to expand that sentence with context, time, place, and polite manners:</p>
+        <div class="visual-formula-box">
+          <div style="font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.8; color: var(--text-primary);">
+            Level 1 (Week 1): &nbsp;<span style="color: #94a3b8;">"I work."</span><br>
+            Level 2 (Preposition): <span style="color: #38bdf8;">"I work <strong>at</strong> a software company <strong>in</strong> Bangalore."</span><br>
+            Level 3 (Time/Tense): <span style="color: #34d399;">"I <strong>have been working</strong> there <strong>since</strong> last year."</span><br>
+            Level 4 (Polite Speech): <span style="color: #fbbf24;">"<strong>Could you please</strong> share your feedback on my project?"</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAY 8 -->
+      <section id="day-8" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Day 08: Prepositions of Place &amp; Time (In, On, At)</h2>
+        <p>Prepositions tell us <strong>WHERE</strong> something is located or <strong>WHEN</strong> something happens. Beginners often confuse <em>In, On, and At</em>. Here is the visual pyramid rule:</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.75rem; color: #34d399;">📐 The Preposition Inverted Pyramid</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 650px; margin: 0 auto;">
+            <div style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); padding: 1rem; border-radius: 8px; text-align: center;">
+              <strong style="color: #38bdf8; font-size: 1.05rem;">IN — Biggest / Most General</strong>
+              <div style="font-size: 0.85rem; margin-top: 0.35rem; color: var(--text-secondary);">
+                <strong>Time:</strong> Centuries, Decades, Years, Months, Seasons (<em>in 2026, in December, in summer</em>)<br>
+                <strong>Place:</strong> Countries, Cities, Enclosed Rooms (<em>in India, in Mumbai, in the room, in a car</em>)
+              </div>
+            </div>
+            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.85rem; border-radius: 8px; text-align: center; width: 85%; margin: 0 auto;">
+              <strong style="color: #34d399; font-size: 1rem;">ON — Medium / Specific Surfaces &amp; Days</strong>
+              <div style="font-size: 0.82rem; margin-top: 0.35rem; color: var(--text-secondary);">
+                <strong>Time:</strong> Specific Days &amp; Dates (<em>on Monday, on my birthday, on 15th August</em>)<br>
+                <strong>Place:</strong> Surfaces, Streets, Public Transit (<em>on the table, on MG Road, on the bus, on the train</em>)
+              </div>
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.75rem; border-radius: 8px; text-align: center; width: 65%; margin: 0 auto;">
+              <strong style="color: #fbbf24; font-size: 0.95rem;">AT — Pinpoint / Exact Point</strong>
+              <div style="font-size: 0.8rem; margin-top: 0.35rem; color: var(--text-secondary);">
+                <strong>Time:</strong> Exact Clock Time (<em>at 5:00 PM, at midnight, at lunchtime</em>)<br>
+                <strong>Place:</strong> Specific Address / Spot (<em>at the door, at home, at the airport</em>)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-tip">
+          <strong>The Vehicle Rule (In vs. On):</strong><br>
+          Can you stand up and walk inside the vehicle? If YES &rarr; use <strong>ON</strong> (<em>on the bus, on the train, on the plane, on the ship</em>).<br>
+          Must you crouch/sit inside without walking? If YES &rarr; use <strong>IN</strong> (<em>in the car, in the taxi, in the helicopter</em>).
+        </div>
+      </section>
+
+      <!-- DAY 9 -->
+      <section id="day-9" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Day 09: Pronouns &amp; Ownership (My, Mine, His, Hers, Theirs)</h2>
+        <p>How do you say who owns what without stumbling? Compare Possessive Adjectives with Possessive Pronouns:</p>
+
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Person</th>
+              <th>With a Noun (Adjective)</th>
+              <th>Standalone at End (Pronoun)</th>
+              <th>Clear Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>I</strong></td>
+              <td><span class="word-highlight">my</span> car</td>
+              <td>This car is <span class="word-highlight">mine</span>.</td>
+              <td><em>"That is my laptop." &harr; "That laptop is mine."</em></td>
+            </tr>
+            <tr>
+              <td><strong>You</strong></td>
+              <td><span class="word-highlight">your</span> phone</td>
+              <td>This phone is <span class="word-highlight">yours</span>.</td>
+              <td><em>"Is this your bag?" &harr; "Is this bag yours?"</em></td>
+            </tr>
+            <tr>
+              <td><strong>He</strong></td>
+              <td><span class="word-highlight">his</span> jacket</td>
+              <td>This jacket is <span class="word-highlight">his</span>.</td>
+              <td><em>"I found his notebook."</em></td>
+            </tr>
+            <tr>
+              <td><strong>She</strong></td>
+              <td><span class="word-highlight">her</span> idea</td>
+              <td>The idea was <span class="word-highlight">hers</span>.</td>
+              <td><em>"That was her presentation." &harr; "The credit is hers."</em></td>
+            </tr>
+            <tr>
+              <td><strong>They</strong></td>
+              <td><span class="word-highlight">their</span> team</td>
+              <td>The victory is <span class="word-highlight">theirs</span>.</td>
+              <td><em>"It is their responsibility."</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 10-11 -->
+      <section id="day-10" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Day 10 &amp; 11: The 4 Big Parts of Speech for Speaking</h2>
+        <p>Forget textbook definitions. You only need to recognize 4 roles when speaking:</p>
+
+        <div class="formula-grid">
+          <div class="formula-card">
+            <span class="formula-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">1. NOUN (चीज़ / नाम)</span>
+            <p style="font-size: 0.85rem; font-weight: 700;">What is it?</p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">laptop, coffee, office, Delhi, Abhimanyu</div>
+          </div>
+          <div class="formula-card">
+            <span class="formula-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">2. VERB (काम / हरकत)</span>
+            <p style="font-size: 0.85rem; font-weight: 700;">What is happening?</p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">runs, codes, explains, learns, listens</div>
+          </div>
+          <div class="formula-card">
+            <span class="formula-badge" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">3. ADJECTIVE (खूबसूरती / खासियत)</span>
+            <p style="font-size: 0.85rem; font-weight: 700;">What kind of thing is it?</p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">fast, expensive, reliable, exhausted, kind</div>
+          </div>
+          <div class="formula-card">
+            <span class="formula-badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">4. ADVERB (काम कैसे हुआ)</span>
+            <p style="font-size: 0.85rem; font-weight: 700;">HOW was it done?</p>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">quickly, smoothly, politely, immediately</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem; background: var(--bg-card); padding: 1rem 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+          <strong>Put them together in one sentence:</strong><br>
+          <em>"The <span style="color: #f59e0b;">smart</span> (Adjective) <span style="color: #38bdf8;">developer</span> (Noun) <span style="color: #10b981;">solved</span> (Verb) the bug <span style="color: #c084fc;">quickly</span> (Adverb)."</em>
+        </div>
+      </section>
+
+      <!-- DAY 12 -->
+      <section id="day-12" class="note-section content-section">
+        <h2><span class="section-number">11.</span> Day 12: Expressing Likes, Dislikes, Preferences &amp; Opinions</h2>
+        <p>In conversation, don't just say <em>"I like this"</em> or <em>"I don't like this"</em> over and over. Use these natural conversational upgrades:</p>
+
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Feeling</th>
+              <th>Upgraded Natural Expression</th>
+              <th>Real-Life Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Love it</strong></td>
+              <td><span class="word-highlight">"I am really into..." / "I am fond of..."</span></td>
+              <td><em>"I am really into machine learning and open-source models."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Dislike it politely</strong></td>
+              <td><span class="word-highlight">"It's not really my cup of tea."</span></td>
+              <td><em>"Action movies aren't really my cup of tea; I prefer documentaries."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Preference</strong></td>
+              <td><span class="word-highlight">"I prefer X over Y" / "I'd rather..."</span></td>
+              <td><em>"I prefer working from home over commuting every day."</em></td>
+            </tr>
+            <tr>
+              <td><strong>Sharing Opinion</strong></td>
+              <td><span class="word-highlight">"In my perspective..." / "From my experience..."</span></td>
+              <td><em>"In my perspective, practical coding beats watching lectures."</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 13 -->
+      <section id="day-13" class="note-section content-section">
+        <h2><span class="section-number">12.</span> Day 13: Polite Requests — Could You &amp; Would You</h2>
+        <p>In English culture, blunt imperatives sound aggressive. Notice the transformation:</p>
+
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Blunt / Bossy ❌</th>
+              <th>Polite &amp; Professional ✅</th>
+              <th>When to Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"Give me that file."</td>
+              <td><span class="word-highlight">"Could you please share that file with me?"</span></td>
+              <td>Emails, Slack, WhatsApp</td>
+            </tr>
+            <tr>
+              <td>"Open the window."</td>
+              <td><span class="word-highlight">"Would you mind opening the window?"</span></td>
+              <td>Cabs, meeting rooms</td>
+            </tr>
+            <tr>
+              <td>"Repeat what you said."</td>
+              <td><span class="word-highlight">"Pardon me, could you please repeat that?"</span></td>
+              <td>Audio calls, bad connection</td>
+            </tr>
+            <tr>
+              <td>"Wait for 5 minutes."</td>
+              <td><span class="word-highlight">"Could you please give me a moment?"</span></td>
+              <td>Counter desk, customer service</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout-tip">
+          <strong>"Would you mind..." Golden Rule:</strong> When someone asks <em>"Would you mind helping me?"</em>, the polite affirmative answer is: <strong>"Not at all! Happy to help."</strong> (Because 'mind' means feel bad — so 'Not at all' means 'I don't mind at all!').
+        </div>
+      </section>
+
+      <!-- DAY 14 -->
+      <section id="day-14" class="note-section content-section">
+        <h2><span class="section-number">13.</span> Day 14: Tenses Made Simple — Present Indefinite vs. Continuous</h2>
+        <p>This is where 80% of English learners stumble. Let's make it crystal clear:</p>
+
+        <div class="visual-formula-box">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div style="background: var(--bg-card); padding: 1.25rem; border-radius: 8px; border-top: 3px solid #38bdf8;">
+              <strong style="color: #38bdf8; font-size: 1rem;">Simple Present (रोज की आदत / सच)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0;">
+                Things you do <strong>regularly, as a routine, or universal facts</strong>.
+              </p>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary);">
+                "I drink tea every morning."<br>
+                "The sun rises in the east."<br>
+                "He works at Microsoft."
+              </div>
+            </div>
+
+            <div style="background: var(--bg-card); padding: 1.25rem; border-radius: 8px; border-top: 3px solid #10b981;">
+              <strong style="color: #34d399; font-size: 1rem;">Present Continuous (जो अभी आँखों के सामने चल रहा है)</strong>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0;">
+                Things happening <strong>RIGHT NOW at this exact moment</strong>.
+              </p>
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary);">
+                "I am drinking tea right now."<br>
+                "He is coding a new feature."<br>
+                "It is raining outside."
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-warning">
+          <strong>The "Stative Verbs" Trap:</strong> You CANNOT put <code>-ing</code> on verbs of thinking, feeling, or senses!<br>
+          &bull; ❌ <em>"I am knowing him."</em> &rarr; ✅ <strong>"I know him."</strong><br>
+          &bull; ❌ <em>"I am understanding."</em> &rarr; ✅ <strong>"I understand."</strong><br>
+          &bull; ❌ <em>"I am having two laptops."</em> &rarr; ✅ <strong>"I have two laptops."</strong>
+        </div>
+      </section>
+
+      <!-- DAY 15 -->
+      <section id="day-15" class="note-section content-section">
+        <h2><span class="section-number">14.</span> Day 15: Past &amp; Future Tenses for Storytelling</h2>
+        <p>To tell stories about yesterday or plans for tomorrow, you only need two structures:</p>
+
+        <h3>1. The Simple Past (Second Form of Verb — V2):</h3>
+        <p style="font-size: 0.92rem; color: var(--text-secondary);">
+          Whenever talking about finished actions yesterday, last week, or in 2024, use <strong>V2</strong>:
+        </p>
+        <ul style="font-size: 0.9rem; line-height: 1.8; color: var(--text-primary);">
+          <li>go &rarr; <strong>went</strong>: <em>"I went to the store yesterday."</em></li>
+          <li>meet &rarr; <strong>met</strong>: <em>"I met an old friend last night."</em></li>
+          <li>buy &rarr; <strong>bought</strong>: <em>"I bought a new keyboard."</em></li>
+          <li>call &rarr; <strong>called</strong>: <em>"She called me in the afternoon."</em></li>
+        </ul>
+
+        <h3>2. The Future (Will vs. Going to):</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem;">
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+            <strong style="color: #60a5fa;">"Will" (Instant Decision / Promise)</strong>
+            <p style="font-size: 0.85rem; margin: 0.3rem 0 0;"><em>"I will call you in 5 minutes."</em></p>
+          </div>
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+            <strong style="color: #34d399;">"Going to" (Already Planned Future)</strong>
+            <p style="font-size: 0.85rem; margin: 0.3rem 0 0;"><em>"I am going to visit my parents this weekend."</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 2 SUMMARY -->
+      <section id="phase-2-summary" class="note-section content-section">
+        <h2><span class="section-number">15.</span> Phase 2 Quick-Revision Cheatsheet</h2>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #34d399;">Your Week 2 Power Rules:</h4>
+          <ul style="line-height: 1.8; font-size: 0.92rem; color: var(--text-secondary); margin: 0; padding-left: 1.25rem;">
+            <li><strong>Prepositions:</strong> <em>IN</em> for countries/months/years; <em>ON</em> for days/surfaces/walkable transit; <em>AT</em> for exact time and spots.</li>
+            <li><strong>Ownership:</strong> <em>"My car"</em> &harr; <em>"The car is mine"</em>.</li>
+            <li><strong>Politeness:</strong> Always start requests with <em>"Could you please..."</em> or <em>"Would you mind..."</em>.</li>
+            <li><strong>Routine vs. Right Now:</strong> <em>"I work"</em> (routine) vs <em>"I am working"</em> (right now).</li>
+            <li><strong>Yesterday's Story:</strong> Always drop into past verb form V2 (<em>went, met, saw, bought</em>).</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="spoken-english-part-1.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Volume 1 (Days 01-07)
+          </a>
+          <a href="spoken-english-part-3.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Volume 3 (Days 16-22) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Spoken English &amp; AI Study Hub &bull; &copy; 2026
+      </div>
+      <div style="display: flex; gap: 1rem; font-size: 0.88rem; flex-wrap: wrap;">
+        <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Home</a>
+        <a href="spoken-english.html" style="color: var(--text-secondary); text-decoration: none;">Hub</a>
+        <a href="spoken-english-part-1.html" style="color: var(--text-secondary); text-decoration: none;">Volume 1</a>
+        <a href="spoken-english-part-2.html" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">Volume 2</a>
+        <a href="spoken-english-part-3.html" style="color: var(--text-secondary); text-decoration: none;">Volume 3</a>
+        <a href="spoken-english-part-4.html" style="color: var(--text-secondary); text-decoration: none;">Volume 4</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

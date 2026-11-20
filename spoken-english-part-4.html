@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume 4: Fluency, Vocabulary, Pronunciation &amp; Idioms | Complete Spoken English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .english-accent { color: #f59e0b; }
+    [data-theme="dark"] .english-accent { color: #fbbf24; }
+
+    .visual-formula-box {
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.3) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .formula-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .formula-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .word-bank-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .word-bank-table th {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .word-bank-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      vertical-align: top;
+    }
+    .word-highlight {
+      font-weight: 700;
+      color: #fbbf24;
+    }
+    .meaning-hindi {
+      color: #38bdf8;
+      font-size: 0.88rem;
+    }
+
+    .fix-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 600px) {
+      .fix-comparison-grid { grid-template-columns: 1fr; }
+    }
+    .fix-wrong {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .fix-right {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .drill-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+      border: 2px dashed rgba(245, 158, 11, 0.4);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .drill-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      color: #fbbf24;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="spoken-english.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Spoken English Hub</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Volume 4 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro" class="sidebar-link">Phase 4 Overview</a></li>
+        <li><a href="#day-23" class="sidebar-link">Day 23: Expressing Emotions &amp; Nuance</a></li>
+        <li><a href="#day-24" class="sidebar-link">Day 24: Multiplying Vocabulary Fast</a></li>
+        <li><a href="#day-25" class="sidebar-link">Day 25: English Pronunciation &amp; Vowels</a></li>
+        <li><a href="#day-26" class="sidebar-link">Day 26: 15 Common Indian-English Fixes</a></li>
+        <li><a href="#day-27" class="sidebar-link">Day 27: 30 Daily Use Sentences</a></li>
+        <li><a href="#day-28" class="sidebar-link">Day 28: 30 Essential Native Idioms</a></li>
+        <li><a href="#day-29-30" class="sidebar-link">Day 29-30: Workplace Fluency Blueprint</a></li>
+        <li><a href="#master-summary" class="sidebar-link">The 30-Day Master Cheatsheet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="spoken-english.html" style="color: inherit; text-decoration: none;">Spoken English</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Volume 4 (Days 23-30)</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: var(--gradient-gold); color: #000;">Volume 4</span>
+          <span class="tag">Days 23-30</span>
+          <span class="tag">Expressing Emotions</span>
+          <span class="tag">Vocabulary Multipliers</span>
+          <span class="tag">Pronunciation &amp; Vowels</span>
+          <span class="tag">30 Idioms</span>
+          <span class="tag">Fluency Blueprint</span>
+        </div>
+        <h1 class="lecture-main-title">Fluency, Vocabulary, Pronunciation &amp; Idioms</h1>
+        <p class="lecture-lead">
+          The final phase of your 30-day journey! Here, you leave robotic English behind and sound like an authentic, expressive speaker. Learn how to express subtle emotions without basic words, multiply your vocabulary exponentially using the root word technique, master vowel sounds and silent letters, eliminate common Indian-English habits, and adopt the daily 15-minute speaking system for life.
+        </p>
+      </div>
+
+      <!-- INTRO -->
+      <section id="intro" class="note-section content-section">
+        <h2><span class="section-number">00.</span> Phase 4: Reaching Real Fluency</h2>
+        <p>Real fluency doesn't mean knowing 50,000 dictionary words. It means having the right word at the right moment without hesitation, pronouncing words clearly so listeners never have to say "sorry, what?", and using natural expressions that make conversations enjoyable!</p>
+      </section>
+
+      <!-- DAY 23 -->
+      <section id="day-23" class="note-section content-section">
+        <h2><span class="section-number">23.</span> Day 23: Expressing Emotions &amp; Nuance</h2>
+        <p>Stop relying on just "I am happy" or "I am sad". Upgrade to these expressive emotion words:</p>
+
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Basic Word ❌</th>
+              <th>Expressive Emotion Word ✅</th>
+              <th>Hindi Nuance</th>
+              <th>Real-Life Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Very Happy</td>
+              <td><span class="word-highlight">Thrilled / Delighted</span></td>
+              <td><span class="meaning-hindi">बेहद खुश, रोमांचित</span></td>
+              <td><em>"I was <strong>thrilled</strong> when I received the job offer!"</em></td>
+            </tr>
+            <tr>
+              <td>Tired</td>
+              <td><span class="word-highlight">Exhausted / Drained</span></td>
+              <td><span class="meaning-hindi">बिल्कुल थक कर चूर</span></td>
+              <td><em>"After an 8-hour coding marathon, I am completely <strong>drained</strong>."</em></td>
+            </tr>
+            <tr>
+              <td>Angry</td>
+              <td><span class="word-highlight">Frustrated / Annoyed</span></td>
+              <td><span class="meaning-hindi">चिढ़ा हुआ, हताश</span></td>
+              <td><em>"I am getting <strong>frustrated</strong> because the bug keeps reappearing."</em></td>
+            </tr>
+            <tr>
+              <td>Scared / Worried</td>
+              <td><span class="word-highlight">Anxious / Nervous</span></td>
+              <td><span class="meaning-hindi">बेचैन, घबराया हुआ</span></td>
+              <td><em>"It's completely normal to feel <strong>nervous</strong> before a big presentation."</em></td>
+            </tr>
+            <tr>
+              <td>Relieved</td>
+              <td><span class="word-highlight">"What a relief!"</span></td>
+              <td><span class="meaning-hindi">राहत की सांस लेना</span></td>
+              <td><em>"The deployment succeeded without errors. What a <strong>relief</strong>!"</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 24 -->
+      <section id="day-24" class="note-section content-section">
+        <h2><span class="section-number">24.</span> Day 24: Multiplying Vocabulary Fast — The Root Word Hack</h2>
+        <p>Don't memorize 1,000 isolated words. Learn <strong>1 Root Word</strong>, and you automatically unlock <strong>5 to 10 English words</strong> at once!</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.75rem; color: #fbbf24;">🌱 The Root Word Multiplier</h4>
+          <div class="formula-grid">
+            <div class="formula-card">
+              <strong style="color: #38bdf8;">Root: BENE (Good / Well)</strong>
+              <p style="font-size: 0.8rem; margin: 0.35rem 0 0; color: var(--text-secondary);">
+                &bull; <strong>Benefit</strong> (फायदा)<br>
+                &bull; <strong>Beneficial</strong> (फायदेमंद)<br>
+                &bull; <strong>Benefactor</strong> (भलाई करने वाला)
+              </p>
+            </div>
+            <div class="formula-card">
+              <strong style="color: #10b981;">Root: DICT (Speak / Tell)</strong>
+              <p style="font-size: 0.8rem; margin: 0.35rem 0 0; color: var(--text-secondary);">
+                &bull; <strong>Predict</strong> (भविष्यवाणी करना)<br>
+                &bull; <strong>Contradict</strong> (उल्टा बोलना)<br>
+                &bull; <strong>Dictate</strong> (हुक्म देना)
+              </p>
+            </div>
+            <div class="formula-card">
+              <strong style="color: #c084fc;">Root: PORT (Carry / Move)</strong>
+              <p style="font-size: 0.8rem; margin: 0.35rem 0 0; color: var(--text-secondary);">
+                &bull; <strong>Transport</strong> (एक जगह से दूसरी जगह)<br>
+                &bull; <strong>Export</strong> (बाहर भेजना)<br>
+                &bull; <strong>Portable</strong> (आसानी से ले जाने योग्य)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-tip">
+          <strong>The "Substitution Trick" When You Forget a Word:</strong><br>
+          If you forget a fancy word like <em>"reluctant"</em>, do not freeze! Simply explain it: <em>"He didn't really want to do it"</em>. If you forget <em>"gigantic"</em>, just say <em>"super big"</em>. The goal is to <strong>keep the stream of speech flowing</strong>!
+        </div>
+      </section>
+
+      <!-- DAY 25 -->
+      <section id="day-25" class="note-section content-section">
+        <h2><span class="section-number">25.</span> Day 25: Master English Pronunciation &amp; Vowel Sounds</h2>
+        <p>English spelling and pronunciation don't always match. Here are the 3 big pronunciation keys taught by Udisha Mishra:</p>
+
+        <h3>1. The Short vs. Long Vowel Trap:</h3>
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Short Vowel (Quick)</th>
+              <th>Long Vowel (Stretched)</th>
+              <th>The Meaning Difference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="word-highlight">Ship</span> (/ʃɪp/)</td>
+              <td><span class="word-highlight">Sheep</span> (/ʃiːp/)</td>
+              <td>जहाज vs. भेड़ (Stretch the 'ee' sound!)</td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">Fit</span> (/fɪt/)</td>
+              <td><span class="word-highlight">Feet</span> (/fiːt/)</td>
+              <td>तंदुरुस्त vs. पैर</td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">Live</span> (/lɪv/)</td>
+              <td><span class="word-highlight">Leave</span> (/liːv/)</td>
+              <td>रहना vs. छोड़ना या छुट्टी</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. Sneaky Silent Letters:</h3>
+        <ul style="font-size: 0.9rem; line-height: 1.8; color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>Silent <strong>B</strong>: Dou<strong>b</strong>t (डॉट), Plum<strong>b</strong>er (प्लम-र), Com<strong>b</strong> (कोम)</li>
+          <li>Silent <strong>K</strong>: <strong>K</strong>now (नो), <strong>K</strong>nee (नी), <strong>K</strong>nife (नाइफ)</li>
+          <li>Silent <strong>W</strong>: <strong>W</strong>rite (राइट), <strong>W</strong>rong (रॉन्ग), Ans<strong>w</strong>er (ऐन्सर)</li>
+          <li>Silent <strong>L</strong>: Ca<strong>l</strong>m (काम), Ta<strong>l</strong>k (टॉक), Shou<strong>l</strong>d (शुड)</li>
+        </ul>
+      </section>
+
+      <!-- DAY 26 -->
+      <section id="day-26" class="note-section content-section">
+        <h2><span class="section-number">26.</span> Day 26: 15 Common Indian-English Mistakes &amp; Fixes</h2>
+        <p>These habits are extremely common in India. Fixing these will instantly make you sound 10x more polished and professional:</p>
+
+        <div class="fix-comparison-grid">
+          <div class="fix-wrong">
+            <h4 style="color: #ef4444; margin-top: 0;">❌ What Beginners Often Say</h4>
+            <ul style="margin: 0; padding-left: 1rem; font-size: 0.85rem; line-height: 1.8;">
+              <li>"I will revert back to you."</li>
+              <li>"Can we prepone the meeting?"</li>
+              <li>"He is my cousin brother."</li>
+              <li>"I passed out of college in 2024."</li>
+              <li>"What is your good name?"</li>
+            </ul>
+          </div>
+          <div class="fix-right">
+            <h4 style="color: #10b981; margin-top: 0;">✅ The Correct International English</h4>
+            <ul style="margin: 0; padding-left: 1rem; font-size: 0.85rem; line-height: 1.8; font-weight: 600;">
+              <li>"I will <strong>reply / get back</strong> to you." ('Revert' already means back!)</li>
+              <li>"Can we <strong>advance / move up</strong> the meeting?"</li>
+              <li>"He is my <strong>cousin</strong>." (Never say cousin brother/sister)</li>
+              <li>"I <strong>graduated</strong> from college in 2024." ('Passed out' means fainted!)</li>
+              <li>"May I know your name, please?"</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAY 27 -->
+      <section id="day-27" class="note-section content-section">
+        <h2><span class="section-number">27.</span> Day 27: 30 Daily Use Sentences for Everyday Life</h2>
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Everyday Situation</th>
+              <th>Ready Sentence</th>
+              <th>Context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Asking someone's opinion</strong></td>
+              <td><span class="word-highlight">"What do you reckon?" / "What are your thoughts?"</span></td>
+              <td>Brainstorming sessions</td>
+            </tr>
+            <tr>
+              <td><strong>Uncertainty / Not sure</strong></td>
+              <td><span class="word-highlight">"Off the top of my head, I'm not entirely sure."</span></td>
+              <td>When asked a question without data ready</td>
+            </tr>
+            <tr>
+              <td><strong>Offering help</strong></td>
+              <td><span class="word-highlight">"Let me know if you need a hand with that."</span></td>
+              <td>Colleague working on a tough task</td>
+            </tr>
+            <tr>
+              <td><strong>Encouraging someone</strong></td>
+              <td><span class="word-highlight">"Don't worry, you've got this!"</span></td>
+              <td>Before an interview or presentation</td>
+            </tr>
+            <tr>
+              <td><strong>Saying goodbye gracefully</strong></td>
+              <td><span class="word-highlight">"It was wonderful catching up with you."</span></td>
+              <td>Ending a meetup or video call</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 28 -->
+      <section id="day-28" class="note-section content-section">
+        <h2><span class="section-number">28.</span> Day 28: 30 Essential Native Idioms Explained</h2>
+        <p>Idioms are colorful expressions where the literal words don't mean what they say. They are the secret sauce of sounding natural:</p>
+
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Idiom</th>
+              <th>Literal Image</th>
+              <th>Real Meaning &amp; Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="word-highlight">"A piece of cake"</span></td>
+              <td>🍰 केक का टुकड़ा</td>
+              <td>Very easy. <em>"Once you understand the SVO formula, English is a piece of cake!"</em></td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">"Under the weather"</span></td>
+              <td>🌧️ मौसम के नीचे</td>
+              <td>Feeling sick or unwell. <em>"I won't make it to the office today; I'm feeling a bit under the weather."</em></td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">"Bite the bullet"</span></td>
+              <td>💥 गोली चबाना</td>
+              <td>Face a difficult situation bravely. <em>"I was scared of public speaking, but I bit the bullet and gave the talk."</em></td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">"Break a leg"</span></td>
+              <td>🦵 टांग तोड़ना</td>
+              <td>Good luck! (Used before theatrical performances or interviews).</td>
+            </tr>
+            <tr>
+              <td><span class="word-highlight">"Burn the midnight oil"</span></td>
+              <td>🕯️ रात का तेल जलाना</td>
+              <td>Working late into the night. <em>"Our team burned the midnight oil to meet the product launch deadline."</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 29-30 -->
+      <section id="day-29-30" class="note-section content-section">
+        <h2><span class="section-number">29.</span> Day 29 &amp; 30: Workplace Fluency &amp; The Lifelong Blueprint</h2>
+
+        <p>Congratulations! You have completed the 30-Day Course. But how do you make sure you don't forget everything next month?</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.75rem; color: #34d399;">🌟 The 15-Minute Daily Maintenance Habit</h4>
+          <div class="formula-grid">
+            <div class="formula-card">
+              <strong style="color: #38bdf8;">Min 01 - 05: Mirror Speaking</strong>
+              <p style="font-size: 0.8rem; margin: 0.3rem 0 0; color: var(--text-secondary);">Stand in front of a mirror and describe your plan for the day out loud in English.</p>
+            </div>
+            <div class="formula-card">
+              <strong style="color: #10b981;">Min 06 - 10: Shadowing</strong>
+              <p style="font-size: 0.8rem; margin: 0.3rem 0 0; color: var(--text-secondary);">Watch a 2-minute clip of a podcast. Pause after each sentence and mimic their exact rhythm and tone.</p>
+            </div>
+            <div class="formula-card">
+              <strong style="color: #fbbf24;">Min 11 - 15: Thinking in English</strong>
+              <p style="font-size: 0.8rem; margin: 0.3rem 0 0; color: var(--text-secondary);">When walking or commuting, narrate your surroundings in your mind: <em>"That car is moving fast. The weather is pleasant today."</em></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="drill-box">
+          <div class="drill-title">🎓 Your Final Graduation Pledge</div>
+          <p style="margin: 0; font-size: 0.95rem; font-style: italic; line-height: 1.7; color: var(--text-primary);">
+            "I will never say 'I suck at English' again. English is just a communication tool, and with practice, my tongue and brain are becoming one unified team. I speak clearly, I express myself confidently, and I am proud of my progress!"
+          </p>
+        </div>
+      </section>
+
+      <!-- MASTER SUMMARY -->
+      <section id="master-summary" class="note-section content-section">
+        <h2><span class="section-number">30.</span> The 30-Day Master Cheatsheet</h2>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #fbbf24;">The Complete 30-Day Spoken English Compass:</h4>
+          <ol style="line-height: 1.9; font-size: 0.92rem; color: var(--text-secondary); margin: 0; padding-left: 1.25rem;">
+            <li><strong>S-V-O is King:</strong> Person + Action + Target. Keep it simple.</li>
+            <li><strong>Being vs. Doing:</strong> <em>Is/Am/Are</em> for identity/location. Don't add 'am' to verbs (<em>"I agree"</em>, never <em>"I am agree"</em>).</li>
+            <li><strong>Preposition Pyramid:</strong> <em>IN</em> (General/Big) &rarr; <em>ON</em> (Surface/Days) &rarr; <em>AT</em> (Exact point/time).</li>
+            <li><strong>Modals:</strong> Must (100%), Should (Advice), Can (Ability), Might (Maybe).</li>
+            <li><strong>Stop Indianisms:</strong> Say <em>reply/get back</em> (not revert back), <em>graduated</em> (not passed out), and <em>cousin</em> (not cousin brother).</li>
+            <li><strong>Never Freeze:</strong> If you forget a fancy word, use the Substitution Trick and explain it in simple words. Fluency is continuity!</li>
+          </ol>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="spoken-english-part-3.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Volume 3 (Days 16-22)
+          </a>
+          <a href="spoken-english.html" class="btn-primary" style="text-decoration: none !important;">
+            Back to Spoken English Hub 🎓
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Spoken English &amp; AI Study Hub &bull; &copy; 2026
+      </div>
+      <div style="display: flex; gap: 1rem; font-size: 0.88rem; flex-wrap: wrap;">
+        <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Home</a>
+        <a href="spoken-english.html" style="color: var(--text-secondary); text-decoration: none;">Hub</a>
+        <a href="spoken-english-part-1.html" style="color: var(--text-secondary); text-decoration: none;">Volume 1</a>
+        <a href="spoken-english-part-2.html" style="color: var(--text-secondary); text-decoration: none;">Volume 2</a>
+        <a href="spoken-english-part-3.html" style="color: var(--text-secondary); text-decoration: none;">Volume 3</a>
+        <a href="spoken-english-part-4.html" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">Volume 4</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

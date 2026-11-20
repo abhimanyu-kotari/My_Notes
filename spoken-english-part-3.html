@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume 3: Conversational Flow &amp; Modal Superpowers | Complete Spoken English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .english-accent { color: #a855f7; }
+    [data-theme="dark"] .english-accent { color: #c084fc; }
+
+    .visual-formula-box {
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.3) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .formula-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .formula-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .word-bank-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .word-bank-table th {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .word-bank-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      vertical-align: top;
+    }
+    .word-highlight {
+      font-weight: 700;
+      color: #c084fc;
+    }
+    .meaning-hindi {
+      color: #fbbf24;
+      font-size: 0.88rem;
+    }
+
+    .dialogue-box {
+      background: var(--bg-secondary);
+      border-left: 4px solid #a855f7;
+      border-radius: 0 10px 10px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .dialogue-turn {
+      margin-bottom: 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .dialogue-speaker {
+      font-weight: 700;
+      color: #c084fc;
+      margin-right: 0.4rem;
+    }
+
+    .drill-box {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(126, 34, 206, 0.05) 100%);
+      border: 2px dashed rgba(168, 85, 247, 0.4);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .drill-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      color: #c084fc;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="spoken-english.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Spoken English Hub</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Table of Contents">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Volume 3 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#intro" class="sidebar-link">Phase 3 Overview</a></li>
+        <li><a href="#day-16" class="sidebar-link">Day 16: Has / Have / Do / Does</a></li>
+        <li><a href="#day-17" class="sidebar-link">Day 17: Active &amp; Passive Voice</a></li>
+        <li><a href="#day-18" class="sidebar-link">Day 18: All Modal Verbs (Certainty Meter)</a></li>
+        <li><a href="#day-19" class="sidebar-link">Day 19: 50 Daily Use Phrases</a></li>
+        <li><a href="#day-20" class="sidebar-link">Day 20: Subject-Verb Agreement</a></li>
+        <li><a href="#day-21-22" class="sidebar-link">Day 21-22: All Tenses Practice &amp; Drills</a></li>
+        <li><a href="#phase-3-summary" class="sidebar-link">Phase 3 Summary Cheatsheet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="spoken-english.html" style="color: inherit; text-decoration: none;">Spoken English</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Volume 3 (Days 16-22)</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);">Volume 3</span>
+          <span class="tag">Days 16-22</span>
+          <span class="tag">Has/Have/Do/Does</span>
+          <span class="tag">Active &amp; Passive</span>
+          <span class="tag">Modal Verbs</span>
+          <span class="tag">Agreement Rules</span>
+          <span class="tag">Dialogue Drills</span>
+        </div>
+        <h1 class="lecture-main-title">Conversational Flow &amp; Modal Superpowers</h1>
+        <p class="lecture-lead">
+          In Week 3, you transition from someone who can assemble sentences to someone who speaks with natural rhythm and nuance. Master the auxiliary powerhouses (Has/Have/Do/Does), understand when passive voice makes your speech sound professional, gain absolute control over modal verbs (the certainty scale), and eliminate embarrassing singular/plural subject-verb agreement blunders forever.
+        </p>
+      </div>
+
+      <!-- INTRO -->
+      <section id="intro" class="note-section content-section">
+        <h2><span class="section-number">00.</span> Phase 3 Overview: Sounding Natural</h2>
+        <p>In spoken English, how you say something matters just as much as what you say. Modals and auxiliary verbs give you the tools to express possibility, obligation, permission, and polite nuance.</p>
+      </section>
+
+      <!-- DAY 16 -->
+      <section id="day-16" class="note-section content-section">
+        <h2><span class="section-number">16.</span> Day 16: Has, Have, Do, Does — The Definitive Usage Guide</h2>
+
+        <p>Why do these four words cause so much panic? Because they play two different games: <strong>Possession</strong> (मेरे पास कुछ है) and <strong>Action / Helping</strong> (काम हो चुका है या सवाल पूछना).</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.75rem; color: #c084fc;">⚡ Subject Split: The Two Teams</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 3px solid #38bdf8;">
+              <strong style="color: #38bdf8;">Team Plural + I/You</strong>
+              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: #38bdf8;">HAVE</strong> &amp; <strong style="color: #38bdf8;">DO</strong></div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">I, You, We, They, Friends, Developers</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-top: 3px solid #ec4899;">
+              <strong style="color: #ec4899;">Team Singular (He / She / It)</strong>
+              <div style="font-size: 0.85rem; margin: 0.4rem 0;">Uses: <strong style="color: #ec4899;">HAS</strong> &amp; <strong style="color: #ec4899;">DOES</strong></div>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">He, She, It, Rahul, The Manager, My Friend</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>The 3 Roles of Has / Have:</h3>
+        <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-secondary);">
+          <li><strong>Possession (मालिकाना हक):</strong> <em>"I <strong>have</strong> a car." / "She <strong>has</strong> a meeting."</em></li>
+          <li><strong>Eating / Drinking:</strong> <em>"I <strong>have</strong> lunch at 1 PM." / "Let's <strong>have</strong> some coffee."</em></li>
+          <li><strong>Completed Action (Present Perfect):</strong> <em>"I <strong>have finished</strong> the work." / "He <strong>has left</strong> the office."</em></li>
+        </ol>
+
+        <div class="callout-warning">
+          <strong>The "Does" Trap:</strong> When <strong>DOES</strong> enters a sentence, the main verb loses its 's'!<br>
+          &bull; ❌ <em>"He doesn't likes tea."</em> &rarr; ✅ <strong>"He doesn't like tea."</strong><br>
+          &bull; ❌ <em>"Does she knows?"</em> &rarr; ✅ <strong>"Does she know?"</strong>
+        </div>
+      </section>
+
+      <!-- DAY 17 -->
+      <section id="day-17" class="note-section content-section">
+        <h2><span class="section-number">17.</span> Day 17: Active &amp; Passive Voice in Spoken English</h2>
+        <p>In school textbooks, passive voice feels like useless torture. But in everyday spoken English, passive voice is crucial for one reason: <strong>When the doer is unknown, obvious, or unimportant!</strong></p>
+
+        <div class="visual-formula-box">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <strong style="color: #60a5fa;">Active (Focus on WHO did it)</strong>
+              <p style="font-size: 0.85rem; margin: 0.35rem 0 0;">"The chef cooked the food."</p>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <strong style="color: #c084fc;">Passive (Focus on the RESULT)</strong>
+              <p style="font-size: 0.85rem; margin: 0.35rem 0 0;">"The food is ready / was cooked." (Nobody cares who cooked it!)</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Top 4 Everyday Situations Where Passive Voice is Natural:</h3>
+        <ul style="font-size: 0.9rem; line-height: 1.8; color: var(--text-primary); margin-left: 1.5rem;">
+          <li><em>"My wallet was stolen."</em> (I don't know who stole it!)</li>
+          <li><em>"The flight has been delayed."</em> (The airline did it, but the delay is what matters.)</li>
+          <li><em>"English is spoken all over the world."</em> (By people — obvious!)</li>
+          <li><em>"You are invited to the wedding."</em> (Much more polite than "I invite you.")</li>
+        </ul>
+      </section>
+
+      <!-- DAY 18 -->
+      <section id="day-18" class="note-section content-section">
+        <h2><span class="section-number">18.</span> Day 18: All Modal Verbs — The Certainty Meter</h2>
+        <p>Modal verbs are your emotional and probability tuning knobs. How sure are you? Look at the certainty scale:</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.75rem; color: #fbbf24;">🌡️ The Certainty &amp; Obligation Thermometer</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-family: var(--font-mono); font-size: 0.85rem;">
+            <div style="background: rgba(239, 68, 68, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #f87171;">
+              <strong>MUST (100% Compulsion):</strong> "You must wear a helmet." / "It must be true!"
+            </div>
+            <div style="background: rgba(245, 158, 11, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #fbbf24;">
+              <strong>SHOULD (Advice / Moral duty):</strong> "You should sleep early." / "We should help them."
+            </div>
+            <div style="background: rgba(56, 189, 248, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #38bdf8;">
+              <strong>CAN / COULD (Ability &amp; Polite option):</strong> "I can solve this." / "Could you pass the salt?"
+            </div>
+            <div style="background: rgba(168, 85, 247, 0.2); padding: 0.6rem 1rem; border-radius: 6px; color: #c084fc;">
+              <strong>MAY / MIGHT (30% - 50% Possibility):</strong> "It might rain today." / "He may join the call."
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAY 19 -->
+      <section id="day-19" class="note-section content-section">
+        <h2><span class="section-number">19.</span> Day 19: 50 High-Frequency Phrases for Daily Situations</h2>
+        <table class="word-bank-table">
+          <thead>
+            <tr>
+              <th>Situation</th>
+              <th>High-Frequency Phrase</th>
+              <th>Meaning / Context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Asking someone to repeat</strong></td>
+              <td><span class="word-highlight">"Come again, please?" / "Pardon?"</span></td>
+              <td>Cleaner than shouting "What?!"</td>
+            </tr>
+            <tr>
+              <td><strong>Interfering politely</strong></td>
+              <td><span class="word-highlight">"Sorry to cut you off, but..."</span></td>
+              <td>Joining an ongoing team discussion gracefully</td>
+            </tr>
+            <tr>
+              <td><strong>Agreeing completely</strong></td>
+              <td><span class="word-highlight">"You took the words right out of my mouth!"</span></td>
+              <td>When someone says exactly what you were thinking</td>
+            </tr>
+            <tr>
+              <td><strong>Delay / Running late</strong></td>
+              <td><span class="word-highlight">"I am running a bit behind schedule."</span></td>
+              <td>Professional way to say you're stuck in traffic</td>
+            </tr>
+            <tr>
+              <td><strong>Wrapping up a conversation</strong></td>
+              <td><span class="word-highlight">"I'll let you get back to it."</span></td>
+              <td>Politely ending a phone call or desk chat</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DAY 20 -->
+      <section id="day-20" class="note-section content-section">
+        <h2><span class="section-number">20.</span> Day 20: Subject-Verb Agreement Made Painless</h2>
+        <p>The golden law of English harmony: <strong>Singular Subject requires Singular Verb (with -s); Plural Subject requires Plural Verb (without -s).</strong></p>
+
+        <div class="fix-comparison-grid">
+          <div class="fix-wrong">
+            <h4 style="color: #ef4444; margin-top: 0;">❌ Common Slip-Ups</h4>
+            <ul style="margin: 0; padding-left: 1rem; font-size: 0.85rem; line-height: 1.6;">
+              <li>"He don't know anything."</li>
+              <li>"Everyone are present."</li>
+              <li>"One of my friend are coming."</li>
+            </ul>
+          </div>
+          <div class="fix-right">
+            <h4 style="color: #10b981; margin-top: 0;">✅ The Correct Harmony</h4>
+            <ul style="margin: 0; padding-left: 1rem; font-size: 0.85rem; line-height: 1.6; font-weight: 600;">
+              <li>"He <strong>doesn't</strong> know anything."</li>
+              <li>"Everyone <strong>is</strong> present." (Everyone = singular unit)</li>
+              <li>"One of my <strong>friends is</strong> coming." (One is the subject!)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAY 21-22 -->
+      <section id="day-21-22" class="note-section content-section">
+        <h2><span class="section-number">21.</span> Day 21 &amp; 22: All Tenses Practice &amp; Real-Life Dialogue Drills</h2>
+        <p>Practice shifting the same action across time:</p>
+
+        <div class="visual-formula-box">
+          <h4 style="margin: 0 0 0.5rem; color: #38bdf8;">🔄 Time-Shifting Drill (The "Learn" Action)</h4>
+          <div style="font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.8;">
+            Routine: &nbsp;&nbsp;&nbsp;&nbsp;<em>"I <strong>learn</strong> English every day."</em><br>
+            Right Now: &nbsp;&nbsp;<em>"I <strong>am learning</strong> English right now."</em><br>
+            Yesterday: &nbsp;&nbsp;<em>"I <strong>learned</strong> 5 new phrases yesterday."</em><br>
+            Experience: &nbsp;<em>"I <strong>have learned</strong> so much this month."</em><br>
+            Tomorrow: &nbsp;&nbsp;&nbsp;<em>"I <strong>will learn</strong> pronunciation tomorrow."</em>
+          </div>
+        </div>
+
+        <div class="dialogue-box">
+          <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">💼 Workplace Standup Call Simulation:</div>
+          <div class="dialogue-turn"><span class="dialogue-speaker">Manager:</span> "Good morning everyone. Abhimanyu, could you give a quick update on your deliverables?"</div>
+          <div class="dialogue-turn"><span class="dialogue-speaker">You:</span> "Sure! Yesterday, I resolved the API authentication bug and pushed the code for testing. Today, I am working on the database query optimization. I don't have any blockers at the moment."</div>
+          <div class="dialogue-turn"><span class="dialogue-speaker">Manager:</span> "Sounds great. Keep up the good work!"</div>
+        </div>
+      </section>
+
+      <!-- PHASE 3 SUMMARY -->
+      <section id="phase-3-summary" class="note-section content-section">
+        <h2><span class="section-number">22.</span> Phase 3 Summary Cheatsheet</h2>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin: 1.25rem 0;">
+          <h4 style="margin-top: 0; color: #c084fc;">Your Week 3 Power Takeaways:</h4>
+          <ul style="line-height: 1.8; font-size: 0.92rem; color: var(--text-secondary); margin: 0; padding-left: 1.25rem;">
+            <li><strong>Has vs Have:</strong> He/She/It has; I/You/We/They have. When 'does' appears, the main verb drops the 's'.</li>
+            <li><strong>Passive Voice:</strong> Use it when the outcome is more important than who did it (<em>"The task is done"</em>).</li>
+            <li><strong>Modals:</strong> Must (100%), Should (Advice), Can (Ability), May/Might (Maybe).</li>
+            <li><strong>Subject-Verb Agreement:</strong> One of my friends <em>is</em> coming (not are).</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <a href="spoken-english-part-2.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Volume 2 (Days 08-15)
+          </a>
+          <a href="spoken-english-part-4.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Volume 4 (Days 23-30) →
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <strong>Tech Notes</strong> &mdash; Spoken English &amp; AI Study Hub &bull; &copy; 2026
+      </div>
+      <div style="display: flex; gap: 1rem; font-size: 0.88rem; flex-wrap: wrap;">
+        <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Home</a>
+        <a href="spoken-english.html" style="color: var(--text-secondary); text-decoration: none;">Hub</a>
+        <a href="spoken-english-part-1.html" style="color: var(--text-secondary); text-decoration: none;">Volume 1</a>
+        <a href="spoken-english-part-2.html" style="color: var(--text-secondary); text-decoration: none;">Volume 2</a>
+        <a href="spoken-english-part-3.html" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">Volume 3</a>
+        <a href="spoken-english-part-4.html" style="color: var(--text-secondary); text-decoration: none;">Volume 4</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
