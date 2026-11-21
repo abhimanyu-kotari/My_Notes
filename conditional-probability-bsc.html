@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conditional Probability &amp; Bayes' Rule (BSc 5th Sem) | Tech Notes</title>
+  <meta name="description" content="Complete university study notes for BSc 5th Semester Probability: Chapter 4 Conditional Probability, Bayes' Rule, Three Rules for Conditional Probability, and step-by-step solutions for Exercises 4.1 to 4.12.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+
+    /* Custom Styling for BSc Notes */
+    .formula-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid #38bdf8;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .formula-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .theorem-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+
+    .exercise-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.75rem 0;
+      transition: border-color 0.2s;
+    }
+    .exercise-box:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+    .exercise-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #a3e635;
+      background: rgba(163, 230, 53, 0.12);
+      border: 1px solid rgba(163, 230, 53, 0.3);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+    }
+    .exercise-question {
+      font-size: 0.96rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      background: var(--bg-primary);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border-left: 3px solid #60a5fa;
+    }
+    .solution-block {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+    .solution-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .step-list {
+      margin-left: 1.25rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+    .final-ans {
+      background: rgba(163, 230, 53, 0.1);
+      border: 1px solid rgba(163, 230, 53, 0.3);
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #a3e635;
+      display: inline-block;
+    }
+    .pdf-download-bar {
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="probability-bsc-5th-sem.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← BSc 5th Sem Hub</a>
+        <a href="assets/conditional-probability-chapter-4.pdf" target="_blank" rel="noopener" class="nav-link" style="font-size: 0.9rem; color: #f87171; margin-right: 0.5rem;">📄 View PDF</a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Chapter 4 Outline
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#formula-sheet" class="sidebar-link">1. Master Formula Sheet</a></li>
+        <li><a href="#three-rules" class="sidebar-link">2. Three Rules for Cond. Prob</a></li>
+        <li><a href="#bayes-theorem" class="sidebar-link">3. Bayes' Rule &amp; Total Prob</a></li>
+        <li><a href="#gambler-ruin" class="sidebar-link">4. Gambler's Ruin Difference Eq</a></li>
+        <li><a href="#exercises-section" class="sidebar-link">5. Exercises 4.1 – 4.12 Solved</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-1" class="sidebar-link">&bull; Ex 4.1 (Two Dice &amp; Indep)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-2" class="sidebar-link">&bull; Ex 4.2 (Dice Sum &ge; 9)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-3" class="sidebar-link">&bull; Ex 4.3 (Two Boxes Marbles)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-4" class="sidebar-link">&bull; Ex 4.4 (Flu Shot Efficacy)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-5" class="sidebar-link">&bull; Ex 4.5 (Color Blindness)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-6" class="sidebar-link">&bull; Ex 4.6 (Light Bulb Lifetime)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-7" class="sidebar-link">&bull; Ex 4.7 (Factory Bolts 3-Way)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-8" class="sidebar-link">&bull; Ex 4.8 (Multiple Choice Guess)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-9" class="sidebar-link">&bull; Ex 4.9 (ALS Disease Test)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-10" class="sidebar-link">&bull; Ex 4.10 (TV Shows Survey)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-11" class="sidebar-link">&bull; Ex 4.11 (Airport Birds &amp; Weather)</a></li>
+        <li style="padding-left: 0.75rem;"><a href="#ex-4-12" class="sidebar-link">&bull; Ex 4.12 (Gambler's Ruin \$20-\$150)</a></li>
+        <li><a href="#starred-proofs" class="sidebar-link">6. Starred Theoretical Proofs</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+        <a href="probability-bsc-5th-sem.html" style="color: inherit; text-decoration: none;">Probability BSc 5th Sem</a> &rsaquo; 
+        <span style="color: #38bdf8;">Chapter 04: Conditional Probability</span>
+      </div>
+
+      <!-- Header -->
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">Chapter 04</span>
+          <span class="tag">BSc 5th Sem</span>
+          <span class="tag">Mariano &bull; Ruiz &bull; Gordina</span>
+          <span class="tag">12 Solved Exercises</span>
+          <span class="tag">University Exam Prep</span>
+        </div>
+        <h1 class="lecture-main-title">Chapter 4: Conditional Probability, Bayes' Rule &amp; Complete Exercise Solutions</h1>
+        <p class="lecture-lead">
+          Comprehensive, mathematically rigorous study guide for Chapter 4 based on the textbook by Phanuel Mariano, Patricia Alonso Ruiz, and Masha Gordina. Covers all fundamental definitions, the "Three Rules for Conditional Probability" (Proposition 4.2), the Law of Total Probability, Bayes' Rule, Gambler's Ruin, and complete step-by-step solutions for Exercises 4.1 through 4.12.
+        </p>
+      </div>
+
+      <!-- PDF Download Banner -->
+      <div class="pdf-download-bar">
+        <div>
+          <strong style="color: #e2e8f0; font-size: 0.95rem;">Official Textbook Source PDF Attached:</strong>
+          <p style="margin: 0.2rem 0 0; font-size: 0.85rem; color: var(--text-secondary);">Chapter 4: Conditional Probability (Pages 41–57) by Phanuel Mariano, Patricia Alonso Ruiz, Masha Gordina.</p>
+        </div>
+        <a href="assets/conditional-probability-chapter-4.pdf" target="_blank" rel="noopener" class="btn-primary" style="background: #38bdf8; color: #0a0a0a; font-weight: 700; padding: 0.55rem 1.15rem; font-size: 0.88rem; text-decoration: none !important; display: inline-flex; align-items: center; gap: 0.4rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          Open Textbook PDF &nearr;
+        </a>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 1: MASTER FORMULA SHEET -->
+      <!-- ======================================================== -->
+      <section id="formula-sheet" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Master Formula Sheet: All Formulas in the Chapter</h2>
+        <p>
+          A consolidated reference of every mathematical definition, identity, and theorem presented in Chapter 4 of the textbook:
+        </p>
+
+        <!-- Formula 1: Definition -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>1. Definition of Conditional Probability</span>
+            <span class="theorem-tag">Definition 4.1</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            If $\mathbb{P}(F) > 0$, the probability of event $E$ given that event $F$ has occurred is defined as:
+          </p>
+          $$\mathbb{P}(E \mid F) := \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(F)}$$
+        </div>
+
+        <!-- Formula 2: Multiplication Rule for 2 Events -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>2. Multiplication Rule (Joint Probability)</span>
+            <span class="theorem-tag">Proposition 4.2(i)</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Rearranging Definition 4.1 yields the joint probability of two events occurring together:
+          </p>
+          $$\mathbb{P}(E \cap F) = \mathbb{P}(E \mid F)\mathbb{P}(F) = \mathbb{P}(F \mid E)\mathbb{P}(E)$$
+        </div>
+
+        <!-- Formula 3: Inverse Conditional Probability -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>3. Inverse Conditional Probability Formula</span>
+            <span class="theorem-tag">Page 42</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Relating $\mathbb{P}(F \mid E)$ to known forward probability $\mathbb{P}(E \mid F)$:
+          </p>
+          $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(F \cap E)}{\mathbb{P}(E)} = \frac{\mathbb{P}(E \mid F)\mathbb{P}(F)}{\mathbb{P}(E)}$$
+        </div>
+
+        <!-- Formula 4: Complement Rule -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>4. Complement Rule for Conditional Probability</span>
+            <span class="theorem-tag">Proposition 4.2(iii)</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Conditioning on $F$ creates a valid probability measure; therefore complements sum to 1:
+          </p>
+          $$\mathbb{P}(E^c \mid F) = 1 - \mathbb{P}(E \mid F)$$
+        </div>
+
+        <!-- Formula 5: Law of Total Probability (Binary) -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>5. Law of Total Probability (Binary Partition)</span>
+            <span class="theorem-tag">Proposition 4.2(ii)</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Decomposing any event $E$ across an event $F$ and its complement $F^c$:
+          </p>
+          $$\mathbb{P}(E) = \mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)$$
+        </div>
+
+        <!-- Formula 6: Bayes' Rule (Simple Form) -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>6. Bayes' Rule (Simple Form)</span>
+            <span class="theorem-tag">Proposition 4.1</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            If $\mathbb{P}(E) > 0$, the posterior probability $\mathbb{P}(F \mid E)$ is given by:
+          </p>
+          $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \mid F)\mathbb{P}(F)}{\mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)}$$
+        </div>
+
+        <!-- Formula 7: General Multiplication Rule -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>7. General Multiplication Rule for $n$ Events</span>
+            <span class="theorem-tag">Proposition 4.3</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            For any sequence of events $E_1, E_2, \dots, E_n$:
+          </p>
+          $$\mathbb{P}(E_1 \cap E_2 \cap \dots \cap E_n) = \mathbb{P}(E_1)\mathbb{P}(E_2 \mid E_1)\mathbb{P}(E_3 \mid E_1 \cap E_2)\cdots\mathbb{P}(E_n \mid E_1 \cap \dots \cap E_{n-1})$$
+        </div>
+
+        <!-- Formula 8: Law of Total Probability (General) -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>8. Law of Total Probability (General Partition)</span>
+            <span class="theorem-tag">Proposition 4.4</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Let $F_1, F_2, \dots, F_n \subseteq S$ be mutually exclusive and exhaustive events ($S = \bigcup_{i=1}^n F_i$ with $F_i \cap F_j = \emptyset$ for $i \neq j$):
+          </p>
+          $$\mathbb{P}(E) = \sum_{i=1}^n \mathbb{P}(E \mid F_i)\mathbb{P}(F_i)$$
+        </div>
+
+        <!-- Formula 9: Generalized Bayes' Rule -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>9. Generalized Bayes' Rule</span>
+            <span class="theorem-tag">Proposition 4.5</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Under the partition $\{F_1, \dots, F_n\}$, for any specific partition class $F_j$:
+          </p>
+          $$\mathbb{P}(F_j \mid E) = \frac{\mathbb{P}(E \mid F_j)\mathbb{P}(F_j)}{\sum_{i=1}^n \mathbb{P}(E \mid F_i)\mathbb{P}(F_i)}$$
+        </div>
+
+        <!-- Formula 10: Gambler's Ruin -->
+        <div class="formula-card">
+          <div class="formula-title">
+            <span>10. Gambler's Ruin Probability Formulas</span>
+            <span class="theorem-tag">Examples 4.8 &amp; 4.9, Ex* 4.1</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            Starting with $n$ dollars, probability of reaching target $N$ before going broke ($0$ dollars):
+          </p>
+          <ul>
+            <li><strong>Fair Coin ($p = 1/2$):</strong> $y(n) = \frac{n}{N}$</li>
+            <li><strong>Biased Coin ($p \neq 1/2$, win prob $p$, loss prob $q = 1-p$):</strong> $P(N \mid n) = \frac{1 - (q/p)^n}{1 - (q/p)^N}$</li>
+            <li><strong>Arbitrary Debt Permitted:</strong> $z(n) = 1$ for all $n$ (certainty of hitting $N$).</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 2: THREE RULES FOR CONDITIONAL PROBABILITY & PROOFS -->
+      <!-- ======================================================== -->
+      <section id="three-rules" class="note-section content-section">
+        <h2><span class="section-number">02.</span> "Three Rules for Conditional Probability" &amp; University Exam Proofs</h2>
+        <p>
+          In BSc examinations, professors frequently ask students to state and prove the fundamental properties of conditional probability. Below are the canonical university questions with complete formal proofs as presented in the textbook.
+        </p>
+
+        <!-- Exam Question 1 -->
+        <div class="callout callout-info" style="margin-bottom: 1.5rem;">
+          <div class="callout-title" style="font-size: 1.05rem;">
+            University Exam Question 1: State and prove the Three Fundamental Rules for Conditional Probability (Proposition 4.2).
+          </div>
+          <div class="callout-content" style="margin-top: 0.75rem;">
+            <p><strong>Statement of Proposition 4.2:</strong> Let $E, F \in \mathcal{F}$ be events with $\mathbb{P}(E) > 0$ and $\mathbb{P}(F) > 0$. Then:</p>
+            <ol style="margin-left: 1.25rem; line-height: 1.8;">
+              <li>$\mathbb{P}(E \cap F) = \mathbb{P}(E)\mathbb{P}(F \mid E)$ &nbsp;<em>(Multiplication Rule)</em></li>
+              <li>$\mathbb{P}(E) = \mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)$ &nbsp;<em>(Law of Total Probability across a set and its complement)</em></li>
+              <li>$\mathbb{P}(E^c \mid F) = 1 - \mathbb{P}(E \mid F)$ &nbsp;<em>(Complement Rule)</em></li>
+            </ol>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+
+            <p><strong style="color: #38bdf8;">Formal Proof:</strong></p>
+            
+            <p><strong>Proof of (i):</strong><br>
+            By Definition 4.1 of conditional probability, we have:
+            $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(E)}$$
+            Multiplying both sides of this equality by $\mathbb{P}(E)$ (which is strictly positive, $\mathbb{P}(E) > 0$), we obtain:
+            $$\mathbb{P}(E \cap F) = \mathbb{P}(E)\mathbb{P}(F \mid E) \quad \blacksquare$$
+            </p>
+
+            <p><strong>Proof of (ii):</strong><br>
+            Notice that the sample space $S$ can be partitioned into two disjoint sets: $S = F \cup F^c$ where $F \cap F^c = \emptyset$.<br>
+            Therefore, the event $E$ can be written as the union of two pairwise disjoint sets:
+            $$E = E \cap S = E \cap (F \cup F^c) = (E \cap F) \cup (E \cap F^c)$$
+            Since $(E \cap F)$ and $(E \cap F^c)$ are mutually exclusive, by the third axiom of probability:
+            $$\mathbb{P}(E) = \mathbb{P}(E \cap F) + \mathbb{P}(E \cap F^c)$$
+            Applying identity (i) to both terms:
+            $$\mathbb{P}(E \cap F) = \mathbb{P}(E \mid F)\mathbb{P}(F)$$
+            $$\mathbb{P}(E \cap F^c) = \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)$$
+            Substituting these into the equation yields:
+            $$\mathbb{P}(E) = \mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c) \quad \blacksquare$$
+            </p>
+
+            <p><strong>Proof of (iii):</strong><br>
+            Consider the conditional probability space conditioned on event $F$. In any probability space, the probability of the entire sample space is 1, so $\mathbb{P}(S \mid F) = 1$.<br>
+            Since $S = E \cup E^c$ where $E \cap E^c = \emptyset$, we have:
+            $$\mathbb{P}(S \mid F) = \mathbb{P}(E \cup E^c \mid F) = \mathbb{P}(E \mid F) + \mathbb{P}(E^c \mid F) = 1$$
+            Subtracting $\mathbb{P}(E \mid F)$ from both sides:
+            $$\mathbb{P}(E^c \mid F) = 1 - \mathbb{P}(E \mid F) \quad \blacksquare$$
+            </p>
+          </div>
+        </div>
+
+        <!-- Exam Question 2 -->
+        <div class="callout callout-tip" style="margin-bottom: 1.5rem;">
+          <div class="callout-title" style="font-size: 1.05rem;">
+            University Exam Question 2: State and prove Bayes' Rule (Proposition 4.1).
+          </div>
+          <div class="callout-content" style="margin-top: 0.75rem;">
+            <p><strong>Statement:</strong> If $\mathbb{P}(E) > 0$, then:</p>
+            $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \mid F)\mathbb{P}(F)}{\mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)}$$
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+
+            <p><strong style="color: #a3e635;">Formal Proof (from textbook page 43):</strong></p>
+            <p>By the definition of conditional probability:
+            $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(F \cap E)}{\mathbb{P}(E)} = \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(E)}$$
+            From the multiplication rule, the numerator is:
+            $$\mathbb{P}(E \cap F) = \mathbb{P}(E \mid F)\mathbb{P}(F)$$
+            By Proposition 4.2(ii) (the Law of Total Probability), the denominator is:
+            $$\mathbb{P}(E) = \mathbb{P}((E \cap F) \cup (E \cap F^c)) = \mathbb{P}(E \cap F) + \mathbb{P}(E \cap F^c)$$
+            $$= \mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)$$
+            Substituting both numerator and denominator:
+            $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \mid F)\mathbb{P}(F)}{\mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)} \quad \blacksquare$$
+            </p>
+          </div>
+        </div>
+
+        <!-- Exam Question 3 -->
+        <div class="callout callout-warning">
+          <div class="callout-title" style="font-size: 1.05rem;">
+            University Exam Question 3: Prove that Conditional Probability satisfies Kolmogorov's Three Axioms of Probability (Exercise* 4.2).
+          </div>
+          <div class="callout-content" style="margin-top: 0.75rem;">
+            <p><strong>Statement:</strong> Let $F$ be an event with $\mathbb{P}(F) > 0$. Define $\mathbb{P}_F(E) := \mathbb{P}(E \mid F)$. Show that $\mathbb{P}_F$ is a legitimate probability measure on sample space $S$.</p>
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+            <ol style="margin-left: 1.25rem; line-height: 1.8;">
+              <li><strong>Axiom 1 (Non-negativity):</strong><br>
+                For any event $E \in \mathcal{F}$, since $E \cap F \subseteq F$, we have $0 \le \mathbb{P}(E \cap F) \le \mathbb{P}(F)$.<br>
+                Dividing by $\mathbb{P}(F) > 0$, we get $0 \le \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(F)} \le 1 \implies 0 \le \mathbb{P}_F(E) \le 1$.
+              </li>
+              <li><strong>Axiom 2 (Normalization):</strong><br>
+                $\mathbb{P}_F(S) = \mathbb{P}(S \mid F) = \frac{\mathbb{P}(S \cap F)}{\mathbb{P}(F)}$. Since $S \cap F = F$, we have $\frac{\mathbb{P}(F)}{\mathbb{P}(F)} = 1$.
+              </li>
+              <li><strong>Axiom 3 (Countable Additivity):</strong><br>
+                Let $\{E_i\}_{i=1}^\infty$ be a sequence of pairwise disjoint events ($E_i \cap E_j = \emptyset$ for $i \neq j$).<br>
+                By distributive laws of set theory: $(\bigcup_{i=1}^\infty E_i) \cap F = \bigcup_{i=1}^\infty (E_i \cap F)$.<br>
+                Since $\{E_i\}$ are pairwise disjoint, the sets $\{E_i \cap F\}$ are also pairwise disjoint.<br>
+                By countable additivity of the original probability measure $\mathbb{P}$:
+                $$\mathbb{P}\left(\bigcup_{i=1}^\infty (E_i \cap F)\right) = \sum_{i=1}^\infty \mathbb{P}(E_i \cap F)$$
+                Therefore:
+                $$\mathbb{P}_F\left(\bigcup_{i=1}^\infty E_i\right) = \frac{\mathbb{P}\left((\bigcup_{i=1}^\infty E_i) \cap F\right)}{\mathbb{P}(F)} = \frac{\sum_{i=1}^\infty \mathbb{P}(E_i \cap F)}{\mathbb{P}(F)} = \sum_{i=1}^\infty \frac{\mathbb{P}(E_i \cap F)}{\mathbb{P}(F)} = \sum_{i=1}^\infty \mathbb{P}_F(E_i) \quad \blacksquare$$
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 3: BAYES' THEOREM & TOTAL PROBABILITY -->
+      <!-- ======================================================== -->
+      <section id="bayes-theorem" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Generalized Bayes' Rule &amp; The Law of Total Probability</h2>
+        <p>
+          In real-world applications, events are rarely partitioned into just two sets ($F$ and $F^c$). A factory may have 3 machines (Example 4.16), weather may take 3 states (Example 4.11), or an insurance company might segment policyholders across multiple risk tiers.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Binary Form (2 Classes: $F, F^c$)</th>
+                <th>Generalized Form ($n$ Classes Partition: $F_1, F_2, \dots, F_n$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Partition Condition</strong></td>
+                <td>$S = F \cup F^c$, $F \cap F^c = \emptyset$</td>
+                <td>$S = \bigcup_{i=1}^n F_i$, $F_i \cap F_j = \emptyset$ for $i \neq j$</td>
+              </tr>
+              <tr>
+                <td><strong>Law of Total Probability</strong></td>
+                <td>$\mathbb{P}(E) = \mathbb{P}(E \mid F)\mathbb{P}(F) + \mathbb{P}(E \mid F^c)\mathbb{P}(F^c)$</td>
+                <td>$\mathbb{P}(E) = \sum_{i=1}^n \mathbb{P}(E \mid F_i)\mathbb{P}(F_i)$</td>
+              </tr>
+              <tr>
+                <td><strong>Bayes' Rule (Posterior)</strong></td>
+                <td>$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \mid F)\mathbb{P}(F)}{\mathbb{P}(E)}$</td>
+                <td>$\mathbb{P}(F_j \mid E) = \frac{\mathbb{P}(E \mid F_j)\mathbb{P}(F_j)}{\sum_{i=1}^n \mathbb{P}(E \mid F_i)\mathbb{P}(F_i)}$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 4: GAMBLER'S RUIN DIFFERENCE EQUATIONS -->
+      <!-- ======================================================== -->
+      <section id="gambler-ruin" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Gambler's Ruin &amp; Linear Difference Equations</h2>
+        <p>
+          In Examples 4.8 &amp; 4.9, the authors present the celebrated <strong>Gambler's Ruin Problem</strong> using conditioning on the first step:
+        </p>
+        <ul>
+          <li>A gambler starts with $\$n$. At each turn, they flip a fair coin: win $\$1$ with probability $1/2$, lose $\$1$ with probability $1/2$.</li>
+          <li>Game ends when the gambler reaches $\$N$ (win) or $\$0$ (ruined / broke).</li>
+        </ul>
+
+        <div class="callout callout-info">
+          <div class="callout-title">Derivation of the Difference Equation</div>
+          <p class="callout-content">
+            Let $y(n) := \mathbb{P}(N \mid n)$ be the probability of reaching $\$N$ starting from $\$n$.<br>
+            By conditioning on the first coin flip:
+            $$y(n) = \frac{1}{2}y(n+1) + \frac{1}{2}y(n-1)$$
+            Multiplying by 2 and rearranging:
+            $$2y(n) = y(n+1) + y(n-1) \implies y(n+1) - y(n) = y(n) - y(n-1)$$
+            This fundamental identity states that the step difference (slope) is constant across all adjacent intervals:
+            $$y(n) - y(n-1) = y(1) - y(0) = \text{constant } c$$
+            Summing the telescoping differences from $0$ to $n$:
+            $$y(n) = y(n) - y(0) = \sum_{k=1}^n [y(k) - y(k-1)] = n \cdot y(1)$$
+            Using boundary conditions $y(0) = 0$ (ruin) and $y(N) = 1$ (win):
+            $$y(N) = N \cdot y(1) = 1 \implies y(1) = \frac{1}{N}$$
+            Therefore, for any starting bankroll $n$:
+            $$y(n) = \frac{n}{N}$$
+          </p>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 5: EXERCISES 4.1 TO 4.12 FULLY SOLVED -->
+      <!-- ======================================================== -->
+      <section id="exercises-section" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Complete Solutions for Textbook Exercises 4.1 to 4.12</h2>
+        <p>
+          Every question from Section 4.3 of the textbook solved step-by-step, showing all event definitions, intermediate fractional calculations, and final exact values.
+        </p>
+
+        <!-- EXERCISE 4.1 -->
+        <article class="exercise-box" id="ex-4-1">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.1</span>
+            <span class="theorem-tag">Two Dice &bull; Independence</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Two dice are rolled. Consider the events:
+            <br>&bull; $A = \{\text{sum of two dice equals } 3\}$
+            <br>&bull; $B = \{\text{sum of two dice equals } 7\}$
+            <br>&bull; $C = \{\text{at least one of the dice shows a } 1\}$
+            <br><strong>(a)</strong> What is $\mathbb{P}(A \mid C)$?
+            <br><strong>(b)</strong> What is $\mathbb{P}(B \mid C)$?
+            <br><strong>(c)</strong> Are $A$ and $C$ independent? What about $B$ and $C$?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Sample Space:</strong> The sample space of rolling two fair 6-sided dice is:
+                $$S = \{(i, j) \mid 1 \le i, j \le 6\}, \quad |S| = 6 \times 6 = 36$$
+                Each of the 36 ordered pairs is equally likely with probability $1/36$.
+              </li>
+              <li>
+                <strong>List Elements of Each Event:</strong>
+                <br>&bull; $A = \{(1, 2), (2, 1)\} \implies |A| = 2 \implies \mathbb{P}(A) = \frac{2}{36} = \frac{1}{18}$.
+                <br>&bull; $B = \{(1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1)\} \implies |B| = 6 \implies \mathbb{P}(B) = \frac{6}{36} = \frac{1}{6}$.
+                <br>&bull; $C = \{(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1)\} \implies |C| = 11 \implies \mathbb{P}(C) = \frac{11}{36}$.
+              </li>
+              <li>
+                <strong>Part (a) Compute $\mathbb{P}(A \mid C)$ :</strong>
+                Notice $A \cap C = \{(1, 2), (2, 1)\} = A \implies |A \cap C| = 2$.
+                $$\mathbb{P}(A \mid C) = \frac{\mathbb{P}(A \cap C)}{\mathbb{P}(C)} = \frac{2/36}{11/36} = \mathbf{\frac{2}{11}}$$
+              </li>
+              <li>
+                <strong>Part (b) Compute $\mathbb{P}(B \mid C)$ :</strong>
+                Looking at outcomes in $B$ that have at least one 1: $B \cap C = \{(1, 6), (6, 1)\} \implies |B \cap C| = 2$.
+                $$\mathbb{P}(B \mid C) = \frac{\mathbb{P}(B \cap C)}{\mathbb{P}(C)} = \frac{2/36}{11/36} = \mathbf{\frac{2}{11}}$$
+              </li>
+              <li>
+                <strong>Part (c) Independence Check:</strong>
+                Two events $X$ and $Y$ are independent if and only if $\mathbb{P}(X \mid Y) = \mathbb{P}(X)$ (or equivalently $\mathbb{P}(X \cap Y) = \mathbb{P}(X)\mathbb{P}(Y)$).
+                <br>&bull; For $A$ and $C$: $\mathbb{P}(A) = \frac{2}{36} = \frac{1}{18} \approx 0.0556$, whereas $\mathbb{P}(A \mid C) = \frac{2}{11} \approx 0.1818$.
+                Since $\mathbb{P}(A) \neq \mathbb{P}(A \mid C)$, <strong>$A$ and $C$ are NOT independent</strong>.
+                <br>&bull; For $B$ and $C$: $\mathbb{P}(B) = \frac{6}{36} = \frac{1}{6} \approx 0.1667$, whereas $\mathbb{P}(B \mid C) = \frac{2}{11} \approx 0.1818$.
+                Since $\mathbb{P}(B) \neq \mathbb{P}(B \mid C)$, <strong>$B$ and $C$ are NOT independent</strong>.
+              </li>
+            </ol>
+            <div class="final-ans">
+              Answers: (a) $\mathbb{P}(A \mid C) = \frac{2}{11}$ &bull; (b) $\mathbb{P}(B \mid C) = \frac{2}{11}$ &bull; (c) Neither pair is independent.
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.2 -->
+        <article class="exercise-box" id="ex-4-2">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.2</span>
+            <span class="theorem-tag">Dice Sum &ge; 9 Given a 6</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Suppose you roll two standard, fair, 6-sided dice. What is the probability that the sum is at least 9 given that you rolled at least one 6?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define the Events:</strong>
+                <br>&bull; Let $E$ be the conditioning event: "at least one die shows a 6".
+                <br>&bull; Let $F$ be the target event: "the sum of the two dice is at least 9" (i.e. $\text{Sum} \in \{9, 10, 11, 12\}$).
+                <br>We seek $\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(E)}$.
+              </li>
+              <li>
+                <strong>Calculate $\mathbb{P}(E)$ :</strong>
+                The rolls containing at least one 6 are:
+                $$E = \{(6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)\}$$
+                There are 11 outcomes, so $\mathbb{P}(E) = \frac{11}{36}$.
+              </li>
+              <li>
+                <strong>Find the Intersection $E \cap F$ :</strong>
+                We filter the outcomes in $E$ whose sum is $\ge 9$:
+                <br>&bull; $(6, 3) \implies 6 + 3 = 9$
+                <br>&bull; $(6, 4) \implies 6 + 4 = 10$
+                <br>&bull; $(6, 5) \implies 6 + 5 = 11$
+                <br>&bull; $(6, 6) \implies 6 + 6 = 12$
+                <br>&bull; $(3, 6) \implies 3 + 6 = 9$
+                <br>&bull; $(4, 6) \implies 4 + 6 = 10$
+                <br>&bull; $(5, 6) \implies 5 + 6 = 11$
+                <br>This gives exactly 7 outcomes: $E \cap F = \{(6, 3), (6, 4), (6, 5), (6, 6), (3, 6), (4, 6), (5, 6)\}$.
+                $$\mathbb{P}(E \cap F) = \frac{7}{36}$$
+              </li>
+              <li>
+                <strong>Compute Conditional Probability:</strong>
+                $$\mathbb{P}(F \mid E) = \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(E)} = \frac{7/36}{11/36} = \mathbf{\frac{7}{11}} \approx \mathbf{0.6364} \text{ (63.64\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(F \mid E) = \frac{7}{11} \approx 63.64\%$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.3 -->
+        <article class="exercise-box" id="ex-4-3">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.3</span>
+            <span class="theorem-tag">Two Urns &bull; Bayes' Rule</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> A box contains 1 green ball and 1 red ball, and a second box contains 2 green and 3 red balls. First a box is chosen and afterwards a ball withdrawn from the chosen box. Both boxes are equally likely to be chosen. Given that a green ball has been withdrawn, what is the probability that the first box was chosen?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Events &amp; Priors:</strong>
+                <br>&bull; $B_1$: Box 1 is chosen $\implies \mathbb{P}(B_1) = \frac{1}{2}$
+                <br>&bull; $B_2$: Box 2 is chosen $\implies \mathbb{P}(B_2) = \frac{1}{2}$
+                <br>&bull; $G$: A green ball is withdrawn.
+              </li>
+              <li>
+                <strong>Determine Conditional Likelihoods:</strong>
+                <br>&bull; In Box 1 (1 green, 1 red, total 2): $\mathbb{P}(G \mid B_1) = \frac{1}{2}$.
+                <br>&bull; In Box 2 (2 green, 3 red, total 5): $\mathbb{P}(G \mid B_2) = \frac{2}{5}$.
+              </li>
+              <li>
+                <strong>Apply Bayes' Theorem:</strong>
+                $$\mathbb{P}(B_1 \mid G) = \frac{\mathbb{P}(G \mid B_1)\mathbb{P}(B_1)}{\mathbb{P}(G \mid B_1)\mathbb{P}(B_1) + \mathbb{P}(G \mid B_2)\mathbb{P}(B_2)}$$
+              </li>
+              <li>
+                <strong>Substitute Numerical Values:</strong>
+                $$\text{Numerator} = \left(\frac{1}{2}\right) \cdot \left(\frac{1}{2}\right) = \frac{1}{4}$$
+                $$\text{Denominator} = \frac{1}{4} + \left(\frac{2}{5}\right) \cdot \left(\frac{1}{2}\right) = \frac{1}{4} + \frac{1}{5} = \frac{5 + 4}{20} = \frac{9}{20}$$
+                $$\mathbb{P}(B_1 \mid G) = \frac{1/4}{9/20} = \frac{1}{4} \times \frac{20}{9} = \mathbf{\frac{5}{9}} \approx \mathbf{0.5556} \text{ (55.56\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(B_1 \mid G) = \frac{5}{9} \approx 55.56\%$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.4 -->
+        <article class="exercise-box" id="ex-4-4">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.4</span>
+            <span class="theorem-tag">UConn Flu Exposure &bull; Law of Total Probability</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Suppose that 60% of UConn students will be at random exposed to the flu. If you are exposed and did not get a flu shot, then the probability that you will get the flu (after being exposed) is 80%. If you did get a flu shot, then the probability that you will get the flu (after being exposed) is only 15%.
+            <br><strong>(a)</strong> What is the probability that a person who got a flu shot will get the flu?
+            <br><strong>(b)</strong> What is the probability that a person who did not get a flu shot will get the flu?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Events:</strong>
+                <br>&bull; Let $E$ be the event that a student is exposed to the flu $\implies \mathbb{P}(E) = 0.60$.
+                <br>&bull; Let $E^c$ be the event that a student is not exposed $\implies \mathbb{P}(E^c) = 1 - 0.60 = 0.40$.
+                <br>&bull; Let $F$ be the event that a student gets the flu.
+                <br><em>Crucial physiological fact from textbook:</em> If a student is never exposed to the virus ($E^c$), they cannot catch the flu: $\mathbb{P}(F \mid E^c) = 0 \implies \mathbb{P}(E^c \cap F) = 0$.
+              </li>
+              <li>
+                <strong>Part (a) Student who GOT the flu shot:</strong>
+                For a vaccinated student, the exposure probability is still $\mathbb{P}(E) = 0.60$, but the conditional infection probability given exposure is $\mathbb{P}(F \mid E) = 0.15$.
+                <br>Applying the Law of Total Probability:
+                $$\mathbb{P}(F) = \mathbb{P}(F \mid E)\mathbb{P}(E) + \mathbb{P}(F \mid E^c)\mathbb{P}(E^c)$$
+                $$\mathbb{P}(F) = (0.15)(0.60) + 0 = \mathbf{0.09} \text{ (or 9\%)}$$
+              </li>
+              <li>
+                <strong>Part (b) Student who DID NOT get the flu shot:</strong>
+                For an unvaccinated student, exposure is $\mathbb{P}(E) = 0.60$, and conditional infection probability is $\mathbb{P}(F \mid E) = 0.80$.
+                <br>Applying the Law of Total Probability:
+                $$\mathbb{P}(F) = \mathbb{P}(F \mid E)\mathbb{P}(E) + \mathbb{P}(F \mid E^c)\mathbb{P}(E^c)$$
+                $$\mathbb{P}(F) = (0.80)(0.60) + 0 = \mathbf{0.48} \text{ (or 48\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Answers: (a) $\mathbb{P}(\text{Flu} \mid \text{Shot}) = 0.09$ (9%) &bull; (b) $\mathbb{P}(\text{Flu} \mid \text{No Shot}) = 0.48$ (48%)
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.5 -->
+        <article class="exercise-box" id="ex-4-5">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.5</span>
+            <span class="theorem-tag">Sex-Linked Color Blindness &bull; Bayes' Rule</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Color blindness is a sex-linked condition, and 5% of men and 0.25% of women are color blind. The population of the United States is 51% female. What is the probability that a color-blind American is a man?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Demographics (Prior Probabilities):</strong>
+                <br>&bull; Female population: $\mathbb{P}(W) = 0.51$
+                <br>&bull; Male population: $\mathbb{P}(M) = 1 - 0.51 = 0.49$
+              </li>
+              <li>
+                <strong>Given Conditional Likelihoods of Color Blindness ($C$):</strong>
+                <br>&bull; For Men: $\mathbb{P}(C \mid M) = 5\% = 0.05$
+                <br>&bull; For Women: $\mathbb{P}(C \mid W) = 0.25\% = 0.0025$
+              </li>
+              <li>
+                <strong>Apply Bayes' Formula:</strong>
+                We want $\mathbb{P}(M \mid C)$ (the probability the person is male given they are color blind):
+                $$\mathbb{P}(M \mid C) = \frac{\mathbb{P}(C \mid M)\mathbb{P}(M)}{\mathbb{P}(C \mid M)\mathbb{P}(M) + \mathbb{P}(C \mid W)\mathbb{P}(W)}$$
+              </li>
+              <li>
+                <strong>Execute Arithmetic:</strong>
+                $$\text{Numerator } = (0.05)(0.49) = 0.0245$$
+                $$\text{Denominator } = (0.05)(0.49) + (0.0025)(0.51) = 0.0245 + 0.001275 = 0.025775$$
+                $$\mathbb{P}(M \mid C) = \frac{0.0245}{0.025775} = \frac{2450}{2577.5} \approx \mathbf{0.9505} \text{ (95.05\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(\text{Man} \mid \text{Color Blind}) \approx 0.9505 \text{ (95.05\%)}$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.6 -->
+        <article class="exercise-box" id="ex-4-6">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.6</span>
+            <span class="theorem-tag">Light Bulbs &bull; Total Prob &amp; Bayes</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Two factories supply light bulbs to the market. Bulbs from factory X work for over 5000 hours in 99% of cases, whereas bulbs from factory Y work for over 5000 hours in 95% of cases. It is known that factory X supplies 60% of the total bulbs available in the market.
+            <br><strong>(a)</strong> What is the probability that a purchased bulb will work for longer than 5000 hours?
+            <br><strong>(b)</strong> Given that a light bulb works for more than 5000 hours, what is the probability that it was supplied by factory Y?
+            <br><strong>(c)</strong> Given that a light bulb does not work for more than 5000 hours, what is the probability that it was supplied by factory X?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Events:</strong>
+                <br>&bull; $X$: Bulb came from Factory X $\implies \mathbb{P}(X) = 0.60$
+                <br>&bull; $Y$: Bulb came from Factory Y $\implies \mathbb{P}(Y) = 1 - 0.60 = 0.40$
+                <br>&bull; $H$: Bulb works over 5000 hours.
+                <br>&bull; Given: $\mathbb{P}(H \mid X) = 0.99$ and $\mathbb{P}(H \mid Y) = 0.95$.
+              </li>
+              <li>
+                <strong>Part (a) Total Probability of Working >5000 Hours:</strong>
+                $$\mathbb{P}(H) = \mathbb{P}(H \mid X)\mathbb{P}(X) + \mathbb{P}(H \mid Y)\mathbb{P}(Y)$$
+                $$\mathbb{P}(H) = (0.99)(0.60) + (0.95)(0.40) = 0.594 + 0.380 = \mathbf{0.974} \text{ (97.4\%)}$$
+              </li>
+              <li>
+                <strong>Part (b) Probability from Factory Y given it works >5000h:</strong>
+                $$\mathbb{P}(Y \mid H) = \frac{\mathbb{P}(H \mid Y)\mathbb{P}(Y)}{\mathbb{P}(H)} = \frac{(0.95)(0.40)}{0.974} = \frac{0.380}{0.974} \approx \mathbf{0.3901} \text{ (39.01\%)}$$
+              </li>
+              <li>
+                <strong>Part (c) Probability from Factory X given it FAILS &le; 5000h ($H^c$):</strong>
+                <br>&bull; $\mathbb{P}(H^c) = 1 - \mathbb{P}(H) = 1 - 0.974 = 0.026$.
+                <br>&bull; Failure rate for Factory X: $\mathbb{P}(H^c \mid X) = 1 - \mathbb{P}(H \mid X) = 1 - 0.99 = 0.01$.
+                $$\mathbb{P}(X \mid H^c) = \frac{\mathbb{P}(H^c \mid X)\mathbb{P}(X)}{\mathbb{P}(H^c)} = \frac{(0.01)(0.60)}{0.026} = \frac{0.006}{0.026} = \frac{6}{26} = \frac{3}{13} \approx \mathbf{0.2308} \text{ (23.08\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Answers: (a) $\mathbb{P}(H) = 0.974$ &bull; (b) $\mathbb{P}(Y \mid H) \approx 0.3901$ &bull; (c) $\mathbb{P}(X \mid H^c) \approx 0.2308$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.7 -->
+        <article class="exercise-box" id="ex-4-7">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.7</span>
+            <span class="theorem-tag">Factory Bolts &bull; 3-Machine Bayes' Rule</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> A factory production line is manufacturing bolts using three machines, A, B and C. Of the total output, machine A is responsible for 25%, machine B for 35% and machine C for the rest. It is known from previous experience with the machines that 5% of the output from machine A is defective, 4% from machine B and 2% from machine C. A bolt is chosen at random from the production line and found to be defective. What is the probability that it came from Machine A?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Machine Production Shares (Priors):</strong>
+                <br>&bull; Machine A: $\mathbb{P}(A) = 0.25$
+                <br>&bull; Machine B: $\mathbb{P}(B) = 0.35$
+                <br>&bull; Machine C: $\mathbb{P}(C) = 1 - (0.25 + 0.35) = 1 - 0.60 = 0.40$
+              </li>
+              <li>
+                <strong>Defective Rates (Likelihoods):</strong>
+                <br>&bull; $\mathbb{P}(D \mid A) = 5\% = 0.05$
+                <br>&bull; $\mathbb{P}(D \mid B) = 4\% = 0.04$
+                <br>&bull; $\mathbb{P}(D \mid C) = 2\% = 0.02$
+              </li>
+              <li>
+                <strong>Compute Total Probability of Defective Bolt $\mathbb{P}(D)$:</strong>
+                $$\mathbb{P}(D) = \mathbb{P}(D \mid A)\mathbb{P}(A) + \mathbb{P}(D \mid B)\mathbb{P}(B) + \mathbb{P}(D \mid C)\mathbb{P}(C)$$
+                $$\mathbb{P}(D) = (0.05)(0.25) + (0.04)(0.35) + (0.02)(0.40) = 0.0125 + 0.0140 + 0.0080 = 0.0345$$
+              </li>
+              <li>
+                <strong>Apply Generalized Bayes' Rule for Machine A:</strong>
+                $$\mathbb{P}(A \mid D) = \frac{\mathbb{P}(D \mid A)\mathbb{P}(A)}{\mathbb{P}(D)} = \frac{0.0125}{0.0345} = \frac{125}{345} = \mathbf{\frac{25}{69}} \approx \mathbf{0.3623} \text{ (36.23\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(A \mid D) = \frac{25}{69} \approx 0.3623 \text{ (36.23\%)}$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.8 -->
+        <article class="exercise-box" id="ex-4-8">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.8</span>
+            <span class="theorem-tag">Multiple Choice Test with Elimination &bull; Bayes</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> A multiple choice exam has 4 choices for each question. The student has studied enough so that the probability they will know the answer to a question is 0.5, the probability that the student will be able to eliminate one choice is 0.25, otherwise all 4 choices seem equally plausible. If they know the answer they will get the question correct. If not they have to guess from the 3 or 4 choices. As the teacher you would like the test to measure what the student knows, and not how well they can guess. If the student answers a question correctly what is the probability that they actually know the answer?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Mutually Exclusive Student States:</strong>
+                <br>&bull; $K$: Student knows the correct answer $\implies \mathbb{P}(K) = 0.5 = \frac{1}{2}$.
+                <br>&bull; $E$: Student eliminates 1 choice and guesses among remaining 3 $\implies \mathbb{P}(E) = 0.25 = \frac{1}{4}$.
+                <br>&bull; $G$: Student guesses purely among all 4 choices $\implies \mathbb{P}(G) = 1 - (0.5 + 0.25) = 0.25 = \frac{1}{4}$.
+              </li>
+              <li>
+                <strong>Conditional Probabilities of Answering Correctly ($C$):</strong>
+                <br>&bull; If they know the answer: $\mathbb{P}(C \mid K) = 1$.
+                <br>&bull; If they eliminate 1 choice (3 left): $\mathbb{P}(C \mid E) = \frac{1}{3}$.
+                <br>&bull; If they guess from all 4: $\mathbb{P}(C \mid G) = \frac{1}{4}$.
+              </li>
+              <li>
+                <strong>Total Probability of Correct Answer $\mathbb{P}(C)$:</strong>
+                $$\mathbb{P}(C) = \mathbb{P}(C \mid K)\mathbb{P}(K) + \mathbb{P}(C \mid E)\mathbb{P}(E) + \mathbb{P}(C \mid G)\mathbb{P}(G)$$
+                $$\mathbb{P}(C) = (1)\left(\frac{1}{2}\right) + \left(\frac{1}{3}\right)\left(\frac{1}{4}\right) + \left(\frac{1}{4}\right)\left(\frac{1}{4}\right) = \frac{1}{2} + \frac{1}{12} + \frac{1}{16}$$
+                Finding common denominator (48):
+                $$\mathbb{P}(C) = \frac{24}{48} + \frac{4}{48} + \frac{3}{48} = \frac{31}{48}$$
+              </li>
+              <li>
+                <strong>Bayes' Rule for Knowing the Answer Given Correct Response:</strong>
+                $$\mathbb{P}(K \mid C) = \frac{\mathbb{P}(C \mid K)\mathbb{P}(K)}{\mathbb{P}(C)} = \frac{1/2}{31/48} = \frac{1}{2} \times \frac{48}{31} = \mathbf{\frac{24}{31}} \approx \mathbf{0.7742} \text{ (77.42\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(K \mid C) = \frac{24}{31} \approx 0.7742 \text{ (77.42\%)}$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.9 -->
+        <article class="exercise-box" id="ex-4-9">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.9</span>
+            <span class="theorem-tag">ALS Blood Test &bull; Medical Diagnosis Bayes</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> A blood test indicates the presence of Amyotrophic lateral sclerosis (ALS) 95% of the time when ALS is actually present. The same test indicates the presence of ALS 0.5% of the time when the disease is not actually present. One percent of the population actually has ALS. Calculate the probability that a person actually has ALS given that the test indicates the presence of ALS.
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Medical Parameters:</strong>
+                <br>&bull; Disease Prevalence: $\mathbb{P}(D) = 1\% = 0.01 \implies \mathbb{P}(D^c) = 0.99$.
+                <br>&bull; Test Sensitivity (True Positive Rate): $\mathbb{P}(+ \mid D) = 95\% = 0.95$.
+                <br>&bull; False Positive Rate: $\mathbb{P}(+ \mid D^c) = 0.5\% = 0.005$.
+              </li>
+              <li>
+                <strong>Bayes' Formula for Positive Predictive Value (PPV):</strong>
+                $$\mathbb{P}(D \mid +) = \frac{\mathbb{P}(+ \mid D)\mathbb{P}(D)}{\mathbb{P}(+ \mid D)\mathbb{P}(D) + \mathbb{P}(+ \mid D^c)\mathbb{P}(D^c)}$$
+              </li>
+              <li>
+                <strong>Execute Calculation:</strong>
+                $$\text{Numerator} = (0.95)(0.01) = 0.0095$$
+                $$\text{Denominator} = (0.95)(0.01) + (0.005)(0.99) = 0.0095 + 0.00495 = 0.01445$$
+                $$\mathbb{P}(D \mid +) = \frac{0.0095}{0.01445} = \frac{950}{1445} = \mathbf{\frac{190}{289}} \approx \mathbf{0.6574} \text{ (65.74\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(D \mid +) = \frac{190}{289} \approx 0.6574 \text{ (65.74\%)}$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.10 -->
+        <article class="exercise-box" id="ex-4-10">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.10</span>
+            <span class="theorem-tag">TV Show Survey &bull; Joint &amp; Conditional</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> A survey conducted in a college found that 40% of the students watch show A and 17% of the students who follow show A, also watch show B. In addition, 20% of the students watch show B.
+            <br><strong>(1)</strong> What is the probability that a randomly chosen student follows both shows?
+            <br><strong>(2)</strong> What is the conditional probability that the student follows show A given that she/he follows show B?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Translate Word Problem to Mathematical Statements:</strong>
+                <br>&bull; Student watches Show A: $\mathbb{P}(A) = 0.40$.
+                <br>&bull; Of those who watch Show A, 17% watch Show B: $\mathbb{P}(B \mid A) = 0.17$.
+                <br>&bull; Overall student population watching Show B: $\mathbb{P}(B) = 0.20$.
+              </li>
+              <li>
+                <strong>Part (1) Probability of Following Both Shows $\mathbb{P}(A \cap B)$:</strong>
+                Using the Multiplication Rule (Proposition 4.2(i)):
+                $$\mathbb{P}(A \cap B) = \mathbb{P}(B \mid A)\mathbb{P}(A) = (0.17)(0.40) = \mathbf{0.068} \text{ (or 6.8\%)}$$
+              </li>
+              <li>
+                <strong>Part (2) Conditional Probability $\mathbb{P}(A \mid B)$:</strong>
+                By Definition 4.1 of conditional probability:
+                $$\mathbb{P}(A \mid B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} = \frac{0.068}{0.20} = \mathbf{0.34} \text{ (or 34\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Answers: (1) $\mathbb{P}(A \cap B) = 0.068$ (6.8%) &bull; (2) $\mathbb{P}(A \mid B) = 0.34$ (34%)
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.11 -->
+        <article class="exercise-box" id="ex-4-11">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.11</span>
+            <span class="theorem-tag">Airport Runway Birds &bull; 3-State Bayes</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Use Bayes' formula to solve the following problem. An airport has problems with birds. If the weather is sunny, the probability that there are birds on the runway is 1/2; if it is cloudy, but dry, the probability is 1/3; and if it is raining, then the probability is 1/4. The probability of each type of weather is 1/3. Given that birds are on the runway, what is the probability:
+            <br><strong>(1)</strong> that the weather is sunny?
+            <br><strong>(2)</strong> that the weather is cloudy (dry or rainy)?
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Define Weather Partition &amp; Priors:</strong>
+                <br>&bull; Sunny ($S$): $\mathbb{P}(S) = \frac{1}{3}$
+                <br>&bull; Cloudy Dry ($C$): $\mathbb{P}(C) = \frac{1}{3}$
+                <br>&bull; Rainy ($R$): $\mathbb{P}(R) = \frac{1}{3}$
+              </li>
+              <li>
+                <strong>Conditional Bird Probabilities on Runway ($B$):</strong>
+                <br>&bull; $\mathbb{P}(B \mid S) = \frac{1}{2}$
+                <br>&bull; $\mathbb{P}(B \mid C) = \frac{1}{3}$
+                <br>&bull; $\mathbb{P}(B \mid R) = \frac{1}{4}$
+              </li>
+              <li>
+                <strong>Calculate Total Probability of Birds on Runway $\mathbb{P}(B)$:</strong>
+                $$\mathbb{P}(B) = \mathbb{P}(B \mid S)\mathbb{P}(S) + \mathbb{P}(B \mid C)\mathbb{P}(C) + \mathbb{P}(B \mid R)\mathbb{P}(R)$$
+                $$\mathbb{P}(B) = \left(\frac{1}{2}\right)\left(\frac{1}{3}\right) + \left(\frac{1}{3}\right)\left(\frac{1}{3}\right) + \left(\frac{1}{4}\right)\left(\frac{1}{3}\right) = \frac{1}{6} + \frac{1}{9} + \frac{1}{12}$$
+                Finding common denominator (36):
+                $$\mathbb{P}(B) = \frac{6 + 4 + 3}{36} = \frac{13}{36}$$
+              </li>
+              <li>
+                <strong>Part (1) Probability of Sunny Weather $\mathbb{P}(S \mid B)$:</strong>
+                $$\mathbb{P}(S \mid B) = \frac{\mathbb{P}(B \mid S)\mathbb{P}(S)}{\mathbb{P}(B)} = \frac{1/6}{13/36} = \frac{1}{6} \times \frac{36}{13} = \mathbf{\frac{6}{13}} \approx \mathbf{0.4615} \text{ (46.15\%)}$$
+              </li>
+              <li>
+                <strong>Part (2) Probability of Cloudy Weather (Dry or Rainy) $\mathbb{P}(C \cup R \mid B)$:</strong>
+                Since $S, C, R$ are mutually exclusive and exhaustive:
+                $$\mathbb{P}(C \cup R \mid B) = 1 - \mathbb{P}(S \mid B) = 1 - \frac{6}{13} = \mathbf{\frac{7}{13}} \approx \mathbf{0.5385} \text{ (53.85\%)}$$
+                <em>Direct verification:</em> $\mathbb{P}(C \mid B) + \mathbb{P}(R \mid B) = \frac{4/36}{13/36} + \frac{3/36}{13/36} = \frac{4}{13} + \frac{3}{13} = \frac{7}{13}$.
+              </li>
+            </ol>
+            <div class="final-ans">
+              Answers: (1) $\mathbb{P}(\text{Sunny} \mid \text{Birds}) = \frac{6}{13} \approx 46.15\%$ &bull; (2) $\mathbb{P}(\text{Cloudy} \mid \text{Birds}) = \frac{7}{13} \approx 53.85\%$
+            </div>
+          </div>
+        </article>
+
+        <!-- EXERCISE 4.12 -->
+        <article class="exercise-box" id="ex-4-12">
+          <div class="exercise-header">
+            <span class="exercise-number">Exercise 4.12</span>
+            <span class="theorem-tag">Gambler's Ruin &bull; Fair Coin Difference Equations</span>
+          </div>
+          <div class="exercise-question">
+            <strong>Problem:</strong> Suppose you toss a fair coin repeatedly and independently. If it comes up heads, you win a dollar, and if it comes up tails, you lose a dollar. Suppose you start with $20. What is the probability you will get to $150 before you go broke? (See Example 4.8 for a solution).
+          </div>
+          <div class="solution-block">
+            <div class="solution-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Complete Step-by-Step Solution:</div>
+            <ol class="step-list">
+              <li>
+                <strong>Model Setup:</strong>
+                <br>&bull; Starting capital: $n = 20$.
+                <br>&bull; Target wealth: $N = 150$.
+                <br>&bull; Ruin state: $0$.
+                <br>&bull; Coin is fair: $p = \frac{1}{2}$ (win $\$1$) and $1 - p = \frac{1}{2}$ (lose $\$1$).
+              </li>
+              <li>
+                <strong>Recurrence Formulation from Example 4.8:</strong>
+                Let $y(n) := \mathbb{P}(N \mid n)$ be the probability of reaching $\$N$ before $\$0$ starting with $\$n$.
+                $$y(n) = \frac{1}{2}y(n+1) + \frac{1}{2}y(n-1)$$
+                with boundary conditions $y(0) = 0$ and $y(N) = y(150) = 1$.
+              </li>
+              <li>
+                <strong>Solve the Linear Difference Equation:</strong>
+                As proven in Section 04 and textbook Equation 4.1.1, the solution is linear:
+                $$y(n) = \frac{n}{N}$$
+              </li>
+              <li>
+                <strong>Substitute Specific Values ($n = 20, N = 150$):</strong>
+                $$y(20) = \mathbb{P}(150 \mid 20) = \frac{20}{150} = \mathbf{\frac{2}{15}} \approx \mathbf{0.1333} \text{ (13.33\%)}$$
+              </li>
+            </ol>
+            <div class="final-ans">
+              Final Answer: $\mathbb{P}(150 \mid 20) = \frac{2}{15} \approx 13.33\%$
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 6: THEORETICAL STARRED PROOFS -->
+      <!-- ======================================================== -->
+      <section id="starred-proofs" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Starred Theoretical Proofs (Exercises* 4.1 to 4.3)</h2>
+        <p>
+          The textbook includes three advanced starred exercises exploring foundational probability theory:
+        </p>
+
+        <!-- Star 4.1 -->
+        <div class="callout callout-info" style="margin-bottom: 1.5rem;">
+          <div class="callout-title">Exercise* 4.1: General Biased Gambler's Ruin ($p \neq 1/2$)</div>
+          <div class="callout-content" style="margin-top: 0.75rem;">
+            <p><strong>Problem:</strong> Suppose you win $\$1$ with probability $p$ and lose $\$1$ with probability $q = 1-p$, where $0 < p < 1, p \neq 1/2$. Find the probability of reaching $\$N$ before $\$0$ starting with $\$n$.</p>
+            <p><strong>Solution:</strong><br>
+            The recurrence relation is:
+            $$y(n) = p \, y(n+1) + q \, y(n-1)$$
+            Since $p + q = 1$, we rewrite $y(n) = (p + q)y(n) = p \, y(n) + q \, y(n)$:
+            $$p[y(n+1) - y(n)] = q[y(n) - y(n-1)] \implies y(n+1) - y(n) = \left(\frac{q}{p}\right)[y(n) - y(n-1)]$$
+            Let $r = q/p$. Then $y(k) - y(k-1) = r^{k-1}[y(1) - y(0)] = r^{k-1}y(1)$ since $y(0) = 0$.<br>
+            Summing the geometric series:
+            $$y(n) = \sum_{k=1}^n [y(k) - y(k-1)] = y(1)\sum_{k=1}^n r^{k-1} = y(1) \frac{1 - r^n}{1 - r}$$
+            Using boundary condition $y(N) = 1$:
+            $$1 = y(1) \frac{1 - r^N}{1 - r} \implies y(1) = \frac{1 - r}{1 - r^N}$$
+            Substituting $y(1)$ back into the expression for $y(n)$:
+            $$y(n) = \frac{1 - r^n}{1 - r^N} = \frac{1 - (q/p)^n}{1 - (q/p)^N} \quad \blacksquare$$
+            </p>
+          </div>
+        </div>
+
+        <!-- Star 4.3 -->
+        <div class="callout callout-tip">
+          <div class="callout-title">Exercise* 4.3: Direct Proof of $\mathbb{P}(E^c \mid F) = 1 - \mathbb{P}(E \mid F)$</div>
+          <div class="callout-content" style="margin-top: 0.75rem;">
+            <p><strong>Direct Proof:</strong><br>
+            By Definition 4.1:
+            $$\mathbb{P}(E^c \mid F) = \frac{\mathbb{P}(E^c \cap F)}{\mathbb{P}(F)}$$
+            Notice that $F = (E \cap F) \cup (E^c \cap F)$, and these two events are disjoint.<br>
+            Therefore: $\mathbb{P}(F) = \mathbb{P}(E \cap F) + \mathbb{P}(E^c \cap F) \implies \mathbb{P}(E^c \cap F) = \mathbb{P}(F) - \mathbb{P}(E \cap F)$.<br>
+            Substituting this into the numerator:
+            $$\mathbb{P}(E^c \mid F) = \frac{\mathbb{P}(F) - \mathbb{P}(E \cap F)}{\mathbb{P}(F)} = \frac{\mathbb{P}(F)}{\mathbb{P}(F)} - \frac{\mathbb{P}(E \cap F)}{\mathbb{P}(F)} = 1 - \mathbb{P}(E \mid F) \quad \blacksquare$$
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 2rem; border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 1rem;">
+        <a href="probability-bsc-5th-sem.html" class="btn-secondary" style="padding: 0.65rem 1.25rem; font-size: 0.88rem; text-decoration: none !important;">
+          &larr; Back to BSc 5th Sem Hub
+        </a>
+        <a href="assets/conditional-probability-chapter-4.pdf" target="_blank" rel="noopener" class="btn-primary" style="background: #38bdf8; color: #0a0a0a; font-weight: 700; padding: 0.65rem 1.25rem; font-size: 0.88rem; text-decoration: none !important;">
+          View Original Chapter 4 PDF &nearr;
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech Notes &bull; BSc 5th Semester Probability &bull; University Curriculum</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\(', right: '\)', display: false},
+              {left: '\[', right: '\]', display: true}
+            ],
+            throwOnError: false,
+            errorColor: '#cc0000',
+            strict: false
+          });
+        } else {
+          setTimeout(renderMath, 80);
+        }
+      }
+      renderMath();
+    });
+    window.addEventListener("load", function() {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\(', right: '\)', display: false},
+            {left: '\[', right: '\]', display: true}
+          ],
+          throwOnError: false,
+          errorColor: '#cc0000',
+          strict: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>
