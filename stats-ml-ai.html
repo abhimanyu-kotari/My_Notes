@@ -12,7 +12,10 @@
   <!-- KaTeX for crisp mathematical formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+  </style>
 </head>
 <body>
 
@@ -134,7 +137,7 @@
         <h3>1. Skewness and its Impact on Loss Minimization</h3>
         <p>Many machine learning algorithms (such as Linear Regression, Ridge, Lasso, and K-Means) perform optimally when continuous features follow a symmetrical, near-Gaussian distribution. Heavily right-skewed features (such as user income, house prices, or web traffic latencies) pull the sample mean far away from the median, causing gradient descent updates to oscillate wildly.</p>
 
-        $$	ext{Skewness} = rac{rac{1}{n} \sum_{i=1}^n (x_i - ar{x})^3}{\left[rac{1}{n}\sum_{i=1}^n (x_i - ar{x})^2ight]^{3/2}}$$
+        $$\text{Skewness} = \frac{\frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})^3}{\left[\frac{1}{n}\sum_{i=1}^n (x_i - \bar{x})^2\right]^{3/2}}$$
 
         <table style="width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem;">
           <thead>
@@ -149,19 +152,19 @@
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 0.75rem 1rem;"><strong>$|S| < 0.5$</strong></td>
               <td style="padding: 0.75rem 1rem;">Fairly Symmetrical</td>
-              <td style="padding: 0.75rem 1rem;">$	ext{Mean} pprox 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">$\text{Mean} \approx \text{Median}$</td>
               <td style="padding: 0.75rem 1rem;">Ready for StandardScaler</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 0.75rem 1rem;"><strong>$S > 1.0$ (Right Skew)</strong></td>
               <td style="padding: 0.75rem 1rem;">Long tail on right side</td>
-              <td style="padding: 0.75rem 1rem;">$	ext{Mean} > 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">$\text{Mean} > \text{Median}$</td>
               <td style="padding: 0.75rem 1rem;">Log transform: $\ln(1 + x)$ or Box-Cox</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 0.75rem 1rem;"><strong>$S < -1.0$ (Left Skew)</strong></td>
               <td style="padding: 0.75rem 1rem;">Long tail on left side</td>
-              <td style="padding: 0.75rem 1rem;">$	ext{Mean} < 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">$\text{Mean} < \text{Median}$</td>
               <td style="padding: 0.75rem 1rem;">Reflect and Log, or Yeo-Johnson transform</td>
             </tr>
           </tbody>
@@ -182,7 +185,7 @@
             <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #58a6ff; text-transform: uppercase;">Z-Score Standardization</div>
             <h4 style="margin: 0.4rem 0 0.6rem;">StandardScaler</h4>
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Centers data at $\mu = 0$ with unit variance $\sigma = 1$:</p>
-            $$Z = rac{x - \mu}{\sigma}$$
+            $$Z = \frac{x - \mu}{\sigma}$$
             <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Linear/Logistic Regression, SVMs, PCA, Neural Networks. Does NOT bound outliers.</p>
           </div>
 
@@ -190,15 +193,15 @@
             <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #7ee787; text-transform: uppercase;">Range Normalization</div>
             <h4 style="margin: 0.4rem 0 0.6rem;">MinMaxScaler</h4>
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Compresses feature values strictly between $[0, 1]$:</p>
-            $$X_{norm} = rac{x - x_{min}}{x_{max} - x_{min}}$$
-            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Image pixel arrays ($[0, 255] 	o [0, 1]$), algorithms expecting positive inputs. Heavily compressed by single outliers.</p>
+            $$X_{norm} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Image pixel arrays ($[0, 255] \to [0, 1]$), algorithms expecting positive inputs. Heavily compressed by single outliers.</p>
           </div>
 
           <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
             <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #ffa657; text-transform: uppercase;">Median &amp; IQR Scaling</div>
             <h4 style="margin: 0.4rem 0 0.6rem;">RobustScaler</h4>
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Uses median ($Q_2$) and Interquartile Range ($Q_3 - Q_1$):</p>
-            $$X_{robust} = rac{x - 	ext{Median}}{Q_3 - Q_1}$$
+            $$X_{robust} = \frac{x - \text{Median}}{Q_3 - Q_1}$$
             <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Data containing significant outliers. Median and IQR are immune to extreme tail values.</p>
           </div>
         </div>
@@ -214,16 +217,16 @@
           <h4>1. Univariate Outliers: Z-Score vs. Tukey's IQR Fences</h4>
           <ul>
             <li><strong>Z-Score Rule:</strong> Any observation with $|Z| > 3$ ($3$ standard deviations away from the mean) is flagged. Assumes normal distribution!</li>
-            <li><strong>Tukey's IQR Fences:</strong> $[	ext{Lower} = Q_1 - 1.5 \cdot 	ext{IQR}, 	ext{Upper} = Q_3 + 1.5 \cdot 	ext{IQR}]$. Non-parametric; works on any distribution!</li>
+            <li><strong>Tukey's IQR Fences:</strong> $[\text{Lower} = Q_1 - 1.5 \cdot \text{IQR}, \text{Upper} = Q_3 + 1.5 \cdot \text{IQR}]$. Non-parametric; works on any distribution!</li>
           </ul>
 
           <h4>2. Multivariate Outliers: The Mahalanobis Distance</h4>
           <p>Consider a credit card dataset with two features: <em>Age</em> and <em>Income</em>. An income of \$150,000 is normal for a 50-year-old, and an age of 18 is normal. But an 18-year-old with \$150,000 income is an outlier! Euclidean distance fails to catch this because it ignores the correlation between age and income.</p>
-          <p><strong>Mahalanobis Distance</strong> measures distance in terms of standard deviations while taking the full feature covariance matrix $\Sigma$ into account:</p>
+          <p><strong>Mahalanobis Distance</strong> measures distance in terms of standard deviations while taking the full feature covariance matrix $\boldsymbol{\Sigma}$ into account:</p>
 
-          $$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - oldsymbol{\mu})^T oldsymbol{\Sigma}^{-1} (\mathbf{x} - oldsymbol{\mu})}$$
+          $$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x} - \boldsymbol{\mu})}$$
 
-          <p style="font-size: 0.9rem; color: var(--text-secondary);">If features are independent and standardized ($oldsymbol{\Sigma} = \mathbf{I}$), Mahalanobis distance simplifies directly to standard Euclidean distance!</p>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">If features are independent and standardized ($\boldsymbol{\Sigma} = \mathbf{I}$), Mahalanobis distance simplifies directly to standard Euclidean distance!</p>
         </div>
       </section>
 
@@ -232,38 +235,37 @@
         <h2><span class="section-number">05.</span> Statistical Foundations of Core ML Algorithms</h2>
 
         <h3>1. Linear Regression &amp; Ordinary Least Squares (OLS)</h3>
-        <p>In Ordinary Least Squares, we solve for parameter vector $oldsymbol{eta}$ that minimizes the sum of squared residuals: $\hat{oldsymbol{eta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$.</p>
+        <p>In Ordinary Least Squares, we solve for parameter vector $\boldsymbol{\beta}$ that minimizes the sum of squared residuals: $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$.</p>
         <p>By the <strong>Gauss-Markov Theorem</strong>, OLS is BLUE (<strong>B</strong>est <strong>L</strong>inear <strong>U</strong>nbiased <strong>E</strong>stimator) if and only if the following statistical assumptions hold:</p>
         <ol style="font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);">
           <li><strong>Linearity:</strong> The relationship between target $Y$ and features $X$ is linear in parameters.</li>
           <li><strong>Strict Exogeneity:</strong> Conditional expectation of residuals given features is zero: $\mathbb{E}[\epsilon|\mathbf{X}] = 0$.</li>
-          <li><strong>Homoscedasticity:</strong> Variance of error terms is constant across all feature levels: $	ext{Var}(\epsilon_i|\mathbf{X}) = \sigma^2$. (If violated, standard errors are wrong!).</li>
-          <li><strong>No Autocorrelation:</strong> Residuals are uncorrelated with each other: $	ext{Cov}(\epsilon_i, \epsilon_j) = 0$ for $i 
-eq j$.</li>
+          <li><strong>Homoscedasticity:</strong> Variance of error terms is constant across all feature levels: $\text{Var}(\epsilon_i|\mathbf{X}) = \sigma^2$. (If violated, standard errors are wrong!).</li>
+          <li><strong>No Autocorrelation:</strong> Residuals are uncorrelated with each other: $\text{Cov}(\epsilon_i, \epsilon_j) = 0$ for $i \neq j$.</li>
           <li><strong>No Multicollinearity:</strong> Feature matrix $\mathbf{X}$ has full column rank. If two features correlate perfectly, $(\mathbf{X}^T \mathbf{X})$ is non-invertible!</li>
         </ol>
 
         <h3>2. Logistic Regression &amp; The Odds Ratio</h3>
         <p>Why can't we use linear regression for binary classification? Linear regression outputs continuous values $\hat{y} \in (-\infty, +\infty)$, predicting nonsensical probabilities like $-0.3$ or $1.4$.</p>
-        <p>Instead, we model the <strong>Odds</strong>: $	ext{Odds} = rac{p}{1 - p}$. Taking the natural log gives the <strong>Logit link function</strong>:</p>
+        <p>Instead, we model the <strong>Odds</strong>: $\text{Odds} = \frac{p}{1 - p}$. Taking the natural log gives the <strong>Logit link function</strong>:</p>
 
-        $$\ln\left(rac{p}{1 - p}ight) = eta_0 + eta_1 x_1 + \dots + eta_k x_k$$
+        $$\ln\left(\frac{p}{1 - p}\right) = \beta_0 + \beta_1 x_1 + \dots + \beta_k x_k$$
 
         <p>Inverting the logit yields the famous <strong>Sigmoid function</strong>, guaranteeing valid output probabilities in $[0, 1]$:</p>
 
-        $$p(y = 1 | \mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x}) = rac{1}{1 + e^{-\mathbf{w}^T \mathbf{x}}}$$
+        $$p(y = 1 | \mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x}) = \frac{1}{1 + e^{-\mathbf{w}^T \mathbf{x}}}$$
 
         <h3>3. Naive Bayes &amp; Conditional Independence</h3>
         <p>Naive Bayes uses <strong>Bayes' Theorem</strong> to calculate posterior class probability given input features:</p>
 
-        $$P(Y = c | x_1, x_2, \dots, x_d) = rac{P(Y = c) \cdot P(x_1, \dots, x_d | Y = c)}{P(x_1, \dots, x_d)}$$
+        $$P(Y = c | x_1, x_2, \dots, x_d) = \frac{P(Y = c) \cdot P(x_1, \dots, x_d | Y = c)}{P(x_1, \dots, x_d)}$$
 
         <p>The "Naive" assumption states that all features are <strong>mutually conditionally independent</strong> given the class label. This converts an intractable joint probability into a simple product:</p>
 
         $$P(x_1, x_2, \dots, x_d | Y = c) = \prod_{j=1}^d P(x_j | Y = c)$$
 
         <div class="callout-tip">
-          <strong>The Zero-Frequency Trap &amp; Laplace Smoothing:</strong> If a word (e.g. <em>"cryptocurrency"</em>) never appeared in the spam training emails, $P(	ext{"cryptocurrency"}|	ext{Spam}) = 0$. Because we multiply probabilities, this single zero zeros out the entire prediction! <strong>Laplace Smoothing</strong> adds pseudo-counts $lpha \ge 1$ to both numerator and denominator: $\hat{P}(x_i|c) = rac{N_{ci} + lpha}{N_c + lpha K}$, ensuring probabilities are never zero.
+          <strong>The Zero-Frequency Trap &amp; Laplace Smoothing:</strong> If a word (e.g. <em>"cryptocurrency"</em>) never appeared in the spam training emails, $P(\text{"cryptocurrency"}|\text{Spam}) = 0$. Because we multiply probabilities, this single zero zeros out the entire prediction! <strong>Laplace Smoothing</strong> adds pseudo-counts $\alpha \ge 1$ to both numerator and denominator: $\hat{P}(x_i|c) = \frac{N_{ci} + \alpha}{N_c + \alpha K}$, ensuring probabilities are never zero.
         </div>
       </section>
 
@@ -275,33 +277,33 @@ eq j$.</li>
 
         <h3>Mathematical Proof: Mean Squared Error is Gaussian MLE</h3>
         <p>Assume our target $y$ is generated by a true function $f(x; \mathbf{w})$ with additive Gaussian noise $\epsilon \sim \mathcal{N}(0, \sigma^2)$:</p>
-        $$y = f(x; \mathbf{w}) + \epsilon \implies P(y|x; \mathbf{w}) = rac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -rac{(y - f(x; \mathbf{w}))^2}{2\sigma^2} ight)$$
+        $$y = f(x; \mathbf{w}) + \epsilon \implies P(y|x; \mathbf{w}) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -\frac{(y - f(x; \mathbf{w}))^2}{2\sigma^2} \right)$$
         
         <p>For $n$ independent and identically distributed (i.i.d.) observations, the joint Likelihood is:</p>
-        $$L(\mathbf{w}) = \prod_{i=1}^n rac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -rac{(y_i - f(x_i; \mathbf{w}))^2}{2\sigma^2} ight)$$
+        $$L(\mathbf{w}) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -\frac{(y_i - f(x_i; \mathbf{w}))^2}{2\sigma^2} \right)$$
 
         <p>Taking the natural logarithm yields the <strong>Log-Likelihood</strong>:</p>
-        $$\ln L(\mathbf{w}) = -rac{n}{2}\ln(2\pi\sigma^2) - rac{1}{2\sigma^2} \sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2$$
+        $$\ln L(\mathbf{w}) = -\frac{n}{2}\ln(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2$$
 
         <p>To maximize the log-likelihood with respect to parameters $\mathbf{w}$, constants drop out. Maximizing the positive likelihood is mathematically identical to <strong>minimizing the sum of squared errors</strong>:</p>
-        $$rg\max_{\mathbf{w}} \ln L(\mathbf{w}) \equiv rg\min_{\mathbf{w}} rac{1}{n}\sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2 \quad lacksquare$$
+        $$\arg\max_{\mathbf{w}} \ln L(\mathbf{w}) \equiv \arg\min_{\mathbf{w}} \frac{1}{n}\sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2 \quad \blacksquare$$
       </section>
 
       <!-- SECTION 7: BAYESIAN REGULARIZATION (L1 & L2) -->
       <section id="sec-regularization-bayesian" class="note-section content-section">
         <h2><span class="section-number">07.</span> Regularization from a Bayesian Statistical Lens</h2>
 
-        <p>In standard Machine Learning, we add a penalty term to loss functions: $\mathcal{L}_{	ext{total}} = 	ext{Loss} + \lambda \Omega(\mathbf{w})$. From a Bayesian statistical standpoint, <strong>regularization is nothing more than placing a prior probability distribution over model weights</strong> via Maximum A Posteriori (MAP) estimation:</p>
+        <p>In standard Machine Learning, we add a penalty term to loss functions: $\mathcal{L}_{\text{total}} = \text{Loss} + \lambda \Omega(\mathbf{w})$. From a Bayesian statistical standpoint, <strong>regularization is nothing more than placing a prior probability distribution over model weights</strong> via Maximum A Posteriori (MAP) estimation:</p>
 
-        $$\mathbf{w}_{	ext{MAP}} = rg\max_{\mathbf{w}} \left[ \ln P(	ext{Data}|\mathbf{w}) + \ln P(\mathbf{w}) ight]$$
+        $$\mathbf{w}_{\text{MAP}} = \arg\max_{\mathbf{w}} \left[ \ln P(\text{Data}|\mathbf{w}) + \ln P(\mathbf{w}) \right]$$
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0;">
           <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
             <h4 style="margin-top: 0; color: #58a6ff;">L2 Regularization (Ridge)</h4>
             <p style="font-size: 0.88rem; color: var(--text-secondary);">
-              <strong>Prior:</strong> Zero-mean <strong>Gaussian (Normal) distribution</strong>: $w_j \sim \mathcal{N}(0, 	au^2)$.
+              <strong>Prior:</strong> Zero-mean <strong>Gaussian (Normal) distribution</strong>: $w_j \sim \mathcal{N}(0, \tau^2)$.
             </p>
-            $$\ln P(\mathbf{w}) = -rac{1}{2	au^2} \sum_{j=1}^d w_j^2 + 	ext{const}$$
+            $$\ln P(\mathbf{w}) = -\frac{1}{2\tau^2} \sum_{j=1}^d w_j^2 + \text{const}$$
             <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
               Because the Gaussian log-density is quadratic, it penalizes large weights heavily, shrinking them smoothly toward zero without ever forcing them to exactly zero.
             </p>
@@ -310,9 +312,9 @@ eq j$.</li>
           <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
             <h4 style="margin-top: 0; color: #7ee787;">L1 Regularization (Lasso)</h4>
             <p style="font-size: 0.88rem; color: var(--text-secondary);">
-              <strong>Prior:</strong> Zero-mean <strong>Laplace distribution</strong>: $w_j \sim 	ext{Laplace}(0, b)$.
+              <strong>Prior:</strong> Zero-mean <strong>Laplace distribution</strong>: $w_j \sim \text{Laplace}(0, b)$.
             </p>
-            $$\ln P(\mathbf{w}) = -rac{1}{b} \sum_{j=1}^d |w_j| + 	ext{const}$$
+            $$\ln P(\mathbf{w}) = -\frac{1}{b} \sum_{j=1}^d |w_j| + \text{const}$$
             <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
               The Laplace distribution has a sharp spike at zero. Maximizing posterior density pushes unimportant feature weights directly to exactly $0.0$, performing automatic feature selection!
             </p>
@@ -331,15 +333,15 @@ eq j$.</li>
         <p>For complex metrics like ROC-AUC, F1-Score, or Mean Reciprocal Rank (MRR), no simple analytical formula exists for standard error. We use <strong>Bootstrapping (Sampling with replacement)</strong>:</p>
 
         <ol style="font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);">
-          <li>Take the original test dataset $\mathcal{D}_{	ext{test}}$ of size $N$.</li>
+          <li>Take the original test dataset $\mathcal{D}_{\text{test}}$ of size $N$.</li>
           <li>For iteration $b = 1, \dots, B$ (e.g. $B = 1,000$ iterations):
             <ul>
-              <li>Draw a bootstrap sample $\mathcal{D}_b^*$ of size $N$ randomly <em>with replacement</em> from $\mathcal{D}_{	ext{test}}$.</li>
-              <li>Compute the evaluation metric $	heta_b^* = 	ext{Metric}(\mathcal{D}_b^*)$ (e.g. ROC-AUC).</li>
+              <li>Draw a bootstrap sample $\mathcal{D}_b^*$ of size $N$ randomly <em>with replacement</em> from $\mathcal{D}_{\text{test}}$.</li>
+              <li>Compute the evaluation metric $\theta_b^* = \text{Metric}(\mathcal{D}_b^*)$ (e.g. ROC-AUC).</li>
             </ul>
           </li>
-          <li>Sort the 1,000 computed metrics: $	heta_{(1)}^* \le 	heta_{(2)}^* \le \dots \le 	heta_{(B)}^*$.</li>
-          <li>The empirical 95% Confidence Interval is given by the 2.5th percentile and 97.5th percentile: $[	heta_{(25)}^*, 	heta_{(975)}^*]$.</li>
+          <li>Sort the 1,000 computed metrics: $\theta_{(1)}^* \le \theta_{(2)}^* \le \dots \le \theta_{(B)}^*$.</li>
+          <li>The empirical 95% Confidence Interval is given by the 2.5th percentile and 97.5th percentile: $[\theta_{(25)}^*, \theta_{(975)}^*]$.</li>
         </ol>
       </section>
 
@@ -353,17 +355,17 @@ eq j$.</li>
           <h4 style="margin-top: 0; color: #58a6ff;">The 4 Essential A/B Testing Formulas</h4>
           
           <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>1. Sample Size Determination ($N$ per variant):</strong></p>
-          $$n = rac{(Z_{lpha/2} + Z_{eta})^2 \cdot 2 \sigma^2}{	ext{MDE}^2}$$
+          $$n = \frac{(Z_{\alpha/2} + Z_{\beta})^2 \cdot 2 \sigma^2}{\text{MDE}^2}$$
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Where $lpha = 0.05 \implies Z_{0.025} = 1.96$, Statistical Power $1 - eta = 0.80 \implies Z_{0.20} = 0.84$, and MDE is the Minimum Detectable Effect.
+            Where $\alpha = 0.05 \implies Z_{0.025} = 1.96$, Statistical Power $1 - \beta = 0.80 \implies Z_{0.20} = 0.84$, and MDE is the Minimum Detectable Effect.
           </p>
 
           <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>2. Two-Sample Z-Test for Proportions (Click-Through Rate / Conversion):</strong></p>
-          $$Z = rac{\hat{p}_B - \hat{p}_A}{\sqrt{\hat{p}_{	ext{pool}}(1 - \hat{p}_{	ext{pool}})\left(rac{1}{n_A} + rac{1}{n_B}ight)}}, \quad \hat{p}_{	ext{pool}} = rac{X_A + X_B}{n_A + n_B}$$
+          $$Z = \frac{\hat{p}_B - \hat{p}_A}{\sqrt{\hat{p}_{\text{pool}}(1 - \hat{p}_{\text{pool}})\left(\frac{1}{n_A} + \frac{1}{n_B}\right)}}, \quad \hat{p}_{\text{pool}} = \frac{X_A + X_B}{n_A + n_B}$$
 
           <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>3. The Multiple Comparisons Penalty (Bonferroni Correction):</strong></p>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
-            If you track $k = 10$ secondary metrics simultaneously at $lpha = 0.05$, the probability of at least one false alarm is $1 - (1 - 0.05)^{10} pprox 40\%$! To preserve family-wise error rate, adjust: $lpha_{	ext{adjusted}} = rac{lpha}{k}$.
+            If you track $k = 10$ secondary metrics simultaneously at $\alpha = 0.05$, the probability of at least one false alarm is $1 - (1 - 0.05)^{10} \approx 40\%$! To preserve family-wise error rate, adjust: $\alpha_{\text{adjusted}} = \frac{\alpha}{k}$.
           </p>
         </div>
 
@@ -469,5 +471,25 @@ print(f"95% Bootstrap Confidence Interval: [{ci_lower:.4f}, {ci_upper:.4f}]")
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
+    });
+  </script>
 </body>
 </html>

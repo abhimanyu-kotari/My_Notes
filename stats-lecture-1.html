@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="style.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+  </style>
 </head>
 <body>
 
@@ -127,7 +130,7 @@
               <ul style="margin: 0.75rem 0 0; padding-left: 1.25rem; font-size: 0.88rem; color: var(--text-muted);">
                 <li>Hypothesis Testing ($Z$-test, $t$-test, ANOVA, $\chi^2$-test)</li>
                 <li>Confidence Intervals &amp; Margin of Error</li>
-                <li>P-values, Significance Levels ($lpha$), and Decision Rules</li>
+                <li>P-values, Significance Levels ($\alpha$), and Decision Rules</li>
                 <li><em>Example Question:</em> "Are the exam scores of Class A representative of all 1,000 math students across the entire university?"</li>
               </ul>
             </div>
@@ -195,7 +198,7 @@
                 Variables measured numerically. You can perform standard mathematical operations on them (addition, subtraction, multiplication, averages).
               </p>
               <div style="margin-top: 0.75rem; font-size: 0.88rem; color: #a5d6ff;">
-                <strong>Examples:</strong> Age (25, 30), Weight (72 kg), Height (178 cm), Bank Balance ($5,000), Exam Marks (85%).
+                <strong>Examples:</strong> Age (25, 30), Weight (72 kg), Height (178 cm), Bank Balance (\$5,000), Exam Marks (85%).
               </div>
             </div>
 
@@ -303,8 +306,7 @@
             </p>
             <div style="font-size: 0.84rem; color: var(--text-muted); background: var(--bg-primary); padding: 0.6rem; border-radius: 4px;">
               <strong>Examples:</strong> Gender, Eye Color, Marital Status, Flower Type.<br>
-              <strong>Allowed Math:</strong> Mode, Frequency counts, Equality ($=$ or $
-eq$).
+              <strong>Allowed Math:</strong> Mode, Frequency counts, Equality ($=$ or $\neq$).
             </div>
           </div>
 
@@ -358,10 +360,10 @@ eq$).
         <div class="concept-box">
           <div class="concept-title">Why the "True Zero" Difference Matters</div>
           <p>
-            Consider temperature: $80^\circ	ext{F}$ is <strong>not</strong> "twice as hot" as $40^\circ	ext{F}$ because $0^\circ	ext{F}$ is an arbitrary point on a scale, not the complete absence of heat energy. That makes temperature an <strong>Interval scale</strong>.
+            Consider temperature: $80^\circ\text{F}$ is <strong>not</strong> "twice as hot" as $40^\circ\text{F}$ because $0^\circ\text{F}$ is an arbitrary point on a scale, not the complete absence of heat energy. That makes temperature an <strong>Interval scale</strong>.
           </p>
           <p style="margin-top: 0.5rem;">
-            Now consider money: An employee earning $\$100,000$ earns <strong>exactly twice as much</strong> as someone earning $\$50,000$, and $\$0$ represents the complete absence of money. That makes salary a <strong>Ratio scale</strong>.
+            Now consider money: An employee earning \$100,000 earns <strong>exactly twice as much</strong> as someone earning \$50,000, and \$0 represents the complete absence of money. That makes salary a <strong>Ratio scale</strong>.
           </p>
         </div>
       </section>
@@ -514,19 +516,19 @@ eq$).
               <tr>
                 <td><strong>Rose</strong></td>
                 <td>3</td>
-                <td>$3 / 9 pprox 33.3\%$</td>
+                <td>$3 / 9 \approx 33.3\%$</td>
                 <td>3</td>
               </tr>
               <tr>
                 <td><strong>Lily</strong></td>
                 <td>4</td>
-                <td>$4 / 9 pprox 44.4\%$</td>
+                <td>$4 / 9 \approx 44.4\%$</td>
                 <td>$3 + 4 = \mathbf{7}$</td>
               </tr>
               <tr>
                 <td><strong>Sunflower</strong></td>
                 <td>2</td>
-                <td>$2 / 9 pprox 22.2\%$</td>
+                <td>$2 / 9 \approx 22.2\%$</td>
                 <td>$7 + 2 = \mathbf{9}$ (Total Sample Size $n$)</td>
               </tr>
             </tbody>
@@ -792,11 +794,11 @@ eq$).
               <div id="sim-pop-mean" style="font-size: 1.25rem; font-weight: 700; color: #58a6ff; font-family: var(--font-mono);">--</div>
             </div>
             <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
-              <div style="font-size: 0.8rem; color: var(--text-muted);">Sample Mean ($ar{x}$):</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Sample Mean ($\bar{x}$):</div>
               <div id="sim-sample-mean" style="font-size: 1.25rem; font-weight: 700; color: #7ee787; font-family: var(--font-mono);">--</div>
             </div>
             <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem;">
-              <div style="font-size: 0.8rem; color: var(--text-muted);">Sampling Error ($|ar{x} - \mu|$):</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Sampling Error ($|\bar{x} - \mu|$):</div>
               <div id="sim-sample-err" style="font-size: 1.25rem; font-weight: 700; color: #ffa657; font-family: var(--font-mono);">--</div>
             </div>
           </div>
@@ -947,6 +949,26 @@ eq$).
 
     window.addEventListener('DOMContentLoaded', () => {
       runSamplingSim();
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
     });
   </script>
 </body>
