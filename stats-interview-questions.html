@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 06: Statistics Interview Questions &amp; Answers | Tech Notes</title>
+  <meta name="description" content="Top 26 Statistics, Machine Learning, and A/B Testing interview questions asked at FAANG and top tech companies with deep mathematical explanations and practical examples.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <style>
+    .qa-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.2s ease;
+    }
+    .qa-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    .qa-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+    .qa-q-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #58a6ff;
+      background: rgba(88, 166, 255, 0.12);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .qa-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.4;
+    }
+    .qa-tldr {
+      background: rgba(99, 102, 241, 0.08);
+      border-left: 3px solid #6366f1;
+      border-radius: 0 6px 6px 0;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+    }
+    .qa-tldr strong {
+      color: #818cf8;
+    }
+    .qa-body {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+    .qa-body strong {
+      color: var(--text-primary);
+    }
+    .qa-pitfall {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.85rem;
+      font-size: 0.88rem;
+      color: #fca5a5;
+    }
+    .qa-pitfall strong {
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="statistics.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Statistics Hub</a>
+        <button id="sidebarToggleBtn" class="btn-icon" aria-label="Toggle Sidebar" title="Toggle Sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Interview Categories
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#cat-descriptive" class="sidebar-link">1. Descriptive &amp; Outliers</a></li>
+        <li><a href="#cat-probability" class="sidebar-link">2. Probability &amp; Bayes</a></li>
+        <li><a href="#cat-distributions" class="sidebar-link">3. Distributions &amp; CLT</a></li>
+        <li><a href="#cat-hypothesis" class="sidebar-link">4. Hypothesis Testing</a></li>
+        <li><a href="#cat-modeling" class="sidebar-link">5. ML &amp; Modeling Stats</a></li>
+        <li><a href="#cat-abtesting" class="sidebar-link">6. A/B Testing &amp; Production</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+
+      <!-- Lecture Header -->
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-1.html" style="color: inherit; text-decoration: none;">Month 1</a> &rsaquo; 
+          <a href="statistics.html" style="color: inherit; text-decoration: none;">Statistics</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 06: Statistics Interview Preparation</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 06</span>
+          <span class="tag">Interview Prep</span>
+          <span class="tag">FAANG / Top Tech</span>
+          <span class="tag">26 Core Questions</span>
+          <span class="tag">Conceptual &amp; Numerical</span>
+          <span class="tag">A/B Testing Traps</span>
+        </div>
+        <h1 class="lecture-main-title">Statistics Interview Questions &amp; Detailed Answers</h1>
+        <p class="lecture-lead">
+          A battle-tested question bank curated from actual Data Scientist, Machine Learning Engineer, and Applied Scientist interviews at Google, Meta, Amazon, Microsoft, and Netflix. Every question includes the direct executive answer, deep mathematical reasoning, real-world scenario context, and common candidate traps.
+        </p>
+      </div>
+
+      <!-- CATEGORY 1: DESCRIPTIVE STATISTICS & OUTLIERS -->
+      <section id="cat-descriptive" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Descriptive Statistics, Variance &amp; Outliers</h2>
+
+        <!-- Q1 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q01</span>
+            <h3 class="qa-title">What is Bessel's correction, and why do we divide by $n - 1$ instead of $n$ for sample variance?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Dividing by $n$ underestimates true population variance because sample observations naturally cluster closer to the sample mean $\bar{x}$ than to the true unknown population mean $\mu$. Dividing by $n - 1$ adjusts for this loss of one degree of freedom and produces an <strong>unbiased estimator</strong>: $\mathbb{E}[s^2] = \sigma^2$.
+          </div>
+          <div class="qa-body">
+            <p><strong>Mathematical Reasoning:</strong> When computing sample variance, we don't know the population mean $\mu$, so we estimate it using the sample mean $\bar{x} = \frac{1}{n}\sum x_i$. This imposes a linear constraint: $\sum (x_i - \bar{x}) = 0$. Consequently, only $n - 1$ deviations are free to vary; the $n$-th deviation is mathematically predetermined.</p>
+            <p>It can be proven mathematically that the uncorrected variance has expected value $\mathbb{E}[s_n^2] = \frac{n-1}{n}\sigma^2$. Multiplying by $\frac{n}{n-1}$ cancels the bias:</p>
+            $$s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2 \implies \mathbb{E}[s^2] = \sigma^2$$
+          </div>
+          <div class="qa-pitfall">
+            <strong>Common Trap:</strong> Candidates often claim that Bessel's correction also makes the sample standard deviation $s = \sqrt{s^2}$ unbiased. <strong>This is false!</strong> Due to Jensen's Inequality for concave functions ($\mathbb{E}[\sqrt{X}] < \sqrt{\mathbb{E}[X]}$), taking the square root makes $s$ slightly underestimate $\sigma$, though $n-1$ remains the standard practical adjustment.
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q02</span>
+            <h3 class="qa-title">Why do we use Standard Deviation instead of Variance in reporting, and when can Standard Deviation mislead you?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Standard Deviation is in the <strong>same physical units</strong> as the original measurement (e.g. dollars or milliseconds), whereas Variance is in squared units (e.g. $\text{dollars}^2$). Standard deviation is misleading on <strong>heavily skewed or multi-modal distributions</strong> because it assumes symmetry around the mean.
+          </div>
+          <div class="qa-body">
+            <p><strong>Real-World Example:</strong> If reporting user latency for an API, stating variance as $250,000\text{ ms}^2$ is meaningless to product managers, while standard deviation ($\sigma = 500\text{ ms}$) is directly actionable alongside mean $\mu = 200\text{ ms}$.</p>
+            <p>However, if the latency distribution is bi-modal (fast cached hits at 10ms vs slow database hits at 2,000ms), standard deviation aggregates them into an uninformative average spread. In such cases, <strong>Percentiles ($P_{50}, P_{95}, P_{99}$) and IQR</strong> are far more informative.</p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q03</span>
+            <h3 class="qa-title">What is Simpson's Paradox? Provide a real Data Science example.</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Simpson's Paradox occurs when a statistical trend appears in aggregated data, but completely disappears or reverses when the data is disaggregated into sub-populations due to a lurking (confounding) variable.
+          </div>
+          <div class="qa-body">
+            <p><strong>Concrete Tech Example:</strong> Suppose an e-commerce platform tests two checkout algorithms ($A$ vs $B$):</p>
+            <ul>
+              <li><strong>Aggregated:</strong> Algorithm $A$ has an overall 5.2% conversion rate, while Algorithm $B$ has 4.8%. Algorithm $A$ looks like the winner.</li>
+              <li><strong>Disaggregated by Device (Confounder):</strong>
+                <ul>
+                  <li>On Mobile: Algorithm $B$ (3.5%) beats Algorithm $A$ (3.0%).</li>
+                  <li>On Desktop: Algorithm $B$ (8.5%) beats Algorithm $A$ (8.0%).</li>
+                </ul>
+              </li>
+            </ul>
+            <p><strong>Why did this happen?</strong> Algorithm $A$ received 90% of its traffic from Desktop users (who convert at a much higher baseline rate), while Algorithm $B$ received 90% of its traffic from Mobile users. Device type was an uncontrolled confounder!</p>
+          </div>
+          <div class="qa-pitfall">
+            <strong>How to Avoid:</strong> Always check for confounding variables, perform stratified analysis across key user segments, and verify random assignment in A/B tests.
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q04</span>
+            <h3 class="qa-title">When would you choose Tukey's IQR Fences over Z-Scores for Outlier Detection?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Use <strong>IQR Fences</strong> when data is skewed or contains extreme values, because the median and quartiles are non-parametric and robust. Use <strong>Z-Scores</strong> ($|Z| > 3$) only when data is strictly known to follow a Gaussian (normal) distribution.
+          </div>
+          <div class="qa-body">
+            <p>The Mean and Standard Deviation used in the Z-score formula ($Z = \frac{x - \mu}{\sigma}$) are themselves highly vulnerable to the very outliers you are trying to find! A single massive outlier inflates $\sigma$ and pulls $\mu$, masking subsequent outliers (known as <em>masking effect</em>). Tukey's IQR Fences ($Q_1 - 1.5\text{IQR}, Q_3 + 1.5\text{IQR}$) are immune to this.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORY 2: PROBABILITY & BAYES -->
+      <section id="cat-probability" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Probability Theory &amp; Bayesian Inference</h2>
+
+        <!-- Q5 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q05</span>
+            <h3 class="qa-title">Can two events be both Mutually Exclusive and Independent?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Only if at least one of the events has a probability of zero! For two events with non-zero probability, <strong>they can never be both mutually exclusive and independent</strong>.
+          </div>
+          <div class="qa-body">
+            <p><strong>Proof:</strong></p>
+            <ul>
+              <li>If events $A$ and $B$ are <strong>mutually exclusive</strong>, they cannot occur together: $P(A \cap B) = 0$.</li>
+              <li>If events $A$ and $B$ are <strong>independent</strong>, the probability of both occurring is: $P(A \cap B) = P(A) \cdot P(B)$.</li>
+              <li>For both conditions to hold simultaneously: $P(A) \cdot P(B) = 0$. Therefore, either $P(A) = 0$, $P(B) = 0$, or both.</li>
+            </ul>
+            <p><strong>Intuition:</strong> If two events are mutually exclusive (e.g. rolling a 2 vs rolling a 5 on a die), knowing that $A$ happened gives you 100% certainty that $B$ did NOT happen ($P(B|A) = 0$). That is maximum statistical dependence, not independence!</p>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q06</span>
+            <h3 class="qa-title">Explain the False Positive Paradox (Base Rate Fallacy) using a medical testing or fraud scenario.</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> When the true condition is extremely rare in the population (low base rate), even a test with 99% accuracy will produce more false alarms than true positives.
+          </div>
+          <div class="qa-body">
+            <p><strong>Numerical Example:</strong> Suppose a rare disease affects $1$ in $1,000$ people (prevalence $P(D) = 0.001$). A test has $99\%$ Sensitivity ($P(+|D) = 0.99$) and $99\%$ Specificity ($P(-|\neg D) = 0.99$, meaning false positive rate is $1\%$). A random patient tests positive. What is the probability they actually have the disease?</p>
+            $$P(D|+) = \frac{P(+|D) P(D)}{P(+|D)P(D) + P(+|\neg D)P(\neg D)} = \frac{0.99 \times 0.001}{(0.99 \times 0.001) + (0.01 \times 0.999)} \approx \frac{0.00099}{0.00099 + 0.00999} \approx 9.01\%$$
+            <p>Even though the test is 99% accurate, a positive test result only gives a <strong>~9% chance</strong> of having the disease! 91% of positive results are false alarms because healthy people outnumber diseased people by 999 to 1.</p>
+          </div>
+          <div class="qa-pitfall">
+            <strong>ML Connection:</strong> This is why in fraud detection (where fraud is < 0.1% of transactions), optimizing raw Accuracy is useless, and models must be tuned using Precision-Recall curves (PR-AUC) rather than ROC-AUC.
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q07</span>
+            <h3 class="qa-title">Why do we add Laplace Smoothing in Naive Bayes, and what is its mathematical formulation?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Laplace smoothing prevents the <strong>Zero-Frequency Problem</strong> where a feature value not observed during training produces a conditional probability of $0.0$, causing the entire product of probabilities in Naive Bayes to collapse to zero.
+          </div>
+          <div class="qa-body">
+            <p>The standard empirical conditional probability estimator is $\hat{P}(x_i | c) = \frac{N_{ci}}{N_c}$. With Laplace smoothing ($\alpha = 1$):</p>
+            $$\hat{P}_{\text{Laplace}}(x_i | c) = \frac{N_{ci} + \alpha}{N_c + \alpha \cdot K}$$
+            <p>Where $N_{ci}$ is the count of feature $x_i$ in class $c$, $N_c$ is total count of words in class $c$, and $K$ is the size of the vocabulary (total number of distinct features). Adding $\alpha K$ to the denominator ensures that the probabilities across all possible features still sum up exactly to $1.0$.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORY 3: DISTRIBUTIONS & CENTRAL LIMIT THEOREM -->
+      <section id="cat-distributions" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Probability Distributions &amp; The Central Limit Theorem</h2>
+
+        <!-- Q8 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q08</span>
+            <h3 class="qa-title">State the Central Limit Theorem (CLT) precisely. Why is it so crucial for Data Science?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Given $n$ independent and identically distributed (i.i.d.) random variables from <em>any</em> population with finite mean $\mu$ and finite variance $\sigma^2$, the sampling distribution of the normalized sample mean $\bar{X}_n$ converges to a Standard Normal distribution $\mathcal{N}(0, 1)$ as $n \to \infty$.
+          </div>
+          <div class="qa-body">
+            $$\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1) \quad \text{as } n \to \infty$$
+            <p><strong>Why It Matters for ML:</strong></p>
+            <ol>
+              <li>It allows us to compute <strong>confidence intervals and hypothesis tests</strong> for population parameters without needing to know the underlying population distribution!</li>
+              <li>It justifies treating residuals and measurement errors in linear regression as approximately Gaussian.</li>
+              <li>It underpins modern A/B testing: even if individual user conversion is a binary Bernoulli step (0 or 1), the average conversion rate across 10,000 users behaves as a Gaussian distribution.</li>
+            </ol>
+          </div>
+          <div class="qa-pitfall">
+            <strong>Common Trap:</strong> CLT says the distribution of the <em>sample mean</em> ($\bar{x}$) becomes normal, <strong>NOT</strong> that the original data itself becomes normal as sample size grows!
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q09</span>
+            <h3 class="qa-title">What is the difference between a PDF (Probability Density Function) and PMF (Probability Mass Function)? Can a PDF exceed 1.0?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> A <strong>PMF</strong> applies to discrete random variables where $P(X = x)$ gives the exact probability (which must be $\le 1.0$). A <strong>PDF</strong> applies to continuous variables where the probability of any exact point is zero ($P(X = x_0) = 0$), and height represents <em>density</em>, which <strong>CAN exceed 1.0</strong>!
+          </div>
+          <div class="qa-body">
+            <p><strong>Proof that PDF can exceed 1:</strong> Consider a Uniform continuous distribution $X \sim U[0, 0.2]$. The total area under the curve must equal 1.0:</p>
+            $$\text{Area} = \text{Width} \times \text{Height} \implies 0.2 \times f(x) = 1.0 \implies f(x) = 5.0$$
+            <p>Here, the density is $5.0$, which is well above $1.0$! Probabilities in continuous distributions are obtained only by integrating over an interval: $P(a \le X \le b) = \int_a^b f(x) dx$.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORY 4: HYPOTHESIS TESTING -->
+      <section id="cat-hypothesis" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Hypothesis Testing &amp; Inferential Decisions</h2>
+
+        <!-- Q10 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q10</span>
+            <h3 class="qa-title">What is the exact definition of a P-Value, and what are the 3 biggest misconceptions?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> A p-value is the probability of observing a test statistic as extreme as, or more extreme than, the observed value, <strong>assuming the null hypothesis ($H_0$) is true</strong>: $P(\text{Data as extreme} | H_0)$.
+          </div>
+          <div class="qa-body">
+            <p><strong>The 3 Fatal Misconceptions:</strong></p>
+            <ul>
+              <li><strong>Misconception 1:</strong> <em>"The p-value is the probability that the null hypothesis is true."</em> (False! In frequentist statistics, hypotheses are fixed truths, not random variables).</li>
+              <li><strong>Misconception 2:</strong> <em>"$1 - \text{p-value}$ is the probability that the alternative hypothesis is true."</em> (False!).</li>
+              <li><strong>Misconception 3:</strong> <em>"A tiny p-value means the effect size is massive."</em> (False! With a large enough sample size like $n = 10,000,000$, an utterly trivial 0.001% lift can produce a p-value of $0.00001$).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q11</span>
+            <h3 class="qa-title">Explain Type I vs Type II Errors in the context of high-stakes AI systems.</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> 
+            <strong>Type I Error ($\alpha$):</strong> False Positive (Rejecting true $H_0$). 
+            <strong>Type II Error ($\beta$):</strong> False Negative (Failing to reject false $H_0$). 
+            The relative business cost determines which error you must minimize.
+          </div>
+          <div class="qa-body">
+            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem;">
+              <thead>
+                <tr style="background: var(--bg-card); border-bottom: 2px solid var(--border-color); text-align: left;">
+                  <th style="padding: 0.6rem 0.85rem;">Domain</th>
+                  <th style="padding: 0.6rem 0.85rem;">Type I Error (False Positive)</th>
+                  <th style="padding: 0.6rem 0.85rem;">Type II Error (False Negative)</th>
+                  <th style="padding: 0.6rem 0.85rem;">Critical Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.85rem;"><strong>Cancer Screening AI</strong></td>
+                  <td style="padding: 0.6rem 0.85rem;">Healthy patient flagged for biopsy (temporary stress).</td>
+                  <td style="padding: 0.6rem 0.85rem;">Cancer patient told they are fine (fatal delay).</td>
+                  <td style="padding: 0.6rem 0.85rem; color: #ef4444; font-weight: 600;">Minimize Type II (Maximize Recall)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.85rem;"><strong>Spam Email Filter</strong></td>
+                  <td style="padding: 0.6rem 0.85rem;">Important job offer sent to Spam folder (disastrous).</td>
+                  <td style="padding: 0.6rem 0.85rem;">A spam message enters your inbox (minor annoyance).</td>
+                  <td style="padding: 0.6rem 0.85rem; color: #58a6ff; font-weight: 600;">Minimize Type I (Maximize Precision)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q12</span>
+            <h3 class="qa-title">When should you use a Z-test vs t-test vs Welch's t-test vs ANOVA vs Chi-Square?</h3>
+          </div>
+          <div class="qa-body">
+            <ul style="line-height: 1.7;">
+              <li><strong>One-Sample / Two-Sample Z-Test:</strong> Population variance $\sigma^2$ is known, or sample size is very large ($n > 30$) for proportions.</li>
+              <li><strong>Student's t-Test:</strong> Comparing means of 2 groups when population $\sigma^2$ is unknown ($n < 30$), assuming equal variances ($\sigma_1^2 = \sigma_2^2$).</li>
+              <li><strong>Welch's t-Test:</strong> Comparing means of 2 groups with <strong>unequal variances</strong> ($\sigma_1^2 \neq \sigma_2^2$). <em>Default in Python `scipy.stats.ttest_ind(equal_var=False)`!</em></li>
+              <li><strong>One-Way ANOVA (F-Test):</strong> Comparing means of <strong>3 or more continuous groups</strong> simultaneously without inflating Type I error.</li>
+              <li><strong>Chi-Square ($\chi^2$) Test of Independence:</strong> Testing relationship between <strong>two categorical variables</strong> (e.g. Device Type vs Subscription Choice).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORY 5: MACHINE LEARNING & MODELING STATS -->
+      <section id="cat-modeling" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Machine Learning &amp; Modeling Statistics</h2>
+
+        <!-- Q13 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q13</span>
+            <h3 class="qa-title">What is the difference between Pearson Correlation and Spearman Correlation? When must you use Spearman?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> <strong>Pearson ($r$)</strong> measures strictly <em>linear</em> relationships between continuous normal variables. <strong>Spearman ($\rho$)</strong> measures <em>monotonic</em> relationships (linear or non-linear curves) by ranking the data, making it non-parametric and robust to outliers.
+          </div>
+          <div class="qa-body">
+            <p><strong>Example:</strong> Consider $y = e^x$. The relationship is strictly monotonic (as $x$ increases, $y$ always increases), but non-linear:</p>
+            <ul>
+              <li>Pearson correlation will give $r \approx 0.82$ (penalizing the curvature).</li>
+              <li>Spearman rank correlation will give $\rho = 1.0$ (perfect score because ranks match exactly).</li>
+            </ul>
+            <p><strong>FAANG Rule:</strong> For user engagement metrics (watch time, clicks, customer spend) where data has long fat tails or whale accounts, always check Spearman correlation first.</p>
+          </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q14</span>
+            <h3 class="qa-title">Explain the Bias-Variance Decomposition of Mean Squared Error.</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> The expected out-of-sample prediction error of an ML model decomposes into three distinct components: $\text{MSE} = \text{Bias}^2 + \text{Variance} + \sigma_{\text{irreducible}}^2$.
+          </div>
+          <div class="qa-body">
+            $$\mathbb{E}[(y - \hat{f}(x))^2] = \underbrace{(\mathbb{E}[\hat{f}(x)] - f(x))^2}_{\text{Bias}^2 \text{ (Underfitting)}} + \underbrace{\mathbb{E}[(\hat{f}(x) - \mathbb{E}[\hat{f}(x)])^2]}_{\text{Variance } \text{(Overfitting)}} + \underbrace{\sigma^2}_{\text{Irreducible Noise}}$$
+            <ul>
+              <li><strong>High Bias:</strong> The model makes overly simplistic assumptions (e.g. fitting a straight line to a sine wave). It underfits training data.</li>
+              <li><strong>High Variance:</strong> The model is overly sensitive to training fluctuations (e.g. an unconstrained deep Decision Tree). It memorizes noise.</li>
+              <li><strong>Regularization (L1/L2):</strong> Works by intentionally adding a small amount of bias to achieve a massive reduction in variance, reducing total error!</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q15</span>
+            <h3 class="qa-title">What is Multicollinearity, how does it damage Linear Regression, and how do you diagnose it with VIF?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Multicollinearity occurs when two or more predictor features in a regression model are highly linearly correlated. It inflates the variance of coefficient estimates, making them unstable and sensitive to minor data changes, rendering feature interpretation impossible.
+          </div>
+          <div class="qa-body">
+            <p><strong>Diagnosis using Variance Inflation Factor (VIF):</strong> For feature $X_j$, regressing $X_j$ against all other features yields $R_j^2$. The VIF is:</p>
+            $$\text{VIF}_j = \frac{1}{1 - R_j^2}$$
+            <ul>
+              <li>$\text{VIF} = 1$: No collinearity.</li>
+              <li>$\text{VIF} > 5 \text{ to } 10$: High multicollinearity; feature should be removed, combined via PCA, or stabilized with Ridge Regularization ($L2$).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORY 6: A/B TESTING & EXPERIMENTATION -->
+      <section id="cat-abtesting" class="note-section content-section">
+        <h2><span class="section-number">06.</span> A/B Testing, Experimentation &amp; Production Traps</h2>
+
+        <!-- Q16 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q16</span>
+            <h3 class="qa-title">What is Sample Ratio Mismatch (SRM), how do you detect it, and what should you do if it occurs?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> SRM is a critical data quality bug where the observed user allocation between Control and Treatment differs significantly from the planned experimental design (e.g. expecting 50/50, but observing 52/48).
+          </div>
+          <div class="qa-body">
+            <p><strong>Detection:</strong> Run a **Chi-Square Goodness-of-Fit test** on user counts:</p>
+            $$\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$$
+            <p>If $p < 0.001$, an SRM exists. Common causes include: client-side redirect crashes (users with older browsers crash only on Treatment), latency differences causing timeout drop-offs, or ad-blockers filtering the variant script.</p>
+            <p><strong>Crucial Rule:</strong> Never analyze an A/B test suffering from an SRM! All subsequent metrics are fundamentally biased.</p>
+          </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q17</span>
+            <h3 class="qa-title">What is the "Peeking Problem" in A/B testing, and how do you resolve it?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Checking experiment dashboards repeatedly every day and stopping the experiment as soon as $p < 0.05$ dramatically inflates the Type I error rate from 5% to over 30%!
+          </div>
+          <div class="qa-body">
+            <p><strong>Why:</strong> The p-value follows a random walk under the null hypothesis. Given enough continuous checks, random noise will cross the $0.05$ boundary at least once. Solutions include:</p>
+            <ol>
+              <li><strong>Fixed-Horizon Testing:</strong> Calculate required sample size in advance and look at results <em>only once</em> when sample size is reached.</li>
+              <li><strong>Sequential Testing (mSPRT):</strong> Use Always Valid p-values (Mixture Sequential Probability Ratio Test) which permit continuous monitoring without inflating error rates.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="qa-card">
+          <div class="qa-header">
+            <span class="qa-q-badge">Q18</span>
+            <h3 class="qa-title">When would you prefer PR-AUC over ROC-AUC for model evaluation?</h3>
+          </div>
+          <div class="qa-tldr">
+            <strong>Executive Answer:</strong> Use <strong>PR-AUC</strong> when dealing with **severe class imbalance** (e.g. positive cases < 1%). Use <strong>ROC-AUC</strong> when classes are roughly balanced or when True Negatives matter equally to True Positives.
+          </div>
+          <div class="qa-body">
+            <p><strong>Reasoning:</strong> ROC-AUC plots False Positive Rate ($\text{FPR} = \frac{FP}{FP + TN}$). When negative cases are massive ($TN = 1,000,000$ and $Positives = 100$), even 5,000 false alarms will produce a tiny $\text{FPR} = \frac{5000}{1005000} \approx 0.005$, creating an optical illusion of a stellar model. PR-AUC uses Precision ($\frac{TP}{TP + FP}$), which drops severely and truthfully flags poor performance.</p>
+          </div>
+        </div>
+
+        <!-- Bottom Lecture Navigation -->
+        <div class="lecture-nav-bottom" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <a href="stats-ml-ai.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Module 05 (Statistics in ML &amp; AI)
+          </a>
+          <a href="statistics.html" class="btn-primary" style="text-decoration: none !important;">
+            Back to Statistics Hub 🎓
+          </a>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Module 06: Interview Preparation
+      </div>
+      <div>
+        <a href="statistics.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Statistics Hub</a>
+        <a href="stats-ml-ai.html" style="color: var(--accent-blue);">← Module 05 (ML &amp; AI)</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

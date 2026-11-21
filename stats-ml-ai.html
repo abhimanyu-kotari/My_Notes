@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 05: Statistics in Machine Learning &amp; AI Engineering | Tech Notes</title>
+  <meta name="description" content="Comprehensive engineering guide bridging mathematical statistics with real-world Machine Learning, Deep Learning, Loss Functions, Regularization, and A/B Testing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="statistics.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Statistics Hub</a>
+        <button id="sidebarToggleBtn" class="btn-icon" aria-label="Toggle Sidebar" title="Toggle Sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Module 05 Contents
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#sec-overview" class="sidebar-link">1. The Statistical Bridge to AI</a></li>
+        <li><a href="#sec-eda-distributions" class="sidebar-link">2. EDA &amp; Distribution Profiling</a></li>
+        <li><a href="#sec-preprocessing-scaling" class="sidebar-link">3. Feature Scaling &amp; Transforms</a></li>
+        <li><a href="#sec-outliers" class="sidebar-link">4. Outlier Detection Engineering</a></li>
+        <li><a href="#sec-ml-algorithms" class="sidebar-link">5. Core ML Algorithm Foundations</a></li>
+        <li><a href="#sec-loss-functions-mle" class="sidebar-link">6. Loss Functions as MLE</a></li>
+        <li><a href="#sec-regularization-bayesian" class="sidebar-link">7. Bayesian Regularization (L1/L2)</a></li>
+        <li><a href="#sec-evaluation-uncertainty" class="sidebar-link">8. Uncertainty &amp; Bootstrapping</a></li>
+        <li><a href="#sec-ab-testing" class="sidebar-link">9. Production AI &amp; A/B Testing</a></li>
+        <li><a href="#sec-python-pipeline" class="sidebar-link">10. Complete Hands-On Pipeline</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="docs-content">
+
+      <!-- Lecture Header -->
+      <div class="lecture-header">
+        <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+          <a href="month-1.html" style="color: inherit; text-decoration: none;">Month 1</a> &rsaquo; 
+          <a href="statistics.html" style="color: inherit; text-decoration: none;">Statistics</a> &rsaquo; 
+          <span style="color: var(--text-primary);">Module 05: Statistics in ML &amp; AI</span>
+        </div>
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active">Module 05</span>
+          <span class="tag">ML Engineering</span>
+          <span class="tag">Loss Functions as MLE</span>
+          <span class="tag">Bayesian Regularization</span>
+          <span class="tag">Feature Scaling</span>
+          <span class="tag">A/B Testing</span>
+          <span class="tag">Bootstrapping</span>
+        </div>
+        <h1 class="lecture-main-title">Statistics in Machine Learning &amp; AI Engineering</h1>
+        <p class="lecture-lead">
+          Demystifying how pure mathematical statistics serves as the computational engine under the hood of modern AI: from loss functions as Maximum Likelihood Estimation, to Gaussian and Laplace priors powering L1/L2 regularization, feature distribution calibration, and production A/B hypothesis testing.
+        </p>
+      </div>
+
+      <!-- SECTION 1: THE STATISTICAL BRIDGE TO AI -->
+      <section id="sec-overview" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Statistical Bridge: Why ML is Computational Statistics</h2>
+
+        <p>A common misconception among beginner developers is that Machine Learning is purely software engineering with Python libraries like <code>model.fit()</code> and <code>model.predict()</code>. In reality, <strong>Machine Learning is computational statistics applied to massive, high-dimensional datasets</strong>.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: #58a6ff;">Classical Statistics</h4>
+            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.25rem; color: var(--text-secondary);">
+              <li><strong>Core Objective:</strong> Inference, explanation, and parameter hypothesis testing ($p < 0.05$).</li>
+              <li><strong>Data Regime:</strong> Small to medium samples ($n = 100$ to $5,000$).</li>
+              <li><strong>Assumptions:</strong> Heavy mathematical assumptions (normality, linearity, homoscedasticity).</li>
+              <li><strong>Philosophy:</strong> Understand the underlying population distribution that generated the sample.</li>
+            </ul>
+          </div>
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: #7ee787;">Machine Learning &amp; AI</h4>
+            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.25rem; color: var(--text-secondary);">
+              <li><strong>Core Objective:</strong> Generalization and prediction accuracy on unseen test data ($\hat{y}$).</li>
+              <li><strong>Data Regime:</strong> Large to massive datasets ($n = 100,000$ to billions of tokens).</li>
+              <li><strong>Assumptions:</strong> Relaxed assumptions; complex non-linear hypothesis spaces.</li>
+              <li><strong>Philosophy:</strong> Minimize empirical risk / loss while preventing overfitting via regularization.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout-tip">
+          <strong>The Golden Rule:</strong> An algorithm without statistical validation is just a random number generator that memorized your training noise. Statistics tells you <em>why</em> a model works, <em>when</em> its assumptions are violated, and <em>how much uncertainty</em> surrounds its predictions.
+        </div>
+      </section>
+
+      <!-- SECTION 2: EDA & DISTRIBUTION PROFILING -->
+      <section id="sec-eda-distributions" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Exploratory Data Analysis &amp; Distribution Profiling</h2>
+
+        <p>Before passing tabular features into any machine learning model, data scientists must profile feature distributions to identify skewness, high kurtosis, and zero-variance traps.</p>
+
+        <h3>1. Skewness and its Impact on Loss Minimization</h3>
+        <p>Many machine learning algorithms (such as Linear Regression, Ridge, Lasso, and K-Means) perform optimally when continuous features follow a symmetrical, near-Gaussian distribution. Heavily right-skewed features (such as user income, house prices, or web traffic latencies) pull the sample mean far away from the median, causing gradient descent updates to oscillate wildly.</p>
+
+        $$	ext{Skewness} = rac{rac{1}{n} \sum_{i=1}^n (x_i - ar{x})^3}{\left[rac{1}{n}\sum_{i=1}^n (x_i - ar{x})^2ight]^{3/2}}$$
+
+        <table style="width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--bg-primary); border-bottom: 2px solid var(--border-color); text-align: left;">
+              <th style="padding: 0.75rem 1rem;">Skewness Metric</th>
+              <th style="padding: 0.75rem 1rem;">Visual Shape</th>
+              <th style="padding: 0.75rem 1rem;">Mean vs Median</th>
+              <th style="padding: 0.75rem 1rem;">Recommended ML Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.75rem 1rem;"><strong>$|S| < 0.5$</strong></td>
+              <td style="padding: 0.75rem 1rem;">Fairly Symmetrical</td>
+              <td style="padding: 0.75rem 1rem;">$	ext{Mean} pprox 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">Ready for StandardScaler</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.75rem 1rem;"><strong>$S > 1.0$ (Right Skew)</strong></td>
+              <td style="padding: 0.75rem 1rem;">Long tail on right side</td>
+              <td style="padding: 0.75rem 1rem;">$	ext{Mean} > 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">Log transform: $\ln(1 + x)$ or Box-Cox</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.75rem 1rem;"><strong>$S < -1.0$ (Left Skew)</strong></td>
+              <td style="padding: 0.75rem 1rem;">Long tail on left side</td>
+              <td style="padding: 0.75rem 1rem;">$	ext{Mean} < 	ext{Median}$</td>
+              <td style="padding: 0.75rem 1rem;">Reflect and Log, or Yeo-Johnson transform</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. Kurtosis: Tail Heaviness and Outlier Risk</h3>
+        <p><strong>Kurtosis</strong> measures tail extremity relative to a normal distribution. In financial fraud or medical anomaly detection, features with high positive excess kurtosis (<strong>Leptokurtic</strong>, $K > 3$) possess extreme outliers that will dominate squared loss functions ($MSE$) if left unaddressed.</p>
+      </section>
+
+      <!-- SECTION 3: FEATURE SCALING & STATISTICAL TRANSFORMS -->
+      <section id="sec-preprocessing-scaling" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Feature Scaling &amp; Statistical Transformations</h2>
+
+        <p>Different scaling techniques apply different statistical operators to your feature matrix $X$. Selecting the wrong scaler corrupts algorithm convergence and leads to subtle data leakage.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #58a6ff; text-transform: uppercase;">Z-Score Standardization</div>
+            <h4 style="margin: 0.4rem 0 0.6rem;">StandardScaler</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Centers data at $\mu = 0$ with unit variance $\sigma = 1$:</p>
+            $$Z = rac{x - \mu}{\sigma}$$
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Linear/Logistic Regression, SVMs, PCA, Neural Networks. Does NOT bound outliers.</p>
+          </div>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #7ee787; text-transform: uppercase;">Range Normalization</div>
+            <h4 style="margin: 0.4rem 0 0.6rem;">MinMaxScaler</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Compresses feature values strictly between $[0, 1]$:</p>
+            $$X_{norm} = rac{x - x_{min}}{x_{max} - x_{min}}$$
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Image pixel arrays ($[0, 255] 	o [0, 1]$), algorithms expecting positive inputs. Heavily compressed by single outliers.</p>
+          </div>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: #ffa657; text-transform: uppercase;">Median &amp; IQR Scaling</div>
+            <h4 style="margin: 0.4rem 0 0.6rem;">RobustScaler</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Uses median ($Q_2$) and Interquartile Range ($Q_3 - Q_1$):</p>
+            $$X_{robust} = rac{x - 	ext{Median}}{Q_3 - Q_1}$$
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;"><strong>Best for:</strong> Data containing significant outliers. Median and IQR are immune to extreme tail values.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: OUTLIER DETECTION ENGINEERING -->
+      <section id="sec-outliers" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Statistical Outlier Detection &amp; Anomaly Engineering</h2>
+
+        <p>Outliers can destroy gradient descent updates and distort regression planes. Modern ML systems use three levels of statistical filtering:</p>
+
+        <div style="margin: 1.5rem 0;">
+          <h4>1. Univariate Outliers: Z-Score vs. Tukey's IQR Fences</h4>
+          <ul>
+            <li><strong>Z-Score Rule:</strong> Any observation with $|Z| > 3$ ($3$ standard deviations away from the mean) is flagged. Assumes normal distribution!</li>
+            <li><strong>Tukey's IQR Fences:</strong> $[	ext{Lower} = Q_1 - 1.5 \cdot 	ext{IQR}, 	ext{Upper} = Q_3 + 1.5 \cdot 	ext{IQR}]$. Non-parametric; works on any distribution!</li>
+          </ul>
+
+          <h4>2. Multivariate Outliers: The Mahalanobis Distance</h4>
+          <p>Consider a credit card dataset with two features: <em>Age</em> and <em>Income</em>. An income of \$150,000 is normal for a 50-year-old, and an age of 18 is normal. But an 18-year-old with \$150,000 income is an outlier! Euclidean distance fails to catch this because it ignores the correlation between age and income.</p>
+          <p><strong>Mahalanobis Distance</strong> measures distance in terms of standard deviations while taking the full feature covariance matrix $\Sigma$ into account:</p>
+
+          $$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - oldsymbol{\mu})^T oldsymbol{\Sigma}^{-1} (\mathbf{x} - oldsymbol{\mu})}$$
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">If features are independent and standardized ($oldsymbol{\Sigma} = \mathbf{I}$), Mahalanobis distance simplifies directly to standard Euclidean distance!</p>
+        </div>
+      </section>
+
+      <!-- SECTION 5: STATISTICAL FOUNDATIONS OF CORE ML ALGORITHMS -->
+      <section id="sec-ml-algorithms" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Statistical Foundations of Core ML Algorithms</h2>
+
+        <h3>1. Linear Regression &amp; Ordinary Least Squares (OLS)</h3>
+        <p>In Ordinary Least Squares, we solve for parameter vector $oldsymbol{eta}$ that minimizes the sum of squared residuals: $\hat{oldsymbol{eta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$.</p>
+        <p>By the <strong>Gauss-Markov Theorem</strong>, OLS is BLUE (<strong>B</strong>est <strong>L</strong>inear <strong>U</strong>nbiased <strong>E</strong>stimator) if and only if the following statistical assumptions hold:</p>
+        <ol style="font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);">
+          <li><strong>Linearity:</strong> The relationship between target $Y$ and features $X$ is linear in parameters.</li>
+          <li><strong>Strict Exogeneity:</strong> Conditional expectation of residuals given features is zero: $\mathbb{E}[\epsilon|\mathbf{X}] = 0$.</li>
+          <li><strong>Homoscedasticity:</strong> Variance of error terms is constant across all feature levels: $	ext{Var}(\epsilon_i|\mathbf{X}) = \sigma^2$. (If violated, standard errors are wrong!).</li>
+          <li><strong>No Autocorrelation:</strong> Residuals are uncorrelated with each other: $	ext{Cov}(\epsilon_i, \epsilon_j) = 0$ for $i 
+eq j$.</li>
+          <li><strong>No Multicollinearity:</strong> Feature matrix $\mathbf{X}$ has full column rank. If two features correlate perfectly, $(\mathbf{X}^T \mathbf{X})$ is non-invertible!</li>
+        </ol>
+
+        <h3>2. Logistic Regression &amp; The Odds Ratio</h3>
+        <p>Why can't we use linear regression for binary classification? Linear regression outputs continuous values $\hat{y} \in (-\infty, +\infty)$, predicting nonsensical probabilities like $-0.3$ or $1.4$.</p>
+        <p>Instead, we model the <strong>Odds</strong>: $	ext{Odds} = rac{p}{1 - p}$. Taking the natural log gives the <strong>Logit link function</strong>:</p>
+
+        $$\ln\left(rac{p}{1 - p}ight) = eta_0 + eta_1 x_1 + \dots + eta_k x_k$$
+
+        <p>Inverting the logit yields the famous <strong>Sigmoid function</strong>, guaranteeing valid output probabilities in $[0, 1]$:</p>
+
+        $$p(y = 1 | \mathbf{x}) = \sigma(\mathbf{w}^T \mathbf{x}) = rac{1}{1 + e^{-\mathbf{w}^T \mathbf{x}}}$$
+
+        <h3>3. Naive Bayes &amp; Conditional Independence</h3>
+        <p>Naive Bayes uses <strong>Bayes' Theorem</strong> to calculate posterior class probability given input features:</p>
+
+        $$P(Y = c | x_1, x_2, \dots, x_d) = rac{P(Y = c) \cdot P(x_1, \dots, x_d | Y = c)}{P(x_1, \dots, x_d)}$$
+
+        <p>The "Naive" assumption states that all features are <strong>mutually conditionally independent</strong> given the class label. This converts an intractable joint probability into a simple product:</p>
+
+        $$P(x_1, x_2, \dots, x_d | Y = c) = \prod_{j=1}^d P(x_j | Y = c)$$
+
+        <div class="callout-tip">
+          <strong>The Zero-Frequency Trap &amp; Laplace Smoothing:</strong> If a word (e.g. <em>"cryptocurrency"</em>) never appeared in the spam training emails, $P(	ext{"cryptocurrency"}|	ext{Spam}) = 0$. Because we multiply probabilities, this single zero zeros out the entire prediction! <strong>Laplace Smoothing</strong> adds pseudo-counts $lpha \ge 1$ to both numerator and denominator: $\hat{P}(x_i|c) = rac{N_{ci} + lpha}{N_c + lpha K}$, ensuring probabilities are never zero.
+        </div>
+      </section>
+
+      <!-- SECTION 6: LOSS FUNCTIONS AS MAXIMUM LIKELIHOOD ESTIMATION -->
+      <section id="sec-loss-functions-mle" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Loss Functions as Maximum Likelihood Estimation (MLE)</h2>
+
+        <p>Why do we use Mean Squared Error ($MSE$) for regression, but Binary Cross-Entropy for classification? They are not arbitrary mathematical formulas: <strong>every standard machine learning loss function is mathematically derived from Maximum Likelihood Estimation</strong>!</p>
+
+        <h3>Mathematical Proof: Mean Squared Error is Gaussian MLE</h3>
+        <p>Assume our target $y$ is generated by a true function $f(x; \mathbf{w})$ with additive Gaussian noise $\epsilon \sim \mathcal{N}(0, \sigma^2)$:</p>
+        $$y = f(x; \mathbf{w}) + \epsilon \implies P(y|x; \mathbf{w}) = rac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -rac{(y - f(x; \mathbf{w}))^2}{2\sigma^2} ight)$$
+        
+        <p>For $n$ independent and identically distributed (i.i.d.) observations, the joint Likelihood is:</p>
+        $$L(\mathbf{w}) = \prod_{i=1}^n rac{1}{\sqrt{2\pi\sigma^2}} \exp\left( -rac{(y_i - f(x_i; \mathbf{w}))^2}{2\sigma^2} ight)$$
+
+        <p>Taking the natural logarithm yields the <strong>Log-Likelihood</strong>:</p>
+        $$\ln L(\mathbf{w}) = -rac{n}{2}\ln(2\pi\sigma^2) - rac{1}{2\sigma^2} \sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2$$
+
+        <p>To maximize the log-likelihood with respect to parameters $\mathbf{w}$, constants drop out. Maximizing the positive likelihood is mathematically identical to <strong>minimizing the sum of squared errors</strong>:</p>
+        $$rg\max_{\mathbf{w}} \ln L(\mathbf{w}) \equiv rg\min_{\mathbf{w}} rac{1}{n}\sum_{i=1}^n (y_i - f(x_i; \mathbf{w}))^2 \quad lacksquare$$
+      </section>
+
+      <!-- SECTION 7: BAYESIAN REGULARIZATION (L1 & L2) -->
+      <section id="sec-regularization-bayesian" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Regularization from a Bayesian Statistical Lens</h2>
+
+        <p>In standard Machine Learning, we add a penalty term to loss functions: $\mathcal{L}_{	ext{total}} = 	ext{Loss} + \lambda \Omega(\mathbf{w})$. From a Bayesian statistical standpoint, <strong>regularization is nothing more than placing a prior probability distribution over model weights</strong> via Maximum A Posteriori (MAP) estimation:</p>
+
+        $$\mathbf{w}_{	ext{MAP}} = rg\max_{\mathbf{w}} \left[ \ln P(	ext{Data}|\mathbf{w}) + \ln P(\mathbf{w}) ight]$$
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: #58a6ff;">L2 Regularization (Ridge)</h4>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">
+              <strong>Prior:</strong> Zero-mean <strong>Gaussian (Normal) distribution</strong>: $w_j \sim \mathcal{N}(0, 	au^2)$.
+            </p>
+            $$\ln P(\mathbf{w}) = -rac{1}{2	au^2} \sum_{j=1}^d w_j^2 + 	ext{const}$$
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              Because the Gaussian log-density is quadratic, it penalizes large weights heavily, shrinking them smoothly toward zero without ever forcing them to exactly zero.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="margin-top: 0; color: #7ee787;">L1 Regularization (Lasso)</h4>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">
+              <strong>Prior:</strong> Zero-mean <strong>Laplace distribution</strong>: $w_j \sim 	ext{Laplace}(0, b)$.
+            </p>
+            $$\ln P(\mathbf{w}) = -rac{1}{b} \sum_{j=1}^d |w_j| + 	ext{const}$$
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              The Laplace distribution has a sharp spike at zero. Maximizing posterior density pushes unimportant feature weights directly to exactly $0.0$, performing automatic feature selection!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 8: MODEL EVALUATION & UNCERTAINTY QUANTIFICATION -->
+      <section id="sec-evaluation-uncertainty" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Model Evaluation, Bootstrapping &amp; Confidence Intervals</h2>
+
+        <p>If you test a credit card fraud detection model and announce: <em>"Our model achieves 93.2% Precision"</em>, an experienced ML engineer will immediately ask: <strong>What is the confidence interval?</strong></p>
+        <p>If the test sample is small or class imbalance is severe, that 93.2% metric might have a 95% confidence interval of $[84.1\%, 98.3\%]$! Without confidence intervals, you cannot know if model improvements are real or just random sampling noise.</p>
+
+        <h3>Non-Parametric Bootstrapping Algorithm for ML Metrics</h3>
+        <p>For complex metrics like ROC-AUC, F1-Score, or Mean Reciprocal Rank (MRR), no simple analytical formula exists for standard error. We use <strong>Bootstrapping (Sampling with replacement)</strong>:</p>
+
+        <ol style="font-size: 0.92rem; line-height: 1.7; color: var(--text-secondary);">
+          <li>Take the original test dataset $\mathcal{D}_{	ext{test}}$ of size $N$.</li>
+          <li>For iteration $b = 1, \dots, B$ (e.g. $B = 1,000$ iterations):
+            <ul>
+              <li>Draw a bootstrap sample $\mathcal{D}_b^*$ of size $N$ randomly <em>with replacement</em> from $\mathcal{D}_{	ext{test}}$.</li>
+              <li>Compute the evaluation metric $	heta_b^* = 	ext{Metric}(\mathcal{D}_b^*)$ (e.g. ROC-AUC).</li>
+            </ul>
+          </li>
+          <li>Sort the 1,000 computed metrics: $	heta_{(1)}^* \le 	heta_{(2)}^* \le \dots \le 	heta_{(B)}^*$.</li>
+          <li>The empirical 95% Confidence Interval is given by the 2.5th percentile and 97.5th percentile: $[	heta_{(25)}^*, 	heta_{(975)}^*]$.</li>
+        </ol>
+      </section>
+
+      <!-- SECTION 9: PRODUCTION AI & A/B TESTING -->
+      <section id="sec-ab-testing" class="note-section content-section">
+        <h2><span class="section-number">09.</span> Production AI &amp; A/B Testing in Practice</h2>
+
+        <p>When deploying a new LLM prompt, recommendation engine, or pricing model into production, offline validation metrics (e.g. offline loss or recall) rarely reflect live user behavior. <strong>Online A/B Testing</strong> is the ultimate statistical gold standard.</p>
+
+        <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0;">
+          <h4 style="margin-top: 0; color: #58a6ff;">The 4 Essential A/B Testing Formulas</h4>
+          
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>1. Sample Size Determination ($N$ per variant):</strong></p>
+          $$n = rac{(Z_{lpha/2} + Z_{eta})^2 \cdot 2 \sigma^2}{	ext{MDE}^2}$$
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Where $lpha = 0.05 \implies Z_{0.025} = 1.96$, Statistical Power $1 - eta = 0.80 \implies Z_{0.20} = 0.84$, and MDE is the Minimum Detectable Effect.
+          </p>
+
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>2. Two-Sample Z-Test for Proportions (Click-Through Rate / Conversion):</strong></p>
+          $$Z = rac{\hat{p}_B - \hat{p}_A}{\sqrt{\hat{p}_{	ext{pool}}(1 - \hat{p}_{	ext{pool}})\left(rac{1}{n_A} + rac{1}{n_B}ight)}}, \quad \hat{p}_{	ext{pool}} = rac{X_A + X_B}{n_A + n_B}$$
+
+          <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>3. The Multiple Comparisons Penalty (Bonferroni Correction):</strong></p>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+            If you track $k = 10$ secondary metrics simultaneously at $lpha = 0.05$, the probability of at least one false alarm is $1 - (1 - 0.05)^{10} pprox 40\%$! To preserve family-wise error rate, adjust: $lpha_{	ext{adjusted}} = rac{lpha}{k}$.
+          </p>
+        </div>
+
+        <div class="callout-tip">
+          <strong>The "Peeking Problem" Trap:</strong> Never check your A/B test dashboard every hour and stop the test early as soon as $p < 0.05$. Because p-values fluctuate randomly during early traffic, "peeking" without sequential testing adjustments raises your actual False Positive Rate to over 30%! Always let the test run for its pre-calculated duration.
+        </div>
+      </section>
+
+      <!-- SECTION 10: COMPLETE HANDS-ON PYTHON PIPELINE -->
+      <section id="sec-python-pipeline" class="note-section content-section">
+        <h2><span class="section-number">10.</span> Complete Hands-On Statistical ML Pipeline (Python)</h2>
+
+        <p>Here is an end-to-end, runnable Python script incorporating distribution checking, Mahalanobis outlier detection, Logistic Regression parameter estimation, and Bootstrapped Confidence Intervals using NumPy, SciPy, and Scikit-learn:</p>
+
+        <pre><code class="language-python">import numpy as np
+import pandas as pd
+from scipy import stats
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import roc_auc_score
+
+# 1. Generate Synthetic Real-World Dataset (1,000 users)
+np.random.seed(42)
+n_samples = 1000
+age = np.random.normal(35, 10, n_samples)
+income = np.random.exponential(scale=50000, size=n_samples) # Right-skewed!
+prob_conversion = 1 / (1 + np.exp(-(0.03 * age + 0.00004 * income - 3.5)))
+converted = (np.random.rand(n_samples) < prob_conversion).astype(int)
+
+df = pd.DataFrame({'Age': age, 'Income': income, 'Converted': converted})
+
+# 2. Check Skewness of Features
+income_skew = stats.skew(df['Income'])
+print(f"Income Skewness: {income_skew:.2f}") # Expect > 1.0 -> Apply Log Transform!
+df['Log_Income'] = np.log1p(df['Income'])
+
+# 3. Multivariate Outlier Detection via Mahalanobis Distance
+def mahalanobis_distance(x, mean, cov_inv):
+    diff = x - mean
+    return np.sqrt(np.dot(np.dot(diff, cov_inv), diff.T))
+
+X_data = df[['Age', 'Log_Income']].values
+mean_vec = np.mean(X_data, axis=0)
+cov_matrix = np.cov(X_data, rowvar=False)
+cov_inv = np.linalg.inv(cov_matrix)
+
+df['M_Distance'] = [mahalanobis_distance(x, mean_vec, cov_inv) for x in X_data]
+# Chi-Square cutoff for 2 degrees of freedom at alpha=0.01: 9.21
+clean_df = df[df['M_Distance'] < 9.21].copy()
+print(f"Cleaned {len(df) - len(clean_df)} multivariate outliers.")
+
+# 4. Train Model with Standardized Features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(clean_df[['Age', 'Log_Income']])
+y = clean_df['Converted'].values
+
+model = LogisticRegression(penalty='l2', C=1.0)
+model.fit(X_scaled, y)
+y_pred_proba = model.predict_proba(X_scaled)[:, 1]
+
+# 5. Non-Parametric Bootstrapping for 95% AUC Confidence Interval
+B = 1000
+boot_aucs = []
+for _ in range(B):
+    indices = np.random.choice(len(y), size=len(y), replace=True)
+    sample_y = y[indices]
+    sample_preds = y_pred_proba[indices]
+    if len(np.unique(sample_y)) > 1: # Both classes present
+        boot_aucs.append(roc_auc_score(sample_y, sample_preds))
+
+ci_lower = np.percentile(boot_aucs, 2.5)
+ci_upper = np.percentile(boot_aucs, 97.5)
+print(f"ROC-AUC: {roc_auc_score(y, y_pred_proba):.4f}")
+print(f"95% Bootstrap Confidence Interval: [{ci_lower:.4f}, {ci_upper:.4f}]")
+</code></pre>
+
+        <!-- Bottom Lecture Navigation -->
+        <div class="lecture-nav-bottom" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <a href="stats-lecture-4.html" class="btn-secondary" style="text-decoration: none !important;">
+            ← Previous: Lecture 4 (Inferential Stats)
+          </a>
+          <a href="stats-interview-questions.html" class="btn-primary" style="text-decoration: none !important;">
+            Next: Interview Questions &amp; Answers (Module 06) →
+          </a>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <strong>Statistics for Data Science</strong> &mdash; Module 05: Statistics in ML &amp; AI
+      </div>
+      <div>
+        <a href="statistics.html" style="color: var(--accent-blue); margin-right: 1.5rem;">← Statistics Hub</a>
+        <a href="stats-interview-questions.html" style="color: var(--accent-blue);">Module 06 (Interview Prep) →</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
