@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video 01: Course Philosophy, 100-Day Roadmap & Foundations | Deep Learning</title>
+  <meta name="description" content="Lecture 1 notes from CampusX's 100 Days of Deep Learning: first principles learning philosophy, mathematical prerequisites, and curriculum roadmap.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+    .lecture-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-nav-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .btn-nav-step.primary {
+      background: #a3e635;
+      color: #0a0a0a;
+    }
+    .btn-nav-step.primary:hover {
+      background: #bef264;
+    }
+    .btn-nav-step.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-nav-step.secondary:hover {
+      border-color: #a3e635;
+      color: #a3e635;
+    }
+    .svg-diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .svg-diagram-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="deep-learning.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Deep Learning Hub</a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture Outline
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#philosophy" class="sidebar-link">1. Course Philosophy</a></li>
+        <li><a href="#black-box-trap" class="sidebar-link">2. The "Black Box" Trap</a></li>
+        <li><a href="#math-pillars" class="sidebar-link">3. Four Mathematical Pillars</a></li>
+        <li><a href="#roadmap" class="sidebar-link">4. 100-Day Curriculum Roadmap</a></li>
+        <li><a href="#drawing-pyramid" class="sidebar-link">5. The Deep Learning Pyramid</a></li>
+        <li><a href="#tools" class="sidebar-link">6. Tools &amp; Environment Setup</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &rsaquo; 
+        <span style="color: #a3e635;">Video 01: Course Philosophy &amp; Roadmap</span>
+      </div>
+
+      <!-- Header -->
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: rgba(163, 230, 53, 0.12); color: #a3e635; border: 1px solid rgba(163, 230, 53, 0.3);">Video 01</span>
+          <span class="tag">Course Launch</span>
+          <span class="tag">First Principles</span>
+          <span class="tag">Curriculum Map</span>
+          <span class="tag">18 min</span>
+        </div>
+        <h1 class="lecture-main-title">100 Days of Deep Learning: Philosophy, Prerequisites &amp; Roadmap</h1>
+        <p class="lecture-lead">
+          In this inaugural lecture, Professor Nitish Singh breaks down the fundamental flaw in modern AI education: treating deep neural networks as black boxes. He establishes the first-principles philosophy of the course, lays out the 4 mathematical pillars required for true mastery, and walks through the entire 84-video roadmap from biological neurons to modern Transformers.
+        </p>
+        <div style="margin-top: 1rem;">
+          <a href="https://www.youtube.com/watch?v=2dH_qjc9mFg&list=PLKnIA16_RmvYuZauWaPlRTC54KxSNLtNn&index=1" target="_blank" rel="noopener" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.15rem; font-size: 0.86rem; text-decoration: none !important;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            Watch Official Lecture on YouTube &nearr;
+          </a>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <section id="philosophy" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Professor's Teaching Philosophy: Scratch-First Learning</h2>
+        <p>
+          Professor Nitish begins the video with a direct provocation to aspiring data scientists and machine learning engineers:
+        </p>
+        <div class="callout callout-info">
+          <div class="callout-title">The Professor's Opening Thesis</div>
+          <p class="callout-content">
+            <em>"Anyone can import Keras, write four lines of <code>model.add(Dense())</code>, and run <code>model.fit()</code>. That does not make you a Deep Learning Engineer; that makes you a software user. A real Deep Learning engineer knows what the matrix dimensions look like during backpropagation, why the loss surface oscillates under high momentum, and how the gradients are mathematically derived using the multivariable chain rule."</em>
+          </p>
+        </div>
+        <p>
+          The pedagogy of this 100-day series is built on three strict learning rules:
+        </p>
+        <ol style="margin-left: 1.25rem; line-height: 1.7; color: var(--text-secondary);">
+          <li><strong>Handwritten Mathematical Proofs First:</strong> Every single algorithm (Perceptron learning rule, gradient descent update, cross-entropy loss, backpropagation chain rule, convolution stride formula) is derived on paper before touching code.</li>
+          <li><strong>NumPy Scratch Implementation:</strong> Before importing high-level frameworks like TensorFlow, Keras, or PyTorch, we implement the forward pass, backward pass, and weight update routines in pure Python and NumPy from absolute scratch.</li>
+          <li><strong>Production Framework Implementation:</strong> Once the internal mechanics are completely de-mystified, we rebuild the system using industry-standard libraries (Keras, TensorFlow, PyTorch) and benchmark performance on real-world datasets.</li>
+        </ol>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="black-box-trap" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The "Black Box" Trap in Deep Learning Interviews</h2>
+        <p>
+          Nitish shares his observation from interviewing dozens of data science candidates for high-paying roles:
+        </p>
+        <ul>
+          <li><strong>Surface Knowledge:</strong> Candidates can easily recite definitions: "CNN is used for images, RNN is used for text, and Adam is the best optimizer."</li>
+          <li><strong>Interview Failure Point:</strong> The moment the interviewer asks: <em>"Can you write down the backpropagation chain rule for a 2-layer network on this whiteboard?"</em> or <em>"Why does Adam optimizer have bias-correction terms in the denominator during the first few epochs?"</em>, 90% of candidates freeze.</li>
+        </ul>
+        <p>
+          This course is specifically structured to eliminate that gap by building <strong>visceral mechanical intuition</strong> for every hyperparameter, weight matrix, and activation curve.
+        </p>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="math-pillars" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Four Mathematical Pillars Required</h2>
+        <p>
+          Deep Learning is essentially computational applied mathematics. The professor emphasizes that you do not need a PhD in mathematics, but you must master four key branches:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #a3e635; font-size: 1.05rem;">1. Linear Algebra</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Scalars, vectors, matrices, and tensors. Vector dot products (geometric projection and similarity), matrix multiplication dimensionality rules ($M \times K \cdot K \times N = M \times N$), matrix transpose, and norms ($L_1, L_2$).
+            </p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #60a5fa; font-size: 1.05rem;">2. Multivariable Calculus</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Partial derivatives ($\frac{\partial L}{\partial w}$), the gradient vector ($\nabla L$), and above all, the <strong>Chain Rule</strong>: $\frac{\partial z}{\partial x} = \frac{\partial z}{\partial y} \cdot \frac{\partial y}{\partial x}$, which forms the computational backbone of backpropagation.
+            </p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #f59e0b; font-size: 1.05rem;">3. Probability &amp; Statistics</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Random variables, Gaussian (Normal) distributions, mean and variance, maximum likelihood estimation (MLE), Bayes theorem, and entropy / cross-entropy loss metrics.
+            </p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #ec4899; font-size: 1.05rem;">4. Mathematical Optimization</strong>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Convex vs non-convex loss functions, local vs global minima, saddle points, ravines, learning rates ($\eta$), and numerical gradient descent step formulations ($w_{new} = w_{old} - \eta \frac{\partial L}{\partial w}$).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="roadmap" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The 100-Day Curriculum Trajectory (84 Lectures)</h2>
+        <p>
+          Nitish lays out the chronological progression of the 84 videos across 6 major developmental blocks:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Block</th>
+                <th>Videos</th>
+                <th>Core Subject Matter</th>
+                <th>Milestone Deliverable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Block 1: Perceptrons &amp; Foundations</strong></td>
+                <td>Videos 01 – 07</td>
+                <td>Biological vs artificial neurons, Perceptron trick, Heaviside step, loss functions, XOR failure.</td>
+                <td>NumPy Perceptron from scratch</td>
+              </tr>
+              <tr>
+                <td><strong>Block 2: Multi-Layer Perceptrons &amp; ANNs</strong></td>
+                <td>Videos 08 – 20</td>
+                <td>Forward propagation, Backpropagation derivation, Vanishing gradients, Gradient Descent variants.</td>
+                <td>NumPy MLP &amp; Keras Churn / MNIST</td>
+              </tr>
+              <tr>
+                <td><strong>Block 3: Optimization &amp; Hyperparameter Tuning</strong></td>
+                <td>Videos 21 – 39</td>
+                <td>Dropout, L1/L2 Regularization, Batch Normalization, Momentum, NAG, AdaGrad, RMSProp, Adam, Keras Tuner.</td>
+                <td>Production Neural Net Tuning Suite</td>
+              </tr>
+              <tr>
+                <td><strong>Block 4: Convolutional Neural Networks (CNN)</strong></td>
+                <td>Videos 40 – 54</td>
+                <td>Biological vision (Cat experiment), 2D Convolutions, Padding, Pooling, LeNet-5, Backprop in CNNs, ImageNet, Transfer Learning.</td>
+                <td>Cat vs Dog Classifier &amp; VGG16 Transfer Learning</td>
+              </tr>
+              <tr>
+                <td><strong>Block 5: Sequential Models &amp; RNNs</strong></td>
+                <td>Videos 55 – 66</td>
+                <td>Sequential data, RNN forward pass, BPTT, Vanishing gradients, LSTM internal gates, GRUs, BiLSTMs.</td>
+                <td>IMDb Sentiment Analysis &amp; Next-Word Predictor</td>
+              </tr>
+              <tr>
+                <td><strong>Block 6: Attention &amp; Transformers</strong></td>
+                <td>Videos 67 – 84</td>
+                <td>History of LLMs, Seq2Seq, Bahdanau/Luong Attention, Self-Attention math &amp; code, Multi-Head Attention, Encoder, Decoder, Inference.</td>
+                <td>Full Transformer Architecture Implementation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="drawing-pyramid" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Visual Drawing: The Deep Learning Learning Pyramid</h2>
+        <p>
+          Nitish explains that deep learning architectures are not isolated silos; each major breakthrough builds directly upon the mathematical foundations of the layer below it.
+        </p>
+
+        <div class="svg-diagram-card">
+          <svg viewBox="0 0 800 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background -->
+            <rect width="800" height="420" fill="#141414" rx="10" />
+            
+            <!-- Pyramid Levels -->
+            <!-- Level 5: Transformers & Generative AI -->
+            <polygon points="400,30 490,95 310,95" fill="#a855f7" fill-opacity="0.25" stroke="#a855f7" stroke-width="2" />
+            <text x="400" y="70" fill="#f5f5f5" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">LEVEL 6: TRANSFORMERS &amp; LLMs</text>
+            <text x="400" y="86" fill="#d8b4fe" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Self-Attention, Multi-Head, Encoders &amp; Decoders</text>
+
+            <!-- Level 4: Sequential NLP (RNNs/LSTMs) -->
+            <polygon points="310,97 490,97 550,165 250,165" fill="#ec4899" fill-opacity="0.2" stroke="#ec4899" stroke-width="2" />
+            <text x="400" y="128" fill="#f5f5f5" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">LEVEL 5: SEQUENTIAL MODELS (RNN, LSTM, GRU)</text>
+            <text x="400" y="146" fill="#f472b6" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Time-Series, Gated Memory Highway, BPTT</text>
+
+            <!-- Level 3: Computer Vision (CNNs) -->
+            <polygon points="250,167 550,167 610,235 190,235" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" stroke-width="2" />
+            <text x="400" y="198" fill="#f5f5f5" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">LEVEL 4: COMPUTER VISION (CNNs &amp; TRANSFER LEARNING)</text>
+            <text x="400" y="216" fill="#93c5fd" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">2D Convolutions, Feature Maps, Pooling, LeNet-5, ResNet</text>
+
+            <!-- Level 2: Optimization & Tuning -->
+            <polygon points="190,237 610,237 670,305 130,305" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="2" />
+            <text x="400" y="268" fill="#f5f5f5" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">LEVEL 3: DEEP OPTIMIZATION &amp; REGULARIZATION</text>
+            <text x="400" y="286" fill="#6ee7b7" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Dropout, BatchNorm, Adam, RMSProp, Vanishing Gradient Solutions</text>
+
+            <!-- Level 1: Multi-Layer Perceptrons -->
+            <polygon points="130,307 670,307 730,365 70,365" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="2" />
+            <text x="400" y="333" fill="#f5f5f5" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">LEVEL 2: MULTI-LAYER PERCEPTRONS &amp; BACKPROPAGATION</text>
+            <text x="400" y="350" fill="#fcd34d" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Matrix Forward Pass, Multivariable Chain Rule, Computational Graphs</text>
+
+            <!-- Level 0: Foundations & Single Perceptron -->
+            <polygon points="70,367 730,367 770,410 30,410" fill="#a3e635" fill-opacity="0.25" stroke="#a3e635" stroke-width="2" />
+            <text x="400" y="388" fill="#0a0a0a" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" text-anchor="middle">LEVEL 1: MATHEMATICAL FOUNDATIONS &amp; THE SINGLE PERCEPTRON</text>
+            <text x="400" y="403" fill="#141414" font-family="Inter, sans-serif" font-size="10" font-weight="600" text-anchor="middle">Linear Algebra, Calculus, Biological Neurons, Rosenblatt Decision Boundary</text>
+          </svg>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.75rem;">
+            Figure 1.1: The Deep Learning Learning Pyramid as taught by Nitish Singh in Video 01.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="tools" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Tools, Compute &amp; Environment Setup</h2>
+        <p>
+          The recommended development stack for the 84-video series:
+        </p>
+        <ul>
+          <li><strong>Python 3.9+:</strong> Core language runtime.</li>
+          <li><strong>NumPy &amp; Matplotlib:</strong> For scratch derivations and mathematical plotting.</li>
+          <li><strong>TensorFlow &amp; Keras:</strong> Primary production framework for building ANNs, CNNs, and RNNs.</li>
+          <li><strong>PyTorch:</strong> Secondary comparative framework for dynamic graph executions and Transformers.</li>
+          <li><strong>Hardware:</strong> Local CPU/GPU or free Google Colab with NVIDIA T4 / V100 GPU instances for model training in later blocks.</li>
+        </ul>
+      </section>
+
+      <!-- Navigation Footer -->
+      <div class="lecture-nav-bar">
+        <a href="deep-learning.html" class="btn-nav-step secondary">
+          &larr; Deep Learning Hub
+        </a>
+        <a href="dl-video-2.html" class="btn-nav-step primary">
+          Next: Video 02 &ndash; What is Deep Learning? &rarr;
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech Notes &bull; 100 Days of Deep Learning Masterclass by CampusX</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
+    });
+  </script>
+</body>
+</html>

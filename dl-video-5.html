@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video 05: The Perceptron Trick &amp; How to Train a Perceptron | Tech Notes</title>
+  <meta name="description" content="Lecture 5 notes from CampusX's 100 Days of Deep Learning: Perceptron trick geometric intuition, unified Rosenblatt learning rule, learning rate, and complete NumPy code from scratch.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+    .lecture-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-nav-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .btn-nav-step.primary {
+      background: #a3e635;
+      color: #0a0a0a;
+    }
+    .btn-nav-step.primary:hover {
+      background: #bef264;
+    }
+    .btn-nav-step.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-nav-step.secondary:hover {
+      border-color: #a3e635;
+      color: #a3e635;
+    }
+    .svg-diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .svg-diagram-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .code-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="deep-learning.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Deep Learning Hub</a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture Outline
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#learning-problem" class="sidebar-link">1. How Perceptrons Learn</a></li>
+        <li><a href="#perceptron-trick" class="sidebar-link">2. The Perceptron Trick Intuition</a></li>
+        <li><a href="#vector-math" class="sidebar-link">3. Vector Math of Line Movement</a></li>
+        <li><a href="#trick-drawing" class="sidebar-link">4. Vector Rotation &amp; Shift Diagram</a></li>
+        <li><a href="#unified-rule" class="sidebar-link">5. Unified Rosenblatt Learning Rule</a></li>
+        <li><a href="#learning-rate" class="sidebar-link">6. Role of Learning Rate (&eta;)</a></li>
+        <li><a href="#scratch-code" class="sidebar-link">7. NumPy Implementation from Scratch</a></li>
+        <li><a href="#convergence" class="sidebar-link">8. Novikoff's Convergence Theorem</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &rsaquo; 
+        <span style="color: #a3e635;">Video 05: The Perceptron Trick &amp; Training</span>
+      </div>
+
+      <!-- Header -->
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: rgba(163, 230, 53, 0.12); color: #a3e635; border: 1px solid rgba(163, 230, 53, 0.3);">Video 05</span>
+          <span class="tag">Perceptron Trick</span>
+          <span class="tag">Training Algorithm</span>
+          <span class="tag">NumPy Scratch</span>
+          <span class="tag">51 min</span>
+        </div>
+        <h1 class="lecture-main-title">The Perceptron Trick: How to Train a Perceptron from Scratch</h1>
+        <p class="lecture-lead">
+          In this 51-minute deep-dive, Professor Nitish Singh unveils the training algorithm of the perceptron. Before touching formal loss functions and derivatives, he teaches the intuitive geometric heuristic known as the "Perceptron Trick"—showing how a misclassified point physically pulls or pushes the decision line. He derives the unified Rosenblatt learning rule and codes a complete Perceptron classifier in pure NumPy.
+        </p>
+        <div style="margin-top: 1rem;">
+          <a href="https://www.youtube.com/watch?v=Lu2bruOHN6g&list=PLKnIA16_RmvYuZauWaPlRTC54KxSNLtNn&index=5" target="_blank" rel="noopener" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.15rem; font-size: 0.86rem; text-decoration: none !important;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            Watch Official Lecture on YouTube &nearr;
+          </a>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <section id="learning-problem" class="note-section content-section">
+        <h2><span class="section-number">01.</span> The Learning Problem: Starting from Random Weights</h2>
+        <p>
+          In Video 04, we saw that once we have weights $w_1, w_2$ and bias $b$, making a prediction is trivial: compute $z = w_1 x_1 + w_2 x_2 + b$ and apply the step function.
+        </p>
+        <p>
+          <strong>But where do the weights come from?</strong>
+        </p>
+        <p>
+          When you initialize a neural network, you don't know the optimal values. You initialize $\mathbf{w}$ and $b$ to <strong>random numbers</strong>!
+        </p>
+        <div class="callout callout-info">
+          <div class="callout-title">The Initial State</div>
+          <p class="callout-content">
+            A random initialization produces a completely random straight line on your data plot. Some red dots (negative class) are on the green side, and some green dots (positive class) are on the red side. The training algorithm's job is to adjust the slope and position of this line iteratively until every point is on the correct side!
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="perceptron-trick" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Perceptron Trick: Intuitive Heuristic</h2>
+        <p>
+          Nitish presents an intuitive physical metaphor: <em>"Treat each misclassified point as a magnet with an active electric charge."</em>
+        </p>
+        <p>
+          Suppose we pick a random training point $P(x_1, x_2)$ from our dataset. There are two error cases:
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #4ade80; font-size: 1rem;">Case 1: False Negative ($y = 1, \hat{y} = 0$)</strong>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin: 0.5rem 0 0; line-height: 1.5;">
+              The point belongs to the <strong>Positive Class</strong> ($+1$), but currently lies on the negative side of the line ($\mathbf{w}^T \mathbf{x} + b < 0$).
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; font-size: 0.84rem; color: #a3e635;">
+              <strong>Action Needed:</strong> Pull the decision line <em>TOWARDS</em> the point so that the point ends up on the positive side!
+            </div>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #f87171; font-size: 1rem;">Case 2: False Positive ($y = 0, \hat{y} = 1$)</strong>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin: 0.5rem 0 0; line-height: 1.5;">
+              The point belongs to the <strong>Negative Class</strong> ($0$), but currently lies on the positive side of the line ($\mathbf{w}^T \mathbf{x} + b > 0$).
+            </p>
+            <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; font-size: 0.84rem; color: #f87171;">
+              <strong>Action Needed:</strong> Push the decision line <em>AWAY FROM</em> the point so that the point is excluded to the negative side!
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="vector-math" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Vector Arithmetic of Moving the Line</h2>
+        <p>
+          How do we mathematically pull or push a line toward or away from a point $P(x_1, x_2)$?
+        </p>
+
+        <h3>Pulling the Line Toward a Positive Point:</h3>
+        <p>
+          To rotate the normal vector $\mathbf{w}$ towards the vector $\mathbf{x}$, we <strong>add</strong> the point's coordinates to our weights!
+        </p>
+        $$\mathbf{w}_{new} = \mathbf{w}_{old} + \eta \mathbf{x}$$
+        $$b_{new} = b_{old} + \eta$$
+
+        <h3>Pushing the Line Away from a Negative Point:</h3>
+        <p>
+          To rotate the normal vector $\mathbf{w}$ away from the vector $\mathbf{x}$, we <strong>subtract</strong> the point's coordinates from our weights!
+        </p>
+        $$\mathbf{w}_{new} = \mathbf{w}_{old} - \eta \mathbf{x}$$
+        $$b_{new} = b_{old} - \eta$$
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="trick-drawing" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Visual Drawing: Vector Rotation &amp; Decision Line Adjustment</h2>
+        <p>
+          Nitish illustrates the vector transformation that occurs during a single Perceptron Trick update:
+        </p>
+
+        <div class="svg-diagram-card">
+          <svg viewBox="0 0 760 360" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <rect width="760" height="360" fill="#141414" rx="10" />
+
+            <!-- Original Decision Line -->
+            <line x1="80" y1="280" x2="680" y2="120" stroke="#f87171" stroke-width="2.5" stroke-dasharray="6,4" />
+            <text x="690" y="125" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="11">Initial Line (w_old)</text>
+
+            <!-- Misclassified Positive Point P -->
+            <circle cx="340" cy="260" r="8" fill="#22c55e" stroke="#ffffff" stroke-width="2" />
+            <text x="360" y="265" fill="#86efac" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">P(x_1, x_2) [y = 1, False Negative]</text>
+
+            <!-- Vector Vector Addition: w_old + eta*x -->
+            <!-- w_old vector -->
+            <line x1="380" y1="200" x2="330" y2="30" stroke="#f87171" stroke-width="2" />
+            <text x="310" y="40" fill="#fca5a5" font-family="'JetBrains Mono', monospace" font-size="11">w_old</text>
+
+            <!-- eta*x displacement -->
+            <line x1="330" y1="30" x2="430" y2="90" stroke="#a3e635" stroke-width="2" stroke-dasharray="3,3" />
+            <text x="400" y="50" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="11">+ &eta; x</text>
+
+            <!-- w_new resultant vector -->
+            <line x1="380" y1="200" x2="430" y2="90" stroke="#38bdf8" stroke-width="3" />
+            <polygon points="430,90 422,102 434,102" fill="#38bdf8" />
+            <text x="445" y="105" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800">w_new = w_old + &eta; x</text>
+
+            <!-- Adjusted New Decision Line -->
+            <line x1="80" y1="310" x2="680" y2="210" stroke="#a3e635" stroke-width="3" />
+            <text x="690" y="215" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">Updated Line (P is now correctly in positive half!)</text>
+
+            <!-- Motion Curve Arrow -->
+            <path d="M 420 180 Q 400 220 380 245" fill="none" stroke="#bef264" stroke-width="1.8" stroke-dasharray="3,3" />
+            <text x="430" y="215" fill="#bef264" font-family="Inter, sans-serif" font-size="10">Line rotates toward P</text>
+          </svg>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Figure 5.1: The Perceptron Trick in action: adding $\eta \mathbf{x}$ rotates the weight vector $\mathbf{w}$ toward the misclassified point, swinging the decision boundary over $P$.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="unified-rule" class="note-section content-section">
+        <h2><span class="section-number">05.</span> The Unified Rosenblatt Perceptron Learning Rule</h2>
+        <p>
+          Instead of writing complex conditional <code>if-else</code> branches for Case 1 and Case 2, Frank Rosenblatt unified both cases into a single mathematical equation using the error term $(y_i - \hat{y}_i)$:
+        </p>
+
+        <div style="background: var(--bg-card); border: 2px solid #a3e635; border-radius: 8px; padding: 1.5rem; margin: 1.25rem 0; text-align: center;">
+          <div style="color: #a3e635; font-family: 'JetBrains Mono', monospace; font-size: 1.35rem; font-weight: 700;">
+            $$\mathbf{w}_{new} = \mathbf{w}_{old} + \eta \, (y_i - \hat{y}_i) \, \mathbf{x}_i$$
+          </div>
+          <div style="color: #a3e635; font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 700; margin-top: 0.5rem;">
+            $$b_{new} = b_{old} + \eta \, (y_i - \hat{y}_i)$$
+          </div>
+        </div>
+
+        <p>
+          Let's verify why this formula is mathematically bulletproof using the three possible scenarios:
+        </p>
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Actual $y_i$</th>
+                <th>Predicted $\hat{y}_i$</th>
+                <th>Error $(y_i - \hat{y}_i)$</th>
+                <th>Resulting Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Correct Prediction</strong></td>
+                <td>1 or 0</td>
+                <td>1 or 0</td>
+                <td>$1 - 1 = 0$ or $0 - 0 = 0$</td>
+                <td>$\mathbf{w} + 0 = \mathbf{w}$ (Zero change! Leave line alone.)</td>
+              </tr>
+              <tr>
+                <td><strong>False Negative</strong></td>
+                <td>1</td>
+                <td>0</td>
+                <td>$1 - 0 = \mathbf{+1}$</td>
+                <td>$\mathbf{w}_{new} = \mathbf{w}_{old} + \eta \mathbf{x}_i$ (Add &rarr; Pull line toward point!)</td>
+              </tr>
+              <tr>
+                <td><strong>False Positive</strong></td>
+                <td>0</td>
+                <td>1</td>
+                <td>$0 - 1 = \mathbf{-1}$</td>
+                <td>$\mathbf{w}_{new} = \mathbf{w}_{old} - \eta \mathbf{x}_i$ (Subtract &rarr; Push line away from point!)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="learning-rate" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Why the Learning Rate ($\eta$) is Essential</h2>
+        <p>
+          Nitish emphasizes why you cannot simply set $\eta = 1$:
+        </p>
+        <div class="callout callout-warning">
+          <div class="callout-title">The Danger of a Large Learning Rate</div>
+          <p class="callout-content">
+            If a point is at coordinates $(100, 200)$ and $\eta = 1$, adding the full vector $[100, 200]^T$ to your weights will swing the decision line wildly across the entire coordinate plane! It will fix point $P$, but in doing so, it will misclassify 50 other points that were previously correct.
+          </p>
+        </div>
+        <p>
+          The <strong>Learning Rate $\eta$</strong> (typically a small value like $0.1, 0.01$, or $0.001$) scales down the step size. It ensures the line takes small, cautious, incremental steps toward the misclassified point without violently disrupting the progress made on other training points.
+        </p>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="scratch-code" class="note-section content-section">
+        <h2><span class="section-number">07.</span> Complete NumPy Implementation from Scratch</h2>
+        <p>
+          Here is the complete, self-contained Python implementation coded by Professor Nitish during the lecture:
+        </p>
+
+        <div class="code-box">
+<span style="color: #64748b;"># ========================================================</span>
+<span style="color: #64748b;"># PERCEPTRON FROM SCRATCH IN PURE NUMPY (CampusX Lecture 5)</span>
+<span style="color: #64748b;"># ========================================================</span>
+<span style="color: #f472b6;">import</span> numpy <span style="color: #f472b6;">as</span> np
+<span style="color: #f472b6;">from</span> sklearn.datasets <span style="color: #f472b6;">import</span> make_classification
+
+<span style="color: #f472b6;">class</span> <span style="color: #a3e635;">PerceptronFromScratch</span>:
+    <span style="color: #f472b6;">def</span> <span style="color: #60a5fa;">__init__</span>(self, learning_rate=<span style="color: #f59e0b;">0.1</span>, epochs=<span style="color: #f59e0b;">1000</span>):
+        self.lr = learning_rate
+        self.epochs = epochs
+        self.weights = <span style="color: #f472b6;">None</span>
+        self.bias = <span style="color: #f472b6;">None</span>
+
+    <span style="color: #f472b6;">def</span> <span style="color: #60a5fa;">_step_function</span>(self, z):
+        <span style="color: #64748b;"># Heaviside step: 1 if z >= 0, else 0</span>
+        <span style="color: #f472b6;">return</span> np.where(z &gt;= <span style="color: #f59e0b;">0</span>, <span style="color: #f59e0b;">1</span>, <span style="color: #f59e0b;">0</span>)
+
+    <span style="color: #f472b6;">def</span> <span style="color: #60a5fa;">fit</span>(self, X, y):
+        n_samples, n_features = X.shape
+        
+        <span style="color: #64748b;"># 1. Initialize weights and bias to random or zero</span>
+        self.weights = np.ones(n_features)
+        self.bias = <span style="color: #f59e0b;">0.0</span>
+
+        <span style="color: #64748b;"># 2. Iterate through epochs</span>
+        <span style="color: #f472b6;">for</span> epoch <span style="color: #f472b6;">in</span> range(self.epochs):
+            <span style="color: #64748b;"># Pick a random sample index (Perceptron Trick uses stochastic picking)</span>
+            idx = np.random.randint(<span style="color: #f59e0b;">0</span>, n_samples)
+            x_i = X[idx]
+            y_i = y[idx]
+
+            <span style="color: #64748b;"># 3. Compute linear combination and prediction</span>
+            z = np.dot(x_i, self.weights) + self.bias
+            y_hat = self._step_function(z)
+
+            <span style="color: #64748b;"># 4. Apply unified Rosenblatt update rule</span>
+            error = y_i - y_hat
+            self.weights += self.lr * error * x_i
+            self.bias += self.lr * error
+
+    <span style="color: #f472b6;">def</span> <span style="color: #60a5fa;">predict</span>(self, X):
+        z = np.dot(X, self.weights) + self.bias
+        <span style="color: #f472b6;">return</span> self._step_function(z)
+
+<span style="color: #64748b;"># ========================================================</span>
+<span style="color: #64748b;"># TEST ON LINEARLY SEPARABLE DATA</span>
+<span style="color: #64748b;"># ========================================================</span>
+X, y = make_classification(n_samples=<span style="color: #f59e0b;">100</span>, n_features=<span style="color: #f59e0b;">2</span>, n_redundant=<span style="color: #f59e0b;">0</span>,
+                           n_informative=<span style="color: #f59e0b;">1</span>, n_clusters_per_class=<span style="color: #f59e0b;">1</span>, random_state=<span style="color: #f59e0b;">41</span>)
+
+model = PerceptronFromScratch(learning_rate=<span style="color: #f59e0b;">0.01</span>, epochs=<span style="color: #f59e0b;">1000</span>)
+model.fit(X, y)
+predictions = model.predict(X)
+accuracy = np.mean(predictions == y)
+print(<span style="color: #a3e635;">f"Perceptron Scratch Accuracy: {accuracy * 100:.2f}%"</span>)
+        </div>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section id="convergence" class="note-section content-section">
+        <h2><span class="section-number">08.</span> Novikoff's Perceptron Convergence Theorem</h2>
+        <p>
+          Nitish concludes with a profound mathematical theorem proven by Albert Novikoff in 1962:
+        </p>
+        <div class="callout callout-tip">
+          <div class="callout-title">Novikoff's Convergence Guarantee</div>
+          <p class="callout-content">
+            If the training dataset is <strong>strictly linearly separable</strong> (there exists at least one hyperplane that separates Class 0 from Class 1 with margin $\gamma > 0$), then the Perceptron learning algorithm is mathematically <strong>guaranteed to converge</strong> and find a separating boundary in a finite number of steps:
+            $$k \le \left(\frac{R}{\gamma}\right)^2$$
+            where $R = \max \|\mathbf{x}_i\|$ is the maximum radius of the data points, and $\gamma$ is the geometric margin.
+          </p>
+        </div>
+        <p>
+          <em>Crucial caveat:</em> If the data is <strong>not</strong> linearly separable (like XOR or overlapping distributions), the perceptron algorithm will loop infinitely, cycling between errors forever! In Video 06, we will see how smooth Loss Functions and Sigmoid activations resolve this.
+        </p>
+      </section>
+
+      <!-- Navigation Footer -->
+      <div class="lecture-nav-bar">
+        <a href="dl-video-4.html" class="btn-nav-step secondary">
+          &larr; Prev: Video 04 (Perceptron &amp; Geometry)
+        </a>
+        <a href="deep-learning.html" class="btn-nav-step primary">
+          Back to Deep Learning Hub &rarr;
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech Notes &bull; 100 Days of Deep Learning Masterclass by CampusX</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
+    });
+  </script>
+</body>
+</html>

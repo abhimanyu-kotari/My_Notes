@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video 04: What is a Perceptron? Perceptron vs Neuron &amp; Geometric Intuition | Tech Notes</title>
+  <meta name="description" content="Lecture 4 notes from CampusX's 100 Days of Deep Learning: biological neuron vs artificial perceptron, mathematical formulations, student placement example, and 2D geometric decision boundary.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+    .lecture-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-nav-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .btn-nav-step.primary {
+      background: #a3e635;
+      color: #0a0a0a;
+    }
+    .btn-nav-step.primary:hover {
+      background: #bef264;
+    }
+    .btn-nav-step.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-nav-step.secondary:hover {
+      border-color: #a3e635;
+      color: #a3e635;
+    }
+    .svg-diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .svg-diagram-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="deep-learning.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Deep Learning Hub</a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture Outline
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#biological-vs-artificial" class="sidebar-link">1. Biological Neuron vs Perceptron</a></li>
+        <li><a href="#neuron-drawing" class="sidebar-link">2. Architectural Anatomy Diagram</a></li>
+        <li><a href="#math-formulation" class="sidebar-link">3. Mathematical Formulation</a></li>
+        <li><a href="#placement-example" class="sidebar-link">4. Student Placement Example</a></li>
+        <li><a href="#geometric-intuition" class="sidebar-link">5. Geometric Hyperplane &amp; Vector w</a></li>
+        <li><a href="#decision-plot" class="sidebar-link">6. Visual Decision Boundary Plot</a></li>
+        <li><a href="#role-of-bias" class="sidebar-link">7. The Vital Role of Bias (b)</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &rsaquo; 
+        <span style="color: #a3e635;">Video 04: What is a Perceptron? Geometric Intuition</span>
+      </div>
+
+      <!-- Header -->
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: rgba(163, 230, 53, 0.12); color: #a3e635; border: 1px solid rgba(163, 230, 53, 0.3);">Video 04</span>
+          <span class="tag">Frank Rosenblatt 1957</span>
+          <span class="tag">Linear Classifier</span>
+          <span class="tag">Hyperplane Math</span>
+          <span class="tag">38 min</span>
+        </div>
+        <h1 class="lecture-main-title">What is a Perceptron? Biological Neuron vs. Artificial Perceptron &amp; Geometric Intuition</h1>
+        <p class="lecture-lead">
+          In this milestone lecture, Professor Nitish Singh introduces the single most important atom of all deep learning: the Perceptron. He builds the direct biological analogy between human brain neurons and Rosenblatt's 1957 mathematical model, solves the Student Placement prediction problem step-by-step, and develops the profound geometric intuition of separating hyperplanes, normal weight vectors, and the physical meaning of bias.
+        </p>
+        <div style="margin-top: 1rem;">
+          <a href="https://www.youtube.com/watch?v=X7iIKPoZ0Sw&list=PLKnIA16_RmvYuZauWaPlRTC54KxSNLtNn&index=4" target="_blank" rel="noopener" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.15rem; font-size: 0.86rem; text-decoration: none !important;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            Watch Official Lecture on YouTube &nearr;
+          </a>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <section id="biological-vs-artificial" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Biological Neuron vs. Artificial Perceptron Mapping</h2>
+        <p>
+          Nitish begins by showing an anatomical diagram of a biological neuron in the human brain. The human brain contains roughly 86 billion interconnected neurons. Rosenblatt abstracted this biological mechanism into simple mathematical components:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Biological Neuron Component</th>
+                <th>Biological Function</th>
+                <th>Artificial Perceptron Equivalent</th>
+                <th>Mathematical Notation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Dendrites</strong></td>
+                <td>Branch-like fibers that receive chemical/electrical signals from neighboring neurons.</td>
+                <td>Input Features</td>
+                <td>$x_1, x_2, \dots, x_m$</td>
+              </tr>
+              <tr>
+                <td><strong>Synapses</strong></td>
+                <td>Microscopic junctions controlling the strength (efficacy) of the incoming signal.</td>
+                <td>Weights</td>
+                <td>$w_1, w_2, \dots, w_m$</td>
+              </tr>
+              <tr>
+                <td><strong>Soma (Cell Body)</strong></td>
+                <td>Accumulates and sums the incoming electrochemical potentials.</td>
+                <td>Weighted Sum + Bias</td>
+                <td>$z = \sum_{i=1}^m w_i x_i + b$</td>
+              </tr>
+              <tr>
+                <td><strong>Axon Hillock / Threshold</strong></td>
+                <td>If accumulated voltage exceeds a critical threshold, it fires an action potential.</td>
+                <td>Activation Function</td>
+                <td>$f(z) = \text{Heaviside Step}$</td>
+              </tr>
+              <tr>
+                <td><strong>Axon &amp; Terminals</strong></td>
+                <td>Transmits the electrical pulse to downstream neurons or muscles.</td>
+                <td>Output Prediction</td>
+                <td>$\hat{y} \in \{0, 1\}$</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="neuron-drawing" class="note-section content-section">
+        <h2><span class="section-number">02.</span> Visual Drawing: Anatomy of an Artificial Perceptron</h2>
+        <p>
+          Nitish sketches the complete internal dataflow of a single Rosenblatt perceptron:
+        </p>
+
+        <div class="svg-diagram-card">
+          <svg viewBox="0 0 780 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <rect width="780" height="340" fill="#141414" rx="10" />
+
+            <!-- Input Nodes -->
+            <circle cx="70" cy="80" r="22" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+            <text x="70" y="85" fill="#93c5fd" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" text-anchor="middle">x_1</text>
+            <text x="70" y="50" fill="#64748b" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Feature 1 (CGPA)</text>
+
+            <circle cx="70" cy="170" r="22" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+            <text x="70" y="175" fill="#93c5fd" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" text-anchor="middle">x_2</text>
+            <text x="70" y="140" fill="#64748b" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Feature 2 (IQ)</text>
+
+            <circle cx="70" cy="260" r="22" fill="#1e293b" stroke="#3b82f6" stroke-width="2" />
+            <text x="70" y="265" fill="#93c5fd" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" text-anchor="middle">x_m</text>
+            <text x="70" y="230" fill="#64748b" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Feature m</text>
+
+            <!-- Bias Node -->
+            <circle cx="210" cy="30" r="18" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+            <text x="210" y="35" fill="#fcd34d" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">b</text>
+            <text x="210" y="8" fill="#f59e0b" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Bias (+b)</text>
+
+            <!-- Summation Junction -->
+            <circle cx="340" cy="170" r="48" fill="#1e293b" stroke="#a3e635" stroke-width="2.5" />
+            <text x="340" y="165" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" text-anchor="middle">&Sigma;</text>
+            <text x="340" y="195" fill="#bef264" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">z = w^T x + b</text>
+
+            <!-- Activation Function Box -->
+            <rect x="470" y="125" width="100" height="90" fill="#1e293b" stroke="#c084fc" stroke-width="2" rx="8" />
+            <text x="520" y="152" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">f(z)</text>
+            <!-- Step function drawing -->
+            <line x1="485" y1="190" x2="520" y2="190" stroke="#a1a1aa" stroke-width="1.5" />
+            <line x1="520" y1="190" x2="520" y2="165" stroke="#a1a1aa" stroke-width="1.5" stroke-dasharray="2,2" />
+            <line x1="520" y1="165" x2="555" y2="165" stroke="#a3e635" stroke-width="2" />
+            <text x="520" y="206" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="9" text-anchor="middle">Step Function</text>
+
+            <!-- Output Node -->
+            <circle cx="690" cy="170" r="25" fill="#1e293b" stroke="#22c55e" stroke-width="2.5" />
+            <text x="690" y="176" fill="#86efac" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="800" text-anchor="middle">&ycirc;</text>
+            <text x="690" y="215" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Output (0 or 1)</text>
+
+            <!-- Arrows & Weight Labels -->
+            <!-- x1 to Sum -->
+            <line x1="92" y1="80" x2="295" y2="155" stroke="#475569" stroke-width="2" />
+            <text x="175" y="105" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">w_1</text>
+
+            <!-- x2 to Sum -->
+            <line x1="92" y1="170" x2="292" y2="170" stroke="#475569" stroke-width="2" />
+            <text x="175" y="162" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">w_2</text>
+
+            <!-- xm to Sum -->
+            <line x1="92" y1="260" x2="295" y2="185" stroke="#475569" stroke-width="2" />
+            <text x="175" y="235" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">w_m</text>
+
+            <!-- Bias to Sum -->
+            <line x1="228" y1="35" x2="310" y2="135" stroke="#f59e0b" stroke-width="1.8" />
+
+            <!-- Sum to Activation -->
+            <line x1="388" y1="170" x2="470" y2="170" stroke="#e2e8f0" stroke-width="2.5" />
+            <text x="428" y="160" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="12">z</text>
+
+            <!-- Activation to Output -->
+            <line x1="570" y1="170" x2="665" y2="170" stroke="#a3e635" stroke-width="2.5" />
+          </svg>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Figure 4.1: Mathematical Architecture of a Rosenblatt Perceptron: Weighted Sum &rarr; Activation &rarr; Binary Output.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="math-formulation" class="note-section content-section">
+        <h2><span class="section-number">03.</span> Mathematical Formulation of the Perceptron</h2>
+        <p>
+          Mathematically, a perceptron operates in two distinct stages:
+        </p>
+
+        <h3>Stage 1: Linear Combination (Pre-activation $z$)</h3>
+        <p>
+          Given an input vector $\mathbf{x} = [x_1, x_2, \dots, x_m]^T$ and a weight vector $\mathbf{w} = [w_1, w_2, \dots, w_m]^T$, the linear aggregator computes:
+        </p>
+        $$z = w_1 x_1 + w_2 x_2 + \dots + w_m x_m + b = \sum_{i=1}^m w_i x_i + b = \mathbf{w}^T \mathbf{x} + b$$
+
+        <h3>Stage 2: Non-Linear Thresholding (Activation Function)</h3>
+        <p>
+          Frank Rosenblatt's original perceptron used the <strong>Heaviside Step Function</strong>:
+        </p>
+        $$\hat{y} = f(z) = \begin{cases} 1 & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}$$
+        <p>
+          Combining both stages yields the complete prediction function:
+        </p>
+        $$\hat{y} = \begin{cases} 1 & \text{if } \mathbf{w}^T \mathbf{x} + b \ge 0 \\ 0 & \text{if } \mathbf{w}^T \mathbf{x} + b < 0 \end{cases}$$
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="placement-example" class="note-section content-section">
+        <h2><span class="section-number">04.</span> The Professor's Concrete Example: The Student Placement Problem</h2>
+        <p>
+          Nitish presents a simple dataset of college students to illustrate how the weights and bias classify real people:
+        </p>
+        <ul>
+          <li><strong>Input $x_1$:</strong> CGPA (College Grade Point Average, scale 0 to 10)</li>
+          <li><strong>Input $x_2$:</strong> IQ Score (scale 80 to 140)</li>
+          <li><strong>Target $y$:</strong> Placed in Campus Interviews ($1 = \text{Placed}, 0 = \text{Not Placed}$)</li>
+        </ul>
+
+        <p>
+          Suppose through training, our perceptron learned the following weights and bias:
+        </p>
+        $$w_1 = 2.0 \quad (\text{weight for CGPA}), \quad w_2 = 0.5 \quad (\text{weight for IQ}), \quad b = -60.0 \quad (\text{threshold bias})$$
+        <p>
+          The decision formula becomes:
+        </p>
+        $$z = 2.0 \cdot x_1 + 0.5 \cdot x_2 - 60$$
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.25rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #4ade80;">Student A: High Achiever</strong>
+            <ul style="font-size: 0.88rem; color: var(--text-secondary); margin: 0.5rem 0 0 1.2rem; line-height: 1.6;">
+              <li>$\text{CGPA } x_1 = 8.5$, $\text{IQ } x_2 = 110$</li>
+              <li>$z = 2.0(8.5) + 0.5(110) - 60$</li>
+              <li>$z = 17.0 + 55.0 - 60 = \mathbf{+12.0}$</li>
+              <li>Since $z = +12 \ge 0 \implies \mathbf{\hat{y} = 1 \text{ (PLACED!)}}$</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #f87171;">Student B: Low Metrics</strong>
+            <ul style="font-size: 0.88rem; color: var(--text-secondary); margin: 0.5rem 0 0 1.2rem; line-height: 1.6;">
+              <li>$\text{CGPA } x_1 = 5.0$, $\text{IQ } x_2 = 85$</li>
+              <li>$z = 2.0(5.0) + 0.5(85) - 60$</li>
+              <li>$z = 10.0 + 42.5 - 60 = \mathbf{-7.5}$</li>
+              <li>Since $z = -7.5 < 0 \implies \mathbf{\hat{y} = 0 \text{ (NOT PLACED)}}$</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="geometric-intuition" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Geometric Intuition: The Separating Hyperplane &amp; Vector w</h2>
+        <p>
+          What does the perceptron look like geometrically in feature space?
+        </p>
+        <p>
+          The transition boundary occurs exactly where the decision changes from $0$ to $1$, which is when $z = 0$:
+        </p>
+        $$w_1 x_1 + w_2 x_2 + b = 0$$
+        <p>
+          In a 2-dimensional feature space $(x_1, x_2)$, this is the equation of a <strong>straight line</strong> ($Ax + By + C = 0$)!
+        </p>
+        <div class="callout callout-info">
+          <div class="callout-title">Geometric Facts Every Engineer Must Know</div>
+          <ol class="callout-content" style="margin: 0.5rem 0 0 1.25rem; line-height: 1.65;">
+            <li><strong>Decision Boundary:</strong> In 2D, it is a line. In 3D $(x_1, x_2, x_3)$, it is a 2D plane ($w_1 x_1 + w_2 x_2 + w_3 x_3 + b = 0$). In $m$-dimensional space, it is an <strong>$(m-1)$-dimensional Hyperplane</strong>.</li>
+            <li><strong>The Weight Vector $\mathbf{w}$ is Normal (Perpendicular):</strong> The vector $\mathbf{w} = [w_1, w_2]^T$ is mathematically orthogonal (at a 90&deg; angle) to the separating line!</li>
+            <li><strong>Direction of the Positive Region:</strong> The normal vector $\mathbf{w}$ always points directly into the positive half-space ($z > 0$). Any point lying in the direction of $\mathbf{w}$ produces a positive dot product!</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="decision-plot" class="note-section content-section">
+        <h2><span class="section-number">06.</span> Visual Drawing: 2D Coordinate Decision Boundary</h2>
+        <p>
+          Nitish plots the 2D Cartesian plane on the screen to show how the line divides the universe of students into placed and unplaced halves:
+        </p>
+
+        <div class="svg-diagram-card">
+          <svg viewBox="0 0 760 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <rect width="760" height="380" fill="#141414" rx="10" />
+
+            <!-- Coordinate Axes -->
+            <line x1="80" y1="320" x2="700" y2="320" stroke="#475569" stroke-width="2" />
+            <line x1="80" y1="320" x2="80" y2="40" stroke="#475569" stroke-width="2" />
+
+            <text x="700" y="345" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end">Feature x_1 (CGPA) &rarr;</text>
+            <text x="45" y="45" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">&uarr; x_2 (IQ)</text>
+
+            <!-- Positive Shaded Region -->
+            <polygon points="120,320 680,80 700,80 700,40 280,40 120,320" fill="#a3e635" fill-opacity="0.08" />
+
+            <!-- Decision Boundary Line: w1*x1 + w2*x2 + b = 0 -->
+            <line x1="120" y1="320" x2="680" y2="80" stroke="#a3e635" stroke-width="3" />
+            <text x="600" y="70" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">w_1 x_1 + w_2 x_2 + b = 0</text>
+
+            <!-- Weight Vector w Normal Arrow -->
+            <line x1="400" y1="200" x2="480" y2="12" stroke="#38bdf8" stroke-width="3" />
+            <!-- Arrowhead -->
+            <polygon points="480,12 470,24 485,26" fill="#38bdf8" />
+            <text x="495" y="30" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800">w = [w_1, w_2]^T (Normal Vector)</text>
+
+            <!-- Angle Arc: 90 degrees -->
+            <path d="M 412 185 L 424 195 L 412 208" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <text x="430" y="195" fill="#38bdf8" font-family="Inter, sans-serif" font-size="10">90&deg;</text>
+
+            <!-- Points: Class 1 (Placed: Green Dots) -->
+            <circle cx="500" cy="110" r="6" fill="#22c55e" />
+            <circle cx="540" cy="90" r="6" fill="#22c55e" />
+            <circle cx="620" cy="70" r="6" fill="#22c55e" />
+            <circle cx="430" cy="130" r="6" fill="#22c55e" />
+            <circle cx="580" cy="130" r="6" fill="#22c55e" />
+            <text x="560" y="115" fill="#4ade80" font-family="'JetBrains Mono', monospace" font-size="11">y = 1 (z &gt; 0)</text>
+
+            <!-- Points: Class 0 (Not Placed: Red Dots) -->
+            <circle cx="160" cy="270" r="6" fill="#ef4444" />
+            <circle cx="210" cy="290" r="6" fill="#ef4444" />
+            <circle cx="250" cy="240" r="6" fill="#ef4444" />
+            <circle cx="320" cy="260" r="6" fill="#ef4444" />
+            <circle cx="180" cy="220" r="6" fill="#ef4444" />
+            <text x="210" y="270" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="11">y = 0 (z &lt; 0)</text>
+
+            <!-- Origin & Bias annotation -->
+            <circle cx="80" cy="320" r="4" fill="#94a3b8" />
+            <text x="80" y="340" fill="#94a3b8" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">(0, 0)</text>
+          </svg>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Figure 4.2: 2D Geometric view of Perceptron: Separating straight line decision boundary with normal weight vector $\mathbf{w}$ pointing into the positive half-space.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section id="role-of-bias" class="note-section content-section">
+        <h2><span class="section-number">07.</span> The Vital Role of Bias ($b$)</h2>
+        <p>
+          Why do we need the bias term $b$? Nitish poses this critical question:
+        </p>
+        <p>
+          If $b = 0$, our line equation reduces to:
+        </p>
+        $$w_1 x_1 + w_2 x_2 = 0$$
+        <p>
+          If $x_1 = 0$ and $x_2 = 0$, then $w_1(0) + w_2(0) = 0$. <strong>The line is mathematically forced to pass through the origin $(0, 0)$!</strong>
+        </p>
+        <div class="callout callout-danger">
+          <div class="callout-title">Without Bias, You Cannot Shift the Line!</div>
+          <p class="callout-content">
+            Without a bias term, the perceptron can only <em>rotate</em> the line around $(0, 0)$. It can never shift the line up, down, left, or right away from the origin! If the true separating boundary between placed and unplaced students does not pass through $(0, 0)$, a perceptron without bias will fail miserably. The bias $b$ provides the necessary translational degree of freedom.
+          </p>
+        </div>
+      </section>
+
+      <!-- Navigation Footer -->
+      <div class="lecture-nav-bar">
+        <a href="dl-video-3.html" class="btn-nav-step secondary">
+          &larr; Prev: Video 03 (Types &amp; History)
+        </a>
+        <a href="dl-video-5.html" class="btn-nav-step primary">
+          Next: Video 05 &ndash; The Perceptron Trick &rarr;
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech Notes &bull; 100 Days of Deep Learning Masterclass by CampusX</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
+    });
+  </script>
+</body>
+</html>

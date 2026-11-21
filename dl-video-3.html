@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video 03: Types of Neural Networks &amp; History of Deep Learning | Tech Notes</title>
+  <meta name="description" content="Lecture 3 notes from CampusX's 100 Days of Deep Learning: ANN vs CNN vs RNN, parameter explosion on images, and the complete 70-year history of AI winters.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\(', right: '\\)', display: false}, {left: '\\[', right: '\\]', display: true}]});"></script>
+  <style>
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+    .lecture-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-nav-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .btn-nav-step.primary {
+      background: #a3e635;
+      color: #0a0a0a;
+    }
+    .btn-nav-step.primary:hover {
+      background: #bef264;
+    }
+    .btn-nav-step.secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-nav-step.secondary:hover {
+      border-color: #a3e635;
+      color: #a3e635;
+    }
+    .svg-diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .svg-diagram-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="deep-learning.html" class="nav-link" style="font-size: 0.9rem; margin-right: 0.5rem;">← Deep Learning Hub</a>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Docs Layout -->
+  <div class="docs-layout">
+
+    <!-- Sticky Table of Contents -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Lecture Outline
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#modality" class="sidebar-link">1. Modality-Specific Architectures</a></li>
+        <li><a href="#core-three" class="sidebar-link">2. The Big 3: ANN, CNN &amp; RNN</a></li>
+        <li><a href="#ann-image-failure" class="sidebar-link">3. Why ANNs Fail on Images</a></li>
+        <li><a href="#architecture-drawing" class="sidebar-link">4. Architectural Comparison Diagram</a></li>
+        <li><a href="#advanced-types" class="sidebar-link">5. Autoencoders, GANs &amp; Transformers</a></li>
+        <li><a href="#history-timeline" class="sidebar-link">6. 70-Year Historical Timeline</a></li>
+        <li><a href="#ai-winters" class="sidebar-link">7. The Two AI Winters &amp; AlexNet</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="docs-content">
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <a href="index.html" style="color: inherit; text-decoration: none;">Home</a> &rsaquo; 
+        <a href="deep-learning.html" style="color: inherit; text-decoration: none;">Deep Learning</a> &rsaquo; 
+        <span style="color: #a3e635;">Video 03: Types of Neural Networks &amp; History</span>
+      </div>
+
+      <!-- Header -->
+      <div class="lecture-header">
+        <div class="lecture-badge-row">
+          <span class="card-badge badge-active" style="background: rgba(163, 230, 53, 0.12); color: #a3e635; border: 1px solid rgba(163, 230, 53, 0.3);">Video 03</span>
+          <span class="tag">Network Taxonomy</span>
+          <span class="tag">ANN vs CNN vs RNN</span>
+          <span class="tag">AI Winters</span>
+          <span class="tag">33 min</span>
+        </div>
+        <h1 class="lecture-main-title">Types of Neural Networks, History of Deep Learning &amp; AI Winters</h1>
+        <p class="lecture-lead">
+          In this lecture, Professor Nitish Singh explains why there is no single "universal" neural network architecture and categorizes the field across data modalities (tabular, spatial grid, sequential, and generative). He computes the mathematical proof of why ANNs fail on computer vision, and walks through the dramatic 70-year history of Deep Learning—from McCulloch-Pitts and Frank Rosenblatt's Perceptron to the crushing AI Winters and the 2012 AlexNet GPU revolution.
+        </p>
+        <div style="margin-top: 1rem;">
+          <a href="https://www.youtube.com/watch?v=fne_UE7hDn0&list=PLKnIA16_RmvYuZauWaPlRTC54KxSNLtNn&index=3" target="_blank" rel="noopener" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.15rem; font-size: 0.86rem; text-decoration: none !important;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            Watch Official Lecture on YouTube &nearr;
+          </a>
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <section id="modality" class="note-section content-section">
+        <h2><span class="section-number">01.</span> Modality-Specific Architectures: No Free Lunch</h2>
+        <p>
+          Nitish begins by dispelling a frequent misconception among new students: <em>"Can't we just build one giant neural network and feed it everything?"</em>
+        </p>
+        <p>
+          The answer is <strong>No</strong>. Different data structures possess fundamentally different geometric symmetries and properties:
+        </p>
+        <ul>
+          <li><strong>Tabular Data (Rows &amp; Columns):</strong> Each column has an independent semantic meaning (e.g. <code>Age</code>, <code>Salary</code>, <code>CreditScore</code>). Column order is arbitrary.</li>
+          <li><strong>Spatial Grid Data (Images &amp; Video):</strong> Pixels only make sense relative to their spatial neighbors. If you shuffle the pixels of a face, the face is destroyed.</li>
+          <li><strong>Sequential Data (Text, Audio, Time-Series):</strong> Data points unfold along a time dimension. Order is everything ("Dog bites man" vs "Man bites dog").</li>
+        </ul>
+        <p>
+          Because of these differences, Deep Learning developed specialized architectural families designed to exploit these inductive biases.
+        </p>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section id="core-three" class="note-section content-section">
+        <h2><span class="section-number">02.</span> The Three Core Foundational Architectures</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+          <!-- ANN -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #a3e635; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">1. ANN / MLP</div>
+            <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin: 0.25rem 0 0.5rem;">Artificial Neural Networks</strong>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              Feedforward multi-layer perceptrons where every neuron in layer $l$ is fully connected to every neuron in layer $l+1$. Best suited for tabular tabular datasets, structured features, and classical regression/classification.
+            </p>
+          </div>
+
+          <!-- CNN -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #60a5fa; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">2. CNN</div>
+            <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin: 0.25rem 0 0.5rem;">Convolutional Neural Networks</strong>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              Uses sliding convolutional filters and pooling layers. Enforces <em>local connectivity</em>, <em>weight sharing</em>, and <em>translation invariance</em>. The undisputed foundation of Computer Vision (object detection, segmentation).
+            </p>
+          </div>
+
+          <!-- RNN -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <div style="color: #f59e0b; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">3. RNN / LSTM / GRU</div>
+            <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin: 0.25rem 0 0.5rem;">Recurrent Neural Networks</strong>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              Features recurrent loops where hidden states are passed forward across time steps $h_t = f(h_{t-1}, x_t)$. Possesses internal memory to handle variable-length sequences (Speech, Text, Financial time-series).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section id="ann-image-failure" class="note-section content-section">
+        <h2><span class="section-number">03.</span> The Mathematical Proof: Why ANNs Fail on Images</h2>
+        <p>
+          Nitish performs a classic derivation on the board that explains why Yann LeCun had to invent CNNs:
+        </p>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">The Parameter Explosion Calculation</div>
+          <p class="callout-content">
+            Suppose you have a standard modest-resolution color photograph:
+            $$1000 \text{ pixels (Height)} \times 1000 \text{ pixels (Width)} \times 3 \text{ color channels (RGB)}$$
+            To feed this image into a standard fully connected Artificial Neural Network (ANN), you must first flatten the 2D matrix into a 1D vector:
+            $$\text{Input Vector Size } D = 1000 \times 1000 \times 3 = \mathbf{3,000,000} \text{ input features}$$
+            Now, suppose your first hidden layer contains just <strong>1,000 neurons</strong> (a very modest layer). Because an ANN is fully connected, every input neuron connects to every hidden neuron:
+            $$\text{Number of Weights } W = 3,000,000 \times 1,000 = \mathbf{3,000,000,000} \text{ (3 Billion Parameters!)}$$
+          </p>
+        </div>
+
+        <p>
+          <strong>The Two Disastrous Consequences:</strong>
+        </p>
+        <ol style="margin-left: 1.25rem; line-height: 1.7; color: var(--text-secondary);">
+          <li><strong>Catastrophic Overfitting:</strong> 3 billion weights on a single layer will immediately memorize the training set, giving 100% training accuracy and near 0% validation accuracy.</li>
+          <li><strong>Loss of 2D Spatial Locality:</strong> Flattening pixels into a 1D vector destroys the relationship between neighboring pixels. Pixel $(0, 0)$ is now separated from pixel $(1, 0)$ by 1,000 positions!</li>
+        </ol>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section id="architecture-drawing" class="note-section content-section">
+        <h2><span class="section-number">04.</span> Visual Drawing: ANN vs. CNN vs. RNN Architecture</h2>
+        <p>
+          Nitish draws the three architectural paradigms side-by-side:
+        </p>
+
+        <div class="svg-diagram-card">
+          <svg viewBox="0 0 780 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <rect width="780" height="340" fill="#141414" rx="10" />
+
+            <!-- ANN SECTION -->
+            <rect x="20" y="20" width="230" height="300" fill="#1a1a1a" stroke="#262626" rx="8" />
+            <text x="135" y="48" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">ANN (Fully Connected)</text>
+            <text x="135" y="65" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Tabular / Dense Vectors</text>
+
+            <!-- ANN Nodes -->
+            <!-- Input -->
+            <circle cx="50" cy="110" r="10" fill="#22c55e" />
+            <circle cx="50" cy="155" r="10" fill="#22c55e" />
+            <circle cx="50" cy="200" r="10" fill="#22c55e" />
+            <circle cx="50" cy="245" r="10" fill="#22c55e" />
+            <!-- Hidden -->
+            <circle cx="135" cy="125" r="10" fill="#3b82f6" />
+            <circle cx="135" cy="175" r="10" fill="#3b82f6" />
+            <circle cx="135" cy="225" r="10" fill="#3b82f6" />
+            <!-- Output -->
+            <circle cx="215" cy="155" r="10" fill="#ec4899" />
+            <circle cx="215" cy="200" r="10" fill="#ec4899" />
+
+            <!-- ANN Dense Lines -->
+            <line x1="60" y1="110" x2="125" y2="125" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="110" x2="125" y2="175" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="155" x2="125" y2="125" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="155" x2="125" y2="175" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="200" x2="125" y2="175" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="200" x2="125" y2="225" stroke="#475569" stroke-width="1" />
+            <line x1="60" y1="245" x2="125" y2="225" stroke="#475569" stroke-width="1" />
+
+            <line x1="145" y1="125" x2="205" y2="155" stroke="#475569" stroke-width="1" />
+            <line x1="145" y1="175" x2="205" y2="155" stroke="#475569" stroke-width="1" />
+            <line x1="145" y1="175" x2="205" y2="200" stroke="#475569" stroke-width="1" />
+            <line x1="145" y1="225" x2="205" y2="200" stroke="#475569" stroke-width="1" />
+
+            <text x="135" y="295" fill="#64748b" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Feedforward Only</text>
+
+
+            <!-- CNN SECTION -->
+            <rect x="275" y="20" width="230" height="300" fill="#1a1a1a" stroke="#262626" rx="8" />
+            <text x="390" y="48" fill="#60a5fa" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">CNN (Spatial Filters)</text>
+            <text x="390" y="65" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">2D Images &amp; Video</text>
+
+            <!-- Image Grid -->
+            <rect x="295" y="110" width="45" height="45" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+            <rect x="305" y="120" width="15" height="15" fill="#3b82f6" fill-opacity="0.4" />
+            <text x="317" y="172" fill="#94a3b8" font-family="Inter, sans-serif" font-size="9" text-anchor="middle">Image</text>
+
+            <!-- Kernel -->
+            <rect x="360" y="125" width="24" height="24" fill="#a3e635" fill-opacity="0.2" stroke="#a3e635" stroke-width="1.5" />
+            <text x="372" y="165" fill="#a3e635" font-family="'JetBrains Mono', monospace" font-size="8.5" text-anchor="middle">Kernel</text>
+
+            <!-- Convolved Feature Map -->
+            <rect x="405" y="115" width="38" height="38" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5" />
+            <text x="424" y="172" fill="#94a3b8" font-family="Inter, sans-serif" font-size="9" text-anchor="middle">Map</text>
+
+            <!-- Pooling -->
+            <rect x="460" y="122" width="24" height="24" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.5" />
+            <text x="472" y="165" fill="#f59e0b" font-family="'JetBrains Mono', monospace" font-size="8" text-anchor="middle">Pool</text>
+
+            <!-- Connections -->
+            <line x1="340" y1="132" x2="360" y2="137" stroke="#64748b" stroke-width="1" />
+            <line x1="384" y1="137" x2="405" y2="134" stroke="#64748b" stroke-width="1" />
+            <line x1="443" y1="134" x2="460" y2="134" stroke="#64748b" stroke-width="1" />
+
+            <!-- Dense classifier on bottom -->
+            <line x1="472" y1="180" x2="472" y2="210" stroke="#64748b" stroke-width="1" />
+            <rect x="350" y="215" width="80" height="25" fill="#1e293b" stroke="#475569" rx="4" />
+            <text x="390" y="231" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Dense Head</text>
+
+            <text x="390" y="295" fill="#64748b" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Weight Sharing &amp; Stride</text>
+
+
+            <!-- RNN SECTION -->
+            <rect x="530" y="20" width="230" height="300" fill="#1a1a1a" stroke="#262626" rx="8" />
+            <text x="645" y="48" fill="#f59e0b" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">RNN (Recurrent Loop)</text>
+            <text x="645" y="65" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Sequential / Language</text>
+
+            <!-- Timestep 1 -->
+            <circle cx="575" cy="220" r="10" fill="#22c55e" />
+            <text x="575" y="248" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">x_{t-1}</text>
+            <rect x="562" y="145" width="26" height="26" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="1.5" rx="4" />
+            <text x="575" y="161" fill="#fcd34d" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">h_1</text>
+            <line x1="575" y1="210" x2="575" y2="171" stroke="#64748b" stroke-width="1.5" />
+
+            <!-- Timestep 2 -->
+            <circle cx="645" cy="220" r="10" fill="#22c55e" />
+            <text x="645" y="248" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">x_t</text>
+            <rect x="632" y="145" width="26" height="26" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="1.5" rx="4" />
+            <text x="645" y="161" fill="#fcd34d" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">h_2</text>
+            <line x1="645" y1="210" x2="645" y2="171" stroke="#64748b" stroke-width="1.5" />
+
+            <!-- Timestep 3 -->
+            <circle cx="715" cy="220" r="10" fill="#22c55e" />
+            <text x="715" y="248" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">x_{t+1}</text>
+            <rect x="702" y="145" width="26" height="26" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="1.5" rx="4" />
+            <text x="715" y="161" fill="#fcd34d" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">h_3</text>
+            <line x1="715" y1="210" x2="715" y2="171" stroke="#64748b" stroke-width="1.5" />
+
+            <!-- Recurrent Horizontal Arrows -->
+            <line x1="588" y1="158" x2="632" y2="158" stroke="#a3e635" stroke-width="2" />
+            <line x1="658" y1="158" x2="702" y2="158" stroke="#a3e635" stroke-width="2" />
+
+            <!-- Output -->
+            <circle cx="645" cy="95" r="10" fill="#ec4899" />
+            <text x="645" y="80" fill="#f472b6" font-family="'JetBrains Mono', monospace" font-size="9" text-anchor="middle">y_t</text>
+            <line x1="645" y1="145" x2="645" y2="105" stroke="#64748b" stroke-width="1.5" />
+
+            <text x="645" y="295" fill="#64748b" font-family="Inter, sans-serif" font-size="9.5" text-anchor="middle">Internal Temporal Memory</text>
+          </svg>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Figure 3.1: The three architectural pillars of deep learning: ANN (fully connected), CNN (local weight-shared filters), and RNN (unfolded recurrent hidden loops).
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section id="advanced-types" class="note-section content-section">
+        <h2><span class="section-number">05.</span> Modern Specialized Neural Architectures</h2>
+        <p>
+          Beyond the big three, Nitish introduces the modern architectures that dominate cutting-edge AI:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #c084fc; font-size: 1rem;">Autoencoders (Unsupervised)</strong>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Encoder compresses high-dimensional input into a tiny bottleneck latent space vector $z$; Decoder reconstructs original input. Used for dimensionality reduction, image denoising, and anomaly detection.
+            </p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #ec4899; font-size: 1rem;">Generative Adversarial Networks (GANs)</strong>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Invented by Ian Goodfellow (2014). Two networks in a game-theoretic minimax duel: <strong>Generator</strong> generates fake images, <strong>Discriminator</strong> acts as an art detective trying to spot fakes.
+            </p>
+          </div>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem;">
+            <strong style="color: #a3e635; font-size: 1rem;">Transformers (Attention-Based)</strong>
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5;">
+              Replaced RNNs in modern NLP. Discards recurrent loops entirely in favor of parallel Self-Attention. The core engine behind GPT-4, Claude, Gemini, BERT, and LLaMA.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section id="history-timeline" class="note-section content-section">
+        <h2><span class="section-number">06.</span> The 70-Year Rollercoaster History of Deep Learning</h2>
+        <p>
+          Deep Learning did not happen overnight. Nitish walks through the dramatic history of euphoria and despair that shaped the field:
+        </p>
+
+        <div style="border-left: 2px solid #a3e635; padding-left: 1.25rem; margin: 1.5rem 0;">
+          <div style="margin-bottom: 1.25rem;">
+            <strong style="color: #a3e635; font-family: 'JetBrains Mono', monospace;">1943: The McCulloch-Pitts Neuron</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Neurophysiologist Warren McCulloch and logician Walter Pitts propose the first computational model of a biological neuron using binary threshold logic.
+            </p>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <strong style="color: #a3e635; font-family: 'JetBrains Mono', monospace;">1957: Frank Rosenblatt's Perceptron</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Rosenblatt builds the physical Mark I Perceptron machine at Cornell. The New York Times boldly reports that the Navy expects perceptrons will soon <em>"walk, talk, see, write, reproduce themselves, and be conscious of their existence."</em>
+            </p>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <strong style="color: #ef4444; font-family: 'JetBrains Mono', monospace;">1969: Minsky &amp; Papert's XOR Proof &rarr; THE FIRST AI WINTER</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              MIT luminaries Marvin Minsky and Seymour Papert publish "Perceptrons", mathematically proving that a single-layer perceptron cannot even compute an XOR gate. US government (DARPA) cuts funding; research freezes for over a decade.
+            </p>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <strong style="color: #3b82f6; font-family: 'JetBrains Mono', monospace;">1986: The Backpropagation Renaissance</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Geoffrey Hinton, David Rumelhart, and Ronald Williams publish their Nature paper showing that multi-layer perceptrons can be trained using the backpropagation chain rule, shattering Minsky's limitation.
+            </p>
+          </div>
+
+          <div style="margin-bottom: 1.25rem;">
+            <strong style="color: #ef4444; font-family: 'JetBrains Mono', monospace;">Late 1990s: The Second AI Winter</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Computers are still too slow to train deep networks. Vanishing gradients cripple deep layers. Corinna Cortes and Vladimir Vapnik's Support Vector Machines (SVM) become mathematically elegant and dominate industry.
+            </p>
+          </div>
+
+          <div>
+            <strong style="color: #a3e635; font-family: 'JetBrains Mono', monospace;">2012: The AlexNet Revolution &amp; Modern Boom</strong>
+            <p style="margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+              Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton enter AlexNet into the ImageNet competition, crushing traditional computer vision by dropping top-5 error rate from 26% to 15.3%. The deep learning gold rush begins.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Footer -->
+      <div class="lecture-nav-bar">
+        <a href="dl-video-2.html" class="btn-nav-step secondary">
+          &larr; Prev: Video 02 (DL vs ML)
+        </a>
+        <a href="dl-video-4.html" class="btn-nav-step primary">
+          Next: Video 04 &ndash; What is a Perceptron? &rarr;
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech Notes &bull; 100 Days of Deep Learning Masterclass by CampusX</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function renderMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(renderMath, 100);
+        }
+      }
+      renderMath();
+    });
+  </script>
+</body>
+</html>
