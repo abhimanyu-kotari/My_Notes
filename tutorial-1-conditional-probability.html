@@ -1,0 +1,3135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="notes">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial 1 — Conditional Probability | BSc 5th Sem Notes</title>
+  <meta name="description" content="Learn conditional probability, Bayes' theorem, the law of total probability and Gambler's Ruin through 12 worked exercises (4.1 to 4.12).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX for crisp mathematical equations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <style>
+    :root {
+      --acad-bg-main: #0A0A0A;
+      --acad-bg-card: #141414;
+      --acad-bg-elevated: #1A1A1A;
+      --acad-bg-inset: #101012;
+      --acad-border: #262626;
+      --acad-border-hover: #3F3F46;
+      --acad-text-primary: #F5F5F5;
+      --acad-text-secondary: #A1A1AA;
+      --acad-text-muted: #71717A;
+      --acad-accent: #38BDF8;
+      --acad-accent-hover: #7DD3FC;
+      --acad-accent-subtle: rgba(56, 189, 248, 0.08);
+      --acad-accent-border: rgba(56, 189, 248, 0.28);
+    }
+
+    [data-theme="light"] {
+      --acad-bg-main: #FAFAFA;
+      --acad-bg-card: #FFFFFF;
+      --acad-bg-elevated: #F4F4F5;
+      --acad-bg-inset: #F8FAFC;
+      --acad-border: #E4E4E7;
+      --acad-border-hover: #D4D4D8;
+      --acad-text-primary: #18181B;
+      --acad-text-secondary: #52525B;
+      --acad-text-muted: #71717A;
+      --acad-accent: #0284C7;
+      --acad-accent-hover: #0369A1;
+      --acad-accent-subtle: rgba(2, 132, 199, 0.08);
+      --acad-accent-border: rgba(2, 132, 199, 0.28);
+    }
+
+    body {
+      background-color: var(--acad-bg-main) !important;
+      color: var(--acad-text-primary) !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.65;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(10, 10, 10, 0.9) !important;
+      border-bottom: 1px solid var(--acad-border) !important;
+      backdrop-filter: blur(12px);
+    }
+    [data-theme="light"] .navbar {
+      background: rgba(255, 255, 255, 0.92) !important;
+    }
+
+    /* Layout & Sidebar */
+    .docs-layout {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .sidebar {
+      background: var(--acad-bg-main) !important;
+      border-right: 1px solid var(--acad-border) !important;
+      width: 268px;
+      min-width: 268px;
+      position: sticky;
+      top: 4.75rem;
+      max-height: calc(100vh - 5.75rem);
+      overflow-y: auto;
+      padding: 0 1.25rem 1.5rem 0 !important;
+    }
+    .sidebar-header {
+      border-bottom: 1px solid var(--acad-border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--acad-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar-nav li {
+      margin-bottom: 0.18rem;
+    }
+    .sidebar-link {
+      display: block;
+      padding: 0.42rem 0.7rem;
+      color: var(--acad-text-secondary);
+      text-decoration: none;
+      font-size: 0.84rem;
+      border-radius: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-link:hover {
+      color: var(--acad-text-primary);
+      background: var(--acad-bg-elevated);
+      text-decoration: none;
+    }
+    .sidebar-link.active {
+      color: var(--acad-text-primary);
+      background: var(--acad-bg-elevated);
+      border-left-color: var(--acad-accent);
+      font-weight: 600;
+    }
+    .sidebar-group-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--acad-text-muted);
+      padding: 0.75rem 0.7rem 0.25rem;
+    }
+
+    .docs-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    /* Top Header Card */
+    .tutorial-hero {
+      background: var(--acad-bg-card);
+      border: 1px solid var(--acad-border);
+      border-radius: 12px;
+      padding: 2.25rem 2.25rem 2rem;
+      margin-bottom: 1.75rem;
+    }
+    .acad-breadcrumb {
+      font-size: 0.84rem;
+      color: var(--acad-text-muted);
+      margin-bottom: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .acad-breadcrumb a {
+      color: var(--acad-text-secondary);
+      text-decoration: none;
+    }
+    .acad-breadcrumb a:hover {
+      color: var(--acad-text-primary);
+    }
+    .acad-breadcrumb .current {
+      color: var(--acad-accent);
+      font-weight: 500;
+    }
+
+    .tutorial-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+    .meta-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.22rem 0.6rem;
+      border-radius: 5px;
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      color: var(--acad-text-secondary);
+    }
+    .meta-pill.accent {
+      background: var(--acad-accent-subtle);
+      border-color: var(--acad-accent-border);
+      color: var(--acad-accent);
+    }
+
+    .tutorial-main-title {
+      font-size: 2.15rem;
+      font-weight: 700;
+      color: var(--acad-text-primary);
+      letter-spacing: -0.025em;
+      line-height: 1.22;
+      margin: 0 0 0.75rem;
+    }
+    .tutorial-lead {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--acad-text-secondary);
+      margin: 0;
+      max-width: 760px;
+    }
+
+    /* Quick Jump Tutorial Navigation */
+    .quick-jump-card {
+      background: var(--acad-bg-card);
+      border: 1px solid var(--acad-border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.25rem;
+    }
+    .quick-jump-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--acad-text-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .quick-jump-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .jump-pill {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--acad-text-secondary);
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      padding: 0.32rem 0.68rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .jump-pill:hover {
+      border-color: var(--acad-accent-border);
+      color: var(--acad-accent);
+      text-decoration: none;
+    }
+
+    /* Major Part Sections */
+    .note-section.content-section {
+      background: var(--acad-bg-card);
+      border: 1px solid var(--acad-border);
+      border-radius: 12px;
+      padding: 2.25rem;
+      margin-bottom: 2.25rem;
+      scroll-margin-top: 5.25rem;
+    }
+    .part-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--acad-accent);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+    .note-section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--acad-text-primary);
+      letter-spacing: -0.02em;
+      margin: 0 0 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--acad-border);
+    }
+    .note-section h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--acad-text-primary);
+      margin: 1.75rem 0 0.75rem;
+    }
+    .note-section h4 {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--acad-text-primary);
+      margin: 1.35rem 0 0.55rem;
+    }
+    .note-section p, .note-section li {
+      color: var(--acad-text-secondary);
+      font-size: 0.96rem;
+      line-height: 1.72;
+    }
+    .note-section strong {
+      color: var(--acad-text-primary);
+      font-weight: 600;
+    }
+
+    /* Highlight / Callout */
+    .key-idea-box {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-left: 3px solid var(--acad-accent);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: var(--acad-text-primary);
+      font-size: 0.96rem;
+    }
+
+    .ideas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.15rem 0 0;
+    }
+    .idea-card {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-radius: 8px;
+      padding: 1.1rem 1.2rem;
+    }
+    .idea-card-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--acad-text-primary);
+      margin-bottom: 0.4rem;
+    }
+    .idea-card p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .notation-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 1.5rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+    .notation-list li {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-radius: 7px;
+      padding: 0.65rem 1rem;
+      margin: 0;
+      font-size: 0.93rem;
+    }
+
+    /* Formula Cards */
+    .formula-card {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-radius: 10px;
+      padding: 1.35rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+    .formula-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+    .formula-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--acad-text-primary);
+      margin: 0;
+    }
+    .formula-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--acad-accent);
+      background: var(--acad-accent-subtle);
+      border: 1px solid var(--acad-accent-border);
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .math-block {
+      background: var(--acad-bg-inset);
+      border: 1px solid var(--acad-border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .formula-when {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--acad-border);
+      font-size: 0.89rem;
+      color: var(--acad-text-secondary);
+    }
+    .formula-when strong {
+      color: var(--acad-accent);
+    }
+
+    /* Exercise Cards */
+    .exercise-section {
+      background: var(--acad-bg-card);
+      border: 1px solid var(--acad-border);
+      border-radius: 12px;
+      padding: 2.25rem;
+      margin-bottom: 2rem;
+      scroll-margin-top: 5.25rem;
+    }
+    .exercise-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-bottom: 1rem;
+      margin-bottom: 1.35rem;
+      border-bottom: 1px solid var(--acad-border);
+    }
+    .exercise-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--acad-accent);
+      background: var(--acad-accent-subtle);
+      border: 1px solid var(--acad-accent-border);
+      padding: 0.24rem 0.65rem;
+      border-radius: 5px;
+      display: inline-block;
+      margin-bottom: 0.45rem;
+    }
+    .exercise-title {
+      font-size: 1.32rem;
+      font-weight: 700;
+      color: var(--acad-text-primary);
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+    .exercise-subblock {
+      margin-bottom: 1.5rem;
+    }
+    .subblock-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--acad-text-muted);
+      margin-bottom: 0.55rem;
+      display: block;
+    }
+    .original-question-box {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-left: 3px solid var(--acad-accent);
+      border-radius: 8px;
+      padding: 1.15rem 1.35rem;
+    }
+    .original-question-box p {
+      color: var(--acad-text-primary);
+      margin-bottom: 0.6rem;
+      font-size: 0.96rem;
+    }
+    .original-question-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .understanding-box {
+      background: var(--acad-bg-inset);
+      border: 1px solid var(--acad-border);
+      border-radius: 8px;
+      padding: 1.1rem 1.3rem;
+    }
+    .understanding-box p:last-child,
+    .understanding-box ul:last-child,
+    .understanding-box ol:last-child {
+      margin-bottom: 0;
+    }
+
+    .solution-steps {
+      border-top: 1px solid var(--acad-border);
+      padding-top: 1.35rem;
+      margin-top: 1.35rem;
+    }
+    .step-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--acad-border);
+    }
+    .step-item:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0.25rem;
+    }
+    .step-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--acad-text-primary);
+      margin: 0 0 0.65rem;
+    }
+
+    .final-answer-box {
+      background: var(--acad-accent-subtle);
+      border: 1px solid var(--acad-accent-border);
+      border-radius: 8px;
+      padding: 1.15rem 1.35rem;
+      margin-top: 1.35rem;
+    }
+    .final-answer-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--acad-accent);
+      margin: 0 0 0.55rem;
+    }
+    .final-answer-box p,
+    .final-answer-box li {
+      color: var(--acad-text-primary);
+    }
+    .final-answer-box p:last-child,
+    .final-answer-box ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .exam-tip-box {
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+      color: var(--acad-text-secondary);
+    }
+    .exam-tip-box strong {
+      color: var(--acad-text-primary);
+    }
+
+    /* Tables */
+    .revision-table-wrap {
+      overflow-x: auto;
+      margin: 1.25rem 0 1.75rem;
+      border: 1px solid var(--acad-border);
+      border-radius: 8px;
+    }
+    .revision-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .revision-table th,
+    .revision-table td {
+      padding: 0.78rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--acad-border);
+    }
+    .revision-table th {
+      background: var(--acad-bg-elevated);
+      color: var(--acad-text-primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .revision-table td {
+      color: var(--acad-text-secondary);
+    }
+    .revision-table tr:last-child td {
+      border-bottom: none;
+    }
+    .revision-table td:last-child {
+      color: var(--acad-accent);
+      font-weight: 600;
+    }
+
+    /* KaTeX Polish */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0.35rem 0;
+      margin: 0.65rem 0;
+    }
+    .katex .fbox,
+    .katex .boxed {
+      border-color: var(--acad-accent-border) !important;
+    }
+
+    /* Bottom Navigation */
+    .tutorial-bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--acad-border);
+    }
+    .btn-acad-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--acad-bg-elevated);
+      border: 1px solid var(--acad-border);
+      color: var(--acad-text-secondary) !important;
+      padding: 0.65rem 1.15rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none !important;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .btn-acad-ghost:hover {
+      border-color: var(--acad-border-hover);
+      color: var(--acad-text-primary) !important;
+    }
+    .btn-acad-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--acad-accent);
+      color: #0A0A0A !important;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: background 0.15s ease;
+    }
+    .btn-acad-primary:hover {
+      background: var(--acad-accent-hover);
+    }
+
+    .acad-footer {
+      border-top: 1px solid var(--acad-border);
+      padding: 2rem 1.5rem;
+      color: var(--acad-text-muted);
+      font-size: 0.84rem;
+    }
+    .acad-footer-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    @media (max-width: 992px) {
+      .docs-layout {
+        display: block;
+        padding: 1.25rem 1rem 4rem;
+      }
+      .docs-content {
+        max-width: 100%;
+      }
+      .tutorial-hero,
+      .note-section.content-section,
+      .exercise-section {
+        padding: 1.5rem 1.25rem;
+      }
+      .tutorial-main-title {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <span>Tech Notes</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="probability-bsc-5th-sem.html" class="nav-link" style="font-size: 0.88rem; margin-right: 0.25rem;">&larr; BSc 5th Sem</a>
+        <button id="sidebarToggleBtn" class="btn-toggle-sidebar" aria-label="Toggle Sidebar" title="Toggle Tutorial Navigation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <span class="sidebar-btn-text">Contents</span>
+        </button>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+          <span class="theme-toggle-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="docs-layout">
+
+    <!-- Sticky Tutorial Navigation Sidebar -->
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Tutorial 1 Index
+        </div>
+        <button id="sidebarCloseBtn" class="btn-close-sidebar" aria-label="Close Sidebar" title="Hide Sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li class="sidebar-group-label">Foundations</li>
+        <li><a href="#concept-intro" class="sidebar-link">1. Concept Introduction</a></li>
+        <li><a href="#important-formulas" class="sidebar-link">2. Important Formulas</a></li>
+
+        <li class="sidebar-group-label">Worked Exercises</li>
+        <li><a href="#ex-4-1" class="sidebar-link">Exercise 4.1</a></li>
+        <li><a href="#ex-4-2" class="sidebar-link">Exercise 4.2</a></li>
+        <li><a href="#ex-4-3" class="sidebar-link">Exercise 4.3</a></li>
+        <li><a href="#ex-4-4" class="sidebar-link">Exercise 4.4</a></li>
+        <li><a href="#ex-4-5" class="sidebar-link">Exercise 4.5</a></li>
+        <li><a href="#ex-4-6" class="sidebar-link">Exercise 4.6</a></li>
+        <li><a href="#ex-4-7" class="sidebar-link">Exercise 4.7</a></li>
+        <li><a href="#ex-4-8" class="sidebar-link">Exercise 4.8</a></li>
+        <li><a href="#ex-4-9" class="sidebar-link">Exercise 4.9</a></li>
+        <li><a href="#ex-4-10" class="sidebar-link">Exercise 4.10</a></li>
+        <li><a href="#ex-4-11" class="sidebar-link">Exercise 4.11</a></li>
+        <li><a href="#ex-4-12" class="sidebar-link">Exercise 4.12</a></li>
+
+        <li class="sidebar-group-label">Exam Review</li>
+        <li><a href="#quick-revision" class="sidebar-link">Quick Revision</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Tutorial Content -->
+    <main class="docs-content">
+
+      <!-- Top Section -->
+      <header class="tutorial-hero">
+        <nav class="acad-breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <a href="probability-bsc-5th-sem.html">Tutorials</a>
+          <span>/</span>
+          <span class="current">Tutorial 1</span>
+        </nav>
+
+        <div class="tutorial-meta-row">
+          <span class="meta-pill accent">Tutorial 1</span>
+          <span class="meta-pill">Estimated Reading Time: ~35 min</span>
+          <span class="meta-pill">12 Worked Exercises</span>
+          <span class="meta-pill">10 Core Formulas</span>
+        </div>
+
+        <h1 class="tutorial-main-title">Tutorial 1 &mdash; Conditional Probability</h1>
+        <p class="tutorial-lead">
+          Learn conditional probability, Bayes' theorem, the law of total probability and Gambler's Ruin through 12 worked exercises.
+        </p>
+      </header>
+
+      <!-- Convenient Quick-Jump Navigation -->
+      <nav class="quick-jump-card" aria-label="Tutorial Navigation">
+        <div class="quick-jump-label">
+          <span>Jump to Section</span>
+          <a href="assets/conditional-probability-chapter-4.pdf" target="_blank" rel="noopener" style="color: var(--acad-accent); text-decoration: none; text-transform: none; letter-spacing: 0;">Source PDF &#8599;</a>
+        </div>
+        <div class="quick-jump-links">
+          <a href="#concept-intro" class="jump-pill">Concept Introduction</a>
+          <a href="#important-formulas" class="jump-pill">Important Formulas</a>
+          <a href="#ex-4-1" class="jump-pill">Exercise 4.1</a>
+          <a href="#ex-4-2" class="jump-pill">Exercise 4.2</a>
+          <a href="#ex-4-3" class="jump-pill">Exercise 4.3</a>
+          <a href="#ex-4-4" class="jump-pill">Exercise 4.4</a>
+          <a href="#ex-4-5" class="jump-pill">Exercise 4.5</a>
+          <a href="#ex-4-6" class="jump-pill">Exercise 4.6</a>
+          <a href="#ex-4-7" class="jump-pill">Exercise 4.7</a>
+          <a href="#ex-4-8" class="jump-pill">Exercise 4.8</a>
+          <a href="#ex-4-9" class="jump-pill">Exercise 4.9</a>
+          <a href="#ex-4-10" class="jump-pill">Exercise 4.10</a>
+          <a href="#ex-4-11" class="jump-pill">Exercise 4.11</a>
+          <a href="#ex-4-12" class="jump-pill">Exercise 4.12</a>
+          <a href="#quick-revision" class="jump-pill">Quick Revision</a>
+        </div>
+      </nav>
+
+      <!-- ================================================================== -->
+      <!-- PART A — CONCEPT INTRODUCTION -->
+      <!-- ================================================================== -->
+      <section id="concept-intro" class="note-section content-section">
+        <span class="part-eyebrow">Part A</span>
+        <h2>Concept Introduction</h2>
+
+        <h3>What is Conditional Probability?</h3>
+        <p>In probability, we sometimes want to calculate the probability of an event when we already know that another event has happened.</p>
+        <p>This is called <strong>conditional probability</strong>.</p>
+        <p>For example:</p>
+        <p>Imagine rolling two dice.</p>
+        <p>Normally, we have 36 possible outcomes.</p>
+        <p>But suppose someone tells us that at least one die shows a 1.</p>
+        <p>Now we don't need to consider all 36 outcomes. We only consider the outcomes where at least one die shows a 1.</p>
+        <p>The probability changes because we have received additional information.</p>
+
+        <div class="key-idea-box">
+          That is the main idea behind conditional probability:<br>
+          <strong>We calculate the probability of an event under a given condition.</strong>
+        </div>
+
+        <h4>Real-life examples</h4>
+        <ul>
+          <li>Probability of rain given that the sky is cloudy.</li>
+          <li>Probability of having a disease given that a medical test is positive.</li>
+          <li>Probability that a student knows an answer given that the student answered correctly.</li>
+          <li>Probability that a purchased product came from a particular factory given that the product is defective.</li>
+        </ul>
+
+        <h3>Important mathematical notation</h3>
+        <ul class="notation-list">
+          <li>\(P(A)\): Probability of event A.</li>
+          <li>\(P(B)\): Probability of event B.</li>
+          <li>\(P(A\cap B)\): Probability that both A and B happen.</li>
+          <li>\(P(A\cup B)\): Probability that A or B or both happen.</li>
+          <li>\(P(A\mid B)\): Probability of A given that B has happened.</li>
+          <li>\(A^c\): Complement of event A, meaning A does not happen.</li>
+          <li>\(S\): Sample space, containing all possible outcomes.</li>
+        </ul>
+
+        <h3>Three important ideas to remember</h3>
+        <div class="ideas-grid">
+          <div class="idea-card">
+            <div class="idea-card-title">1. Intersection</div>
+            <p>\(A\cap B\) means both events happen.</p>
+          </div>
+          <div class="idea-card">
+            <div class="idea-card-title">2. Union</div>
+            <p>\(A\cup B\) means at least one of the events happens.</p>
+          </div>
+          <div class="idea-card">
+            <div class="idea-card-title">3. Conditional probability</div>
+            <p>\(P(A\mid B)\) means event B has already occurred, and we are calculating the probability of A.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- PART B — IMPORTANT FORMULAS -->
+      <!-- ================================================================== -->
+      <section id="important-formulas" class="note-section content-section">
+        <span class="part-eyebrow">Part B</span>
+        <h2>Important Formulas</h2>
+        <p>A dedicated reference of all formulas required across the 12 exercises.</p>
+
+        <!-- Formula 1 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 1: Conditional Probability</h3>
+            <span class="formula-num">Formula 01</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{P(A\mid B)=\frac{P(A\cap B)}{P(B)}}
+            \]
+          </div>
+          <p>Condition: \(P(B)>0\).</p>
+          <p style="margin-bottom: 0;">Gives the updated probability of \(A\) after restricting the sample space to outcomes where \(B\) has occurred.</p>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when the question asks for the probability of A given that B has already occurred.
+          </div>
+        </div>
+
+        <!-- Formula 2 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 2: Intersection or Joint Probability</h3>
+            <span class="formula-num">Formula 02</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{P(A\cap B)=P(A\mid B)\times P(B)}
+            \]
+          </div>
+          <p>We can also write:</p>
+          <div class="math-block">
+            \[
+            \boxed{P(A\cap B)=P(B\mid A)\times P(A)}
+            \]
+          </div>
+          <p style="margin-bottom: 0;">Multiplies the probability of the conditioning event by the conditional probability of the second event.</p>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when we know a conditional probability and need to calculate the probability of both events happening.
+          </div>
+        </div>
+
+        <!-- Formula 3 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 3: Complement Rule</h3>
+            <span class="formula-num">Formula 03</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{P(A^c)=1-P(A)}
+            \]
+          </div>
+          <p><strong>Example:</strong> If the probability of an event is 0.60:</p>
+          <div class="math-block">
+            \[
+            P(A^c)=1-0.60=0.40
+            \]
+          </div>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when we need the probability that an event does not happen.
+          </div>
+        </div>
+
+        <!-- Formula 4 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 4: Conditional Complement Rule</h3>
+            <span class="formula-num">Formula 04</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{P(A^c\mid B)=1-P(A\mid B)}
+            \]
+          </div>
+          <p style="margin-bottom: 0;">Inside the restricted world where \(B\) occurs, an event \(A\) and its complement \(A^c\) still add up to 1.</p>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when we need the probability that A does not occur, given B.
+          </div>
+        </div>
+
+        <!-- Formula 5 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 5: Law of Total Probability &mdash; Two Events</h3>
+            <span class="formula-num">Formula 05</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{
+            P(A)=P(A\mid B)P(B)+P(A\mid B^c)P(B^c)
+            }
+            \]
+          </div>
+          <p style="margin-bottom: 0;">Splits the total probability of event \(A\) into a weighted average across whether \(B\) happens or does not happen.</p>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when an event can happen through two different, mutually exclusive possibilities.
+          </div>
+        </div>
+
+        <!-- Formula 6 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 6: Law of Total Probability &mdash; Multiple Events</h3>
+            <span class="formula-num">Formula 06</span>
+          </div>
+          <p>If the sample space is divided into mutually exclusive and exhaustive events \(B_1,B_2,\ldots,B_n\):</p>
+          <div class="math-block">
+            \[
+            \boxed{
+            P(A)=\sum_{i=1}^{n}P(A\mid B_i)P(B_i)
+            }
+            \]
+          </div>
+          <p>Expanded form for three possibilities:</p>
+          <div class="math-block">
+            \[
+            \begin{aligned}
+            P(A)={}&P(A\mid B_1)P(B_1)\\
+            &+P(A\mid B_2)P(B_2)\\
+            &+P(A\mid B_3)P(B_3)
+            \end{aligned}
+            \]
+          </div>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this when an event can occur through multiple possible sources or conditions.
+          </div>
+        </div>
+
+        <!-- Formula 7 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 7: Bayes' Theorem &mdash; Two Events</h3>
+            <span class="formula-num">Formula 07</span>
+          </div>
+          <div class="math-block">
+            \[
+            \boxed{
+            P(B\mid A)=
+            \frac{P(A\mid B)P(B)}
+            {P(A\mid B)P(B)+P(A\mid B^c)P(B^c)}
+            }
+            \]
+          </div>
+          <p style="margin-bottom: 0;">For example: we know the probability of a person having a positive test when the disease is present, and we want the probability of actually having the disease when the test is positive.</p>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use Bayes' theorem when the condition is reversed.
+          </div>
+        </div>
+
+        <!-- Formula 8 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 8: Generalized Bayes' Theorem</h3>
+            <span class="formula-num">Formula 08</span>
+          </div>
+          <p>When there are more than two possible sources:</p>
+          <div class="math-block">
+            \[
+            \boxed{
+            P(B_j\mid A)=
+            \frac{P(A\mid B_j)P(B_j)}
+            {\sum_{i=1}^{n}P(A\mid B_i)P(B_i)}
+            }
+            \]
+          </div>
+          <p>For three possibilities:</p>
+          <div class="math-block">
+            \[
+            \boxed{
+            P(B_1\mid A)=
+            \frac{P(A\mid B_1)P(B_1)}
+            {P(A\mid B_1)P(B_1)+P(A\mid B_2)P(B_2)+P(A\mid B_3)P(B_3)}
+            }
+            \]
+          </div>
+          <div class="key-idea-box" style="margin-bottom: 0;">
+            <strong>Important learning preference:</strong> In Bayes' theorem solutions, expand the entire denominator directly inside Bayes' formula. Do not calculate the overall probability separately before applying Bayes' theorem. Show all denominator terms together, then substitute and simplify.
+          </div>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this for questions involving multiple factories, machines, weather conditions or groups.
+          </div>
+        </div>
+
+        <!-- Formula 9 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 9: Independence of Events</h3>
+            <span class="formula-num">Formula 09</span>
+          </div>
+          <p>Two events A and B are independent if:</p>
+          <div class="math-block">
+            \[
+            \boxed{P(A\mid B)=P(A)}
+            \]
+          </div>
+          <p>Equivalently:</p>
+          <div class="math-block">
+            \[
+            \boxed{P(A\cap B)=P(A)P(B)}
+            \]
+          </div>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this to check whether the occurrence of one event affects the probability of another event.
+          </div>
+        </div>
+
+        <!-- Formula 10 -->
+        <div class="formula-card">
+          <div class="formula-header">
+            <h3 class="formula-name">Formula 10: Fair Coin &mdash; Gambler's Ruin Recurrence Relation</h3>
+            <span class="formula-num">Formula 10</span>
+          </div>
+          <p>When a player wins $1 with probability \(1/2\) and loses $1 with probability \(1/2\):</p>
+          <div class="math-block">
+            \[
+            \boxed{
+            y(n)=\frac12y(n+1)+\frac12y(n-1)
+            }
+            \]
+          </div>
+          <p>Boundary conditions:</p>
+          <div class="math-block">
+            \[
+            \boxed{y(0)=0,\quad y(N)=1}
+            \]
+          </div>
+          <p>For a fair-coin game:</p>
+          <div class="math-block">
+            \[
+            \boxed{y(n)=\frac{n}{N}}
+            \]
+          </div>
+          <ul style="margin-bottom: 0;">
+            <li>\(n\) = Starting money.</li>
+            <li>\(N\) = Target amount.</li>
+            <li>\(y(n)\) = Probability of reaching N before reaching zero.</li>
+          </ul>
+          <div class="formula-when">
+            <strong>When to use:</strong> Use this for the fair-coin Gambler's Ruin problem.
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- PART C — ALL 12 EXERCISES WITH DETAILED SOLUTIONS -->
+      <!-- ================================================================== -->
+
+      <!-- EXERCISE 4.1 -->
+      <article id="ex-4-1" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.1</span>
+            <h2 class="exercise-title">Rolling Two Dice</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Two dice are rolled. Consider the events A = {sum of two dice equals 3}, B = {sum of two dice equals 7 }, and C = {at least one of the dice shows a 1}.</p>
+            <p>(a) What is P(A | C)?</p>
+            <p>(b) What is P(B | C)?</p>
+            <p>(c) Are A and C independent? What about B and C?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>We roll two standard six-sided dice.</p>
+            <p>Each die has six possible outcomes, so there are:</p>
+            \[
+            6\times6=36
+            \]
+            <p>possible ordered outcomes.</p>
+            <p>We need to find conditional probabilities using the condition that at least one die shows 1.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>A = Sum of the two dice is 3.</li>
+              <li>B = Sum of the two dice is 7.</li>
+              <li>C = At least one die shows 1.</li>
+            </ul>
+            <p>The sample space is:</p>
+            \[
+            S=\{(i,j):i,j\in\{1,2,3,4,5,6\}\}
+            \]
+            \[
+            n(S)=36
+            \]
+            <p>All 36 outcomes are equally likely.</p>
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: List the event A</h3>
+            <p>For the sum to equal 3:</p>
+            \[
+            A=\{(1,2),(2,1)\}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(A)=\frac{2}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: List the event B</h3>
+            <p>For the sum to equal 7:</p>
+            \[
+            B=\{
+            (1,6),(2,5),(3,4),(4,3),(5,2),(6,1)
+            \}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(B)=\frac{6}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 4: List the event C</h3>
+            <p>At least one die must show 1:</p>
+            \[
+            \begin{aligned}
+            C=\{&
+            (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),\\
+            &(2,1),(3,1),(4,1),(5,1),(6,1)
+            \}
+            \end{aligned}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(C)=\frac{11}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(a) Calculate \(P(A\mid C)\)</h3>
+            <p>We use conditional probability:</p>
+            \[
+            P(A\mid C)=\frac{P(A\cap C)}{P(C)}
+            \]
+            <p>First, find the intersection:</p>
+            \[
+            A\cap C=\{(1,2),(2,1)\}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(A\cap C)=\frac{2}{36}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(A\mid C)=\frac{2/36}{11/36}
+            \]
+            \[
+            =\frac{2}{36}\times\frac{36}{11}
+            \]
+            \[
+            \boxed{P(A\mid C)=\frac{2}{11}}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(b) Calculate \(P(B\mid C)\)</h3>
+            <p>Using:</p>
+            \[
+            P(B\mid C)=\frac{P(B\cap C)}{P(C)}
+            \]
+            <p>Find the intersection:</p>
+            \[
+            B\cap C=\{(1,6),(6,1)\}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(B\cap C)=\frac{2}{36}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(B\mid C)=\frac{2/36}{11/36}
+            \]
+            \[
+            =\frac{2}{36}\times\frac{36}{11}
+            \]
+            \[
+            \boxed{P(B\mid C)=\frac{2}{11}}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(c) Check independence</h3>
+            <p>Two events are independent if:</p>
+            \[
+            P(A\mid C)=P(A)
+            \]
+            <p>For A:</p>
+            \[
+            P(A\mid C)=\frac{2}{11}
+            \]
+            <p>But:</p>
+            \[
+            P(A)=\frac{2}{36}=\frac{1}{18}
+            \]
+            <p>Since:</p>
+            \[
+            \frac{2}{11}\neq\frac{1}{18}
+            \]
+            <p>A and C are not independent.</p>
+            <p>For B:</p>
+            \[
+            P(B\mid C)=\frac{2}{11}
+            \]
+            <p>But:</p>
+            \[
+            P(B)=\frac{6}{36}=\frac16
+            \]
+            <p>Since:</p>
+            \[
+            \frac{2}{11}\neq\frac16
+            \]
+            <p>B and C are also not independent.</p>
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answers</div>
+          <ul>
+            <li>(a) \(P(A\mid C)=\boxed{2/11}\)</li>
+            <li>(b) \(P(B\mid C)=\boxed{2/11}\)</li>
+            <li>(c) A and C are not independent. B and C are not independent.</li>
+          </ul>
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> When a condition is given, restrict the possible outcomes to that condition before calculating the conditional probability.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.2 -->
+      <article id="ex-4-2" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.2</span>
+            <h2 class="exercise-title">Two Dice and a Sum of at Least 9</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Suppose you roll two standard, fair, 6-sided dice. What is the probability that the sum is at least 9 given that you rolled at least one 6?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>We roll two dice.</p>
+            <p>We already know that at least one die shows 6.</p>
+            <p>Now we need to calculate the probability that their sum is at least 9.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>E = At least one die shows 6.</li>
+              <li>F = Sum of the two dice is at least 9.</li>
+            </ul>
+            <p>Sample space:</p>
+            \[
+            S=\{(i,j):i,j\in\{1,2,3,4,5,6\}\}
+            \]
+            \[
+            n(S)=36
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: List event E</h3>
+            \[
+            \begin{aligned}
+            E=\{&
+            (1,6),(2,6),(3,6),(4,6),(5,6),(6,6),\\
+            &(6,1),(6,2),(6,3),(6,4),(6,5)
+            \}
+            \end{aligned}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(E)=\frac{11}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: List event F</h3>
+            <p>The sum must be at least 9.</p>
+            \[
+            \begin{aligned}
+            F=\{&
+            (3,6),(4,5),(5,4),(6,3),\\
+            &(4,6),(5,5),(6,4),\\
+            &(5,6),(6,5),(6,6)
+            \}
+            \end{aligned}
+            \]
+            <p>There are 10 outcomes.</p>
+            \[
+            P(F)=\frac{10}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 4: Find the intersection</h3>
+            <p>We need outcomes that satisfy both conditions:</p>
+            <ul>
+              <li>At least one die shows 6.</li>
+              <li>The sum is at least 9.</li>
+            </ul>
+            \[
+            \begin{aligned}
+            E\cap F=\{&
+            (3,6),(4,6),(5,6),(6,3),\\
+            &(6,4),(6,5),(6,6)
+            \}
+            \end{aligned}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(E\cap F)=\frac{7}{36}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 5: Apply conditional probability</h3>
+            <p>We need:</p>
+            \[
+            P(F\mid E)
+            \]
+            <p>Formula:</p>
+            \[
+            P(F\mid E)=\frac{P(E\cap F)}{P(E)}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(F\mid E)=\frac{7/36}{11/36}
+            \]
+            \[
+            =\frac{7}{36}\times\frac{36}{11}
+            \]
+            \[
+            \boxed{P(F\mid E)=\frac7{11}}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          \[
+          \boxed{\frac7{11}\approx0.6364=63.64\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> The condition is at least one 6, so the denominator must contain only the 11 outcomes satisfying that condition.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.3 -->
+      <article id="ex-4-3" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.3</span>
+            <h2 class="exercise-title">Green and Red Balls in Two Boxes</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>A box contains 1 green ball and 1 red ball, and a second box contains 2 green and 3 red balls. First a box is chosen and afterwards a ball withdrawn from the chosen box. Both boxes are equally likely to be chosen. Given that a green ball has been withdrawn, what is the probability that the first box was chosen?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>There are two boxes.</p>
+            <ul>
+              <li>Box 1 contains 1 green and 1 red ball.</li>
+              <li>Box 2 contains 2 green and 3 red balls.</li>
+            </ul>
+            <p>Both boxes have an equal chance of being selected.</p>
+            <p>We know that the selected ball is green.</p>
+            <p>We need to find the probability that Box 1 was selected.</p>
+            <p>This is a Bayes' theorem problem because we know the colour of the ball and need to identify which box was selected.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>\(B_1\) = First box is selected.</li>
+              <li>\(B_2\) = Second box is selected.</li>
+              <li>G = Green ball is withdrawn.</li>
+            </ul>
+            <p>Sample space for box selection:</p>
+            \[
+            S_B=\{B_1,B_2\}
+            \]
+            <p>Since both boxes are equally likely:</p>
+            \[
+            P(B_1)=\frac12
+            \]
+            \[
+            P(B_2)=\frac12
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Calculate conditional probabilities</h3>
+            <p>For Box 1, the ball outcomes are:</p>
+            \[
+            S_1=\{G,R\}
+            \]
+            <p>Only one of the two balls is green.</p>
+            \[
+            P(G\mid B_1)=\frac12
+            \]
+            <p>For Box 2, the ball outcomes are:</p>
+            \[
+            S_2=\{G_1,G_2,R_1,R_2,R_3\}
+            \]
+            <p>Two out of five balls are green.</p>
+            \[
+            P(G\mid B_2)=\frac25
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Write Bayes' theorem</h3>
+            <p>We need:</p>
+            \[
+            P(B_1\mid G)
+            \]
+            \[
+            \boxed{
+            P(B_1\mid G)=
+            \frac{P(G\mid B_1)P(B_1)}
+            {P(G\mid B_1)P(B_1)+P(G\mid B_2)P(B_2)}
+            }
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 4: Substitute the values</h3>
+            \[
+            P(B_1\mid G)=
+            \frac{\left(\frac12\right)\left(\frac12\right)}
+            {\left(\frac12\right)\left(\frac12\right)+
+            \left(\frac25\right)\left(\frac12\right)}
+            \]
+            <p>Calculate the numerator:</p>
+            \[
+            \frac12\times\frac12=\frac14
+            \]
+            <p>Calculate the denominator terms:</p>
+            \[
+            \frac12\times\frac12=\frac14
+            \]
+            \[
+            \frac25\times\frac12=\frac15
+            \]
+            <p>Therefore:</p>
+            \[
+            P(B_1\mid G)=
+            \frac{\frac14}{\frac14+\frac15}
+            \]
+            <p>Take LCM 20:</p>
+            \[
+            =\frac{\frac14}{\frac5{20}+\frac4{20}}
+            \]
+            \[
+            =\frac{\frac14}{\frac9{20}}
+            \]
+            \[
+            =\frac14\times\frac{20}{9}
+            \]
+            \[
+            \boxed{P(B_1\mid G)=\frac59}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          \[
+          \boxed{\frac59\approx55.56\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> Bayes' theorem reverses the condition. We know that a green ball was withdrawn, and we want to know which box it came from.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.4 -->
+      <article id="ex-4-4" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.4</span>
+            <h2 class="exercise-title">Flu Exposure and Vaccination</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Suppose that 60% of UConn students will be at random exposed to the flu. If you are exposed and did not get a flu shot, then the probability that you will get the flu (after being exposed) is 80%. If you did get a flu shot, then the probability that you will get the flu (after being exposed) is only 15%.</p>
+            <p>(a) What is the probability that a person who got a flu shot will get the flu?</p>
+            <p>(b) What is the probability that a person who did not get a flu shot will get the flu?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>To get the flu in this problem, two things must happen:</p>
+            <ol>
+              <li>A person must first be exposed to the flu virus.</li>
+              <li>After being exposed, the person must catch the flu.</li>
+            </ol>
+            <p>The chance of exposure is 60%, regardless of whether the person received a flu shot or not.</p>
+            <p>However, the chance of catching the flu after exposure depends on vaccination status.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>E = Person is exposed to the flu.</li>
+              <li>S = Person got a flu shot.</li>
+              <li>\(S^c\) = Person did not get a flu shot.</li>
+              <li>F = Person gets the flu.</li>
+            </ul>
+            <p>Given:</p>
+            \[
+            P(E)=0.60
+            \]
+            \[
+            P(E^c)=1-0.60=0.40
+            \]
+            <p>For a vaccinated person:</p>
+            \[
+            P(F\mid E\cap S)=0.15
+            \]
+            <p>For an unvaccinated person:</p>
+            \[
+            P(F\mid E\cap S^c)=0.80
+            \]
+            <p>Since exposure happens at random, assume it is independent of vaccination status:</p>
+            \[
+            P(E\mid S)=P(E\mid S^c)=0.60
+            \]
+            <p>If a person is not exposed, they cannot catch the flu through this exposure process.</p>
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(a) Probability that a vaccinated person gets the flu</h3>
+            <p>We need:</p>
+            \[
+            P(F\mid S)
+            \]
+            <p>For a vaccinated person to get the flu:</p>
+            <ul>
+              <li>The person must be exposed: probability 0.60.</li>
+              <li>After exposure, the person must catch the flu: probability 0.15.</li>
+            </ul>
+            <p>Therefore:</p>
+            \[
+            P(F\mid S)=P(E\mid S)\times P(F\mid E\cap S)
+            \]
+            <p>Substitute:</p>
+            \[
+            P(F\mid S)=0.60\times0.15
+            \]
+            \[
+            \boxed{P(F\mid S)=0.09=9\%}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(b) Probability that an unvaccinated person gets the flu</h3>
+            <p>We need:</p>
+            \[
+            P(F\mid S^c)
+            \]
+            <p>For an unvaccinated person to get the flu:</p>
+            <ul>
+              <li>The person must be exposed: probability 0.60.</li>
+              <li>After exposure, the person must catch the flu: probability 0.80.</li>
+            </ul>
+            <p>Therefore:</p>
+            \[
+            P(F\mid S^c)=P(E\mid S^c)\times P(F\mid E\cap S^c)
+            \]
+            <p>Substitute:</p>
+            \[
+            P(F\mid S^c)=0.60\times0.80
+            \]
+            \[
+            \boxed{P(F\mid S^c)=0.48=48\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answers</div>
+          <ul>
+            <li>(a) Vaccinated person gets flu: <strong>9%</strong></li>
+            <li>(b) Unvaccinated person gets flu: <strong>48%</strong></li>
+          </ul>
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> First exposure must happen, then infection can occur. Multiply the exposure probability by the probability of catching the flu after exposure. The calculation assumes exposure is independent of vaccination status, as indicated by the question's random-exposure wording.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.5 -->
+      <article id="ex-4-5" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.5</span>
+            <h2 class="exercise-title">Color Blindness and Gender</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Color blindness is a sex-linked condition, and 5% of men and 0.25% of women are color blind. The population of the United States is 51% female. What is the probability that a color-blind American is a man?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>We are given:</p>
+            <ul>
+              <li>The percentage of men who are color blind.</li>
+              <li>The percentage of women who are color blind.</li>
+              <li>The percentage of the population who are women.</li>
+            </ul>
+            <p>We need to find the probability that a person is a man, given that the person is color blind.</p>
+            <p>This is a Bayes' theorem problem.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>M = Person is a man.</li>
+              <li>W = Person is a woman.</li>
+              <li>C = Person is color blind.</li>
+            </ul>
+            <p>Sample space:</p>
+            \[
+            S=\{M,W\}
+            \]
+            <p>Given:</p>
+            \[
+            P(W)=0.51
+            \]
+            <p>Therefore:</p>
+            \[
+            P(M)=1-0.51=0.49
+            \]
+            <p>Probability of color blindness among men:</p>
+            \[
+            P(C\mid M)=0.05
+            \]
+            <p>Probability of color blindness among women:</p>
+            \[
+            P(C\mid W)=0.25\%=0.0025
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Write Bayes' theorem</h3>
+            <p>We need:</p>
+            \[
+            P(M\mid C)
+            \]
+            \[
+            \boxed{
+            P(M\mid C)=
+            \frac{P(C\mid M)P(M)}
+            {P(C\mid M)P(M)+P(C\mid W)P(W)}
+            }
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Substitute the values</h3>
+            \[
+            P(M\mid C)=
+            \frac{(0.05)(0.49)}
+            {(0.05)(0.49)+(0.0025)(0.51)}
+            \]
+            <p>Calculate the numerator:</p>
+            \[
+            0.05\times0.49=0.0245
+            \]
+            <p>Calculate the second denominator term:</p>
+            \[
+            0.0025\times0.51=0.001275
+            \]
+            <p>Now:</p>
+            \[
+            P(M\mid C)=
+            \frac{0.0245}{0.0245+0.001275}
+            \]
+            \[
+            =\frac{0.0245}{0.025775}
+            \]
+            \[
+            =0.95053
+            \]
+            <p>Convert into percentage:</p>
+            \[
+            =0.95053\times100
+            \]
+            \[
+            \boxed{95.05\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          <p>The probability that a randomly selected color-blind American is a man is approximately:</p>
+          \[
+          \boxed{95.05\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> Do not confuse \(P(C\mid M)\), the probability that a man is color blind, with \(P(M\mid C)\), the probability that a color-blind person is a man.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.6 -->
+      <article id="ex-4-6" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.6</span>
+            <h2 class="exercise-title">Two Factories and Light Bulbs</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Two factories supply light bulbs to the market. Bulbs from factory X work for over 5000 hours in 99% of cases, whereas bulbs from factory Y work for over 5000 hours in 95% of cases. It is known that factory X supplies 60% of the total bulbs available in the market.</p>
+            <p>(a) What is the probability that a purchased bulb will work for longer than 5000 hours?</p>
+            <p>(b) Given that a light bulb works for more than 5000 hours, what is the probability that it was supplied by factory Y?</p>
+            <p>(c) Given that a light bulb does not work for more than 5000 hours, what is the probability that it was supplied by factory X?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>Two factories supply light bulbs.</p>
+            <ul>
+              <li>Factory X supplies 60% of all bulbs.</li>
+              <li>Factory Y supplies the remaining 40%.</li>
+            </ul>
+            <p>The reliability of the two factories is different.</p>
+            <p>We need to calculate the overall probability of a bulb lasting more than 5000 hours, and then identify the source of a bulb under two different conditions.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>X = Bulb came from factory X.</li>
+              <li>Y = Bulb came from factory Y.</li>
+              <li>L = Bulb works for more than 5000 hours.</li>
+              <li>\(L^c\) = Bulb does not work for more than 5000 hours.</li>
+            </ul>
+            <p>Sample space:</p>
+            \[
+            S=\{X,Y\}
+            \]
+            <p>Given:</p>
+            \[
+            P(X)=0.60
+            \]
+            \[
+            P(Y)=1-0.60=0.40
+            \]
+            <p>For factory X:</p>
+            \[
+            P(L\mid X)=0.99
+            \]
+            <p>For factory Y:</p>
+            \[
+            P(L\mid Y)=0.95
+            \]
+            <p>Complementary probabilities:</p>
+            \[
+            P(L^c\mid X)=1-0.99=0.01
+            \]
+            \[
+            P(L^c\mid Y)=1-0.95=0.05
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(a) Probability that a purchased bulb works for more than 5000 hours</h3>
+            <p>We need:</p>
+            \[
+            P(L)
+            \]
+            <p>A purchased bulb can come from either factory.</p>
+            <p>Using the Law of Total Probability:</p>
+            \[
+            P(L)=P(L\mid X)P(X)+P(L\mid Y)P(Y)
+            \]
+            <p>Substitute:</p>
+            \[
+            P(L)=(0.99)(0.60)+(0.95)(0.40)
+            \]
+            <p>Calculate:</p>
+            \[
+            0.99\times0.60=0.594
+            \]
+            \[
+            0.95\times0.40=0.380
+            \]
+            <p>Add:</p>
+            \[
+            P(L)=0.594+0.380
+            \]
+            \[
+            \boxed{P(L)=0.974=97.4\%}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(b) Given that the bulb works for more than 5000 hours, what is the probability it came from factory Y?</h3>
+            <p>We need:</p>
+            \[
+            P(Y\mid L)
+            \]
+            <p>Using Bayes' theorem:</p>
+            \[
+            P(Y\mid L)=
+            \frac{P(L\mid Y)P(Y)}
+            {P(L\mid X)P(X)+P(L\mid Y)P(Y)}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(Y\mid L)=
+            \frac{(0.95)(0.40)}
+            {(0.99)(0.60)+(0.95)(0.40)}
+            \]
+            <p>Numerator:</p>
+            \[
+            0.95\times0.40=0.380
+            \]
+            <p>Denominator:</p>
+            \[
+            0.594+0.380=0.974
+            \]
+            <p>Therefore:</p>
+            \[
+            P(Y\mid L)=\frac{0.380}{0.974}
+            \]
+            \[
+            =0.3901
+            \]
+            \[
+            \boxed{39.01\%}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(c) Given that the bulb does not work for more than 5000 hours, what is the probability it came from factory X?</h3>
+            <p>We need:</p>
+            \[
+            P(X\mid L^c)
+            \]
+            <p>Using Bayes' theorem:</p>
+            \[
+            P(X\mid L^c)=
+            \frac{P(L^c\mid X)P(X)}
+            {P(L^c\mid X)P(X)+P(L^c\mid Y)P(Y)}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(X\mid L^c)=
+            \frac{(0.01)(0.60)}
+            {(0.01)(0.60)+(0.05)(0.40)}
+            \]
+            <p>Numerator:</p>
+            \[
+            0.01\times0.60=0.006
+            \]
+            <p>Denominator terms:</p>
+            \[
+            0.01\times0.60=0.006
+            \]
+            \[
+            0.05\times0.40=0.020
+            \]
+            <p>Therefore:</p>
+            \[
+            P(X\mid L^c)=
+            \frac{0.006}{0.006+0.020}
+            \]
+            \[
+            =\frac{0.006}{0.026}
+            \]
+            \[
+            \boxed{23.08\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answers</div>
+          <ul>
+            <li>(a) \(P(L)=\boxed{97.4\%}\)</li>
+            <li>(b) \(P(Y\mid L)=\boxed{39.01\%}\)</li>
+            <li>(c) \(P(X\mid L^c)=\boxed{23.08\%}\)</li>
+          </ul>
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> Part (a) uses the Law of Total Probability. Parts (b) and (c) use Bayes' theorem because the condition is reversed.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.7 -->
+      <article id="ex-4-7" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.7</span>
+            <h2 class="exercise-title">Defective Bolts from Three Machines</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>A factory production line is manufacturing bolts using three machines, A, B and C. Of the total output, machine A is responsible for 25%, machine B for 35% and machine C for the rest. It is known from previous experience with the machines that 5% of the output from machine A is defective, 4% from machine B and 2% from machine C. A bolt is chosen at random from the production line and found to be defective. What is the probability that it came from Machine A?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>A factory uses three machines to manufacture bolts.</p>
+            <p>Each machine produces a different percentage of the total output, and each has a different defect rate.</p>
+            <p>A randomly selected bolt is found to be defective.</p>
+            <p>We need to calculate the probability that the defective bolt was manufactured by Machine A.</p>
+            <p>Since we know the bolt is defective and need to identify its source, we use generalized Bayes' theorem.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>A = Bolt manufactured by Machine A.</li>
+              <li>B = Bolt manufactured by Machine B.</li>
+              <li>C = Bolt manufactured by Machine C.</li>
+              <li>D = Bolt is defective.</li>
+            </ul>
+            <p>Sample space:</p>
+            \[
+            S=\{A,B,C\}
+            \]
+            <p>Given:</p>
+            \[
+            P(A)=0.25
+            \]
+            \[
+            P(B)=0.35
+            \]
+            <p>Machine C produces the remaining output:</p>
+            \[
+            P(C)=1-(0.25+0.35)
+            \]
+            \[
+            P(C)=0.40
+            \]
+            <p>Defect probabilities:</p>
+            \[
+            P(D\mid A)=0.05
+            \]
+            \[
+            P(D\mid B)=0.04
+            \]
+            \[
+            P(D\mid C)=0.02
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Write Bayes' theorem</h3>
+            <p>We need:</p>
+            \[
+            P(A\mid D)
+            \]
+            \[
+            \boxed{
+            P(A\mid D)=
+            \frac{P(D\mid A)P(A)}
+            {P(D\mid A)P(A)+P(D\mid B)P(B)+P(D\mid C)P(C)}
+            }
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Substitute the values</h3>
+            \[
+            P(A\mid D)=
+            \frac{(0.05)(0.25)}
+            {(0.05)(0.25)+(0.04)(0.35)+(0.02)(0.40)}
+            \]
+            <p>Numerator:</p>
+            \[
+            0.05\times0.25=0.0125
+            \]
+            <p>Denominator terms:</p>
+            \[
+            0.05\times0.25=0.0125
+            \]
+            \[
+            0.04\times0.35=0.014
+            \]
+            \[
+            0.02\times0.40=0.008
+            \]
+            <p>Substitute:</p>
+            \[
+            P(A\mid D)=
+            \frac{0.0125}{0.0125+0.014+0.008}
+            \]
+            \[
+            =\frac{0.0125}{0.0345}
+            \]
+            \[
+            =0.3623
+            \]
+            <p>Convert into percentage:</p>
+            \[
+            \boxed{36.23\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          <p>The probability that the defective bolt came from Machine A is approximately:</p>
+          \[
+          \boxed{36.23\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> When a problem has three possible sources, include all three sources in the Bayes' theorem denominator.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.8 -->
+      <article id="ex-4-8" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.8</span>
+            <h2 class="exercise-title">Multiple-Choice Examination</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>A multiple choice exam has 4 choices for each question. The student has studied enough so that the probability they will know the answer to a question is 0.5, the probability that the student will be able to eliminate one choice is 0.25, otherwise all 4 choices seem equally plausible. If they know the answer they will get the question correct. If not they have to guess from the 3 or 4 choices. As the teacher you would like the test to measure what the student knows, and not how well they can guess. If the student answers a question correctly what is the probability that they actually know the answer?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>There are three possible situations:</p>
+            <ol>
+              <li>The student knows the answer.</li>
+              <li>The student does not know the answer but can eliminate one option.</li>
+              <li>The student cannot eliminate any option and must guess among all four choices.</li>
+            </ol>
+            <p>The student answered correctly.</p>
+            <p>We need to find the probability that they actually knew the answer instead of guessing correctly.</p>
+            <p>This is a Bayes' theorem problem.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>K = Student knows the answer.</li>
+              <li>E = Student can eliminate one choice.</li>
+              <li>G = Student cannot eliminate any choice.</li>
+              <li>C = Student answers correctly.</li>
+            </ul>
+            <p>The sample space for the three knowledge situations is:</p>
+            \[
+            S=\{K,E,G\}
+            \]
+            <p>Given:</p>
+            \[
+            P(K)=0.50
+            \]
+            \[
+            P(E)=0.25
+            \]
+            <p>The probability of not knowing the answer and being unable to eliminate an option is:</p>
+            \[
+            P(G)=1-(0.50+0.25)
+            \]
+            \[
+            P(G)=0.25
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Calculate the conditional probabilities</h3>
+            <p><strong>Case 1: Student knows the answer</strong></p>
+            <p>If the student knows the answer, they will definitely answer correctly.</p>
+            \[
+            P(C\mid K)=1
+            \]
+
+            <p><strong>Case 2: Student eliminates one choice</strong></p>
+            <p>One incorrect option is eliminated, so three options remain.</p>
+            <p>There is one correct answer among three choices.</p>
+            \[
+            P(C\mid E)=\frac13
+            \]
+
+            <p><strong>Case 3: Student cannot eliminate any choice</strong></p>
+            <p>All four choices remain possible.</p>
+            <p>There is one correct answer among four choices.</p>
+            \[
+            P(C\mid G)=\frac14
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Write Bayes' theorem</h3>
+            <p>We need:</p>
+            \[
+            P(K\mid C)
+            \]
+            \[
+            \boxed{
+            P(K\mid C)=
+            \frac{P(C\mid K)P(K)}
+            {P(C\mid K)P(K)+P(C\mid E)P(E)+P(C\mid G)P(G)}
+            }
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 4: Substitute the values</h3>
+            \[
+            P(K\mid C)=
+            \frac{(1)(0.50)}
+            {(1)(0.50)+\left(\frac13\right)(0.25)+\left(\frac14\right)(0.25)}
+            \]
+            <p>Calculate numerator:</p>
+            \[
+            1\times0.50=0.50
+            \]
+            <p>Denominator terms:</p>
+            \[
+            1\times0.50=0.50
+            \]
+            \[
+            \frac13\times0.25=0.08333
+            \]
+            \[
+            \frac14\times0.25=0.0625
+            \]
+            <p>Substitute:</p>
+            \[
+            P(K\mid C)=
+            \frac{0.50}{0.50+0.08333+0.0625}
+            \]
+            \[
+            =\frac{0.50}{0.645833}
+            \]
+            <p>Using exact fractions:</p>
+            \[
+            =\frac{\frac12}{\frac12+\frac1{12}+\frac1{16}}
+            \]
+            \[
+            =\frac{\frac{24}{48}}{\frac{24}{48}+\frac4{48}+\frac3{48}}
+            \]
+            \[
+            =\frac{24}{31}
+            \]
+            \[
+            =0.77419
+            \]
+            <p>Convert into percentage:</p>
+            \[
+            \boxed{77.42\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          <p>The probability that the student actually knows the answer, given that they answered correctly, is approximately:</p>
+          \[
+          \boxed{77.42\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> A correct answer does not always mean that a student knows the answer. Bayes' theorem helps us calculate the probability of actual knowledge after observing a correct answer.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.9 -->
+      <article id="ex-4-9" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.9</span>
+            <h2 class="exercise-title">Blood Test for ALS</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>A blood test indicates the presence of Amyotrophic lateral sclerosis (ALS) 95% of the time when ALS is actually present. The same test indicates the presence of ALS 0.5% of the time when the disease is not actually present. One percent of the population actually has ALS. Calculate the probability that a person actually has ALS given that the test indicates the presence of ALS.</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>A medical test produces a positive result.</p>
+            <p>However, the person may or may not actually have ALS.</p>
+            <p>There are two possibilities:</p>
+            <ol>
+              <li>The person has ALS and the test correctly detects it.</li>
+              <li>The person does not have ALS, but the test incorrectly gives a positive result. This is called a false positive.</li>
+            </ol>
+            <p>We need to find the probability that the person actually has ALS, given a positive test result.</p>
+            <p>This is a Bayes' theorem problem.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>A = Person actually has ALS.</li>
+              <li>\(A^c\) = Person does not have ALS.</li>
+              <li>T = Test indicates the presence of ALS.</li>
+            </ul>
+            <p>Given:</p>
+            \[
+            P(A)=0.01
+            \]
+            <p>Complement:</p>
+            \[
+            P(A^c)=1-0.01=0.99
+            \]
+            <p>The test correctly indicates ALS when the disease is present 95% of the time:</p>
+            \[
+            P(T\mid A)=0.95
+            \]
+            <p>The test incorrectly indicates ALS when the disease is absent 0.5% of the time:</p>
+            \[
+            P(T\mid A^c)=0.005
+            \]
+            <p>Remember:</p>
+            \[
+            0.5\%=\frac{0.5}{100}=0.005
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Write Bayes' theorem</h3>
+            <p>We need:</p>
+            \[
+            P(A\mid T)
+            \]
+            \[
+            \boxed{
+            P(A\mid T)=
+            \frac{P(T\mid A)P(A)}
+            {P(T\mid A)P(A)+P(T\mid A^c)P(A^c)}
+            }
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Substitute the values</h3>
+            \[
+            P(A\mid T)=
+            \frac{(0.95)(0.01)}
+            {(0.95)(0.01)+(0.005)(0.99)}
+            \]
+            <p>Numerator:</p>
+            \[
+            0.95\times0.01=0.0095
+            \]
+            <p>First denominator term:</p>
+            \[
+            0.95\times0.01=0.0095
+            \]
+            <p>Second denominator term:</p>
+            \[
+            0.005\times0.99=0.00495
+            \]
+            <p>Substitute:</p>
+            \[
+            P(A\mid T)=
+            \frac{0.0095}{0.0095+0.00495}
+            \]
+            \[
+            =\frac{0.0095}{0.01445}
+            \]
+            \[
+            =0.6574
+            \]
+            <p>Convert into percentage:</p>
+            \[
+            \boxed{65.74\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          <p>The probability that a person actually has ALS, given that their blood test indicates a positive result, is approximately:</p>
+          \[
+          \boxed{65.74\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> The probability of testing positive when someone has a disease is different from the probability of having the disease when someone tests positive.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.10 -->
+      <article id="ex-4-10" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.10</span>
+            <h2 class="exercise-title">Watching Two Television Shows</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>A survey conducted in a college found that 40% of the students watch show A and 17% of the students who follow show A, also watch show B. In addition, 20% of the students watch show B.</p>
+            <p>(1) What is the probability that a randomly chosen student follows both shows?</p>
+            <p>(2) What is the conditional probability that the student follows show A given that she/he follows show B?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>A college survey provides information about two television shows.</p>
+            <ul>
+              <li>40% of students watch Show A.</li>
+              <li>Of the students watching Show A, 17% also watch Show B.</li>
+              <li>20% of students watch Show B.</li>
+            </ul>
+            <p>We need to find:</p>
+            <ol>
+              <li>The probability of watching both shows.</li>
+              <li>The probability of watching Show A, given that the student watches Show B.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>A = Student watches Show A.</li>
+              <li>B = Student watches Show B.</li>
+            </ul>
+            <p>Sample space: all students surveyed in the college.</p>
+            <p>Given:</p>
+            \[
+            P(A)=0.40
+            \]
+            \[
+            P(B\mid A)=0.17
+            \]
+            \[
+            P(B)=0.20
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(1) Probability that a student watches both shows</h3>
+            <p>We need:</p>
+            \[
+            P(A\cap B)
+            \]
+            <p>Using the intersection formula:</p>
+            \[
+            P(A\cap B)=P(B\mid A)\times P(A)
+            \]
+            <p>Substitute:</p>
+            \[
+            P(A\cap B)=0.17\times0.40
+            \]
+            \[
+            \boxed{P(A\cap B)=0.068=6.8\%}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(2) Conditional probability of watching A given B</h3>
+            <p>We need:</p>
+            \[
+            P(A\mid B)
+            \]
+            <p>We know:</p>
+            \[
+            P(A\cap B)=0.068
+            \]
+            <p>And:</p>
+            \[
+            P(B)=0.20
+            \]
+            <p>Using conditional probability:</p>
+            \[
+            P(A\mid B)=\frac{P(A\cap B)}{P(B)}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(A\mid B)=\frac{0.068}{0.20}
+            \]
+            \[
+            \boxed{P(A\mid B)=0.34=34\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answers</div>
+          <ul>
+            <li>(1) Probability of watching both shows: <strong>6.8%</strong></li>
+            <li>(2) Probability of watching Show A given Show B: <strong>34%</strong></li>
+          </ul>
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> \(P(A\cap B)\) means watching both shows. \(P(A\mid B)\) means watching A among students who already watch B.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.11 -->
+      <article id="ex-4-11" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.11</span>
+            <h2 class="exercise-title">Weather Conditions and Birds on the Runway</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Use Bayes' formula to solve the following problem. An airport has problems with birds. If the weather is sunny, the probability that there are birds on the runway is 1/2; if it is cloudy, but dry, the probability is 1/3; and if it is raining, then the probability is 1/4. The probability of each type of the weather is 1/3. Given that the birds are on the runway, what is the probability</p>
+            <p>(1) that the weather is sunny?</p>
+            <p>(2) that the weather is cloudy (dry or rainy)?</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>There are three possible weather conditions:</p>
+            <ol>
+              <li>Sunny.</li>
+              <li>Cloudy but dry.</li>
+              <li>Rainy.</li>
+            </ol>
+            <p>Each weather condition has an equal probability.</p>
+            <p>However, the probability of birds being on the runway changes depending on the weather.</p>
+            <p>We already know that birds are on the runway.</p>
+            <p>We need to find the probability of the weather condition.</p>
+            <p>This is a generalized Bayes' theorem problem.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the events</h3>
+            <ul>
+              <li>S = Weather is sunny.</li>
+              <li>C = Weather is cloudy but dry.</li>
+              <li>R = Weather is rainy.</li>
+              <li>B = Birds are present on the runway.</li>
+            </ul>
+            <p>Sample space:</p>
+            \[
+            \Omega=\{S,C,R\}
+            \]
+            <p>Given:</p>
+            \[
+            P(S)=P(C)=P(R)=\frac13
+            \]
+            <p>Probability of birds on the runway:</p>
+            \[
+            P(B\mid S)=\frac12
+            \]
+            \[
+            P(B\mid C)=\frac13
+            \]
+            \[
+            P(B\mid R)=\frac14
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(1) Probability that the weather is sunny</h3>
+            <p>We need:</p>
+            \[
+            P(S\mid B)
+            \]
+            <p>Using Bayes' theorem for three possibilities:</p>
+            \[
+            \boxed{
+            P(S\mid B)=
+            \frac{P(B\mid S)P(S)}
+            {P(B\mid S)P(S)+P(B\mid C)P(C)+P(B\mid R)P(R)}
+            }
+            \]
+            <p>Substitute:</p>
+            \[
+            P(S\mid B)=
+            \frac{\left(\frac12\right)\left(\frac13\right)}
+            {\left(\frac12\right)\left(\frac13\right)+
+            \left(\frac13\right)\left(\frac13\right)+
+            \left(\frac14\right)\left(\frac13\right)}
+            \]
+            <p>Numerator:</p>
+            \[
+            \frac12\times\frac13=\frac16
+            \]
+            <p>Denominator terms:</p>
+            \[
+            \frac12\times\frac13=\frac16
+            \]
+            \[
+            \frac13\times\frac13=\frac19
+            \]
+            \[
+            \frac14\times\frac13=\frac1{12}
+            \]
+            <p>Substitute:</p>
+            \[
+            P(S\mid B)=
+            \frac{\frac16}{\frac16+\frac19+\frac1{12}}
+            \]
+            <p>Take LCM 36:</p>
+            \[
+            =\frac{\frac16}{\frac6{36}+\frac4{36}+\frac3{36}}
+            \]
+            \[
+            =\frac{\frac16}{\frac{13}{36}}
+            \]
+            \[
+            =\frac16\times\frac{36}{13}
+            \]
+            \[
+            \boxed{P(S\mid B)=\frac6{13}\approx46.15\%}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">(2) Probability that the weather is cloudy (dry or rainy)</h3>
+            <p>We need the combined probability of the cloudy-but-dry and rainy conditions, given that birds are on the runway.</p>
+            \[
+            P(C\cup R\mid B)
+            \]
+            <p>Using Bayes' theorem:</p>
+            \[
+            P(C\cup R\mid B)=
+            \frac{P(B\mid C)P(C)+P(B\mid R)P(R)}
+            {P(B\mid S)P(S)+P(B\mid C)P(C)+P(B\mid R)P(R)}
+            \]
+            <p>Substitute:</p>
+            \[
+            =
+            \frac{
+            \left(\frac13\right)\left(\frac13\right)+
+            \left(\frac14\right)\left(\frac13\right)}
+            {
+            \left(\frac12\right)\left(\frac13\right)+
+            \left(\frac13\right)\left(\frac13\right)+
+            \left(\frac14\right)\left(\frac13\right)}
+            \]
+            <p>Numerator:</p>
+            \[
+            =\frac19+\frac1{12}
+            \]
+            <p>Take LCM 36:</p>
+            \[
+            =\frac4{36}+\frac3{36}
+            \]
+            \[
+            =\frac7{36}
+            \]
+            <p>Denominator:</p>
+            \[
+            =\frac{13}{36}
+            \]
+            <p>Therefore:</p>
+            \[
+            P(C\cup R\mid B)=
+            \frac{\frac7{36}}{\frac{13}{36}}
+            \]
+            \[
+            =\frac7{13}
+            \]
+            \[
+            \boxed{P(C\cup R\mid B)\approx53.85\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answers</div>
+          <ul>
+            <li>(1) Probability of sunny weather: <strong>46.15%</strong></li>
+            <li>(2) Probability of cloudy-but-dry or rainy weather: <strong>53.85%</strong></li>
+          </ul>
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> When Bayes' theorem has three possible cases, include all three in the denominator. If the required answer combines two cases, add those two contributions in the numerator.
+        </div>
+      </article>
+
+      <!-- EXERCISE 4.12 -->
+      <article id="ex-4-12" class="exercise-section">
+        <div class="exercise-top">
+          <div>
+            <span class="exercise-badge">Exercise 4.12</span>
+            <h2 class="exercise-title">Gambler's Ruin</h2>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Original Question</span>
+          <div class="original-question-box">
+            <p>Suppose you toss a fair coin repeatedly and independently. If it comes up heads, you win a dollar, and if it comes up tails, you lose a dollar. Suppose you start with $20. What is the probability you will get to $150 before you go broke? (See Example 4.8 for a solution).</p>
+          </div>
+        </div>
+
+        <div class="exercise-subblock">
+          <span class="subblock-label">Understanding the Question</span>
+          <div class="understanding-box">
+            <p>Imagine that you start a game with $20.</p>
+            <ul>
+              <li>Whenever the coin shows Heads, you win $1.</li>
+              <li>Whenever the coin shows Tails, you lose $1.</li>
+              <li>You keep playing independently until you either reach $150 or lose all your money.</li>
+            </ul>
+            <p>We need to calculate:</p>
+            <p><strong>What is the probability of reaching $150 before reaching $0, starting with $20?</strong></p>
+            <p>This problem is called Gambler's Ruin.</p>
+            <p>We will follow Example 4.8 from the tutorial.</p>
+          </div>
+        </div>
+
+        <div class="solution-steps">
+          <span class="subblock-label">Step-by-Step Solution</span>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 1: Define the outcomes and variables</h3>
+            <p>The sample space for one coin toss is:</p>
+            \[
+            \Omega=\{H,T\}
+            \]
+            <p>Since the coin is fair:</p>
+            \[
+            P(H)=\frac12
+            \]
+            \[
+            P(T)=\frac12
+            \]
+            <p>Let:</p>
+            <ul>
+              <li>\(N=150\): Target amount.</li>
+              <li>\(n=20\): Initial amount.</li>
+              <li>\(y(n)\): Probability of reaching $150 before going broke when currently holding \(n\) dollars.</li>
+            </ul>
+            <p>The possible money states are:</p>
+            \[
+            S=\{0,1,2,3,\ldots,150\}
+            \]
+            <p>We need to calculate:</p>
+            \[
+            y(20)
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 2: Identify the boundary conditions</h3>
+            <p>There are two situations where the game ends.</p>
+            <p><strong>Case 1: You have $0</strong></p>
+            <p>You are already broke.</p>
+            <p>Therefore:</p>
+            \[
+            \boxed{y(0)=0}
+            \]
+            <p><strong>Case 2: You have $150</strong></p>
+            <p>You have already reached the target.</p>
+            <p>Therefore:</p>
+            \[
+            \boxed{y(150)=1}
+            \]
+            <p>These are called boundary conditions.</p>
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 3: Form the recurrence relation</h3>
+            <p>Suppose you currently have \(n\) dollars.</p>
+            <p>There are two possible outcomes in the next coin toss.</p>
+            <p><strong>Case 1: Heads</strong></p>
+            <p>You win $1. Your money becomes:</p>
+            \[
+            n+1
+            \]
+            <p>The probability of eventually reaching the target from this state is:</p>
+            \[
+            y(n+1)
+            \]
+            <p><strong>Case 2: Tails</strong></p>
+            <p>You lose $1. Your money becomes:</p>
+            \[
+            n-1
+            \]
+            <p>The probability of eventually reaching the target from this state is:</p>
+            \[
+            y(n-1)
+            \]
+            <p>Both outcomes have a probability of \(1/2\).</p>
+            <p>Therefore:</p>
+            \[
+            \boxed{
+            y(n)=\frac12y(n+1)+\frac12y(n-1)
+            }
+            \]
+            <p>This is the recurrence relation.</p>
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 4: Simplify the recurrence relation</h3>
+            <p>Starting with:</p>
+            \[
+            y(n)=\frac12y(n+1)+\frac12y(n-1)
+            \]
+            <p>Multiply both sides by 2:</p>
+            \[
+            2y(n)=y(n+1)+y(n-1)
+            \]
+            <p>Rearrange:</p>
+            \[
+            \boxed{
+            y(n+1)-y(n)=y(n)-y(n-1)
+            }
+            \]
+            <p>This tells us that the difference between consecutive values of \(y(n)\) is constant.</p>
+            <p>Therefore, the graph of \(y(n)\) is a straight line.</p>
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 5: Find the probability function</h3>
+            <p>We know:</p>
+            \[
+            y(0)=0
+            \]
+            \[
+            y(150)=1
+            \]
+            <p>Since the graph is a straight line between these two points:</p>
+            \[
+            \boxed{y(n)=\frac{n}{150}}
+            \]
+          </div>
+
+          <div class="step-item">
+            <h3 class="step-heading">Step 6: Calculate the required probability</h3>
+            <p>We start with $20.</p>
+            \[
+            n=20
+            \]
+            <p>Therefore:</p>
+            \[
+            y(20)=\frac{20}{150}
+            \]
+            <p>Simplify:</p>
+            \[
+            =\frac2{15}
+            \]
+            <p>Convert into decimal:</p>
+            \[
+            =0.1333
+            \]
+            <p>Convert into percentage:</p>
+            \[
+            \boxed{13.33\%}
+            \]
+          </div>
+        </div>
+
+        <div class="final-answer-box">
+          <div class="final-answer-title">Final Answer</div>
+          <p>The probability of reaching $150 before going broke, starting with $20 and playing with a fair coin, is approximately:</p>
+          \[
+          \boxed{13.33\%}
+          \]
+        </div>
+
+        <div class="exam-tip-box">
+          <strong>Important exam understanding:</strong> For a fair-coin Gambler's Ruin problem, the probability is starting money divided by target money:
+          \[
+          \boxed{\frac{\text{Starting money}}{\text{Target money}}}
+          \]
+          This result applies to the fair-coin game with the two stopping boundaries at zero and the target.
+        </div>
+      </article>
+
+      <!-- ================================================================== -->
+      <!-- PART D — QUICK REVISION BEFORE THE EXAM -->
+      <!-- ================================================================== -->
+      <section id="quick-revision" class="note-section content-section">
+        <span class="part-eyebrow">Part D</span>
+        <h2>Quick Revision &mdash; How to Identify the Correct Formula</h2>
+
+        <div class="revision-table-wrap">
+          <table class="revision-table">
+            <thead>
+              <tr>
+                <th>Question pattern</th>
+                <th>Formula / method</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Probability of A given B</td>
+                <td>Conditional Probability</td>
+              </tr>
+              <tr>
+                <td>Probability of both A and B</td>
+                <td>Intersection Formula</td>
+              </tr>
+              <tr>
+                <td>Probability of an event not happening</td>
+                <td>Complement Rule</td>
+              </tr>
+              <tr>
+                <td>Combining possible groups or sources</td>
+                <td>Law of Total Probability</td>
+              </tr>
+              <tr>
+                <td>Condition is reversed</td>
+                <td>Bayes' Theorem</td>
+              </tr>
+              <tr>
+                <td>More than two possible sources</td>
+                <td>Generalized Bayes' Theorem</td>
+              </tr>
+              <tr>
+                <td>Checking whether two events are independent</td>
+                <td>Independence Test</td>
+              </tr>
+              <tr>
+                <td>Fair coin and reaching target before zero</td>
+                <td>Gambler's Ruin</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Bayes' theorem &mdash; Important reminder</h3>
+        <p>Remember this distinction:</p>
+        <div class="math-block">
+          \[
+          P(A\mid B)\neq P(B\mid A)
+          \]
+        </div>
+        <p>They are generally not equal.</p>
+        <p>For example:</p>
+        <ul>
+          <li>\(P(\text{Positive test}\mid\text{Disease})\): Probability of a positive test when the disease is present.</li>
+          <li>\(P(\text{Disease}\mid\text{Positive test})\): Probability of having the disease after receiving a positive test.</li>
+        </ul>
+        <p>Bayes' theorem helps us reverse the condition.</p>
+
+        <h3>Important calculation reminders</h3>
+        <ul>
+          <li>Convert percentages to decimals before substitution.</li>
+          <li>5% = 0.05.</li>
+          <li>0.5% = 0.005.</li>
+          <li>Calculate complements carefully.</li>
+          <li>Show all intermediate calculations.</li>
+          <li>For Bayes' theorem, include all possible sources in the denominator.</li>
+          <li>For conditional probability, pay attention to the event after the vertical bar.</li>
+          <li>Always simplify fractions before converting into percentages when possible.</li>
+        </ul>
+
+        <h3>Final formula memory list</h3>
+        <ol>
+          <li>
+            <strong>Conditional probability:</strong>
+            \[
+            P(A\mid B)=\frac{P(A\cap B)}{P(B)}
+            \]
+          </li>
+          <li>
+            <strong>Intersection:</strong>
+            \[
+            P(A\cap B)=P(B\mid A)P(A)
+            \]
+          </li>
+          <li>
+            <strong>Complement:</strong>
+            \[
+            P(A^c)=1-P(A)
+            \]
+          </li>
+          <li>
+            <strong>Total probability:</strong>
+            \[
+            P(A)=\sum_iP(A\mid B_i)P(B_i)
+            \]
+          </li>
+          <li>
+            <strong>Bayes' theorem:</strong>
+            \[
+            P(B_j\mid A)=
+            \frac{P(A\mid B_j)P(B_j)}
+            {\sum_iP(A\mid B_i)P(B_i)}
+            \]
+          </li>
+          <li>
+            <strong>Independence:</strong>
+            \[
+            P(A\mid B)=P(A)
+            \]
+          </li>
+          <li>
+            <strong>Fair-coin Gambler's Ruin:</strong>
+            \[
+            y(n)=\frac{n}{N}
+            \]
+          </li>
+        </ol>
+
+        <div class="tutorial-bottom-nav">
+          <a href="probability-bsc-5th-sem.html" class="btn-acad-ghost">
+            &larr; Back to Probability BSc 5th Sem
+          </a>
+          <a href="assets/conditional-probability-chapter-4.pdf" target="_blank" rel="noopener" class="btn-acad-primary">
+            View Source Textbook PDF &#8599;
+          </a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="acad-footer">
+    <div class="acad-footer-inner">
+      <span><strong style="color: var(--acad-text-primary);">Tech Notes</strong> &mdash; Tutorial 1: Conditional Probability</span>
+      <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
+        <a href="index.html" style="color: var(--acad-text-secondary); text-decoration: none;">Home</a>
+        <a href="probability-bsc-5th-sem.html" style="color: var(--acad-text-secondary); text-decoration: none;">Tutorials</a>
+        <a href="#concept-intro" style="color: var(--acad-accent); text-decoration: none;">Back to Top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    (function() {
+      var katexOptions = {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false,
+        errorColor: '#cc0000',
+        strict: false
+      };
+
+      function renderTutorialMath() {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(document.body, katexOptions);
+        } else {
+          setTimeout(renderTutorialMath, 60);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', renderTutorialMath);
+      window.addEventListener('load', renderTutorialMath);
+    })();
+  </script>
+</body>
+</html>
